@@ -1,0 +1,8 @@
+/**
+ * 
+ */
+/**
+ * @author seandoyle
+ *
+ */
+package kinematics;
