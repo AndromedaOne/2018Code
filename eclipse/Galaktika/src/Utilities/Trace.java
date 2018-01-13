@@ -68,36 +68,36 @@ public class Trace
 	private class TraceEntry {
 		private BufferedWriter m_file;
 		private int m_numbOfValues;
-		
+
 		public TraceEntry(BufferedWriter file, int numbOfValues) {
 			m_file = file;
 			m_numbOfValues = numbOfValues;
 		}
-		
+
 		public BufferedWriter getFile() {
 			return(m_file);
 		}
-		
+
 		public long getNumbOfValues() {
 			return(m_numbOfValues);
 		}
 	}
-	
+
 	public static Trace getInstance() {
 		if(m_instance == null) {
 			m_instance = new Trace();
 		}
 		return(m_instance);
 	}
-	
+
 	private Trace() {
 		m_traces = new TreeMap<String, TraceEntry>();
 		m_startTime = System.currentTimeMillis();
 		createNewTraceDir();
 		redirectOutput();
-		
+
 	}
-	
+
 	private String getDateStr()
 	{
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy-HH-mm-ss");
@@ -105,14 +105,14 @@ public class Trace
 		String dateStr = new String(dateFormat.format(date));
 		return(dateStr);
 	}
-	
+
 	private void createNewTraceDir()
 	{
 		try {
 			File directory = new File(m_basePathOfTraceDirs);
 			if(!directory.exists()) {
 				if(!directory.mkdir()) {
-					System.err.println("ERROR: failed to create directory " 
+					System.err.println("ERROR: failed to create directory "
 							+ m_basePathOfTraceDirs +
 							" for tracing data.");
 					m_basePathOfTraceDirs = null;
@@ -130,13 +130,13 @@ public class Trace
 				m_pathOfTraceDir = m_basePathOfTraceDirs + "/" + "trace0";
 			} else {
 				System.out.println("Found trace numb file: " + traceNumFileName);
-				BufferedReader reader = new 
+				BufferedReader reader = new
 					BufferedReader(new FileReader(traceNumbFile));
 				String line = reader.readLine();
 				reader.close();
 				traceNumbFile.delete();
 				if(line == null) {
-					System.err.println("ERROR: failed to read trace file number file: " 
+					System.err.println("ERROR: failed to read trace file number file: "
 							+ m_basePathOfTraceDirs + m_traceDirNumberFile);
 					m_pathOfTraceDir = null;
 					return;
@@ -147,7 +147,7 @@ public class Trace
 			File traceDir = new File(m_pathOfTraceDir);
 			if(!traceDir.exists()) {
 				if(!traceDir.mkdirs()) {
-					System.err.println("ERROR: failed to create directory " 
+					System.err.println("ERROR: failed to create directory "
 							+ m_pathOfTraceDir +
 							" for tracing data.");
 					m_basePathOfTraceDirs = null;
@@ -202,7 +202,7 @@ public class Trace
 			addEntry(fileName, header);
 		}
 		catch(IOException e) {
-			System.err.println("ERROR: unable to open/write to trace file " + 
+			System.err.println("ERROR: unable to open/write to trace file " +
 					fileName + " ;" + e.getMessage());
 			e.printStackTrace();
 			return;
@@ -242,7 +242,7 @@ public class Trace
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void flushTraceFiles() {
 		if(m_pathOfTraceDir == null)
 		{
@@ -267,7 +267,7 @@ public class Trace
 			System.err.println("ERROR: Failed to Flush");
 			e.printStackTrace();
 		}
-		
+
 	}
 	private void redirectOutput(){
 		try {
@@ -275,7 +275,7 @@ public class Trace
 			{
 				return;
 			}
-			FileOutputStream fOut= new FileOutputStream(m_pathOfTraceDir + "/" + 
+			FileOutputStream fOut= new FileOutputStream(m_pathOfTraceDir + "/" +
 					m_consoleOutput + ".log");
 			m_out= new MultipleOutputStream(System.out, fOut);
 			m_err= new MultipleOutputStream(System.err, fOut);
@@ -289,15 +289,15 @@ public class Trace
 			System.err.println("ERROR: Redirect Failed");
 		}
 	}
-	
+
 	public void matchStarted() {
 		if(m_pathOfTraceDir == null)
-		{ 
+		{
 			return;
 		}
 		BufferedWriter outputFile = null;
 		try {
-			String fullFileName = new 
+			String fullFileName = new
 					String(m_pathOfTraceDir  + "/" + m_matchStartFname + ".txt");
 			FileWriter fstream = new FileWriter(fullFileName, false);
 			outputFile = new BufferedWriter(fstream);
