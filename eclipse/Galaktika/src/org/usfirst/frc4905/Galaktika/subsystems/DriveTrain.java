@@ -67,6 +67,9 @@ public class DriveTrain extends Subsystem {
     public void move(double forwardBackSpeed, double rotateAmount) {
     	differentialDrive.arcadeDrive(forwardBackSpeed, rotateAmount);
     }
+    public void stop() {
+    	differentialDrive.stopMotor();
+    }
     
 }
 
