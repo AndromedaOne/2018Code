@@ -12,7 +12,19 @@ public enum ButtonsEnumerated {
 	BACKBUTTON(7),
 	STARTBUTTON(8),
 	LEFTSTICKBUTTON(9),
-	RIGHTSTICKBUTTON(10);
+	RIGHTSTICKBUTTON(10),
+	LEFTTRIGGER(2) {
+		public boolean isPressed(Joystick gamepad) {
+			return EnumeratedRawAxis.getRightTriggerButton(gamepad);
+		}
+	},
+	RIGHTTRIGGER(3) {
+		public boolean isPressed(Joystick gamepad) {
+			return EnumeratedRawAxis.getRightTriggerButton(gamepad);
+		}
+	};
+	
+	
 
 	private int m_buttonValue;
 
@@ -67,5 +79,7 @@ public enum ButtonsEnumerated {
 	public static boolean getRightStickButton(Joystick gamepad) {
 		return RIGHTSTICKBUTTON.isPressed(gamepad);
 	}
-
+	public static boolean getLeftTriggerButton(Joystick gamepad) {
+		return LEFTTRIGGER.isPressed(gamepad);
+	}
 }
