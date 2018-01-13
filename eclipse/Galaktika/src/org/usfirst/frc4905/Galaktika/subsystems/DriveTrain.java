@@ -70,6 +70,8 @@ public class DriveTrain extends Subsystem {
     public void stop() {
     	differentialDrive.stopMotor();
     }
-    
+    public void rotateToAngle(double angle) {
+    	RobotMap.navX.turnWithGyroPID(angle);
+    }
 }
 
