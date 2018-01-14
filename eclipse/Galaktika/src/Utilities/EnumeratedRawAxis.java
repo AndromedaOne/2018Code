@@ -16,12 +16,8 @@ public enum EnumeratedRawAxis {
 		m_rawAxisValue = value;
 	}
 
-	public int getValue() {
-		return m_rawAxisValue;
-	}
-
 	public double getRawAxis(Joystick gamepad) {
-		return gamepad.getRawAxis(getValue());
+		return gamepad.getRawAxis(m_rawAxisValue);
 	}
 
 	public static double getLeftStickHorizontal (Joystick gamepad) {

@@ -9,21 +9,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Vector;
 
-// utility to store trace information to a file on the roborio. this class uses the
+// utility to store trace information to a file on the roborio. this class uses the 
 // singleton pattern. on the first call to Trace.getInstance(), the utility will
 // create a trace directory in /home/lvuser/traceLogs/trace<next number>. the utility
-// uses a file, .traceNumb, that is written in the traceLogs dir to store the next
+// uses a file, .traceNumb, that is written in the traceLogs dir to store the next 
 // number to use. if the .traceNumb file does not exist, the next number will be 0
 // and a .traceNumb file will be created containing the number 1. when the robot
 // code is restarted, the number is read from the file and then incremented and stored
-// back.
-// to use this utility you simply call
+// back. 
+// to use this utility you simply call 
 // Trace.getInstance().addTrace(...) at the point where you want to trace some
 // interesting values. the addTrace signature is as follow:
 // addTrace(<filename for trace file, .csv will be appended>,
@@ -31,13 +32,13 @@ import java.util.TreeMap;
 //  		new TracePair(...),
 //			<as many items as you want to log>);
 //
-// on the first call to this method with a unique filename,
+// on the first call to this method with a unique filename, 
 // this method will create the csv file to store the data as well as the
 // header row with the names of the columns. it will then store the set
 // of values. on subsequent calls to this method with a filename that has already
 // been encountered, the method will simply store the values passed in.
 // an example for tracing the navx:
-// Trace.getInstance().addTrace("NavxGyro",
+// Trace.getInstance().addTrace("NavxGyro", 
 // 		new TracePair("Raw Angle", m_navX.getAngle()),
 //		new TracePair("X Accel", (double) m_navX.getWorldLinearAccelX()),
 //		new TracePair("X Accel", (double) m_navX.getWorldLinearAccelY()),
@@ -49,9 +50,9 @@ import java.util.TreeMap;
 // written.
 // once all tracing in complete you need to call closeTraceFiles() if possible.
 // you can also call flush periodically so that values are flushed out to the trace
-// file so that at least something will be written out before the robot it turned
+// file so that at least something will be written out before the robot it turned 
 // off.
-public class Trace
+public class Trace 
 {
 	private String m_basePathOfTraceDirs = "/home/lvuser/traceLogs";
 	private static String m_traceDirNumberFile = ".traceNumb";
@@ -63,7 +64,7 @@ public class Trace
 	private MultipleOutputStream m_out;
 	private MultipleOutputStream m_err;
 	private static String m_matchStartFname = "matchStarted";
-
+	
 	private class TraceEntry {
 		private BufferedWriter m_file;
 		private int m_numbOfValues;
