@@ -1,6 +1,8 @@
 package Utilities;
 
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public enum ButtonsEnumerated {
 	ABUTTON(1),
@@ -20,12 +22,12 @@ public enum ButtonsEnumerated {
 		m_buttonValue = value;
 	}
 
-	public int getValue() {
-		return m_buttonValue;
+	public JoystickButton getJoystickButton(Joystick driveController) {
+		return new JoystickButton(driveController, m_buttonValue);
 	}
 
 	public boolean isPressed(Joystick gamepad) {
-		return gamepad.getRawButton(getValue());
+		return gamepad.getRawButton(m_buttonValue);
 	}
 
 	public static boolean getAButton(Joystick gamepad) {
