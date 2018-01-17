@@ -203,10 +203,11 @@ public class KinematicsTester {
 		KinematicsTester kinematicsTester = new KinematicsTester();
 
 		m_kinematicsSimpler.addPointToPath(myPath, m_kinematicsSimpler.new Point(14));
-		m_kinematicsSimpler.createTrajectory(myPath, 2.0, 0.5, 0.25);
+		m_kinematicsSimpler.createTrajectory(myPath, 2.0, 0.5, 0.25, true);
 		printTrajectory(myPath);
 
-		checkTrajectoryPath(myPath, kinematicsTester);
+
+
 	}
 
 	private static void createPositiveTrajectoryLessThanTwiceTheDistanceCoveredWhileAcceleratingCase()
@@ -1674,7 +1675,7 @@ public class KinematicsTester {
 				errMessage = "The point at time: " + originalTrajectoryPointsPath.get(i).m_timestamp
 						+ " has a calculated velocity that exceeds the maxVelocity!";
 				invalidVelocityException = kinematicsTester.new InvalidVelocityException(errMessage);
-				System.out.println("calculatedVelocity: " + calculatedVelocity);
+				
 
 				throw invalidVelocityException;
 			}
@@ -1682,7 +1683,7 @@ public class KinematicsTester {
 				errMessage = "The point at time: " + originalTrajectoryPointsPath.get(i).m_timestamp
 						+ " has a difference between calculated velocity and original velocity which exceed 0.1!";
 				invalidVelocityException = kinematicsTester.new InvalidVelocityException(errMessage);
-				System.out.println("calculatedVelocity: " + calculatedVelocity);
+				
 				throw invalidVelocityException;
 			}
 			if (Math.abs(originalTrajectoryPointPathVelocity) > Key.getMaxVelocity()) {
@@ -1822,8 +1823,6 @@ public class KinematicsTester {
 				if (Math.abs(trajectoryPoint.m_currentVelocity - calculatedVelocity) > 0.1) {
 					errMessage = "The point at time: " + trajectoryPoint.m_timestamp
 							+ " is a point where the calculated velocity and the current velocity are not equal";
-					System.out.println("calculatedVelocity: " + calculatedVelocity);
-					System.out.println("trajectoryPoint.m_currentVelocity: " + trajectoryPoint.m_currentVelocity);
 					invalidTrajectoryLogic = kinematicsTester.new InvalidTrajectoryLogic(errMessage);
 					throw invalidTrajectoryLogic;
 				}
@@ -1839,21 +1838,7 @@ public class KinematicsTester {
 						trajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 				double nextAcceleration = getAccelerationOfPoint(Key, nextPoint);
 				double currentJerk = getJerkOfPoint(Key, trajectoryPoint.m_timestamp);
-				try {
-					if (Key.getSetpointVector().get(0).getm_X() == 14.0
-							&& Key.getSetpointVector().get(0).getm_X() == 6.0) {
-						System.out.println("");
-						System.out.println("calculatedAcceleration: " + calculatedAcceleration);
-						System.out.println("setpoint.getaf(): " + setpoint.getaf());
-						System.out.println("nextAcceleration: " + nextAcceleration);
-						System.out.println("trajectoryPoint.m_position: " + trajectoryPoint.m_position);
-						System.out.println("nextPoint.m_position: " + nextPoint.m_position);
-						System.out.println("currentJerk: " + currentJerk);
-						System.out.println("trajectoryPoint.m_timestamp: " + trajectoryPoint.m_timestamp);
-					}
-				} catch (ArrayIndexOutOfBoundsException a) {
-
-				}
+				
 				if (Math.abs(Math.abs(calculatedAcceleration) - setpoint.getaf()) > 0.0001) {
 					errMessage = "The point at time: " + trajectoryPoint.m_timestamp
 							+ " is a point where the calculated acceleration and the final acceleration are not equal";
@@ -1947,13 +1932,7 @@ public class KinematicsTester {
 				- deltaBeforeOriginalTrajectoryPoint.m_position;
 		double changeInTime = m_deltaTimeFromOriginalPoint * 2;
 		double calculatedVelocity = changeInPosition / changeInTime;
-		if(calculatedVelocity == -3.84582196796428) {
-			System.out.println("deltaBeforeOriginalTrajectoryPoint: " + deltaBeforeOriginalTrajectoryPoint.m_position);
-			System.out.println("deltaAfterOriginalTrajectoryPoint: " + deltaAfterOriginalTrajectoryPoint.m_position);
-			
-			System.out.println("changeInPosition: " + changeInPosition);
-			System.out.println("changeInTime: " + changeInTime);
-		}
+		
 
 		return calculatedVelocity;
 	}
@@ -1998,12 +1977,7 @@ public class KinematicsTester {
 				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
 		double deltaAfterAcceleration = getAccelerationOfPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
-		if (testMode) {
-			System.out.println("");
-			System.out.println("deltaBeforeAcceleration: " + deltaBeforeAcceleration);
-			System.out.println("deltaAfterAcceleration: " + deltaAfterAcceleration);
-			System.out.println("");
-		}
+		
 		double changeInAcceleration = deltaAfterAcceleration - deltaBeforeAcceleration;
 		double changeInTime = m_deltaTimeFromOriginalPoint * 2;
 		double calculatedJerk = changeInAcceleration / changeInTime;
@@ -2018,7 +1992,7 @@ public class KinematicsTester {
 		}
 
 		for (double i = 0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
-			TrajectoryPoint currentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i);
+			TrajectoryPoint currentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i, true);
 			TrajectoryPoint deltaBeforeCurrentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
 					i - m_deltaTimeFromOriginalPoint);
 			TrajectoryPoint deltaAfterCurrentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
@@ -2049,16 +2023,6 @@ public class KinematicsTester {
 		TrajectoryPoint testDeltaAfter = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,12.041666666666668 + m_deltaTimeFromOriginalPoint);
 		double deltaBeforeAcceleration = getAccelerationOfPoint(Key, testDeltaBefore);
 		double deltaAfterAcceleration = getAccelerationOfPoint(Key, testDeltaAfter);
-		System.out.println("test.m_position: " + test.m_position);
-		System.out.println("test.m_velocity: " + test.m_currentVelocity);
-		
-		System.out.println("testDeltaBeforePosition: " + testDeltaBefore.m_position);
-		System.out.println("testDeltaBeforeVelocity: " + testDeltaBefore.m_currentVelocity);
-		System.out.println("deltaBeforeAcceleration: " + deltaBeforeAcceleration);
-		
-		System.out.println("testDeltaAfterPosition: " + testDeltaAfter.m_position);
-		System.out.println("testDeltaAfterVelocity: " + testDeltaAfter.m_currentVelocity);
-		System.out.println("deltaAfterAcceleration: " + deltaAfterAcceleration);
 		
 		System.out.print("The Setpoints are: ");
 		for (int i = 0; i < Key.getSetpointVector().size(); i++) {
@@ -2070,16 +2034,6 @@ public class KinematicsTester {
 			System.out.println(" MaxV " + Key.getSetpointVector().get(i).getMaxVelocity());
 
 		}
-		System.out.println("");
-		System.out.println("");
-		/*
-		 * for(int i = 0; i < 20; i++) { TrajectoryPoint point =
-		 * m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, 12.0 + i/20.0);
-		 * double acceleration = getAccelerationOfPoint(Key, point);
-		 * System.out.println(""); System.out.println("The time is: " + (12.0 +
-		 * i/20.0)); System.out.println("acceleration: " + acceleration);
-		 * System.out.println(""); }
-		 */
 
 	}
 
