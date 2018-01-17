@@ -4,9 +4,10 @@ import java.util.Vector;
 
 public class Kinematics {
 
-	private enum TrajectoryType{
+	private enum MaxVelocityAndMaxAccelerationTrajectoryType {
 		willCruiseAtMaxVelocityAndMaxAcceleration, willCruiseAtMaxAccelerationNotMaxVelocity, willNotCruiseAtMaxVelocityOrMaxAcceleration
 	}
+
 	private Kinematics m_instance;
 	private boolean alreadyPrinted = true;
 
@@ -141,27 +142,29 @@ public class Kinematics {
 			return af;
 		}
 	}
-	
-	private class TrajectoryParameters{
-		
-		TrajectoryType trajectoryType;
-		
+
+	private class TrajectoryDistanceAndVelocityParameters {
+
+		MaxVelocityAndMaxAccelerationTrajectoryType maxVelocityAndMaxAccelerationTrajectoryType;
+
+		double distance;
+
 		double jerkVelocityCovered;
+		double jerkTime;
+		double justJerkDistanceCovered;
+
+		double initialAccelerationDistanceCovered;
 		double initialFirstJerkVelocityCovered;
 		double initialFirstJerkTimeCovered;
-		double jerkTime;
-		double distance;
-		double initialAccelerationDistanceCovered;
+		double initialFirstJerkDistanceCovered;
+		double initialSecondJerkVelocityCovered;
+
 		double finalAccelerationDistanceCovered;
 		double finalSecondJerkVelocityCovered;
 		double finalSecondJerkTimeCovered;
-		double initialFirstJerkDistanceCovered;
 		double finalSecondJerkDistanceCovered;
-		double initialSecondJerkVelocityCovered;
-		double justJerkDistanceCovered;
 
 	}
-	
 
 	/**
 	 * Takes a point and tries to add it to the setpoint vector inside of Key
@@ -226,15 +229,15 @@ public class Kinematics {
 	 * by time parameterizing each setpoint
 	 */
 	public void createTrajectory(Path Key, double maxVelocity, double maxAcceleration, double maxJerk) {
-		createTrajectory(Key, maxVelocity,maxAcceleration,maxJerk, false);
+		createTrajectory(Key, maxVelocity, maxAcceleration, maxJerk, false);
 	}
 
-	
-	public void createTrajectory(Path Key, double maxVelocity, double maxAcceleration, double maxJerk, boolean debugMode) {
+	public void createTrajectory(Path Key, double maxVelocity, double maxAcceleration, double maxJerk,
+			boolean debugMode) {
 		Key.maxVelocity = maxVelocity;
 		Key.maxAcceleration = maxAcceleration;
 		Key.maxJerk = maxJerk;
-		
+
 		Vector<Point> setpointVector = Key.setpointVector;
 
 		// Final velocity and Initial Velocity are commonly referred to as vi and vf
@@ -256,327 +259,363 @@ public class Kinematics {
 			}
 			setpoint.maxAcceleration = Key.maxAcceleration;
 
-			TrajectoryParameters trajectoryParameters = getTrajectoryParameters(Key, setpoint, previousSetpoint, debugMode);
-			/*
-			 * If the theoretical max velocity is impossible to reach due to design
-			 * constraints or user constraints that limit max velocity find when the max
-			 * velocity will be reached and how long it will stay or "cruise" at that
-			 * velocity before it needs to decelerate down to reach the vf
-			 * 
-			 * Else set the distance cruising to 0 and all the times associated with
-			 * cruising to the halfway time which is when the maximum theoretical velocity
-			 * will be reached and pretend that you are cruising for 0 seconds
-			 */
-			
-			
-			
-			switch(trajectoryParameters.trajectoryType) {
-			case willCruiseAtMaxVelocityAndMaxAcceleration:
-				
-				double initialVelocityCoveredAtMaxAcceleration = setpoint.maxVelocity - trajectoryParameters.jerkVelocityCovered
-				- trajectoryParameters.initialFirstJerkVelocityCovered;
+			TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters = setTrajectoryDistanceAndVelocityParameters(
+					Key, setpoint, previousSetpoint, debugMode);
 
-				setpoint.firstStartAccelerationCruisingDeltaTime = trajectoryParameters.initialFirstJerkTimeCovered;
-		
-				setpoint.firstEndAccelerationCruisingDeltaTime = initialVelocityCoveredAtMaxAcceleration
-						/ Key.maxAcceleration + setpoint.firstStartAccelerationCruisingDeltaTime;
-		
-				setpoint.startVelocityCruisingDeltaTime = setpoint.firstEndAccelerationCruisingDeltaTime + trajectoryParameters.jerkTime;
-		
-				double distanceCruisingAtMaxVelocity = trajectoryParameters.distance - trajectoryParameters.initialAccelerationDistanceCovered
-						- trajectoryParameters.finalAccelerationDistanceCovered;
-				double timeCruising = distanceCruisingAtMaxVelocity / Key.maxVelocity;
-				setpoint.endVelocityCruisingDeltaTime = setpoint.startVelocityCruisingDeltaTime + timeCruising;
-				setpoint.secondStartAccelerationCruisingDeltaTime = setpoint.endVelocityCruisingDeltaTime + trajectoryParameters.jerkTime;
-				double finalVelocityCoveredAtMaxAcceleration = setpoint.maxVelocity - trajectoryParameters.jerkVelocityCovered
-						- trajectoryParameters.finalSecondJerkVelocityCovered;
-				setpoint.secondEndAccelerationCruisingDeltaTime = setpoint.secondStartAccelerationCruisingDeltaTime
-						+ finalVelocityCoveredAtMaxAcceleration / Key.maxAcceleration;
-				setpoint.endDeltaTime = setpoint.secondEndAccelerationCruisingDeltaTime + trajectoryParameters.finalSecondJerkTimeCovered;
-		
-				
+			switch (trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType) {
+			case willCruiseAtMaxVelocityAndMaxAcceleration:
+				setTrajectoryTimesWhenMaxVelocityAndMaxAccelerationAreReached(Key, setpoint,
+						trajectoryDistanceAndVelocityParameters);
 				break;
 			case willCruiseAtMaxAccelerationNotMaxVelocity:
-				
-				setpoint.firstStartAccelerationCruisingDeltaTime = trajectoryParameters.initialFirstJerkTimeCovered;
-				/*
-				 * Trying to find distance covered at each max acceleration cruising
-				 * 
-				 * The finalAccelerationCruisingDistance can be represented in terms of
-				 * initialAccelerationCruisingTime as such
-				 * 
-				 * vi = vf + fjvc (jerkVelocityCovered)
-				 * 
-				 * vf = vi + iat * A + jvc This is correct because the final velocity of both
-				 * maxAcceleration Cruising times are the same so they can be used
-				 * interchangeably
-				 * 
-				 * Acceleration = A
-				 * 
-				 * finalAccelerationCruisingDistance ((vi + iat * A + jvc)^2 - (vf +
-				 * jvc)^2)/(2*A)
-				 * 
-				 * Solve for iat Distance = ijdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*((vi + ijvc
-				 * + iat*A)*jT + 1/2*A*jT^2 + 1/6J*jT^3) + ((vi + iat * A + ijvc)^2 - (vf +
-				 * fjvc)^2)/(2*A) + fjdc
-				 * 
-				 * Distance = ijdc + fjdc + (vi + ijvc)*iat+ 0.5*A*iat^2 + 2*jT(vi+ijvc+iat*A) +
-				 * A*jT^2 + 1/3J*jT^3 + (((vi + ijvc) + iat*A)^2 - (vf+fjvc)^2)/(2*A)
-				 * 
-				 * Distance = ijdc + fjdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*jT*(vi + ijvc) +
-				 * 2*jT*iat*A + A*jT^2 + 1/3*J*jT^3 + (((vi + ijvc) + iat*A)^2 -
-				 * (vf+fjvc)^2)/(2*A)
-				 * 
-				 * (((vi + ijvc) + iat*A)^2 - (vf+fjvc)^2)/(2*A) = ((vi + ijvc)^2 + 2*((vi +
-				 * ijvc)* iat*A) + (iat*A)^2 - (vf + fjvc)^2)/(2*A)
-				 * 
-				 * ((vi + ijvc)^2 + 2*(vi+ijvc)*iat*A + iat^2*A^2 - (vf + fjvc)^2)/(2*A)
-				 * 
-				 * ((vi + ijvc)^2)/(2*A) + (2*(vi+ijvc)*iat*A)/(2*A) + (iat^2*A^2)/(2*A) - ((vf
-				 * + fjvc)^2)/(2*A) ((vi + ijvc)^2)/(2*A) + (vi+ijvc)*iat + (iat^2*A)/2 - ((vf +
-				 * fjvc)^2)/(2*A)
-				 * 
-				 * Distance = ijdc + fjdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*jT*(vi + ijvc) +
-				 * 2*jT*iat*A + A*jT^2 + 1/3*J*jT^3 + ((vi + ijvc)^2)/(2*A) + (vi+ijvc)*iat +
-				 * (iat^2*A)/2 - ((vf + fjvc)^2)/(2*A)
-				 * 
-				 * Distance - ijdc - fjdc - 2*jT*(vi + ijvc) - A*jT^2- 1/3*J*jT^3 - ((vi +
-				 * ijvc)^2)/(2*A) + ((vf + fjvc)^2)/(2*A) = (vi + ijvc)*iat + 0.5*A*iat^2 +
-				 * 2*jT*iat*A + (vi+ijvc)*iat + (iat^2*A)/2
-				 * 
-				 * newDistance = (vi + ijvc)*iat + 0.5*A*iat^2 + 2*jT*iat*A + (vi+ijvc)*iat +
-				 * (iat^2*A)/2
-				 * 
-				 * newDistance = (0.5*A + A/2)iat^2 + (2*vi + 2*ijvc + 2*jT*A )*iat
-				 * 
-				 * 0 = (0.5*A + A/2)iat^2 + (2*vi + 2*ijvc + 2*jT*A )*iat- newDistance
-				 * 
-				 * A term = (0.5*A + A/2) B term = (2*vi + 2*ijvc + 2*jT*A ) C term =
-				 * newDistance = Distance - ijdc - fjdc - 2*jT*(vi + ijvc) - A*jT^2- 1/3*J*jT^3
-				 * - ((vi + ijvc)^2)/(2*A) + ((vf + fjvc)^2)/(2*A)
-				 * 
-				 * 
-				 */
-				
-				double aTerm = setpoint.maxAcceleration;
-				double bTerm = 2
-						* (setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered + trajectoryParameters.jerkTime * setpoint.maxAcceleration);
-				double cTerm = -1 * (trajectoryParameters.distance - trajectoryParameters.initialFirstJerkDistanceCovered - trajectoryParameters.finalSecondJerkDistanceCovered
-						- 2 * trajectoryParameters.jerkTime * (setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered)
-						- setpoint.maxAcceleration * Math.pow(trajectoryParameters.jerkTime, 2)
-						+ (1.0 / 3.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3)
-						- Math.pow((setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered), 2) / (2 * setpoint.maxAcceleration)
-						+ Math.pow((setpoint.vf + trajectoryParameters.finalSecondJerkVelocityCovered), 2) / (2 * setpoint.maxAcceleration));
-
-				double initialAccelerationTime = (-bTerm + Math.sqrt(Math.pow(bTerm, 2) - (4 * aTerm * cTerm)))
-						/ (2 * aTerm);
-				double accelerationVelocityCovered = Key.maxAcceleration * initialAccelerationTime;
-				double finalAccelerationTime = ((setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered
-						+ accelerationVelocityCovered) - (setpoint.vf + trajectoryParameters.finalSecondJerkVelocityCovered))
-						/ setpoint.maxAcceleration;
-				setpoint.firstEndAccelerationCruisingDeltaTime = setpoint.firstStartAccelerationCruisingDeltaTime
-						+ initialAccelerationTime;
-				setpoint.startVelocityCruisingDeltaTime = setpoint.firstEndAccelerationCruisingDeltaTime + trajectoryParameters.jerkTime;
-				setpoint.endVelocityCruisingDeltaTime = setpoint.startVelocityCruisingDeltaTime;
-				
-				setpoint.maxVelocity = setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered + trajectoryParameters.initialSecondJerkVelocityCovered
-						+ accelerationVelocityCovered;
-				setpoint.secondStartAccelerationCruisingDeltaTime = setpoint.endVelocityCruisingDeltaTime + trajectoryParameters.jerkTime;
-				setpoint.secondEndAccelerationCruisingDeltaTime = setpoint.secondStartAccelerationCruisingDeltaTime
-						+ finalAccelerationTime;
-				setpoint.endDeltaTime = setpoint.secondEndAccelerationCruisingDeltaTime + trajectoryParameters.finalSecondJerkTimeCovered;
-
-				double initialMaxAccelerationDistanceCovered = ((setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered)
-						* initialAccelerationTime
-						+ 0.5 * setpoint.maxAcceleration * Math.pow(initialAccelerationTime, 2));
-				double endMaxAccelerationVelocity = (setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered
-						+ setpoint.maxAcceleration * initialAccelerationTime);
-				double initialSecondJerkDistanceCoveredAccountingForAcceleration = endMaxAccelerationVelocity * trajectoryParameters.jerkTime
-						+ 0.5 * setpoint.maxAcceleration * Math.pow(trajectoryParameters.jerkTime, 2)
-						- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3);
-				double finalFirstJerkDistanceCoveredAccountingForAcceleration = setpoint.maxVelocity * trajectoryParameters.jerkTime
-						- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3);
-
-				
+				setTrajectoryTimesWhenMaxAccelerationIsReached(Key, setpoint, trajectoryDistanceAndVelocityParameters);
 				break;
 			case willNotCruiseAtMaxVelocityOrMaxAcceleration:
-				double timeTakenToAccelerateUpToAi = setpoint.ai / Key.maxJerk;
-				double timeTakenToAccelerateUpToAf = setpoint.af / Key.maxJerk;
+				setTrajectoryTimesWhenNietherMaxAccelerationOrMaxVelocityAreReached(Key, setpoint,
+						trajectoryDistanceAndVelocityParameters);
 
-				double accelertationUpToAiDistanceCovered = (1.0 / 6.0) * Key.maxJerk
-						* Math.pow(timeTakenToAccelerateUpToAi, 3);
-				double accelerationUpToAfDistanceCovered = (1.0 / 6.0) * Key.maxJerk
-						* Math.pow(timeTakenToAccelerateUpToAf, 3);
-
-				double maxVelocityDistance = (Math.abs(trajectoryParameters.distance) + accelertationUpToAiDistanceCovered
-						+ accelerationUpToAfDistanceCovered) / 2;
-				trajectoryParameters.jerkTime = Math.cbrt(maxVelocityDistance / Key.maxJerk);
-				/*
-				 * Not hitting Max Acceleration: Time taken to accelerate up to ai: ai/J
-				 * 
-				 * Time taken to accelerate up to af: af/J
-				 * 
-				 * Trying to find jt:
-				 * 
-				 * Distance = vi*(jt - ai/J)+ 1/2*ai*(jt - ai/J)^2 + 1/6*J*(jt - ai/J)^3 +
-				 * 2*((vi + ai*(jt-ai/J) + 1/2*J*(jt-ai/J)^2)*jt + 1/2*(ai + J*(jt-ai/J)) -
-				 * 1/6*J*jt^3) + vf*(jt - af/J) + 1/2*af*(jt - af/J) + 1/6*J*(jt - af/J)
-				 * 
-				 * (jt - ai/J)^3
-				 * 
-				 * (jt^2 - 2*jt*ai/J + (ai/J)^2)(jt - ai/J)
-				 * 
-				 * jt^3 - ai/J*jt^2 - 2*jt^2*ai/J + 2*jt*(ai/J)^2 + (ai/J)^2*jt - (ai/J)^3
-				 * 
-				 * jt^3 - (ai/J)^3 - 3*jt^2*ai/J + 3*jt*(ai/J)^2
-				 * 
-				 * Distance = vi*jt - vi*ai/J + 1/2*ai*(jt^2 -2*jt*ai/J + (ai/J)^2) +
-				 * 1/6*J*(jt^3 - (ai/J)^3 - 3*jt^2*ai/J + 3*jt*(ai/J)^2) + 2*(vi*jt +
-				 * jt*ai*(jt-ai/J) + jt*1/2*J*(jt^2 -2*jt*ai/J + (ai/J)^2)) + (ai + J*(jt-ai/J))
-				 * -1/3*J*jt^3 + jt*vf - vf*af/J + 1/2*af*jt - 1/2*af*af/J + 1/6*J*jt - 1/6*J
-				 * *af/J
-				 * 
-				 * Distance = vi*jt - vi*ai/J + 1/2*ai*jt^2 - jt*ai/J*ai + 1/2*ai*(ai/J)^2 +
-				 * 1/6*J*jt^3 - 1/6*J*(ai/J)^3 - 1/2*J*jt^2*ai/J + 1/2*J*jt*(ai/J)^2 + 2*vi*jt +
-				 * 2*jt*ai*(jt-ai/J) + jt*J*(jt^2 -2*jt*ai/J + (ai/J)^2) + ai + J*jt - J*ai/J
-				 * -1/3*J*jt^3 + jt*vf - vf*af/J + 1/2*af*jt - 1/2*af*af/J + 1/6*J*jt - 1/6*J
-				 * *af
-				 * 
-				 * Distance = vi*jt - vi*ai/J + 1/2*ai*jt^2 - jt*ai/J*ai + 1/2*ai*(ai/J)^2 +
-				 * 1/6*J*jt^3 - 1/6*J*(ai/J)^3 - 1/2*J*jt^2*ai/J + 1/2*J*jt*(ai/J)^2 + 2*vi*jt +
-				 * 2*jt*ai*(jt-ai/J) + jt^3*J - 2*jt^2*J*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 +
-				 * ai + J*jt - J*ai/J -1/3*J*jt^3 + jt*vf - vf*af/J + 1/2*af*jt - 1/2*af*af/J +
-				 * 1/6*J*jt - 1/6*J *af
-				 * 
-				 * Distance + vi*ai/J - 1/2*ai*(ai/J)^2 + 1/6*J*(ai/J)^3 - ai + J*ai/J + vj*af/J
-				 * + 1/2*af*af/J + 1/6*J *af = vi*jt + 1/2*ai*jt^2 - jt*ai/J*ai + 1/6*J*jt^3 -
-				 * 1/2*J*jt^2*ai/J + 1/2*J*jt*(ai/J)^2 + 2*vi*jt + 2*jt*ai*(jt-ai/J) + jt^3*J -
-				 * 2*jt^2*J*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt -1/3*J*jt^3 + jt*vf +
-				 * 1/2*af*jt + 1/6*J*jt
-				 * 
-				 * newDistance = vi*jt + 1/2*ai*jt^2 - jt*ai/J*ai + 1/6*J*jt^3 - 1/2*J*jt^2*ai/J
-				 * + 1/2*J*jt*(ai/J)^2 + 2*vi*jt + 2*jt*ai*(jt-ai/J) + jt^3*J - 2*jt^2*J*ai/J +
-				 * jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt -1/3*J*jt^3 + jt*vf + 1/2*af*jt +
-				 * 1/6*J*jt
-				 * 
-				 * newDistance = vi*jt + 1/2*ai*jt^2 - jt*ai/J*ai + 1/6*J*jt^3 - 1/2*J*jt^2*ai/J
-				 * + 1/2*J*jt*(ai/J)^2 + 2*vi*jt + 2*jt^2*ai - 2*jt*ai*ai/J + jt^3*J -
-				 * 2*jt^2*J*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt -1/3*J*jt^3 + jt*vf +
-				 * 1/2*af*jt + 1/6*J*jt
-				 * 
-				 * newDistance = 1/6*J*jt^3 + jt^3*J -1/3*J*jt^3 + 1/2*ai*jt^2 - 1/2*J*jt^2*ai/J
-				 * + 2*jt^2*ai - 2*jt^2*J*ai/J + vi*jt - jt*ai/J*ai + 1/2*J*jt*(ai/J)^2 +
-				 * 2*vi*jt - 2*jt*ai*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt + jt*vf +
-				 * 1/2*af*jt + 1/6*J*jt
-				 * 
-				 * newDistance = (1/6*J + J - 1/3*J)*jt^3 + (1/2*ai - 1/2*J*ai/J + 2*ai -
-				 * 2*J*ai/J)*jt^2 + (vi - ai*ai/J + 1/2*J*(ai/J)^2 + 2*vi - 2*jt*ai*ai/J
-				 * +J*(ai/J)^2 + J*(ai/J)^2 + J + vf + 1/2*af + 1/6*J)*jt
-				 * 
-				 * A term: (1/6*J + J - 1/3*J) B term: (1/2*ai - 1/2*J*ai/J + 2*ai - 2*J*ai/J) =
-				 * (1/2*ai - 1/2*ai + 2*ai - 2*ai) C term: (vi - ai*ai/J + 1/2*J*(ai/J)^2 + 2*vi
-				 * - 2*jt*ai*ai/J +J*(ai/J)^2 + J*(ai/J)^2 + J + vf + 1/2*af + 1/6*J) D term:
-				 * -1*(Distance + vi*ai/J - 1/2*ai*(ai/J)^2 + 1/6*J*(ai/J)^3 - ai + J*ai/J +
-				 * vf*af/J + 1/2*af*af/J + 1/6*J *af)
-				 * 
-				 * A term: (J*5/6) B term: 0 C term: (3*vi - ai*ai/J + 1/2*J*(ai/J)^2 -
-				 * 2*jt*ai*ai/J +J*(ai/J)^2 + J*(ai/J)^2 + J + vf + 1/2*af + 1/6*J) D term:
-				 * -1*(Distance + vi*ai/J - 1/2*ai*(ai/J)^2 + 1/6*J*(ai/J)^3 - ai + J*ai/J +
-				 * vf*af/J + 1/2*af*af/J + 1/6*J *af)
-				 * 
-				 * double aTerm = (5.0 / 6.0) * Key.maxJerk; double bTerm = 0.0; double cTerm =
-				 * 3 * setpoint.vi - Math.pow(setpoint.ai, 2) / Key.maxJerk + 0.5 * Key.maxJerk
-				 * * Math.pow((setpoint.ai / Key.maxJerk), 2) - 2 * Math.pow(setpoint.ai, 2) /
-				 * Key.maxJerk + 2 * Key.maxJerk * Math.pow((setpoint.ai / Key.maxJerk), 2) +
-				 * Key.maxJerk + setpoint.vf + 0.5 * setpoint.af + (1.0 / 6.0) * Key.maxJerk;
-				 * double dTerm = -1 * (distance + setpoint.vi * setpoint.ai / Key.maxJerk - 0.5
-				 * * Math.pow(setpoint.ai, 3) / Math.pow(Key.maxJerk, 2) + (1.0 / 6.0) *
-				 * Key.maxJerk * Math.pow((setpoint.ai / Key.maxJerk), 3) + setpoint.vf *
-				 * setpoint.af / Key.maxJerk + 0.5 * Math.pow(setpoint.af, 2) / Key.maxJerk +
-				 * (1.0 / 6.0) * Key.maxJerk * setpoint.af);
-				 */
-
-				// What if instead I used the same formula from before and added in the extra
-				// distance to make it work...
-				
-				setpoint.firstStartAccelerationCruisingDeltaTime = trajectoryParameters.jerkTime - setpoint.ai / Key.maxJerk;
-				setpoint.firstEndAccelerationCruisingDeltaTime = setpoint.firstStartAccelerationCruisingDeltaTime;
-				setpoint.startVelocityCruisingDeltaTime = setpoint.firstStartAccelerationCruisingDeltaTime + trajectoryParameters.jerkTime;
-				setpoint.endVelocityCruisingDeltaTime = setpoint.startVelocityCruisingDeltaTime;
-				setpoint.secondStartAccelerationCruisingDeltaTime = setpoint.endVelocityCruisingDeltaTime + trajectoryParameters.jerkTime;
-				setpoint.secondEndAccelerationCruisingDeltaTime = setpoint.secondStartAccelerationCruisingDeltaTime;
-				setpoint.endDeltaTime = setpoint.secondEndAccelerationCruisingDeltaTime + trajectoryParameters.jerkTime
-						- setpoint.af / Key.maxJerk;
-				double velocityCoveredByNewJerkTime = 0.5 * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 2);
-				setpoint.maxVelocity = 2 * velocityCoveredByNewJerkTime;
-				setpoint.maxAcceleration = Key.maxJerk * trajectoryParameters.jerkTime;
-
-				double distanceCoveredDuringFirstJerkTime = (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3);
-				double jerkVi = 0.5 * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 2);
-				double jerkAcceleration = Key.maxJerk * trajectoryParameters.jerkTime;
-				double distanceCoveredDuringSecondJerkTime = jerkVi * trajectoryParameters.jerkTime
-						+ 0.5 * jerkAcceleration * Math.pow(trajectoryParameters.jerkTime, 2)
-						+ (1.0 / 6.0) * (-1 * Key.maxJerk) * Math.pow(trajectoryParameters.jerkTime, 3);
-				
-				
+			}
 			// Needs to do this so that the last time through the code the max velocity is
 			// not left at some obscure value
 
 			Key.maxVelocity = maxVelocity;
-			}
-		
 		}
 
 	}
-	
-	private TrajectoryParameters getTrajectoryParameters(Path Key, Point setpoint, Point previousSetpoint, boolean debugMode) {
-		TrajectoryParameters trajectoryParameters = new TrajectoryParameters();
-		
-		trajectoryParameters.distance = Math.abs(setpoint.m_x - previousSetpoint.m_x);
-		trajectoryParameters.jerkTime = Key.maxAcceleration / Key.maxJerk;
-		trajectoryParameters.jerkVelocityCovered = 0.5 * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 2);
+
+	private void setTrajectoryTimesWhenMaxVelocityAndMaxAccelerationAreReached(Path Key, Point setpoint,
+			TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters) {
+		double initialVelocityCoveredAtMaxAcceleration = setpoint.maxVelocity
+				- trajectoryDistanceAndVelocityParameters.jerkVelocityCovered
+				- trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered;
+
+		setpoint.firstStartAccelerationCruisingDeltaTime = trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered;
+
+		setpoint.firstEndAccelerationCruisingDeltaTime = initialVelocityCoveredAtMaxAcceleration / Key.maxAcceleration
+				+ setpoint.firstStartAccelerationCruisingDeltaTime;
+
+		setpoint.startVelocityCruisingDeltaTime = setpoint.firstEndAccelerationCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime;
+
+		double distanceCruisingAtMaxVelocity = trajectoryDistanceAndVelocityParameters.distance
+				- trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered
+				- trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered;
+		double timeCruising = distanceCruisingAtMaxVelocity / Key.maxVelocity;
+		setpoint.endVelocityCruisingDeltaTime = setpoint.startVelocityCruisingDeltaTime + timeCruising;
+		setpoint.secondStartAccelerationCruisingDeltaTime = setpoint.endVelocityCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime;
+		double finalVelocityCoveredAtMaxAcceleration = setpoint.maxVelocity
+				- trajectoryDistanceAndVelocityParameters.jerkVelocityCovered
+				- trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered;
+		setpoint.secondEndAccelerationCruisingDeltaTime = setpoint.secondStartAccelerationCruisingDeltaTime
+				+ finalVelocityCoveredAtMaxAcceleration / Key.maxAcceleration;
+		setpoint.endDeltaTime = setpoint.secondEndAccelerationCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered;
+	}
+
+	private void setTrajectoryTimesWhenMaxAccelerationIsReached(Path Key, Point setpoint,
+			TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters) {
+		setpoint.firstStartAccelerationCruisingDeltaTime = trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered;
+		/*
+		 * Trying to find distance covered at each max acceleration cruising
+		 * 
+		 * The finalAccelerationCruisingDistance can be represented in terms of
+		 * initialAccelerationCruisingTime as such
+		 * 
+		 * vi = vf + fjvc (jerkVelocityCovered)
+		 * 
+		 * vf = vi + iat * A + jvc This is correct because the final velocity of both
+		 * maxAcceleration Cruising times are the same so they can be used
+		 * interchangeably
+		 * 
+		 * Acceleration = A
+		 * 
+		 * finalAccelerationCruisingDistance ((vi + iat * A + jvc)^2 - (vf +
+		 * jvc)^2)/(2*A)
+		 * 
+		 * Solve for iat Distance = ijdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*((vi + ijvc
+		 * + iat*A)*jT + 1/2*A*jT^2 + 1/6J*jT^3) + ((vi + iat * A + ijvc)^2 - (vf +
+		 * fjvc)^2)/(2*A) + fjdc
+		 * 
+		 * Distance = ijdc + fjdc + (vi + ijvc)*iat+ 0.5*A*iat^2 + 2*jT(vi+ijvc+iat*A) +
+		 * A*jT^2 + 1/3J*jT^3 + (((vi + ijvc) + iat*A)^2 - (vf+fjvc)^2)/(2*A)
+		 * 
+		 * Distance = ijdc + fjdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*jT*(vi + ijvc) +
+		 * 2*jT*iat*A + A*jT^2 + 1/3*J*jT^3 + (((vi + ijvc) + iat*A)^2 -
+		 * (vf+fjvc)^2)/(2*A)
+		 * 
+		 * (((vi + ijvc) + iat*A)^2 - (vf+fjvc)^2)/(2*A) = ((vi + ijvc)^2 + 2*((vi +
+		 * ijvc)* iat*A) + (iat*A)^2 - (vf + fjvc)^2)/(2*A)
+		 * 
+		 * ((vi + ijvc)^2 + 2*(vi+ijvc)*iat*A + iat^2*A^2 - (vf + fjvc)^2)/(2*A)
+		 * 
+		 * ((vi + ijvc)^2)/(2*A) + (2*(vi+ijvc)*iat*A)/(2*A) + (iat^2*A^2)/(2*A) - ((vf
+		 * + fjvc)^2)/(2*A) ((vi + ijvc)^2)/(2*A) + (vi+ijvc)*iat + (iat^2*A)/2 - ((vf +
+		 * fjvc)^2)/(2*A)
+		 * 
+		 * Distance = ijdc + fjdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*jT*(vi + ijvc) +
+		 * 2*jT*iat*A + A*jT^2 + 1/3*J*jT^3 + ((vi + ijvc)^2)/(2*A) + (vi+ijvc)*iat +
+		 * (iat^2*A)/2 - ((vf + fjvc)^2)/(2*A)
+		 * 
+		 * Distance - ijdc - fjdc - 2*jT*(vi + ijvc) - A*jT^2- 1/3*J*jT^3 - ((vi +
+		 * ijvc)^2)/(2*A) + ((vf + fjvc)^2)/(2*A) = (vi + ijvc)*iat + 0.5*A*iat^2 +
+		 * 2*jT*iat*A + (vi+ijvc)*iat + (iat^2*A)/2
+		 * 
+		 * newDistance = (vi + ijvc)*iat + 0.5*A*iat^2 + 2*jT*iat*A + (vi+ijvc)*iat +
+		 * (iat^2*A)/2
+		 * 
+		 * newDistance = (0.5*A + A/2)iat^2 + (2*vi + 2*ijvc + 2*jT*A )*iat
+		 * 
+		 * 0 = (0.5*A + A/2)iat^2 + (2*vi + 2*ijvc + 2*jT*A )*iat- newDistance
+		 * 
+		 * A term = (0.5*A + A/2) B term = (2*vi + 2*ijvc + 2*jT*A ) C term =
+		 * newDistance = Distance - ijdc - fjdc - 2*jT*(vi + ijvc) - A*jT^2- 1/3*J*jT^3
+		 * - ((vi + ijvc)^2)/(2*A) + ((vf + fjvc)^2)/(2*A)
+		 * 
+		 * 
+		 */
+
+		double aTerm = setpoint.maxAcceleration;
+		double bTerm = 2 * (setpoint.vi + trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered
+				+ trajectoryDistanceAndVelocityParameters.jerkTime * setpoint.maxAcceleration);
+		double cTerm = -1 * (trajectoryDistanceAndVelocityParameters.distance
+				- trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered
+				- trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered
+				- 2 * trajectoryDistanceAndVelocityParameters.jerkTime
+						* (setpoint.vi + trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered)
+				- setpoint.maxAcceleration * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2)
+				+ (1.0 / 3.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3)
+				- Math.pow((setpoint.vi + trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered), 2)
+						/ (2 * setpoint.maxAcceleration)
+				+ Math.pow((setpoint.vf + trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered), 2)
+						/ (2 * setpoint.maxAcceleration));
+
+		double initialAccelerationTime = (-bTerm + Math.sqrt(Math.pow(bTerm, 2) - (4 * aTerm * cTerm))) / (2 * aTerm);
+		double accelerationVelocityCovered = Key.maxAcceleration * initialAccelerationTime;
+		double finalAccelerationTime = ((setpoint.vi
+				+ trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered + accelerationVelocityCovered)
+				- (setpoint.vf + trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered))
+				/ setpoint.maxAcceleration;
+		setpoint.firstEndAccelerationCruisingDeltaTime = setpoint.firstStartAccelerationCruisingDeltaTime
+				+ initialAccelerationTime;
+		setpoint.startVelocityCruisingDeltaTime = setpoint.firstEndAccelerationCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime;
+		setpoint.endVelocityCruisingDeltaTime = setpoint.startVelocityCruisingDeltaTime;
+
+		setpoint.maxVelocity = setpoint.vi + trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered
+				+ trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered
+				+ accelerationVelocityCovered;
+		setpoint.secondStartAccelerationCruisingDeltaTime = setpoint.endVelocityCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime;
+		setpoint.secondEndAccelerationCruisingDeltaTime = setpoint.secondStartAccelerationCruisingDeltaTime
+				+ finalAccelerationTime;
+		setpoint.endDeltaTime = setpoint.secondEndAccelerationCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered;
+
+		double initialMaxAccelerationDistanceCovered = ((setpoint.vi
+				+ trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered) * initialAccelerationTime
+				+ 0.5 * setpoint.maxAcceleration * Math.pow(initialAccelerationTime, 2));
+		double endMaxAccelerationVelocity = (setpoint.vi
+				+ trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered
+				+ setpoint.maxAcceleration * initialAccelerationTime);
+		double initialSecondJerkDistanceCoveredAccountingForAcceleration = endMaxAccelerationVelocity
+				* trajectoryDistanceAndVelocityParameters.jerkTime
+				+ 0.5 * setpoint.maxAcceleration * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2)
+				- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
+		double finalFirstJerkDistanceCoveredAccountingForAcceleration = setpoint.maxVelocity
+				* trajectoryDistanceAndVelocityParameters.jerkTime
+				- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
+	}
+
+	private void setTrajectoryTimesWhenNietherMaxAccelerationOrMaxVelocityAreReached(Path Key, Point setpoint,
+			TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters) {
+		double timeTakenToAccelerateUpToAi = setpoint.ai / Key.maxJerk;
+		double timeTakenToAccelerateUpToAf = setpoint.af / Key.maxJerk;
+
+		double accelertationUpToAiDistanceCovered = (1.0 / 6.0) * Key.maxJerk
+				* Math.pow(timeTakenToAccelerateUpToAi, 3);
+		double accelerationUpToAfDistanceCovered = (1.0 / 6.0) * Key.maxJerk * Math.pow(timeTakenToAccelerateUpToAf, 3);
+
+		double maxVelocityDistance = (Math.abs(trajectoryDistanceAndVelocityParameters.distance)
+				+ accelertationUpToAiDistanceCovered + accelerationUpToAfDistanceCovered) / 2;
+		trajectoryDistanceAndVelocityParameters.jerkTime = Math.cbrt(maxVelocityDistance / Key.maxJerk);
+		/*
+		 * Not hitting Max Acceleration: Time taken to accelerate up to ai: ai/J
+		 * 
+		 * Time taken to accelerate up to af: af/J
+		 * 
+		 * Trying to find jt:
+		 * 
+		 * Distance = vi*(jt - ai/J)+ 1/2*ai*(jt - ai/J)^2 + 1/6*J*(jt - ai/J)^3 +
+		 * 2*((vi + ai*(jt-ai/J) + 1/2*J*(jt-ai/J)^2)*jt + 1/2*(ai + J*(jt-ai/J)) -
+		 * 1/6*J*jt^3) + vf*(jt - af/J) + 1/2*af*(jt - af/J) + 1/6*J*(jt - af/J)
+		 * 
+		 * (jt - ai/J)^3
+		 * 
+		 * (jt^2 - 2*jt*ai/J + (ai/J)^2)(jt - ai/J)
+		 * 
+		 * jt^3 - ai/J*jt^2 - 2*jt^2*ai/J + 2*jt*(ai/J)^2 + (ai/J)^2*jt - (ai/J)^3
+		 * 
+		 * jt^3 - (ai/J)^3 - 3*jt^2*ai/J + 3*jt*(ai/J)^2
+		 * 
+		 * Distance = vi*jt - vi*ai/J + 1/2*ai*(jt^2 -2*jt*ai/J + (ai/J)^2) +
+		 * 1/6*J*(jt^3 - (ai/J)^3 - 3*jt^2*ai/J + 3*jt*(ai/J)^2) + 2*(vi*jt +
+		 * jt*ai*(jt-ai/J) + jt*1/2*J*(jt^2 -2*jt*ai/J + (ai/J)^2)) + (ai + J*(jt-ai/J))
+		 * -1/3*J*jt^3 + jt*vf - vf*af/J + 1/2*af*jt - 1/2*af*af/J + 1/6*J*jt - 1/6*J
+		 * *af/J
+		 * 
+		 * Distance = vi*jt - vi*ai/J + 1/2*ai*jt^2 - jt*ai/J*ai + 1/2*ai*(ai/J)^2 +
+		 * 1/6*J*jt^3 - 1/6*J*(ai/J)^3 - 1/2*J*jt^2*ai/J + 1/2*J*jt*(ai/J)^2 + 2*vi*jt +
+		 * 2*jt*ai*(jt-ai/J) + jt*J*(jt^2 -2*jt*ai/J + (ai/J)^2) + ai + J*jt - J*ai/J
+		 * -1/3*J*jt^3 + jt*vf - vf*af/J + 1/2*af*jt - 1/2*af*af/J + 1/6*J*jt - 1/6*J
+		 * *af
+		 * 
+		 * Distance = vi*jt - vi*ai/J + 1/2*ai*jt^2 - jt*ai/J*ai + 1/2*ai*(ai/J)^2 +
+		 * 1/6*J*jt^3 - 1/6*J*(ai/J)^3 - 1/2*J*jt^2*ai/J + 1/2*J*jt*(ai/J)^2 + 2*vi*jt +
+		 * 2*jt*ai*(jt-ai/J) + jt^3*J - 2*jt^2*J*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 +
+		 * ai + J*jt - J*ai/J -1/3*J*jt^3 + jt*vf - vf*af/J + 1/2*af*jt - 1/2*af*af/J +
+		 * 1/6*J*jt - 1/6*J *af
+		 * 
+		 * Distance + vi*ai/J - 1/2*ai*(ai/J)^2 + 1/6*J*(ai/J)^3 - ai + J*ai/J + vj*af/J
+		 * + 1/2*af*af/J + 1/6*J *af = vi*jt + 1/2*ai*jt^2 - jt*ai/J*ai + 1/6*J*jt^3 -
+		 * 1/2*J*jt^2*ai/J + 1/2*J*jt*(ai/J)^2 + 2*vi*jt + 2*jt*ai*(jt-ai/J) + jt^3*J -
+		 * 2*jt^2*J*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt -1/3*J*jt^3 + jt*vf +
+		 * 1/2*af*jt + 1/6*J*jt
+		 * 
+		 * newDistance = vi*jt + 1/2*ai*jt^2 - jt*ai/J*ai + 1/6*J*jt^3 - 1/2*J*jt^2*ai/J
+		 * + 1/2*J*jt*(ai/J)^2 + 2*vi*jt + 2*jt*ai*(jt-ai/J) + jt^3*J - 2*jt^2*J*ai/J +
+		 * jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt -1/3*J*jt^3 + jt*vf + 1/2*af*jt +
+		 * 1/6*J*jt
+		 * 
+		 * newDistance = vi*jt + 1/2*ai*jt^2 - jt*ai/J*ai + 1/6*J*jt^3 - 1/2*J*jt^2*ai/J
+		 * + 1/2*J*jt*(ai/J)^2 + 2*vi*jt + 2*jt^2*ai - 2*jt*ai*ai/J + jt^3*J -
+		 * 2*jt^2*J*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt -1/3*J*jt^3 + jt*vf +
+		 * 1/2*af*jt + 1/6*J*jt
+		 * 
+		 * newDistance = 1/6*J*jt^3 + jt^3*J -1/3*J*jt^3 + 1/2*ai*jt^2 - 1/2*J*jt^2*ai/J
+		 * + 2*jt^2*ai - 2*jt^2*J*ai/J + vi*jt - jt*ai/J*ai + 1/2*J*jt*(ai/J)^2 +
+		 * 2*vi*jt - 2*jt*ai*ai/J + jt*J*(ai/J)^2 + jt*J*(ai/J)^2 + J*jt + jt*vf +
+		 * 1/2*af*jt + 1/6*J*jt
+		 * 
+		 * newDistance = (1/6*J + J - 1/3*J)*jt^3 + (1/2*ai - 1/2*J*ai/J + 2*ai -
+		 * 2*J*ai/J)*jt^2 + (vi - ai*ai/J + 1/2*J*(ai/J)^2 + 2*vi - 2*jt*ai*ai/J
+		 * +J*(ai/J)^2 + J*(ai/J)^2 + J + vf + 1/2*af + 1/6*J)*jt
+		 * 
+		 * A term: (1/6*J + J - 1/3*J) B term: (1/2*ai - 1/2*J*ai/J + 2*ai - 2*J*ai/J) =
+		 * (1/2*ai - 1/2*ai + 2*ai - 2*ai) C term: (vi - ai*ai/J + 1/2*J*(ai/J)^2 + 2*vi
+		 * - 2*jt*ai*ai/J +J*(ai/J)^2 + J*(ai/J)^2 + J + vf + 1/2*af + 1/6*J) D term:
+		 * -1*(Distance + vi*ai/J - 1/2*ai*(ai/J)^2 + 1/6*J*(ai/J)^3 - ai + J*ai/J +
+		 * vf*af/J + 1/2*af*af/J + 1/6*J *af)
+		 * 
+		 * A term: (J*5/6) B term: 0 C term: (3*vi - ai*ai/J + 1/2*J*(ai/J)^2 -
+		 * 2*jt*ai*ai/J +J*(ai/J)^2 + J*(ai/J)^2 + J + vf + 1/2*af + 1/6*J) D term:
+		 * -1*(Distance + vi*ai/J - 1/2*ai*(ai/J)^2 + 1/6*J*(ai/J)^3 - ai + J*ai/J +
+		 * vf*af/J + 1/2*af*af/J + 1/6*J *af)
+		 * 
+		 * double aTerm = (5.0 / 6.0) * Key.maxJerk; double bTerm = 0.0; double cTerm =
+		 * 3 * setpoint.vi - Math.pow(setpoint.ai, 2) / Key.maxJerk + 0.5 * Key.maxJerk
+		 * * Math.pow((setpoint.ai / Key.maxJerk), 2) - 2 * Math.pow(setpoint.ai, 2) /
+		 * Key.maxJerk + 2 * Key.maxJerk * Math.pow((setpoint.ai / Key.maxJerk), 2) +
+		 * Key.maxJerk + setpoint.vf + 0.5 * setpoint.af + (1.0 / 6.0) * Key.maxJerk;
+		 * double dTerm = -1 * (distance + setpoint.vi * setpoint.ai / Key.maxJerk - 0.5
+		 * * Math.pow(setpoint.ai, 3) / Math.pow(Key.maxJerk, 2) + (1.0 / 6.0) *
+		 * Key.maxJerk * Math.pow((setpoint.ai / Key.maxJerk), 3) + setpoint.vf *
+		 * setpoint.af / Key.maxJerk + 0.5 * Math.pow(setpoint.af, 2) / Key.maxJerk +
+		 * (1.0 / 6.0) * Key.maxJerk * setpoint.af);
+		 */
+
+		// What if instead I used the same formula from before and added in the extra
+		// distance to make it work...
+
+		setpoint.firstStartAccelerationCruisingDeltaTime = trajectoryDistanceAndVelocityParameters.jerkTime
+				- setpoint.ai / Key.maxJerk;
+		setpoint.firstEndAccelerationCruisingDeltaTime = setpoint.firstStartAccelerationCruisingDeltaTime;
+		setpoint.startVelocityCruisingDeltaTime = setpoint.firstStartAccelerationCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime;
+		setpoint.endVelocityCruisingDeltaTime = setpoint.startVelocityCruisingDeltaTime;
+		setpoint.secondStartAccelerationCruisingDeltaTime = setpoint.endVelocityCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime;
+		setpoint.secondEndAccelerationCruisingDeltaTime = setpoint.secondStartAccelerationCruisingDeltaTime;
+		setpoint.endDeltaTime = setpoint.secondEndAccelerationCruisingDeltaTime
+				+ trajectoryDistanceAndVelocityParameters.jerkTime - setpoint.af / Key.maxJerk;
+		double velocityCoveredByNewJerkTime = 0.5 * Key.maxJerk
+				* Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2);
+		setpoint.maxVelocity = 2 * velocityCoveredByNewJerkTime;
+		setpoint.maxAcceleration = Key.maxJerk * trajectoryDistanceAndVelocityParameters.jerkTime;
+
+		double distanceCoveredDuringFirstJerkTime = (1.0 / 6.0) * Key.maxJerk
+				* Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
+		double jerkVi = 0.5 * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2);
+		double jerkAcceleration = Key.maxJerk * trajectoryDistanceAndVelocityParameters.jerkTime;
+		double distanceCoveredDuringSecondJerkTime = jerkVi * trajectoryDistanceAndVelocityParameters.jerkTime
+				+ 0.5 * jerkAcceleration * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2)
+				+ (1.0 / 6.0) * (-1 * Key.maxJerk) * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
+	}
+
+	private TrajectoryDistanceAndVelocityParameters setTrajectoryDistanceAndVelocityParameters(Path Key, Point setpoint,
+			Point previousSetpoint, boolean debugMode) {
+		TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters = new TrajectoryDistanceAndVelocityParameters();
+
+		trajectoryDistanceAndVelocityParameters.distance = Math.abs(setpoint.m_x - previousSetpoint.m_x);
+		trajectoryDistanceAndVelocityParameters.jerkTime = Key.maxAcceleration / Key.maxJerk;
+		trajectoryDistanceAndVelocityParameters.jerkVelocityCovered = 0.5 * Key.maxJerk
+				* Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2);
 
 		double deltaInitialAccelerationFromMaxAcceleration = setpoint.maxAcceleration - setpoint.ai;
-		trajectoryParameters.initialFirstJerkTimeCovered = deltaInitialAccelerationFromMaxAcceleration / Key.maxJerk;
-		trajectoryParameters.initialFirstJerkDistanceCovered = Math.abs(setpoint.vi * trajectoryParameters.initialFirstJerkTimeCovered
-				+ 0.5 * setpoint.ai * Math.pow(trajectoryParameters.initialFirstJerkTimeCovered, 2)
-				+ (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.initialFirstJerkTimeCovered, 3));
-		trajectoryParameters.initialFirstJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2) - Math.pow(setpoint.ai, 2))
-				/ (2 * Key.maxJerk);
+		trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered = deltaInitialAccelerationFromMaxAcceleration
+				/ Key.maxJerk;
+		trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered = Math
+				.abs(setpoint.vi * trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered
+						+ 0.5 * setpoint.ai
+								* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 2)
+						+ (1.0 / 6.0) * Key.maxJerk
+								* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 3));
+		trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2)
+				- Math.pow(setpoint.ai, 2)) / (2 * Key.maxJerk);
 
 		double initialSecondJerkDistanceCovered = Math
-				.abs(Key.maxVelocity * trajectoryParameters.jerkTime - (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3));
-		trajectoryParameters.initialSecondJerkVelocityCovered = setpoint.maxAcceleration / 2.0 * trajectoryParameters.jerkTime;
+				.abs(Key.maxVelocity * trajectoryDistanceAndVelocityParameters.jerkTime
+						- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3));
+		trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered = setpoint.maxAcceleration / 2.0
+				* trajectoryDistanceAndVelocityParameters.jerkTime;
 
-		double initialStartMaxAccelerationVelocity = setpoint.vi + trajectoryParameters.initialFirstJerkVelocityCovered;
-		double initialEndMaxAccelerationVelocity = setpoint.maxVelocity - trajectoryParameters.initialSecondJerkVelocityCovered;
+		double initialStartMaxAccelerationVelocity = setpoint.vi
+				+ trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered;
+		double initialEndMaxAccelerationVelocity = setpoint.maxVelocity
+				- trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered;
 		double initialDistanceCoveredWhileAtMaxAcceleration = (Math.pow(initialEndMaxAccelerationVelocity, 2)
 				- Math.pow(initialStartMaxAccelerationVelocity, 2)) / (2 * setpoint.maxAcceleration);
 
-		trajectoryParameters.initialAccelerationDistanceCovered = trajectoryParameters.initialFirstJerkDistanceCovered
+		trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered = trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered
 				+ initialSecondJerkDistanceCovered + initialDistanceCoveredWhileAtMaxAcceleration;
 
 		double deltaFinalAccelerationFromMaxAcceleration = setpoint.maxAcceleration - setpoint.af;
-		trajectoryParameters.finalSecondJerkTimeCovered = deltaFinalAccelerationFromMaxAcceleration / Key.maxJerk;
-		trajectoryParameters.finalSecondJerkDistanceCovered = Math.abs(setpoint.vf * trajectoryParameters.finalSecondJerkTimeCovered
-				+ 0.5 * setpoint.af * Math.pow(trajectoryParameters.finalSecondJerkTimeCovered, 2)
-				+ (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.finalSecondJerkTimeCovered, 3));
-		trajectoryParameters.finalSecondJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2) - Math.pow(setpoint.af, 2))
-				/ (2 * Key.maxJerk);
+		trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered = deltaFinalAccelerationFromMaxAcceleration
+				/ Key.maxJerk;
+		trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered = Math
+				.abs(setpoint.vf * trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered
+						+ 0.5 * setpoint.af
+								* Math.pow(trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered, 2)
+						+ (1.0 / 6.0) * Key.maxJerk
+								* Math.pow(trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered, 3));
+		trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2)
+				- Math.pow(setpoint.af, 2)) / (2 * Key.maxJerk);
 
 		double finalFirstJerkDistanceCovered = Math
-				.abs(Key.maxVelocity * trajectoryParameters.jerkTime - (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3));
-		double finalFirstJerkVelocityCovered = setpoint.maxAcceleration / 2.0 * trajectoryParameters.jerkTime;
+				.abs(Key.maxVelocity * trajectoryDistanceAndVelocityParameters.jerkTime
+						- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3));
+		double finalFirstJerkVelocityCovered = setpoint.maxAcceleration / 2.0
+				* trajectoryDistanceAndVelocityParameters.jerkTime;
 
 		double finalStartMaxAccelerationVelocity = Key.maxVelocity - finalFirstJerkVelocityCovered;
-		double finalEndMaxAccelerationVelocity = setpoint.vf + trajectoryParameters.finalSecondJerkVelocityCovered;
+		double finalEndMaxAccelerationVelocity = setpoint.vf
+				+ trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered;
 		double finalDistanceCoveredWhileAtMaxAcceleration = (Math.pow(finalEndMaxAccelerationVelocity, 2)
 				- Math.pow(finalStartMaxAccelerationVelocity, 2)) / (-2 * setpoint.maxAcceleration);
 
-		trajectoryParameters.finalAccelerationDistanceCovered = trajectoryParameters.finalSecondJerkDistanceCovered + finalFirstJerkDistanceCovered
-				+ finalDistanceCoveredWhileAtMaxAcceleration;
-		
-		
+		trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered = trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered
+				+ finalFirstJerkDistanceCovered + finalDistanceCoveredWhileAtMaxAcceleration;
+
 		if (setpoint.vi == 0.0 && setpoint.ai != 0) {
 			double velocityCoveredDuringBothJerkTimes = Math.pow(setpoint.ai, 2) / (2 * Key.maxJerk);
 			double timeCoveredBetweenAiand0 = setpoint.ai / Key.maxJerk;
@@ -585,42 +624,50 @@ public class Kinematics {
 			double finalFirstJerkInitialVelocity = setpoint.ai / 2 * timeCoveredBetweenAiand0;
 			double finalSecondJerkInitialVelocity = finalFirstJerkInitialVelocity
 					+ finalMaxAcceleration / 2 * finalJerkTime;
-			trajectoryParameters.justJerkDistanceCovered = 0.5 * setpoint.ai * Math.pow(timeCoveredBetweenAiand0, 2)
+			trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered = 0.5 * setpoint.ai
+					* Math.pow(timeCoveredBetweenAiand0, 2)
 					- (1.0 / 6.0) * Key.maxJerk * Math.pow(timeCoveredBetweenAiand0, 3)
 					+ finalFirstJerkInitialVelocity * finalJerkTime
 					- (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3)
 					+ finalSecondJerkInitialVelocity * finalJerkTime
 					- 0.5 * finalMaxAcceleration * Math.pow(finalJerkTime, 2)
 					+ (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
-			
 
 		} else {
-			double initialmaxAccelerationInitialVelocity = setpoint.vi + setpoint.ai * trajectoryParameters.initialFirstJerkTimeCovered
-					+ 0.5 * Key.maxJerk * Math.pow(trajectoryParameters.initialFirstJerkTimeCovered, 2);
+			double initialmaxAccelerationInitialVelocity = setpoint.vi
+					+ setpoint.ai * trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered
+					+ 0.5 * Key.maxJerk
+							* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 2);
 			double initialSecondJerkDistanceCoveredNoMaxAccelerationCruising = initialmaxAccelerationInitialVelocity
-					* trajectoryParameters.jerkTime + 0.5 * setpoint.maxAcceleration * trajectoryParameters.jerkTime
-					- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3);
+					* trajectoryDistanceAndVelocityParameters.jerkTime
+					+ 0.5 * setpoint.maxAcceleration * trajectoryDistanceAndVelocityParameters.jerkTime
+					- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
 
-			double finalMaxAccelerationFinalVelocity = setpoint.vf + setpoint.af * trajectoryParameters.finalSecondJerkTimeCovered
-					+ 0.5 * Key.maxJerk * Math.pow(trajectoryParameters.finalSecondJerkTimeCovered, 2);
+			double finalMaxAccelerationFinalVelocity = setpoint.vf
+					+ setpoint.af * trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered
+					+ 0.5 * Key.maxJerk
+							* Math.pow(trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered, 2);
 			double finalFirstJerkDistanceCoveredNoMaxAccelerationCruising = finalMaxAccelerationFinalVelocity
-					* trajectoryParameters.jerkTime + 0.5 * setpoint.maxAcceleration * trajectoryParameters.jerkTime
-					- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryParameters.jerkTime, 3);
+					* trajectoryDistanceAndVelocityParameters.jerkTime
+					+ 0.5 * setpoint.maxAcceleration * trajectoryDistanceAndVelocityParameters.jerkTime
+					- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
 
-			trajectoryParameters.justJerkDistanceCovered = trajectoryParameters.initialFirstJerkDistanceCovered
+			trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered = trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered
 					+ initialSecondJerkDistanceCoveredNoMaxAccelerationCruising
-					+ finalFirstJerkDistanceCoveredNoMaxAccelerationCruising + trajectoryParameters.finalSecondJerkDistanceCovered;
+					+ finalFirstJerkDistanceCoveredNoMaxAccelerationCruising
+					+ trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered;
 		}
-		
-		if (trajectoryParameters.initialAccelerationDistanceCovered + trajectoryParameters.finalAccelerationDistanceCovered <= trajectoryParameters.distance) {
-			trajectoryParameters.trajectoryType = TrajectoryType.willCruiseAtMaxVelocityAndMaxAcceleration;
-		}else if (trajectoryParameters.justJerkDistanceCovered <= trajectoryParameters.distance) {
-			trajectoryParameters.trajectoryType = TrajectoryType.willCruiseAtMaxAccelerationNotMaxVelocity;
-		}else {
-			trajectoryParameters.trajectoryType = TrajectoryType.willNotCruiseAtMaxVelocityOrMaxAcceleration;
+
+		if (trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered
+				+ trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
+			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxVelocityAndMaxAcceleration;
+		} else if (trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
+			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxAccelerationNotMaxVelocity;
+		} else {
+			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willNotCruiseAtMaxVelocityOrMaxAcceleration;
 		}
-		
-		return trajectoryParameters;
+
+		return trajectoryDistanceAndVelocityParameters;
 	}
 
 	private void getVf_Vi_Ai_Af(Vector<Point> setpointVector, Path Key) {
@@ -737,228 +784,250 @@ public class Kinematics {
 				setpoint.af = 0.0;
 			} else if ((traveledInAPositiveDirection && willTravelInAPositiveDirection)
 					|| (!traveledInAPositiveDirection && !willTravelInAPositiveDirection)) {
-
-				double distanceCoveredWhileAcceleratingToMaxVelocity = getDistanceTraveledWhileAccelerating(0.0,
-						setpoint.maxVelocity, Key.maxAcceleration);
-				Point previousPoint = setpoint;
 				Vector<Point> possibleFinalVelocityDeterminingSetpoints = new Vector<Point>();
 				Vector<Integer> possibleFinalVelocityDeterminingSetpointIndexes = new Vector<Integer>();
 
-				for (int i = i1; i < setpointVector.size(); i++) {
-
-					nextSetpoint = setpointVector.get(i);
-					if ((traveledInAPositiveDirection && previousPoint.m_x > nextSetpoint.m_x)
-							|| (!traveledInAPositiveDirection && previousPoint.m_x < nextSetpoint.m_x)) {
-						possibleFinalVelocityDeterminingSetpointIndexes.addElement(i - 1);
-						break;
-					}
-
-					possibleFinalVelocityDeterminingSetpoints.add(nextSetpoint);
-					if (i == i1) {
-						continue;
-					}
-
-					if (nextSetpoint.maxVelocity >= Key.maxVelocity || nextSetpoint.maxVelocity <= 0.0) {
-						nextSetpoint.maxVelocity = Key.maxVelocity;
-					} else {
-						possibleFinalVelocityDeterminingSetpointIndexes.addElement(i);
-
-					}
-
-					if (Math.abs(nextSetpoint.m_x)
-							- Math.abs(setpoint.m_x) > distanceCoveredWhileAcceleratingToMaxVelocity) {
-						possibleFinalVelocityDeterminingSetpointIndexes.addElement(i);
-						break;
-					}
-
-					if (i + 1 == setpointVector.size()) {
-						possibleFinalVelocityDeterminingSetpointIndexes.addElement(i);
-						break;
-					}
-					previousPoint = nextSetpoint;
-
-				}
+				getPossibleFinalVelocityDeterminingSetpoint(Key, setpoint, setpointVector, i1,
+						traveledInAPositiveDirection, possibleFinalVelocityDeterminingSetpoints,
+						possibleFinalVelocityDeterminingSetpointIndexes);
 				
-				for (int i11 = 0; i11 < possibleFinalVelocityDeterminingSetpointIndexes.size(); i11++) {
-					Point possibleFinalVelocityDeterminingSetpoint = new Point(0, 0);
-
-					double possibleFinalVelocityDeterminingSetpointMaxVelocity = possibleFinalVelocityDeterminingSetpoints
-							.elementAt(possibleFinalVelocityDeterminingSetpointIndexes.elementAt(i11) - i1).maxVelocity;
-					try {
-						possibleFinalVelocityDeterminingSetpoint = possibleFinalVelocityDeterminingSetpoints
-								.elementAt(possibleFinalVelocityDeterminingSetpointIndexes.elementAt(i11) - 1 - i1);
-					} catch (ArrayIndexOutOfBoundsException a) {
-
-					}
-					double distanceCoveredWhileAcceleratingFrom0ToVi = Math.pow(setpoint.vi, 2)
-							/ (2 * Key.maxAcceleration);
-					double distaneCoveredWhileAcceleratingFrom0ToVf = Math
-							.pow(possibleFinalVelocityDeterminingSetpointMaxVelocity, 2) / (2 * Key.maxAcceleration);
-					double deltaDistanceBetweenSetpoints = Math
-							.abs(possibleFinalVelocityDeterminingSetpoint.m_x - setpoint.m_x);
-					double combinedDistance = deltaDistanceBetweenSetpoints + distanceCoveredWhileAcceleratingFrom0ToVi
-							+ Math.abs(deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint)
-							+ distaneCoveredWhileAcceleratingFrom0ToVf;
-
-					double maxVelocityDistance = Math.abs(combinedDistance / 2);
-					double theoreticalMaxVelocity = Math.sqrt(2 * Key.maxAcceleration * maxVelocityDistance);
-					double highestVelocityHitifOnlyAcceleratingToSetpoint = Math.sqrt(Math.pow(setpoint.vi, 2)
-							+ 2 * Key.maxAcceleration * Math.abs(setpoint.m_x - previousSetpoint.m_x));
-					double highestVelocityHitWhileTravelingToSetpoint;
-					double tempVf;
-					if (highestVelocityHitifOnlyAcceleratingToSetpoint > theoreticalMaxVelocity) {
-						highestVelocityHitWhileTravelingToSetpoint = theoreticalMaxVelocity;
-						double distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint = (Math
-								.pow(theoreticalMaxVelocity, 2) - Math.pow(setpoint.vi, 2)) / (2 * Key.maxAcceleration);
-						double distanceBetweenTheoreticalMaxVelocityAndTempVf = deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint
-								- distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint;
-						tempVf = Math.sqrt(Math.pow(highestVelocityHitWhileTravelingToSetpoint, 2)
-								- 2 * Key.maxAcceleration * distanceBetweenTheoreticalMaxVelocityAndTempVf);
-					} else {
-						highestVelocityHitWhileTravelingToSetpoint = highestVelocityHitifOnlyAcceleratingToSetpoint;
-						tempVf = highestVelocityHitWhileTravelingToSetpoint;
-					}
-
-					tempVf = Math.abs(tempVf);
-
-					if (setpoint.vf > tempVf) {
-						setpoint.vf = tempVf;
-					}
-					if (i11 + 1 == possibleFinalVelocityDeterminingSetpointIndexes.size()) {
-						possibleFinalVelocityDeterminingSetpoint = possibleFinalVelocityDeterminingSetpoints
-								.elementAt(possibleFinalVelocityDeterminingSetpointIndexes.elementAt(i11) - i1);
-
-						deltaDistanceBetweenSetpoints = Math
-								.abs(possibleFinalVelocityDeterminingSetpoint.m_x - setpoint.m_x);
-						combinedDistance = deltaDistanceBetweenSetpoints + distanceCoveredWhileAcceleratingFrom0ToVi
-								+ Math.abs(deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint);
-						maxVelocityDistance = Math.abs(combinedDistance / 2);
-						theoreticalMaxVelocity = Math.sqrt(2 * Key.maxAcceleration * maxVelocityDistance);
-						highestVelocityHitifOnlyAcceleratingToSetpoint = Math.sqrt(Math.pow(setpoint.vi, 2)
-								+ 2 * Key.maxAcceleration * Math.abs(setpoint.m_x - previousSetpoint.m_x));
-
-						if (highestVelocityHitifOnlyAcceleratingToSetpoint > theoreticalMaxVelocity) {
-							highestVelocityHitWhileTravelingToSetpoint = theoreticalMaxVelocity;
-							double distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint = (Math
-									.pow(theoreticalMaxVelocity, 2) - Math.pow(setpoint.vi, 2))
-									/ (2 * Key.maxAcceleration);
-							double distanceBetweenTheoreticalMaxVelocityAndTempVf = deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint
-									- distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint;
-							tempVf = Math.sqrt(Math.pow(highestVelocityHitWhileTravelingToSetpoint, 2)
-									- 2 * Key.maxAcceleration * distanceBetweenTheoreticalMaxVelocityAndTempVf);
-						} else {
-							highestVelocityHitWhileTravelingToSetpoint = highestVelocityHitifOnlyAcceleratingToSetpoint;
-							tempVf = highestVelocityHitWhileTravelingToSetpoint;
-						}
-						tempVf = Math.abs(tempVf);
-
-						if (setpoint.vf > tempVf) {
-							setpoint.vf = tempVf;
-						}
-						
-					}
-				}
+				getFinalVelocityOfPoint(Key,setpoint,previousSetpoint,
+						possibleFinalVelocityDeterminingSetpointIndexes,
+						possibleFinalVelocityDeterminingSetpoints, i1,
+						deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint);
 
 			} else {
 				setpoint.vf = 0.0;
-				setpoint.af = Key.maxAcceleration;
-				double distance = Math.abs(nextSetpoint.m_x - setpoint.m_x);
-				double velocityCoveredWhileDecceleratingFromMaxAccelertion = Math.pow(Key.maxAcceleration, 2)
-						/ (2 * Key.maxJerk);
-				double timeCoveredWhileMaxAccelerationIsDecceleratingTo0 = Key.maxAcceleration / Key.maxJerk;
-				double finalEachJerkVelocityCovered = velocityCoveredWhileDecceleratingFromMaxAccelertion / 2;
-				double finalJerkMaxAcceleration = Math.sqrt(2 * Key.maxJerk * finalEachJerkVelocityCovered);
-				double finalJerkTime = finalJerkMaxAcceleration / Key.maxJerk;
-
-				double initialJerkDistanceCovered = 0.5 * Key.maxAcceleration
-						* Math.pow(timeCoveredWhileMaxAccelerationIsDecceleratingTo0, 2)
-						- (1.0 / 6.0) * Key.maxJerk * Math.pow(timeCoveredWhileMaxAccelerationIsDecceleratingTo0, 3);
-				double finalFirstJerkDistanceCovered = velocityCoveredWhileDecceleratingFromMaxAccelertion
-						* finalJerkTime - (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
-				double finalSecondJerkDistanceCovered = (velocityCoveredWhileDecceleratingFromMaxAccelertion
-						- finalEachJerkVelocityCovered) * finalJerkTime
-						- 0.5 * finalJerkMaxAcceleration * Math.pow(finalJerkTime, 2)
-						+ (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
-
-				double distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 = initialJerkDistanceCovered
-						+ finalFirstJerkDistanceCovered + finalSecondJerkDistanceCovered;
-				if (distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 <= distance) {
-					setpoint.af = Key.maxAcceleration;
-				} else {
-					double aTerm = (1.0 / 6.0 * Key.maxJerk);
-					double bTerm = 0.0;
-					double cTerm = Key.maxAcceleration / (2 * Key.maxJerk);
-					double dTerm = -1 * Math.abs(distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 - distance);
-
-					double timeBeforeEndDeltaTimeForAccelerationToStartChanging = solveCubicEquation(aTerm, bTerm,
-							cTerm, dTerm);
-
-					double tempAf = Key.maxAcceleration
-							- Key.maxJerk / timeBeforeEndDeltaTimeForAccelerationToStartChanging;
-					/*
-					 * Distance = 1/2*ai*(iT + fT)^2 - 1/6*J*(iT + fT)^3 + (ai*(iT + fT) - 1/2*J*(iT
-					 * + fT)^2)*fT + 1/2*(ai - J*(iT + fT))*fT^2 + 1/6*J*fT^3
-					 * 
-					 * iT = ai/J VelocityCoveredWhileAccelerationIsDecceleratingTo0 = ai/2*ai/J =
-					 * ai^2/(2*J) FinalTimeVelocityCovered = ai^2/(4*J) fT = sqrt(ai^2/(4*J)*2 *J) =
-					 * sqrt(ai^2/2) = ai/sqrt(2) iT + fT = ai/J + ai/sqrt(2) = ai*(1/J + 1/sqrt(2))
-					 * 
-					 * Distance = 1/2*ai*(ai*(1/J + 1/sqrt(2)))^2 - 1/6*J*(ai*(1/J + 1/sqrt(2)))^3 +
-					 * (ai*(ai*(1/J + 1/sqrt(2))) - 1/2*J*(ai*(1/J + 1/sqrt(2)))^2)*ai/sqrt(2) +
-					 * 1/2*(ai - J*(ai*(1/J + 1/sqrt(2))))*(ai/ sqrt(2))^2 + 1/6*J*(ai 1/sqrt(2))^3
-					 * 
-					 * Distance = 1/2*ai*ai^2*(1/J + 1/sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
-					 * (ai^2*(1/J + 1/sqrt(2)) - 1/2*J*ai^2*(1/J + 1/sqrt(2))^2)*ai/sqrt(2) +
-					 * 1/2*(ai - J*(ai*(1/J + 1/sqrt(2))))*(ai/sqrt(2))^2 + 1/6*J*ai^3 * 1/sqrt(2)^3
-					 * 
-					 * 
-					 * 1/2*(ai - J*ai*(1/J + 1/sqrt(2)))*ai^2 /sqrt(2)^2 (ai - J*ai*(1/J +
-					 * 1/sqrt(2)))*ai^2 ai^3 - J*ai^3*(1/J + 1/sqrt(2))
-					 * 
-					 * Distance = 1/2*ai*ai^2*(1/J + 1/sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
-					 * (ai^2*(1/J + 1/sqrt(2)) - 1/2*J*ai^2*(1/J + 1/sqrt(2))^2)*ai/sqrt(2) +ai^3 -
-					 * J*ai^3*(1/J + 1/sqrt(2)) + 1/6*J*ai^3 * 1/sqrt(2)^3
-					 * 
-					 * Distance = 1/2*ai^3*(1/J +1/ sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
-					 * ai^3/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*ai^3/sqrt(2)*(1/J + 1/sqrt(2))^2 +
-					 * ai^3 - J*ai^3*(1/J + 1/sqrt(2)) + 1/6*J*ai^3 * 1/sqrt(2)^3
-					 * 
-					 * Distance = 1/2*(1/J + 1/sqrt(2))^2*ai^3 - 1/6*J*(1/J + 1/sqrt(2))^3*ai^3 +
-					 * 1/sqrt(2)*(1/J + 1/sqrt(2))*ai^3 - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2*ai^3 +
-					 * ai^3 - J*(1/J +1/ sqrt(2))*ai^3 + 1/6*J*1/sqrt(2)^3*ai^3
-					 * 
-					 * Distance = (1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 +
-					 * 1/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 -
-					 * J*(1/J + 1/sqrt(2)) + 1/6*J*1/sqrt(2)^3)*ai^3
-					 * 
-					 * Distance/(1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 + 1/sqrt(2)*(1/J
-					 * + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 - J*(1/J + 1/sqrt(2))
-					 * + 1/6*J*1/sqrt(2)^3) = ai^3
-					 * 
-					 * cbrt(Distance/(1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 +
-					 * 1/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 -
-					 * J*(1/J + 1/sqrt(2)) + 1/6*J*1/sqrt(2)^3)) = ai
-					 */
-
-					tempAf = Math.cbrt(distance / (0.5 * Math.pow((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)), 2)
-							- (1.0 / 6) * Key.maxJerk * Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 3)
-							+ (1.0 / Math.sqrt(2)) * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
-							- (1.0 / 2) * Key.maxJerk * (1.0 / Math.sqrt(2))
-									* Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 2)
-							+ 1 - Key.maxJerk * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
-							+ (1.0 / 6) * Key.maxJerk * Math.pow((1.0 / Math.sqrt(2)), 3)));
-
-					if (tempAf < setpoint.af) {
-						setpoint.af = tempAf;
-					}
-					
-				}
-
+				getFinalAccelerationOfPoint(Key, setpoint, nextSetpoint);
 			}
 
 		}
 
 	}
+
+	private void getPossibleFinalVelocityDeterminingSetpoint(Path Key, Point setpoint, Vector<Point> setpointVector,
+			int currentSetpointIndex, boolean traveledInAPositiveDirection,
+			Vector<Point> possibleFinalVelocityDeterminingSetpoints,
+			Vector<Integer> possibleFinalVelocityDeterminingSetpointIndexes) {
+		double distanceCoveredWhileAcceleratingToMaxVelocity = getDistanceTraveledWhileAccelerating(0.0,
+				setpoint.maxVelocity, Key.maxAcceleration);
+		Point previousSetpoint = setpoint;
+		Point nextSetpoint;
+		for (int i = currentSetpointIndex; i < setpointVector.size(); i++) {
+
+			nextSetpoint = setpointVector.get(i);
+			if ((traveledInAPositiveDirection && previousSetpoint.m_x > nextSetpoint.m_x)
+					|| (!traveledInAPositiveDirection && previousSetpoint.m_x < nextSetpoint.m_x)) {
+				possibleFinalVelocityDeterminingSetpointIndexes.addElement(i - 1);
+				break;
+			}
+
+			possibleFinalVelocityDeterminingSetpoints.add(nextSetpoint);
+			if (i == currentSetpointIndex) {
+				continue;
+			}
+
+			if (nextSetpoint.maxVelocity >= Key.maxVelocity || nextSetpoint.maxVelocity <= 0.0) {
+				nextSetpoint.maxVelocity = Key.maxVelocity;
+			} else {
+				possibleFinalVelocityDeterminingSetpointIndexes.addElement(i);
+
+			}
+
+			if (Math.abs(nextSetpoint.m_x) - Math.abs(setpoint.m_x) > distanceCoveredWhileAcceleratingToMaxVelocity) {
+				possibleFinalVelocityDeterminingSetpointIndexes.addElement(i);
+				break;
+			}
+
+			if (i + 1 == setpointVector.size()) {
+				possibleFinalVelocityDeterminingSetpointIndexes.addElement(i);
+				break;
+			}
+			previousSetpoint = nextSetpoint;
+
+		}
+
+	}
+
+	private void getFinalVelocityOfPoint(Path Key, Point setpoint, Point previousSetpoint,
+			Vector<Integer> possibleFinalVelocityDeterminingSetpointIndexes,
+			Vector<Point> possibleFinalVelocityDeterminingSetpoints, int currentSetpointIndex,
+			double deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint) {
+		for (int i11 = 0; i11 < possibleFinalVelocityDeterminingSetpointIndexes.size(); i11++) {
+			Point possibleFinalVelocityDeterminingSetpoint = new Point(0, 0);
+
+			double possibleFinalVelocityDeterminingSetpointMaxVelocity = possibleFinalVelocityDeterminingSetpoints
+					.elementAt(possibleFinalVelocityDeterminingSetpointIndexes.elementAt(i11)
+							- currentSetpointIndex).maxVelocity;
+			try {
+				possibleFinalVelocityDeterminingSetpoint = possibleFinalVelocityDeterminingSetpoints.elementAt(
+						possibleFinalVelocityDeterminingSetpointIndexes.elementAt(i11) - 1 - currentSetpointIndex);
+			} catch (ArrayIndexOutOfBoundsException a) {
+
+			}
+			double distanceCoveredWhileAcceleratingFrom0ToVi = Math.pow(setpoint.vi, 2) / (2 * Key.maxAcceleration);
+			double distaneCoveredWhileAcceleratingFrom0ToVf = Math
+					.pow(possibleFinalVelocityDeterminingSetpointMaxVelocity, 2) / (2 * Key.maxAcceleration);
+			double deltaDistanceBetweenSetpoints = Math
+					.abs(possibleFinalVelocityDeterminingSetpoint.m_x - setpoint.m_x);
+			double combinedDistance = deltaDistanceBetweenSetpoints + distanceCoveredWhileAcceleratingFrom0ToVi
+					+ Math.abs(deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint)
+					+ distaneCoveredWhileAcceleratingFrom0ToVf;
+
+			double maxVelocityDistance = Math.abs(combinedDistance / 2);
+			double theoreticalMaxVelocity = Math.sqrt(2 * Key.maxAcceleration * maxVelocityDistance);
+			double highestVelocityHitifOnlyAcceleratingToSetpoint = Math.sqrt(
+					Math.pow(setpoint.vi, 2) + 2 * Key.maxAcceleration * Math.abs(setpoint.m_x - previousSetpoint.m_x));
+			double highestVelocityHitWhileTravelingToSetpoint;
+			double tempVf;
+			if (highestVelocityHitifOnlyAcceleratingToSetpoint > theoreticalMaxVelocity) {
+				highestVelocityHitWhileTravelingToSetpoint = theoreticalMaxVelocity;
+				double distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint = (Math
+						.pow(theoreticalMaxVelocity, 2) - Math.pow(setpoint.vi, 2)) / (2 * Key.maxAcceleration);
+				double distanceBetweenTheoreticalMaxVelocityAndTempVf = deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint
+						- distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint;
+				tempVf = Math.sqrt(Math.pow(highestVelocityHitWhileTravelingToSetpoint, 2)
+						- 2 * Key.maxAcceleration * distanceBetweenTheoreticalMaxVelocityAndTempVf);
+			} else {
+				highestVelocityHitWhileTravelingToSetpoint = highestVelocityHitifOnlyAcceleratingToSetpoint;
+				tempVf = highestVelocityHitWhileTravelingToSetpoint;
+			}
+
+			tempVf = Math.abs(tempVf);
+
+			if (setpoint.vf > tempVf) {
+				setpoint.vf = tempVf;
+			}
+			if (i11 + 1 == possibleFinalVelocityDeterminingSetpointIndexes.size()) {
+				possibleFinalVelocityDeterminingSetpoint = possibleFinalVelocityDeterminingSetpoints.elementAt(
+						possibleFinalVelocityDeterminingSetpointIndexes.elementAt(i11) - currentSetpointIndex);
+
+				deltaDistanceBetweenSetpoints = Math.abs(possibleFinalVelocityDeterminingSetpoint.m_x - setpoint.m_x);
+				combinedDistance = deltaDistanceBetweenSetpoints + distanceCoveredWhileAcceleratingFrom0ToVi
+						+ Math.abs(deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint);
+				maxVelocityDistance = Math.abs(combinedDistance / 2);
+				theoreticalMaxVelocity = Math.sqrt(2 * Key.maxAcceleration * maxVelocityDistance);
+				highestVelocityHitifOnlyAcceleratingToSetpoint = Math.sqrt(Math.pow(setpoint.vi, 2)
+						+ 2 * Key.maxAcceleration * Math.abs(setpoint.m_x - previousSetpoint.m_x));
+
+				if (highestVelocityHitifOnlyAcceleratingToSetpoint > theoreticalMaxVelocity) {
+					highestVelocityHitWhileTravelingToSetpoint = theoreticalMaxVelocity;
+					double distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint = (Math
+							.pow(theoreticalMaxVelocity, 2) - Math.pow(setpoint.vi, 2)) / (2 * Key.maxAcceleration);
+					double distanceBetweenTheoreticalMaxVelocityAndTempVf = deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint
+							- distanceTraveledWhileAcceleratingFormViToHighestVelocityHitWhileTravelingToSetpoint;
+					tempVf = Math.sqrt(Math.pow(highestVelocityHitWhileTravelingToSetpoint, 2)
+							- 2 * Key.maxAcceleration * distanceBetweenTheoreticalMaxVelocityAndTempVf);
+				} else {
+					highestVelocityHitWhileTravelingToSetpoint = highestVelocityHitifOnlyAcceleratingToSetpoint;
+					tempVf = highestVelocityHitWhileTravelingToSetpoint;
+				}
+				tempVf = Math.abs(tempVf);
+
+				if (setpoint.vf > tempVf) {
+					setpoint.vf = tempVf;
+				}
+
+			}
+		}
+	}
+	
+	private void getFinalAccelerationOfPoint(Path Key, Point setpoint, Point nextSetpoint) {
+		setpoint.af = Key.maxAcceleration;
+		double distance = Math.abs(nextSetpoint.m_x - setpoint.m_x);
+		double velocityCoveredWhileDecceleratingFromMaxAccelertion = Math.pow(Key.maxAcceleration, 2)
+				/ (2 * Key.maxJerk);
+		double timeCoveredWhileMaxAccelerationIsDecceleratingTo0 = Key.maxAcceleration / Key.maxJerk;
+		double finalEachJerkVelocityCovered = velocityCoveredWhileDecceleratingFromMaxAccelertion / 2;
+		double finalJerkMaxAcceleration = Math.sqrt(2 * Key.maxJerk * finalEachJerkVelocityCovered);
+		double finalJerkTime = finalJerkMaxAcceleration / Key.maxJerk;
+
+		double initialJerkDistanceCovered = 0.5 * Key.maxAcceleration
+				* Math.pow(timeCoveredWhileMaxAccelerationIsDecceleratingTo0, 2)
+				- (1.0 / 6.0) * Key.maxJerk * Math.pow(timeCoveredWhileMaxAccelerationIsDecceleratingTo0, 3);
+		double finalFirstJerkDistanceCovered = velocityCoveredWhileDecceleratingFromMaxAccelertion
+				* finalJerkTime - (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
+		double finalSecondJerkDistanceCovered = (velocityCoveredWhileDecceleratingFromMaxAccelertion
+				- finalEachJerkVelocityCovered) * finalJerkTime
+				- 0.5 * finalJerkMaxAcceleration * Math.pow(finalJerkTime, 2)
+				+ (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
+
+		double distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 = initialJerkDistanceCovered
+				+ finalFirstJerkDistanceCovered + finalSecondJerkDistanceCovered;
+		if (distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 <= distance) {
+			setpoint.af = Key.maxAcceleration;
+		} else {
+			double aTerm = (1.0 / 6.0 * Key.maxJerk);
+			double bTerm = 0.0;
+			double cTerm = Key.maxAcceleration / (2 * Key.maxJerk);
+			double dTerm = -1 * Math.abs(distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 - distance);
+
+			double timeBeforeEndDeltaTimeForAccelerationToStartChanging = solveCubicEquation(aTerm, bTerm,
+					cTerm, dTerm);
+
+			double tempAf = Key.maxAcceleration
+					- Key.maxJerk / timeBeforeEndDeltaTimeForAccelerationToStartChanging;
+			/*
+			 * Distance = 1/2*ai*(iT + fT)^2 - 1/6*J*(iT + fT)^3 + (ai*(iT + fT) - 1/2*J*(iT
+			 * + fT)^2)*fT + 1/2*(ai - J*(iT + fT))*fT^2 + 1/6*J*fT^3
+			 * 
+			 * iT = ai/J VelocityCoveredWhileAccelerationIsDecceleratingTo0 = ai/2*ai/J =
+			 * ai^2/(2*J) FinalTimeVelocityCovered = ai^2/(4*J) fT = sqrt(ai^2/(4*J)*2 *J) =
+			 * sqrt(ai^2/2) = ai/sqrt(2) iT + fT = ai/J + ai/sqrt(2) = ai*(1/J + 1/sqrt(2))
+			 * 
+			 * Distance = 1/2*ai*(ai*(1/J + 1/sqrt(2)))^2 - 1/6*J*(ai*(1/J + 1/sqrt(2)))^3 +
+			 * (ai*(ai*(1/J + 1/sqrt(2))) - 1/2*J*(ai*(1/J + 1/sqrt(2)))^2)*ai/sqrt(2) +
+			 * 1/2*(ai - J*(ai*(1/J + 1/sqrt(2))))*(ai/ sqrt(2))^2 + 1/6*J*(ai 1/sqrt(2))^3
+			 * 
+			 * Distance = 1/2*ai*ai^2*(1/J + 1/sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
+			 * (ai^2*(1/J + 1/sqrt(2)) - 1/2*J*ai^2*(1/J + 1/sqrt(2))^2)*ai/sqrt(2) +
+			 * 1/2*(ai - J*(ai*(1/J + 1/sqrt(2))))*(ai/sqrt(2))^2 + 1/6*J*ai^3 * 1/sqrt(2)^3
+			 * 
+			 * 
+			 * 1/2*(ai - J*ai*(1/J + 1/sqrt(2)))*ai^2 /sqrt(2)^2 (ai - J*ai*(1/J +
+			 * 1/sqrt(2)))*ai^2 ai^3 - J*ai^3*(1/J + 1/sqrt(2))
+			 * 
+			 * Distance = 1/2*ai*ai^2*(1/J + 1/sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
+			 * (ai^2*(1/J + 1/sqrt(2)) - 1/2*J*ai^2*(1/J + 1/sqrt(2))^2)*ai/sqrt(2) +ai^3 -
+			 * J*ai^3*(1/J + 1/sqrt(2)) + 1/6*J*ai^3 * 1/sqrt(2)^3
+			 * 
+			 * Distance = 1/2*ai^3*(1/J +1/ sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
+			 * ai^3/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*ai^3/sqrt(2)*(1/J + 1/sqrt(2))^2 +
+			 * ai^3 - J*ai^3*(1/J + 1/sqrt(2)) + 1/6*J*ai^3 * 1/sqrt(2)^3
+			 * 
+			 * Distance = 1/2*(1/J + 1/sqrt(2))^2*ai^3 - 1/6*J*(1/J + 1/sqrt(2))^3*ai^3 +
+			 * 1/sqrt(2)*(1/J + 1/sqrt(2))*ai^3 - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2*ai^3 +
+			 * ai^3 - J*(1/J +1/ sqrt(2))*ai^3 + 1/6*J*1/sqrt(2)^3*ai^3
+			 * 
+			 * Distance = (1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 +
+			 * 1/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 -
+			 * J*(1/J + 1/sqrt(2)) + 1/6*J*1/sqrt(2)^3)*ai^3
+			 * 
+			 * Distance/(1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 + 1/sqrt(2)*(1/J
+			 * + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 - J*(1/J + 1/sqrt(2))
+			 * + 1/6*J*1/sqrt(2)^3) = ai^3
+			 * 
+			 * cbrt(Distance/(1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 +
+			 * 1/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 -
+			 * J*(1/J + 1/sqrt(2)) + 1/6*J*1/sqrt(2)^3)) = ai
+			 */
+
+			tempAf = Math.cbrt(distance / (0.5 * Math.pow((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)), 2)
+					- (1.0 / 6) * Key.maxJerk * Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 3)
+					+ (1.0 / Math.sqrt(2)) * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
+					- (1.0 / 2) * Key.maxJerk * (1.0 / Math.sqrt(2))
+							* Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 2)
+					+ 1.0 - Key.maxJerk * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
+					+ (1.0 / 6) * Key.maxJerk * Math.pow((1.0 / Math.sqrt(2)), 3)));
+
+			if (tempAf < setpoint.af) {
+				setpoint.af = tempAf;
+			}
+
+		}
+
+	}
+	
 
 	/**
 	 * This method uses the kinematic equation involving vi, vf, acceleration and
@@ -974,12 +1043,11 @@ public class Kinematics {
 	 * returns the point where that time is
 	 */
 
-	public TrajectoryPoint getTrajectoryPointWithInterpolation(Path Key, double deltaTimeFromStartOfSetpointVector) {
-		return getTrajectoryPointWithInterpolation(Key, deltaTimeFromStartOfSetpointVector, false);
+	public TrajectoryPoint getTrajectoryPoint(Path Key, double deltaTimeFromStartOfSetpointVector) {
+		return getTrajectoryPoint(Key, deltaTimeFromStartOfSetpointVector, false);
 	}
 
-	public TrajectoryPoint getTrajectoryPointWithInterpolation(Path Key, double deltaTimeFromStartOfSetpointVector,
-			Boolean debugMode) {
+	public TrajectoryPoint getTrajectoryPoint(Path Key, double deltaTimeFromStartOfSetpointVector, Boolean debugMode) {
 		double velocity = 0.0;
 		double deltaPosition = Double.NaN;
 		double time = deltaTimeFromStartOfSetpointVector;
@@ -1006,8 +1074,7 @@ public class Kinematics {
 		}
 
 		double deltaTimeFromSetpoint = deltaTimeFromStartOfSetpointVector - previousEndDeltaTimes;
-		
-		
+
 		if (deltaTimeFromSetpoint <= 0) {
 			velocity = 0.0;
 			deltaPosition = 0.0;
@@ -1018,7 +1085,7 @@ public class Kinematics {
 			velocity = 0.5 * Key.maxJerk * Math.pow(deltaTimeFromSetpoint, 2);
 
 		} else if (deltaTimeFromSetpoint < setpoint.firstEndAccelerationCruisingDeltaTime) {
-			
+
 			beforeWhatTime = BeforeWhatTime.beforeFirstEndAccelerationCruisingDeltaTime;
 
 			double jerkVelocityCovered = 0.5 * Key.maxJerk
@@ -1027,8 +1094,7 @@ public class Kinematics {
 			double timeCruisingAtMaxAcceleration = deltaTimeFromSetpoint
 					- setpoint.firstStartAccelerationCruisingDeltaTime;
 			double velocityCoveredWhileAtMaxAcceleration = timeCruisingAtMaxAcceleration * Key.maxAcceleration;
-			
-			
+
 			velocity = jerkVelocityCovered + velocityCoveredWhileAtMaxAcceleration;
 
 		} else if (deltaTimeFromSetpoint < setpoint.startVelocityCruisingDeltaTime) {
@@ -1052,7 +1118,7 @@ public class Kinematics {
 
 		} else if (deltaTimeFromSetpoint < setpoint.endVelocityCruisingDeltaTime) {
 			beforeWhatTime = BeforeWhatTime.beforeEndVelocityCruisingDeltaTime;
-			
+
 			velocity = setpoint.maxVelocity;
 
 		} else if (deltaTimeFromSetpoint < setpoint.secondStartAccelerationCruisingDeltaTime) {
@@ -1069,7 +1135,7 @@ public class Kinematics {
 					* (setpoint.secondStartAccelerationCruisingDeltaTime - deltaTimeFromSetpoint);
 			velocity = secondEndJerkVelocity + velocityCoveredWhileCruisingAtMaxAcceleration
 					+ secondStartJerkVelocityCovered;
-			
+
 		} else if (deltaTimeFromSetpoint < setpoint.secondEndAccelerationCruisingDeltaTime) {
 			beforeWhatTime = BeforeWhatTime.beforeSecondEndAccelerationCruisingDeltaTime;
 
@@ -1110,7 +1176,7 @@ public class Kinematics {
 		deltaPosition *= directionConstant;
 		double position = previousPositions + deltaPosition;
 		TrajectoryPoint point = new TrajectoryPoint(velocity, position, time);
-		
+
 		return point;
 	}
 
@@ -1165,7 +1231,7 @@ public class Kinematics {
 			}
 
 			position += setpoint.maxVelocity * time + (1.0 / 6.0) * (-1 * maxJerk) * Math.pow(time, 3);
-			
+
 		case beforeEndVelocityCruisingDeltaTime:
 			if (deltaTime < setpoint.endVelocityCruisingDeltaTime) {
 				time = deltaTime - setpoint.startVelocityCruisingDeltaTime;
@@ -1174,7 +1240,7 @@ public class Kinematics {
 			}
 
 			position += setpoint.maxVelocity * time;
-			
+
 		case beforeStartVelocityCruisingDeltaTime:
 			if (deltaTime < setpoint.startVelocityCruisingDeltaTime) {
 				time = deltaTime - setpoint.firstEndAccelerationCruisingDeltaTime;
@@ -1191,7 +1257,7 @@ public class Kinematics {
 
 			position += (velocityAtFirstEndAccelerationCruisingDeltaTime * time
 					+ 0.5 * maxAcceleration * Math.pow(time, 2) + (1.0 / 6.0) * (-1 * maxJerk) * Math.pow(time, 3));
-			
+
 		case beforeFirstEndAccelerationCruisingDeltaTime:
 			if (deltaTime < setpoint.firstEndAccelerationCruisingDeltaTime) {
 				time = deltaTime - setpoint.firstStartAccelerationCruisingDeltaTime;
@@ -1203,7 +1269,7 @@ public class Kinematics {
 			double distanceCovered = startAccelerationVi * time + 0.5 * maxAcceleration * Math.pow(time, 2);
 
 			position += distanceCovered;
-			
+
 		case beforeFirstStartAccelerationCruisingDeltaTime:
 			if (deltaTime < setpoint.firstStartAccelerationCruisingDeltaTime) {
 				time = deltaTime;
@@ -1212,7 +1278,6 @@ public class Kinematics {
 
 			}
 			position += (1.0 / 6.0) * maxJerk * Math.pow(time, 3);
-			
 
 		}
 		return position;

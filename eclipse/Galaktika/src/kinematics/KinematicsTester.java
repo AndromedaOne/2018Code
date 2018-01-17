@@ -1516,10 +1516,9 @@ public class KinematicsTester {
 	 * customMaxVelocity += 1; } if (random.nextBoolean()) { directionConstant =
 	 * 1.0; } else { directionConstant = -1.0; } if (Math.abs(setpoint -
 	 * previousPoint.getm_X()) < maxAcceleration
-	 * Kinematics.getTrajectoryPointInterval()) { if (setpoint > 0.0) {
-	 * setpoint += maxAcceleration * Kinematics.getTrajectoryPointInterval();
-	 * } else { setpoint -= maxAcceleration *
-	 * Kinematics.getTrajectoryPointInterval(); } }
+	 * Kinematics.getTrajectoryPointInterval()) { if (setpoint > 0.0) { setpoint +=
+	 * maxAcceleration * Kinematics.getTrajectoryPointInterval(); } else { setpoint
+	 * -= maxAcceleration * Kinematics.getTrajectoryPointInterval(); } }
 	 * m_kinematicsSimpler.addPointToPath(myPath, m_kinematicsSimpler.new
 	 * Point(setpoint * directionConstant), customMaxVelocity);
 	 * 
@@ -1617,7 +1616,7 @@ public class KinematicsTester {
 			throw naNException;
 		}
 		for (double i = 0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
-			TrajectoryPoint currentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i);
+			TrajectoryPoint currentPoint = m_kinematicsSimpler.getTrajectoryPoint(Key, i);
 
 			if (Double.isNaN(currentPoint.m_currentVelocity) || Double.isNaN(currentPoint.m_position)
 					|| Double.isNaN(currentPoint.m_timestamp)) {
@@ -1636,9 +1635,9 @@ public class KinematicsTester {
 			endDeltatTimeFromStartOfPath += Key.getSetpointVector().get(i).getEndDeltaTime();
 		}
 
-		if (m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, endDeltatTimeFromStartOfPath).m_position
+		if (m_kinematicsSimpler.getTrajectoryPoint(Key, endDeltatTimeFromStartOfPath).m_position
 				- Key.getSetpointVector().get(Key.getSetpointVector().size() - 1).getm_X() > 0.1
-				|| m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, endDeltatTimeFromStartOfPath).m_position
+				|| m_kinematicsSimpler.getTrajectoryPoint(Key, endDeltatTimeFromStartOfPath).m_position
 						- Key.getSetpointVector().get(Key.getSetpointVector().size() - 1).getm_X() < -0.1) {
 			errMesage = "The final position of the trajectory path does not match the final position of the setpoint path!";
 			invalidFinalPosition = kinematicsTester.new InvalidFinalPosition(errMesage);
@@ -1658,7 +1657,7 @@ public class KinematicsTester {
 		}
 		for (double currentTime = 0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
-			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, currentTime);
+			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(Key, currentTime);
 			originalTrajectoryPointsPath.add(trajectoryPoint);
 		}
 		for (int i = 0; i < originalTrajectoryPointsPath.size(); i++) {
@@ -1707,7 +1706,7 @@ public class KinematicsTester {
 		}
 		for (double currentTime = 0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
-			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, currentTime);
+			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(Key, currentTime);
 			originalTrajectoryPointsPath.add(trajectoryPoint);
 		}
 
@@ -1740,7 +1739,7 @@ public class KinematicsTester {
 		}
 		for (double currentTime = 0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
-			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, currentTime);
+			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(Key, currentTime);
 			originalTrajectoryPointsPath.add(trajectoryPoint);
 		}
 		for (int i = 0; i < originalTrajectoryPointsPath.size(); i++) {
@@ -1773,7 +1772,7 @@ public class KinematicsTester {
 			Point lastSetpoint = m_kinematicsSimpler.new Point(0, 0);
 			boolean traveledInAPositiveDirection;
 			boolean willTravelInAPositiveDirection;
-			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+			TrajectoryPoint trajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 					currentTrajectoryPointIndex);
 			try {
 				nextSetpoint = Key.getSetpointVector().get(i + 1);
@@ -1834,7 +1833,7 @@ public class KinematicsTester {
 				}
 				
 				double calculatedAcceleration = getAccelerationOfPoint(Key, trajectoryPoint);
-				TrajectoryPoint nextPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+				TrajectoryPoint nextPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 						trajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 				double nextAcceleration = getAccelerationOfPoint(Key, nextPoint);
 				double currentJerk = getJerkOfPoint(Key, trajectoryPoint.m_timestamp);
@@ -1924,9 +1923,9 @@ public class KinematicsTester {
 	}
 
 	private static double getVelocityOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
-		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(
+		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(
 				Key, originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
-		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 		double changeInPosition = deltaAfterOriginalTrajectoryPoint.m_position
 				- deltaBeforeOriginalTrajectoryPoint.m_position;
@@ -1944,9 +1943,9 @@ public class KinematicsTester {
 	}
 
 	private static double getAccelerationOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
-		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(
+		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(
 				Key, originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
-		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 		double changeInVelocity = deltaAfterOriginalTrajectoryPoint.m_currentVelocity
 				- deltaBeforeOriginalTrajectoryPoint.m_currentVelocity;
@@ -1992,17 +1991,17 @@ public class KinematicsTester {
 		}
 
 		for (double i = 0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
-			TrajectoryPoint currentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i, true);
-			TrajectoryPoint deltaBeforeCurrentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+			TrajectoryPoint currentPoint = m_kinematicsSimpler.getTrajectoryPoint(Key, i, true);
+			TrajectoryPoint deltaBeforeCurrentPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 					i - m_deltaTimeFromOriginalPoint);
-			TrajectoryPoint deltaAfterCurrentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+			TrajectoryPoint deltaAfterCurrentPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 					i + m_deltaTimeFromOriginalPoint);
 			double currentAcceleration = (deltaAfterCurrentPoint.m_currentVelocity
 					- deltaBeforeCurrentPoint.m_currentVelocity) / (2 * m_deltaTimeFromOriginalPoint);
 
-			TrajectoryPoint twiceDeltaBeforeCurrentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+			TrajectoryPoint twiceDeltaBeforeCurrentPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 					i - 2 * m_deltaTimeFromOriginalPoint);
-			TrajectoryPoint twiceDeltaAfterCurrentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
+			TrajectoryPoint twiceDeltaAfterCurrentPoint = m_kinematicsSimpler.getTrajectoryPoint(Key,
 					i + 2 * m_deltaTimeFromOriginalPoint);
 
 			double deltaBeforeAcceleration = (currentPoint.m_currentVelocity
@@ -2018,9 +2017,9 @@ public class KinematicsTester {
 
 		}
 		
-		TrajectoryPoint test = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,12.041666666666668);
-		TrajectoryPoint testDeltaBefore = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,12.041666666666668 - m_deltaTimeFromOriginalPoint);
-		TrajectoryPoint testDeltaAfter = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,12.041666666666668 + m_deltaTimeFromOriginalPoint);
+		TrajectoryPoint test = m_kinematicsSimpler.getTrajectoryPoint(Key,12.041666666666668);
+		TrajectoryPoint testDeltaBefore = m_kinematicsSimpler.getTrajectoryPoint(Key,12.041666666666668 - m_deltaTimeFromOriginalPoint);
+		TrajectoryPoint testDeltaAfter = m_kinematicsSimpler.getTrajectoryPoint(Key,12.041666666666668 + m_deltaTimeFromOriginalPoint);
 		double deltaBeforeAcceleration = getAccelerationOfPoint(Key, testDeltaBefore);
 		double deltaAfterAcceleration = getAccelerationOfPoint(Key, testDeltaAfter);
 		
