@@ -8,15 +8,7 @@ public class Kinematics {
 		willCruiseAtMaxVelocityAndMaxAcceleration, willCruiseAtMaxAccelerationNotMaxVelocity, willNotCruiseAtMaxVelocityOrMaxAcceleration
 	}
 
-	private Kinematics m_instance;
 	private boolean alreadyPrinted = true;
-
-	public Kinematics getInstance() {
-		if (m_instance == null) {
-			m_instance = new Kinematics();
-		}
-		return m_instance;
-	}
 
 	private static double m_trajectoryPointInterval = 1.0;
 
@@ -244,7 +236,7 @@ public class Kinematics {
 		// respectively
 		// Likewise Initial acceleration and Final Acceleration are referred to as ai
 		// and af respectively
-		getVf_Vi_Ai_Af(setpointVector, Key);
+		getVf_Vi_Ai_Af(setpointVector, Key,debugMode);
 
 		// For every point in the setpoint vector
 
@@ -670,7 +662,7 @@ public class Kinematics {
 		return trajectoryDistanceAndVelocityParameters;
 	}
 
-	private void getVf_Vi_Ai_Af(Vector<Point> setpointVector, Path Key) {
+	private void getVf_Vi_Ai_Af(Vector<Point> setpointVector, Path Key, boolean debugMode) {
 
 		// For every point inside of the setpoint vector
 
@@ -798,7 +790,7 @@ public class Kinematics {
 
 			} else {
 				setpoint.vf = 0.0;
-				getFinalAccelerationOfPoint(Key, setpoint, nextSetpoint);
+				getFinalAccelerationOfPoint(Key, setpoint, nextSetpoint, debugMode);
 			}
 
 		}
@@ -932,7 +924,7 @@ public class Kinematics {
 		}
 	}
 	
-	private void getFinalAccelerationOfPoint(Path Key, Point setpoint, Point nextSetpoint) {
+	private void getFinalAccelerationOfPoint(Path Key, Point setpoint, Point nextSetpoint, boolean debugMode) {
 		setpoint.af = Key.maxAcceleration;
 		double distance = Math.abs(nextSetpoint.m_x - setpoint.m_x);
 		double velocityCoveredWhileDecceleratingFromMaxAccelertion = Math.pow(Key.maxAcceleration, 2)
@@ -1019,6 +1011,11 @@ public class Kinematics {
 							* Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 2)
 					+ 1.0 - Key.maxJerk * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
 					+ (1.0 / 6) * Key.maxJerk * Math.pow((1.0 / Math.sqrt(2)), 3)));
+			if(debugMode) {
+				System.out.println("");
+				System.out.println("tempAf: " + tempAf);
+				System.out.println("");
+			}
 
 			if (tempAf < setpoint.af) {
 				setpoint.af = tempAf;
