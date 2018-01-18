@@ -1,6 +1,8 @@
 package Utilities;
 
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public enum ButtonsEnumerated {
 	ABUTTON(1),
@@ -12,7 +14,19 @@ public enum ButtonsEnumerated {
 	BACKBUTTON(7),
 	STARTBUTTON(8),
 	LEFTSTICKBUTTON(9),
-	RIGHTSTICKBUTTON(10);
+	RIGHTSTICKBUTTON(10),
+	LEFTTRIGGER(2) {
+		public boolean isPressed(Joystick gamepad) {
+			return EnumeratedRawAxis.getRightTriggerButton(gamepad);
+		}
+	},
+	RIGHTTRIGGER(3) {
+		public boolean isPressed(Joystick gamepad) {
+			return EnumeratedRawAxis.getRightTriggerButton(gamepad);
+		}
+	};
+	
+	
 
 	private int m_buttonValue;
 
@@ -20,12 +34,12 @@ public enum ButtonsEnumerated {
 		m_buttonValue = value;
 	}
 
-	public int getValue() {
-		return m_buttonValue;
+	public JoystickButton getJoystickButton(Joystick driveController) {
+		return new JoystickButton(driveController, m_buttonValue);
 	}
 
 	public boolean isPressed(Joystick gamepad) {
-		return gamepad.getRawButton(getValue());
+		return gamepad.getRawButton(m_buttonValue);
 	}
 
 	public static boolean getAButton(Joystick gamepad) {
@@ -67,5 +81,7 @@ public enum ButtonsEnumerated {
 	public static boolean getRightStickButton(Joystick gamepad) {
 		return RIGHTSTICKBUTTON.isPressed(gamepad);
 	}
-
+	public static boolean getLeftTriggerButton(Joystick gamepad) {
+		return LEFTTRIGGER.isPressed(gamepad);
+	}
 }

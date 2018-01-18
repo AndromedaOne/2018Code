@@ -12,6 +12,8 @@
 package org.usfirst.frc4905.Galaktika;
 
 import org.usfirst.frc4905.Galaktika.commands.*;
+import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
+import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.*;
@@ -67,7 +69,7 @@ public class OI {
         runIntakeButton = new JoystickButton(subsystemController, 1);
         runIntakeButton.whileHeld(new RunIntakeIn());
         driveController = new Joystick(0);
-        
+
 
 
         // SmartDashboard Buttons
