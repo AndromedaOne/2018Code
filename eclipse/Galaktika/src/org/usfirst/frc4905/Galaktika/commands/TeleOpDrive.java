@@ -14,6 +14,8 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.EnumeratedRawAxis;
+import Utilities.Trace;
+import Utilities.TracePair;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -63,16 +65,28 @@ public class TeleOpDrive extends Command {
 			rotateStickValue = 0;
 		}
 		double robotAngle = RobotMap.navX.getRobotAngle();
+		double correctionEquation = (SavedAngle - robotAngle)*kProportion;
+		int correctionMode = -1;
 		if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
+			correctionMode = 0;
 			SavedAngle = robotAngle;
 		}
 		else if (rotateStickValue != 0) {
+			correctionMode = 1;
 			SavedAngle = robotAngle;
 			Robot.driveTrain.move(forwardBackwardStickValue, rotateStickValue);
 		}
 		else {
-			Robot.driveTrain.move(forwardBackwardStickValue, (SavedAngle - robotAngle)*kProportion);
+			correctionMode = 2;
+			Robot.driveTrain.move(forwardBackwardStickValue, correctionEquation);
 		}
+		Trace.getInstance().addTrace("GyroCorrection",
+				new TracePair("forwardBackwardStickValue", forwardBackwardStickValue),
+				new TracePair("SavedAngle", SavedAngle),
+				new TracePair("robotAngle", robotAngle),
+				new TracePair("kProportion", kProportion),
+				new TracePair("correctionEquation", correctionEquation),
+				new TracePair("correctionMode", (double)correctionMode));
     }
 
     // Make this return true when this Command no longer needs to run execute()
