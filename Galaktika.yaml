@@ -125,7 +125,7 @@ Children:
       Name: Compressor
     Properties:
       Send to SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: false,
-        name: Send to SmartDashboard, validators: null, value: false}
+        name: Send to SmartDashboard, validators: null, value: true}
       Default command parameters: !!robotbuilder.data.properties.ParametersProperty
         default: []
         name: Default command parameters
