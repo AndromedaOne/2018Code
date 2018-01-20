@@ -41,6 +41,7 @@ public class Pneumatics extends Subsystem {
 
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
+    	setDefaultCommand(new PneumaticsCommands());
     }
 
     @Override
@@ -51,6 +52,15 @@ public class Pneumatics extends Subsystem {
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
+    public void extend() {
+    	RobotMap.rampsSolenoid1.set(true);
+    }
+    public void contract() {
+    	RobotMap.rampsSolenoid1.set(false);
+    }
+    public void stop() {
+    	
+    }
 
 }
 
