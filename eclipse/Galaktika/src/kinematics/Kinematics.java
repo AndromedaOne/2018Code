@@ -9,7 +9,6 @@ public class Kinematics {
 	}
 
 	private boolean alreadyPrinted = true;
-
 	private static double m_trajectoryPointInterval = 1.0;
 
 	public static double getTrajectoryPointInterval() {
@@ -236,11 +235,13 @@ public class Kinematics {
 		// respectively
 		// Likewise Initial acceleration and Final Acceleration are referred to as ai
 		// and af respectively
-		getVf_Vi_Ai_Af(setpointVector, Key,debugMode);
+		getVf_Vi_Ai_Af(setpointVector, Key, debugMode);
+	
 
 		// For every point in the setpoint vector
 
 		for (int i1 = 0; i1 < setpointVector.size(); i1++) {
+			
 			Point setpoint = setpointVector.get(i1);
 			Point previousSetpoint = new Point(0, 0);
 			try {
@@ -253,7 +254,11 @@ public class Kinematics {
 
 			TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters = setTrajectoryDistanceAndVelocityParameters(
 					Key, setpoint, previousSetpoint, debugMode);
-
+			if (debugMode && (setpoint.m_x == 6.0 || setpoint.m_x == 13.0)) {
+				System.out.println("");
+				System.out.println("trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType: " + trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType);
+				System.out.println("");
+			}
 			switch (trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType) {
 			case willCruiseAtMaxVelocityAndMaxAcceleration:
 				setTrajectoryTimesWhenMaxVelocityAndMaxAccelerationAreReached(Key, setpoint,
@@ -323,11 +328,9 @@ public class Kinematics {
 		 * Acceleration = A
 		 * 
 		 * finalAccelerationCruisingDistance ((vi + iat * A + jvc)^2 - (vf +
-		 * jvc)^2)/(2*A)
-		 * 
-		 * Solve for iat Distance = ijdc + (vi + ijvc)*iat + 0.5*A*iat^2 + 2*((vi + ijvc
-		 * + iat*A)*jT + 1/2*A*jT^2 + 1/6J*jT^3) + ((vi + iat * A + ijvc)^2 - (vf +
-		 * fjvc)^2)/(2*A) + fjdc
+		 * jvc)^2)/(2*A) f]\ Solve for iat Distance = ijdc + (vi + ijvc)*iat +
+		 * 0.5*A*iat^2 + 2*((vi + ijvc + iat*A)*jT + 1/2*A*jT^2 + 1/6J*jT^3) + ((vi +
+		 * iat * A + ijvc)^2 - (vf + fjvc)^2)/(2*A) + fjdc
 		 * 
 		 * Distance = ijdc + fjdc + (vi + ijvc)*iat+ 0.5*A*iat^2 + 2*jT(vi+ijvc+iat*A) +
 		 * A*jT^2 + 1/3J*jT^3 + (((vi + ijvc) + iat*A)^2 - (vf+fjvc)^2)/(2*A)
@@ -650,6 +653,9 @@ public class Kinematics {
 					+ trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered;
 		}
 
+		//if (debugMode && setpoint.) {
+			
+		//}
 		if (trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered
 				+ trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
 			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxVelocityAndMaxAcceleration;
@@ -782,10 +788,9 @@ public class Kinematics {
 				getPossibleFinalVelocityDeterminingSetpoint(Key, setpoint, setpointVector, i1,
 						traveledInAPositiveDirection, possibleFinalVelocityDeterminingSetpoints,
 						possibleFinalVelocityDeterminingSetpointIndexes);
-				
-				getFinalVelocityOfPoint(Key,setpoint,previousSetpoint,
-						possibleFinalVelocityDeterminingSetpointIndexes,
-						possibleFinalVelocityDeterminingSetpoints, i1,
+
+				getFinalVelocityOfPoint(Key, setpoint, previousSetpoint,
+						possibleFinalVelocityDeterminingSetpointIndexes, possibleFinalVelocityDeterminingSetpoints, i1,
 						deltaDistanceBetweenCurrentSetpointAndPreviousSetpoint);
 
 			} else {
@@ -923,7 +928,7 @@ public class Kinematics {
 			}
 		}
 	}
-	
+
 	private void getFinalAccelerationOfPoint(Path Key, Point setpoint, Point nextSetpoint, boolean debugMode) {
 		setpoint.af = Key.maxAcceleration;
 		double distance = Math.abs(nextSetpoint.m_x - setpoint.m_x);
@@ -937,15 +942,23 @@ public class Kinematics {
 		double initialJerkDistanceCovered = 0.5 * Key.maxAcceleration
 				* Math.pow(timeCoveredWhileMaxAccelerationIsDecceleratingTo0, 2)
 				- (1.0 / 6.0) * Key.maxJerk * Math.pow(timeCoveredWhileMaxAccelerationIsDecceleratingTo0, 3);
-		double finalFirstJerkDistanceCovered = velocityCoveredWhileDecceleratingFromMaxAccelertion
-				* finalJerkTime - (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
+		double finalFirstJerkDistanceCovered = velocityCoveredWhileDecceleratingFromMaxAccelertion * finalJerkTime
+				- (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
 		double finalSecondJerkDistanceCovered = (velocityCoveredWhileDecceleratingFromMaxAccelertion
 				- finalEachJerkVelocityCovered) * finalJerkTime
 				- 0.5 * finalJerkMaxAcceleration * Math.pow(finalJerkTime, 2)
 				+ (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
 
-		double distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 = initialJerkDistanceCovered
-				+ finalFirstJerkDistanceCovered + finalSecondJerkDistanceCovered;
+		double distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 = Math.pow(Key.maxAcceleration, 3)
+				* (0.5 * Math.pow((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)), 2)
+						- (1.0 / 6.0) * Key.maxJerk
+								* Math.pow((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)), 3)
+						+ (Key.maxJerk / Math.sqrt(2)) * ((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)))
+						- (0.5) * Math.pow(Key.maxJerk, 2) * (1.0 / Math.sqrt(2))
+								* Math.pow(((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2))), 2)
+						+ Math.pow(Key.maxJerk, 2) / 4.0
+						- ((Math.pow(Key.maxJerk, 2) / 4) + (Math.pow(Key.maxJerk, 4) / (4 * Math.sqrt(2))))
+						+ (1.0 / 6.0) * Math.pow(Key.maxJerk, 4) * (1.0 / Math.pow(Math.sqrt(2), 3)));
 		if (distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 <= distance) {
 			setpoint.af = Key.maxAcceleration;
 		} else {
@@ -954,66 +967,104 @@ public class Kinematics {
 			double cTerm = Key.maxAcceleration / (2 * Key.maxJerk);
 			double dTerm = -1 * Math.abs(distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0 - distance);
 
-			double timeBeforeEndDeltaTimeForAccelerationToStartChanging = solveCubicEquation(aTerm, bTerm,
-					cTerm, dTerm);
+			double timeBeforeEndDeltaTimeForAccelerationToStartChanging = solveCubicEquation(aTerm, bTerm, cTerm,
+					dTerm);
 
-			double tempAf = Key.maxAcceleration
-					- Key.maxJerk / timeBeforeEndDeltaTimeForAccelerationToStartChanging;
+			double tempAf = Key.maxAcceleration - Key.maxJerk / timeBeforeEndDeltaTimeForAccelerationToStartChanging;
 			/*
 			 * Distance = 1/2*ai*(iT + fT)^2 - 1/6*J*(iT + fT)^3 + (ai*(iT + fT) - 1/2*J*(iT
 			 * + fT)^2)*fT + 1/2*(ai - J*(iT + fT))*fT^2 + 1/6*J*fT^3
 			 * 
 			 * iT = ai/J VelocityCoveredWhileAccelerationIsDecceleratingTo0 = ai/2*ai/J =
-			 * ai^2/(2*J) FinalTimeVelocityCovered = ai^2/(4*J) fT = sqrt(ai^2/(4*J)*2 *J) =
-			 * sqrt(ai^2/2) = ai/sqrt(2) iT + fT = ai/J + ai/sqrt(2) = ai*(1/J + 1/sqrt(2))
+			 * ai^2/(2*J) FinalTimeVelocityCovered = ai^2/(4*J) fT = sqrt(ai^2/(4*J)*2 *1/J)
+			 * = sqrt(ai^2/(2*J^2)) = (ai*J)/sqrt(2) iT + fT = ai/J + ai*J/sqrt(2) = ai*(1/J
+			 * + J/sqrt(2))
 			 * 
-			 * Distance = 1/2*ai*(ai*(1/J + 1/sqrt(2)))^2 - 1/6*J*(ai*(1/J + 1/sqrt(2)))^3 +
-			 * (ai*(ai*(1/J + 1/sqrt(2))) - 1/2*J*(ai*(1/J + 1/sqrt(2)))^2)*ai/sqrt(2) +
-			 * 1/2*(ai - J*(ai*(1/J + 1/sqrt(2))))*(ai/ sqrt(2))^2 + 1/6*J*(ai 1/sqrt(2))^3
+			 * Distance = 1/2*ai*(ai*(1/J + J/sqrt(2)))^2 - 1/6*J*(ai*(1/J + J/sqrt(2)))^3 +
+			 * (ai*(ai*(1/J + J/sqrt(2))) - 1/2*J*(ai*(1/J + J/sqrt(2)))^2)*(ai*J)/sqrt(2) +
+			 * 1/2*(ai - J*(ai*(1/J + J/sqrt(2))))*((ai*J)/ sqrt(2))^2 +
+			 * 1/6*J*((ai*J)/sqrt(2))^3
 			 * 
-			 * Distance = 1/2*ai*ai^2*(1/J + 1/sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
-			 * (ai^2*(1/J + 1/sqrt(2)) - 1/2*J*ai^2*(1/J + 1/sqrt(2))^2)*ai/sqrt(2) +
-			 * 1/2*(ai - J*(ai*(1/J + 1/sqrt(2))))*(ai/sqrt(2))^2 + 1/6*J*ai^3 * 1/sqrt(2)^3
+			 * Distance = 1/2*ai*ai^2*(1/J + J/sqrt(2))^2 - 1/6*J*ai^3*(1/J + J/sqrt(2))^3 +
+			 * (ai^2*(1/J + J/sqrt(2)) - 1/2*J*ai^2*(1/J + J/sqrt(2))^2)*(ai*J)/sqrt(2) +
+			 * 1/2*(ai - J*(ai*(1/J + J/sqrt(2))))*((ai*J)/sqrt(2))^2 + 1/6*J*ai^3 *
+			 * J^3/sqrt(2)^3
 			 * 
+			 * 1/2*(ai - J*(ai*(1/J + J/sqrt(2))))*((ai*J)/sqrt(2))^2 1/2*(ai - J*ai*(1/J +
+			 * J/sqrt(2)))*ai^2 * J^2/sqrt(2)^2 (ai - J*ai*(1/J + J/sqrt(2)))*ai^2 * J^2/4
+			 * (ai^3 - J*ai^3*(1/J + J/sqrt(2))) * J^2/4 J^2*ai^3/4 - J^3*ai^3*(1/J +
+			 * J/sqrt(2))/4 J^2/4*ai^3 - ai^3*(J^2/4 + J^4/(4*sqrt(2)))
 			 * 
-			 * 1/2*(ai - J*ai*(1/J + 1/sqrt(2)))*ai^2 /sqrt(2)^2 (ai - J*ai*(1/J +
-			 * 1/sqrt(2)))*ai^2 ai^3 - J*ai^3*(1/J + 1/sqrt(2))
+			 * Distance = 1/2*ai*ai^2*(1/J + J/sqrt(2))^2 - 1/6*J*ai^3*(1/J + J/sqrt(2))^3 +
+			 * (ai^2*(1/J + J/sqrt(2)) - 1/2*J*ai^2*(1/J + J/sqrt(2))^2)*(ai*J)/sqrt(2) +
+			 * J^2/4*ai^3 - ai^3*(J^2/4 + J^4/(4*sqrt(2))) + 1/6*J*ai^3 * J^3/sqrt(2)^3
 			 * 
-			 * Distance = 1/2*ai*ai^2*(1/J + 1/sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
-			 * (ai^2*(1/J + 1/sqrt(2)) - 1/2*J*ai^2*(1/J + 1/sqrt(2))^2)*ai/sqrt(2) +ai^3 -
-			 * J*ai^3*(1/J + 1/sqrt(2)) + 1/6*J*ai^3 * 1/sqrt(2)^3
+			 * Distance = 1/2*ai^3*(1/J +J/ sqrt(2))^2 - 1/6*J*ai^3*(1/J + J/sqrt(2))^3 +
+			 * ai^3*J/sqrt(2)*(1/J + J/sqrt(2)) - 1/2*J^2*ai^3/sqrt(2)*(1/J + J/sqrt(2))^2 +
+			 * J^2/4*ai^3 - ai^3*(J^2/4 + J^4/(4*sqrt(2))) + 1/6*J*ai^3 * J^3/sqrt(2)^3
 			 * 
-			 * Distance = 1/2*ai^3*(1/J +1/ sqrt(2))^2 - 1/6*J*ai^3*(1/J + 1/sqrt(2))^3 +
-			 * ai^3/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*ai^3/sqrt(2)*(1/J + 1/sqrt(2))^2 +
-			 * ai^3 - J*ai^3*(1/J + 1/sqrt(2)) + 1/6*J*ai^3 * 1/sqrt(2)^3
+			 * Distance = 1/2*(1/J + J/sqrt(2))^2*ai^3 - 1/6*J*(1/J + J/sqrt(2))^3*ai^3 +
+			 * J/sqrt(2)*(1/J + J/sqrt(2))*ai^3 - 1/2*J^2/sqrt(2)*(1/J + J/sqrt(2))^2*ai^3 +
+			 * J^2/4*ai^3 - (J^2/4 + J^4/ (4*sqrt(2)))*ai^3 + 1/6*J^4/sqrt(2)^3*ai^3
 			 * 
-			 * Distance = 1/2*(1/J + 1/sqrt(2))^2*ai^3 - 1/6*J*(1/J + 1/sqrt(2))^3*ai^3 +
-			 * 1/sqrt(2)*(1/J + 1/sqrt(2))*ai^3 - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2*ai^3 +
-			 * ai^3 - J*(1/J +1/ sqrt(2))*ai^3 + 1/6*J*1/sqrt(2)^3*ai^3
+			 * Distance = (1/2*(1/J + J/sqrt(2))^2 -1/6*J*(1/J + J/sqrt(2))^3 +
+			 * J/sqrt(2)*(1/J + J/sqrt(2)) - 1/2*J^2/sqrt(2)*(1/J + J/sqrt(2))^2 + J^2/4 -
+			 * (J^2/4 + J^4/(4*sqrt(2))) + 1/6*J^4/sqrt(2)^3)*ai^3
 			 * 
-			 * Distance = (1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 +
-			 * 1/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 -
-			 * J*(1/J + 1/sqrt(2)) + 1/6*J*1/sqrt(2)^3)*ai^3
+			 * Distance/(1/2*(1/J + J/sqrt(2))^2 -1/6*J*(1/J + J/sqrt(2))^3 + J/sqrt(2)*(1/J
+			 * + J/sqrt(2)) - 1/2*J^2/sqrt(2)*(1/J + J/sqrt(2))^2 + J^2/4 - (J^2/4 +
+			 * J^4/(4*sqrt(2))) + 1/6*J^4/sqrt(2)^3)= ai^3
 			 * 
-			 * Distance/(1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 + 1/sqrt(2)*(1/J
-			 * + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 - J*(1/J + 1/sqrt(2))
-			 * + 1/6*J*1/sqrt(2)^3) = ai^3
-			 * 
-			 * cbrt(Distance/(1/2*(1/J + 1/sqrt(2))^2 -1/6*J*(1/J + 1/sqrt(2))^3 +
-			 * 1/sqrt(2)*(1/J + 1/sqrt(2)) - 1/2*J*1/sqrt(2)*(1/J + 1/sqrt(2))^2 + 1 -
-			 * J*(1/J + 1/sqrt(2)) + 1/6*J*1/sqrt(2)^3)) = ai
+			 * cbrt(Distance/(1/2*(1/J + J/sqrt(2))^2 -1/6*J*(1/J + J/sqrt(2))^3 +
+			 * J/sqrt(2)*(1/J + J/sqrt(2)) - 1/2*J^2/sqrt(2)*(1/J + J/sqrt(2))^2 + J^2/4 -
+			 * (J^2/4 + J^4/(4*sqrt(2))) + 1/6*J^4/sqrt(2)^3)) = ai
 			 */
 
-			tempAf = Math.cbrt(distance / (0.5 * Math.pow((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)), 2)
-					- (1.0 / 6) * Key.maxJerk * Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 3)
-					+ (1.0 / Math.sqrt(2)) * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
-					- (1.0 / 2) * Key.maxJerk * (1.0 / Math.sqrt(2))
-							* Math.pow(((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2))), 2)
-					+ 1.0 - Key.maxJerk * ((1.0 / Key.maxJerk) + (1.0 / Math.sqrt(2)))
-					+ (1.0 / 6) * Key.maxJerk * Math.pow((1.0 / Math.sqrt(2)), 3)));
-			if(debugMode) {
+			tempAf = Math.cbrt(distance / (0.5 * Math.pow((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)), 2)
+					- (1.0 / 6.0) * Key.maxJerk * Math.pow((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)), 3)
+					+ (Key.maxJerk / Math.sqrt(2)) * ((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)))
+					- (0.5) * Math.pow(Key.maxJerk, 2) * (1.0 / Math.sqrt(2))
+							* Math.pow(((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2))), 2)
+					+ Math.pow(Key.maxJerk, 2) / 4.0
+					- ((Math.pow(Key.maxJerk, 2) / 4) + (Math.pow(Key.maxJerk, 4) / (4 * Math.sqrt(2))))
+					+ (1.0 / 6.0) * Math.pow(Key.maxJerk, 4) * (1.0 / Math.pow(Math.sqrt(2), 3))));
+			if (debugMode) {
+				double distanceCoveredWhileDeceleratingFromAIOfMaxAI = Math.pow(Key.maxAcceleration, 3)
+						* (0.5 * Math.pow((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)), 2)
+								- (1.0 / 6.0) * Key.maxJerk
+										* Math.pow((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)), 3)
+								+ (Key.maxJerk / Math.sqrt(2)) * ((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2)))
+								- (0.5) * Math.pow(Key.maxJerk, 2) * (1.0 / Math.sqrt(2))
+										* Math.pow(((1.0 / Key.maxJerk) + (Key.maxJerk / Math.sqrt(2))), 2)
+								+ Math.pow(Key.maxJerk, 2) / 4.0
+								- ((Math.pow(Key.maxJerk, 2) / 4) + (Math.pow(Key.maxJerk, 4) / (4 * Math.sqrt(2))))
+								+ (1.0 / 6.0) * Math.pow(Key.maxJerk, 4) * (1.0 / Math.pow(Math.sqrt(2), 3)));
+				/*
+				 * Distance = 1/2*ai*(ai*(1/J + J/sqrt(2)))^2 - 1/6*J*(ai*(1/J + J/sqrt(2)))^3 +
+				 * (ai*(ai*(1/J + J/sqrt(2))) - 1/2*J*(ai*(1/J + J/sqrt(2)))^2)*(ai*J)/sqrt(2) +
+				 * 1/2*(ai - J*(ai*(1/J + J/sqrt(2))))*((ai*J)/ sqrt(2))^2 +
+				 * 1/6*J*((ai*J)/sqrt(2))^3
+				 */
+				double beforeSimplifiedDistanceCoveredWhileDeceleratingFromAIOfMaxAI = 0.5 * Key.maxAcceleration
+						* Math.pow((Key.maxAcceleration * (1.0 / Key.maxJerk + Key.maxJerk / Math.sqrt(2))), 2)
+						- (1.0/6.0) * Key.maxJerk
+								* Math.pow((Key.maxAcceleration * (1.0 / Key.maxJerk + Key.maxJerk / Math.sqrt(2))), 3)
+						+ (Key.maxAcceleration * (Key.maxAcceleration * (1.0 / Key.maxJerk + Key.maxJerk / Math.sqrt(2)))
+								- 0.5 * Key.maxJerk * Math
+										.pow((Key.maxAcceleration * (1 / Key.maxJerk + Key.maxJerk / Math.sqrt(2))), 2))
+								* (Key.maxAcceleration * Key.maxJerk) / Math.sqrt(2)
+						+ 0.5 * (Key.maxAcceleration
+								- Key.maxJerk * (Key.maxAcceleration * (1.0 / Key.maxJerk + Key.maxJerk / Math.sqrt(2))))
+								* Math.pow(((Key.maxAcceleration * Key.maxJerk) / Math.sqrt(2)), 2)
+						+ 1.0/6.0 * Key.maxJerk * Math.pow(((Key.maxAcceleration * Key.maxJerk) / Math.sqrt(2)), 3);
 				System.out.println("");
+				System.out.println("distance: " + distance);
 				System.out.println("tempAf: " + tempAf);
+				System.out.println("distanceCoveredWhileDeceleratingFromAIOfMaxAI: "
+						+ distanceCoveredWhileDeceleratingFromAIOfMaxAI);
+				System.out.println("beforeSimplifiedDistanceCoveredWhileDeceleratingFromAIOfMaxAI: "
+						+ beforeSimplifiedDistanceCoveredWhileDeceleratingFromAIOfMaxAI);
+				System.out.println("distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0: " + distanceCoveredWhileAccelerationIsChangingKeepingViAndVf0);
 				System.out.println("");
 			}
 
@@ -1024,7 +1075,6 @@ public class Kinematics {
 		}
 
 	}
-	
 
 	/**
 	 * This method uses the kinematic equation involving vi, vf, acceleration and

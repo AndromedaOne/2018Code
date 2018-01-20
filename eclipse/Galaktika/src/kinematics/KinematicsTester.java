@@ -7,7 +7,6 @@ import javax.security.auth.kerberos.KerberosKey;
 
 import kinematics.Kinematics.*;
 
-
 public class KinematicsTester {
 
 	static Kinematics m_kinematics = new Kinematics();
@@ -15,7 +14,6 @@ public class KinematicsTester {
 
 	public static void main(String[] args) {
 		try {
-
 			createPositiveTrajectoryGreaterThanTheDistanceCoveredWhileAcceleratingCase();
 
 			createNegativeTrajectoryGreaterThanDistanceCoveredWhileAcceleratingCase();
@@ -194,6 +192,37 @@ public class KinematicsTester {
 		}
 
 	}
+	
+	private static void createUnitCase(Vector<Double> setpoints)
+			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
+			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
+			InvalidJerkException {
+		createUnitCase(setpoints, false, false);
+	}
+	
+	private static void createUnitCase(Vector<Double> setpoints, boolean printMode)
+			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
+			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
+			InvalidJerkException {
+		createUnitCase(setpoints, printMode, false);
+	}
+
+	private static void createUnitCase(Vector<Double> setpoints, boolean printMode, boolean debugMode)
+			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
+			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
+			InvalidJerkException {
+		Path myPath = m_kinematics.new Path();
+		KinematicsTester kinematicsTester = new KinematicsTester();
+		for(int a = 0; a < setpoints.capacity(); a++) {
+			m_kinematics.addPointToPath(myPath, m_kinematics.new Point(setpoints.get(a)));
+		}
+		m_kinematics.createTrajectory(myPath, 2.0, 0.5, 0.25,debugMode);
+		if(printMode) {
+			printTrajectory(myPath);
+		}
+		checkTrajectoryPath(myPath, kinematicsTester);
+		
+	}
 
 	private static void createPositiveTrajectoryGreaterThanTheDistanceCoveredWhileAcceleratingCase()
 			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
@@ -204,7 +233,7 @@ public class KinematicsTester {
 
 		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(14));
 		m_kinematics.createTrajectory(myPath, 2.0, 0.5, 0.25);
-		
+
 		checkTrajectoryPath(myPath, kinematicsTester);
 	}
 
@@ -281,9 +310,9 @@ public class KinematicsTester {
 
 		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(14));
 		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(-6));
-		
+
 		m_kinematics.createTrajectory(myPath, 2.0, 0.5, 0.25);
-		
+
 		checkTrajectoryPath(myPath, kinematicsTester);
 
 	}
@@ -312,8 +341,9 @@ public class KinematicsTester {
 
 		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(14));
 		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(6));
-		m_kinematics.createTrajectory(myPath, 2.0, 0.5, 0.25);
-
+		m_kinematics.createTrajectory(myPath, 2.0, 0.5, 0.25, true);
+		
+		printTrajectory(myPath);
 		checkTrajectoryPath(myPath, kinematicsTester);
 
 	}
@@ -341,7 +371,7 @@ public class KinematicsTester {
 		KinematicsTester kinematicsTester = new KinematicsTester();
 
 		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(14));
-		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(13));
+		m_kinematics.addPointToPath(myPath, m_kinematics.new Point(13.0));
 		m_kinematics.createTrajectory(myPath, 2.0, 0.5, 0.25, true);
 
 		printTrajectory(myPath);
@@ -1525,9 +1555,7 @@ public class KinematicsTester {
 	 * }
 	 * 
 	 * m_kinematicsSimpler.createTrajectory(myPath, maxVelocity, maxAcceleration,
-	 * 0.25);
-	 * x
-	 * printTrajectory(myPath); System.out.println("Number: " + (i + 1));
+	 * 0.25); x printTrajectory(myPath); System.out.println("Number: " + (i + 1));
 	 * checkTrajectoryPath(myPath, kinematicsTester); } }
 	 */
 	private static void checkTrajectoryPath(Path Key, KinematicsTester kinematicsTester)
@@ -1554,15 +1582,14 @@ public class KinematicsTester {
 	 * double endDeltatTimeFromStartOfPath = 0; for (int i = 0; i <
 	 * Key.getSetpointVector().size(); i++) { endDeltatTimeFromStartOfPath +=
 	 * Key.getSetpointVector().get(i).getEndDeltaTime(); } for (double i = 0; i <
-	 * endDeltatTimeFromStartOfPath; i +=
-	 * Kinematics.getTrajectoryPointInterval()) { TrajectoryPoint
-	 * currentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
-	 * i); TrajectoryPoint previousPoint =
+	 * endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
+	 * TrajectoryPoint currentPoint =
+	 * m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i);
+	 * TrajectoryPoint previousPoint =
 	 * m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i -
 	 * Kinematics.getTrajectoryPointInterval()); if
 	 * (Math.abs(currentPoint.m_currentVelocity - previousPoint.m_currentVelocity) >
-	 * (Key.getMaxAcceleration() * Kinematics.getTrajectoryPointInterval() +
-	 * 0.1)) {
+	 * (Key.getMaxAcceleration() * Kinematics.getTrajectoryPointInterval() + 0.1)) {
 	 * 
 	 * errMessage = "The Current Acceleration at time: " + currentPoint.m_timestamp
 	 * + " is above the maximum acceleration!"; invalidAccelerationException =
@@ -1576,10 +1603,10 @@ public class KinematicsTester {
 	 * String errMessage; double endDeltatTimeFromStartOfPath = 0; for (int i = 0; i
 	 * < Key.getSetpointVector().size(); i++) { endDeltatTimeFromStartOfPath +=
 	 * Key.getSetpointVector().get(i).getEndDeltaTime(); } for (double i = 0; i <
-	 * endDeltatTimeFromStartOfPath; i +=
-	 * Kinematics.getTrajectoryPointInterval()) { TrajectoryPoint
-	 * currentPoint = m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
-	 * i); TrajectoryPoint previousPoint =
+	 * endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
+	 * TrajectoryPoint currentPoint =
+	 * m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key, i);
+	 * TrajectoryPoint previousPoint =
 	 * m_kinematicsSimpler.getTrajectoryPointWithInterpolation(Key,
 	 * i-Kinematics.getTrajectoryPointInterval()); TrajectoryPoint
 	 * secondPreviousPoint =
@@ -1672,7 +1699,6 @@ public class KinematicsTester {
 				errMessage = "The point at time: " + originalTrajectoryPointsPath.get(i).m_timestamp
 						+ " has a calculated velocity that exceeds the maxVelocity!";
 				invalidVelocityException = kinematicsTester.new InvalidVelocityException(errMessage);
-				
 
 				throw invalidVelocityException;
 			}
@@ -1680,7 +1706,7 @@ public class KinematicsTester {
 				errMessage = "The point at time: " + originalTrajectoryPointsPath.get(i).m_timestamp
 						+ " has a difference between calculated velocity and original velocity which exceed 0.1!";
 				invalidVelocityException = kinematicsTester.new InvalidVelocityException(errMessage);
-				
+
 				throw invalidVelocityException;
 			}
 			if (Math.abs(originalTrajectoryPointPathVelocity) > Key.getMaxVelocity()) {
@@ -1770,8 +1796,7 @@ public class KinematicsTester {
 			Point lastSetpoint = m_kinematics.new Point(0, 0);
 			boolean traveledInAPositiveDirection;
 			boolean willTravelInAPositiveDirection;
-			TrajectoryPoint trajectoryPoint = m_kinematics.getTrajectoryPoint(Key,
-					currentTrajectoryPointIndex);
+			TrajectoryPoint trajectoryPoint = m_kinematics.getTrajectoryPoint(Key, currentTrajectoryPointIndex);
 			try {
 				nextSetpoint = Key.getSetpointVector().get(i + 1);
 			} catch (ArrayIndexOutOfBoundsException a) {
@@ -1808,7 +1833,7 @@ public class KinematicsTester {
 					throw invalidTrajectoryLogic;
 				}
 			} else {
-				
+
 				if (Math.abs(trajectoryPoint.m_currentVelocity) > 0.1) {
 
 					errMessage = "The point at time: " + trajectoryPoint.m_timestamp
@@ -1829,13 +1854,13 @@ public class KinematicsTester {
 					invalidTrajectoryLogic = kinematicsTester.new InvalidTrajectoryLogic(errMessage);
 					throw invalidTrajectoryLogic;
 				}
-				
+
 				double calculatedAcceleration = getAccelerationOfPoint(Key, trajectoryPoint);
 				TrajectoryPoint nextPoint = m_kinematics.getTrajectoryPoint(Key,
 						trajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 				double nextAcceleration = getAccelerationOfPoint(Key, nextPoint);
 				double currentJerk = getJerkOfPoint(Key, trajectoryPoint.m_timestamp);
-				
+
 				if (Math.abs(Math.abs(calculatedAcceleration) - setpoint.getaf()) > 0.0001) {
 					errMessage = "The point at time: " + trajectoryPoint.m_timestamp
 							+ " is a point where the calculated acceleration and the final acceleration are not equal";
@@ -1921,28 +1946,26 @@ public class KinematicsTester {
 	}
 
 	private static double getVelocityOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
-		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematics.getTrajectoryPoint(
-				Key, originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
+		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematics.getTrajectoryPoint(Key,
+				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
 		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = m_kinematics.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 		double changeInPosition = deltaAfterOriginalTrajectoryPoint.m_position
 				- deltaBeforeOriginalTrajectoryPoint.m_position;
 		double changeInTime = m_deltaTimeFromOriginalPoint * 2;
 		double calculatedVelocity = changeInPosition / changeInTime;
-		
 
 		return calculatedVelocity;
 	}
 
 	private static double getAccelerationOfPoint(Path Key, double originalTrajectoryPointTime) {
-		TrajectoryPoint trajectoryPoint = m_kinematics.new TrajectoryPoint(0.0, 0.0,
-				originalTrajectoryPointTime);
+		TrajectoryPoint trajectoryPoint = m_kinematics.new TrajectoryPoint(0.0, 0.0, originalTrajectoryPointTime);
 		return getAccelerationOfPoint(Key, trajectoryPoint);
 	}
 
 	private static double getAccelerationOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
-		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematics.getTrajectoryPoint(
-				Key, originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
+		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = m_kinematics.getTrajectoryPoint(Key,
+				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
 		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = m_kinematics.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 		double changeInVelocity = deltaAfterOriginalTrajectoryPoint.m_currentVelocity
@@ -1954,14 +1977,12 @@ public class KinematicsTester {
 	}
 
 	private static double getJerkOfPoint(Path Key, double originalTrajectoryPointTime, boolean testMode) {
-		TrajectoryPoint trajectoryPoint = m_kinematics.new TrajectoryPoint(0.0, 0.0,
-				originalTrajectoryPointTime);
+		TrajectoryPoint trajectoryPoint = m_kinematics.new TrajectoryPoint(0.0, 0.0, originalTrajectoryPointTime);
 		return getJerkOfPoint(Key, trajectoryPoint, testMode);
 	}
 
 	private static double getJerkOfPoint(Path Key, double originalTrajectoryPointTime) {
-		TrajectoryPoint trajectoryPoint = m_kinematics.new TrajectoryPoint(0.0, 0.0,
-				originalTrajectoryPointTime);
+		TrajectoryPoint trajectoryPoint = m_kinematics.new TrajectoryPoint(0.0, 0.0, originalTrajectoryPointTime);
 		return getJerkOfPoint(Key, trajectoryPoint);
 	}
 
@@ -1974,7 +1995,7 @@ public class KinematicsTester {
 				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
 		double deltaAfterAcceleration = getAccelerationOfPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
-		
+
 		double changeInAcceleration = deltaAfterAcceleration - deltaBeforeAcceleration;
 		double changeInTime = m_deltaTimeFromOriginalPoint * 2;
 		double calculatedJerk = changeInAcceleration / changeInTime;
@@ -2014,13 +2035,15 @@ public class KinematicsTester {
 					+ ", " + currentJerk + ", " + currentPoint.m_position + ", " + currentPoint.m_timestamp + "]");
 
 		}
-		
-		TrajectoryPoint test = m_kinematics.getTrajectoryPoint(Key,12.041666666666668);
-		TrajectoryPoint testDeltaBefore = m_kinematics.getTrajectoryPoint(Key,12.041666666666668 - m_deltaTimeFromOriginalPoint);
-		TrajectoryPoint testDeltaAfter = m_kinematics.getTrajectoryPoint(Key,12.041666666666668 + m_deltaTimeFromOriginalPoint);
+
+		TrajectoryPoint test = m_kinematics.getTrajectoryPoint(Key, 12.041666666666668);
+		TrajectoryPoint testDeltaBefore = m_kinematics.getTrajectoryPoint(Key,
+				12.041666666666668 - m_deltaTimeFromOriginalPoint);
+		TrajectoryPoint testDeltaAfter = m_kinematics.getTrajectoryPoint(Key,
+				12.041666666666668 + m_deltaTimeFromOriginalPoint);
 		double deltaBeforeAcceleration = getAccelerationOfPoint(Key, testDeltaBefore);
 		double deltaAfterAcceleration = getAccelerationOfPoint(Key, testDeltaAfter);
-		
+
 		System.out.print("The Setpoints are: ");
 		for (int i = 0; i < Key.getSetpointVector().size(); i++) {
 			if (i == 0) {
@@ -2031,8 +2054,8 @@ public class KinematicsTester {
 			System.out.println(" MaxV " + Key.getSetpointVector().get(i).getMaxVelocity());
 
 		}
+		System.out.println("");
 
 	}
 
 }
-
