@@ -10,12 +10,18 @@ import edu.wpi.first.wpilibj.command.Command;
 public class GyroPIDTurnDeltaAngle extends Command {
 	
 	private double m_deltaAngleToTurn = 0.0;
-
+	
+	public GyroPIDTurnDeltaAngle() {
+		requires(Robot.driveTrain);
+		m_deltaAngleToTurn = 90; 
+	}
+	
     public GyroPIDTurnDeltaAngle(double deltaAngleToTurn) {
     	m_deltaAngleToTurn = deltaAngleToTurn;
     	requires(Robot.driveTrain); 
     }
 
+    
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.driveTrain.initGyroPIDDeltaAngle();
