@@ -7,9 +7,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoLoadScale extends AutoCommand {
 	public AutoLoadScale() {
 
-	}
-
-	public void start() {
 		char robotPos = Robot.getInitialRobotLocation();
 		char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == robotPos) {

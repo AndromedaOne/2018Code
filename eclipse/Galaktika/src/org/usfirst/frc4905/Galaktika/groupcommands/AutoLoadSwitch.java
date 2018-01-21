@@ -10,9 +10,6 @@ public class AutoLoadSwitch extends AutoCommand {
 
 		public AutoLoadSwitch() {
 
-		}
-
-		public void start() {
 			char robotPos = Robot.getInitialRobotLocation();
 			char platePos = Robot.getSwitchPlatePosition();
 			if (platePos == robotPos) {

@@ -9,10 +9,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 	private static final double LATERAL_DISTANCE_TO_LEFT = 0;
 
 	AutoMiddleLoadSwitch(){
-		
-	}
-	
-	public void start() {
+
 		char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == 'R') {
 			driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
