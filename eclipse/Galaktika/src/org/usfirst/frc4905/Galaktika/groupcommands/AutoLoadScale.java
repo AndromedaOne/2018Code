@@ -4,11 +4,7 @@ import org.usfirst.frc4905.Galaktika.Robot;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class AutoLoadScale extends CommandGroup {
-	//We got these values from CAD
-	private static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
-	private static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
-
+public class AutoLoadScale extends AutoCommand {
 	public AutoLoadScale() {
 
 	}
@@ -17,13 +13,13 @@ public class AutoLoadScale extends CommandGroup {
 		char robotPos = Robot.getInitialRobotLocation();
 		char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == robotPos) {
-			loadNearScale(robotPos);
+			loadNearScalePlate(robotPos);
 		} else {
-			loadFarScale(robotPos);
+			loadFarScalePlate(robotPos);
 		}
 	}
 
-	public void loadNearScale(char robotPos) {
+	public void loadNearScalePlate(char robotPos) {
 		driveForward(FORWARD_DISTANCE_TO_SCALE);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -39,23 +35,29 @@ public class AutoLoadScale extends CommandGroup {
 		
 	}
 
-	private void turnRight() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
-	private void turnLeft() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void driveForward(double forwardDistanceToScale) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void loadFarScale(char robotPos) {
-
+	public void loadFarScalePlate(char robotPos) {
+		driveForward(FORWARD_DISTANCE_TO_MIDDLE);
+		if (robotPos == 'R') {
+			turnLeft();
+		} else {
+			turnRight();
+		}
+		driveForward(LATERAL_DISTANCE_BETWEEN_PATHS);
+		if (robotPos == 'R') {
+			turnRight();
+		} else {
+			turnLeft();
+		}
+		driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_TO_MIDDLE);
+		if (robotPos == 'R') {
+			turnRight();
+		} else {
+			turnLeft();
+		}
+		driveForward(LATERAL_DISTANCE_TO_SCALE);
+		loadPowerCubeOntoScale();
 	}
 
 }

@@ -1,8 +1,6 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-
-public class AutoCrossTheLine extends CommandGroup {
+public class AutoCrossTheLine extends AutoCommand {
 	
 	static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
 	static final double LATERAL_DISTANCE_TO_EXCHANGE = 0;
@@ -28,18 +26,4 @@ public class AutoCrossTheLine extends CommandGroup {
 		
 	}
 
-	private void turnRight() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void turnLeft() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void driveForward(double distanceToAutoLine) {
-		// TODO Auto-generated method stub
-		
-	}
 }

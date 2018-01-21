@@ -4,7 +4,7 @@ import org.usfirst.frc4905.Galaktika.Robot;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class AutoMiddleLoadSwitch extends CommandGroup {
+public class AutoMiddleLoadSwitch extends AutoCommand {
 	private static final double LATERAL_DISTANCE_TO_RIGHT = 0;
 	private static final double LATERAL_DISTANCE_TO_LEFT = 0;
 
@@ -33,18 +33,4 @@ public class AutoMiddleLoadSwitch extends CommandGroup {
 		}
 	}
 
-	private void turnLeft() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void turnRight() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void driveForward(double d) {
-		// TODO Auto-generated method stub
-		
-	}
 }
