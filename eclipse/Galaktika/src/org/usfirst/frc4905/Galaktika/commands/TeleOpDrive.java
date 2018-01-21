@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TeleOpDrive extends Command {
 	public static final double kDeadzone = 0.15;
 
-	private static final double kProportion = 1;
+	private static final double kProportion = .1;
 
 	private double SavedAngle = 0;
 

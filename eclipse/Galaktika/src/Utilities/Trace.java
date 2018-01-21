@@ -14,7 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
 
 // utility to store trace information to a file on the roborio. this class uses the 
 // singleton pattern. on the first call to Trace.getInstance(), the utility will
