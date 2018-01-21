@@ -7,19 +7,19 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class GyroPIDTurn extends Command {
+public class GyroPIDTurnDeltaAngle extends Command {
 	
-	private double m_angleToTurn = 0.0;
+	private double m_deltaAngleToTurn = 0.0;
 
-    public GyroPIDTurn(double angleToTurn) {
-    	m_angleToTurn = angleToTurn;
+    public GyroPIDTurnDeltaAngle(double deltaAngleToTurn) {
+    	m_deltaAngleToTurn = deltaAngleToTurn;
     	requires(Robot.driveTrain); 
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.initGyroPID();
-    	Robot.driveTrain.enableGyroPID(m_angleToTurn);
+    	Robot.driveTrain.initGyroPIDDeltaAngle();
+    	Robot.driveTrain.enableGyroPID(m_deltaAngleToTurn);
     }
     
 
