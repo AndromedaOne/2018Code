@@ -127,20 +127,16 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			if(Math.abs(output) < 0.12){
-				if(output > 0){
-					output = 0.12;
-				}else{
-					output = -0.12;
-				}
+			
+	    	differentialDrive.arcadeDrive(output, 0, false);
+			System.out.println("Output = " + output);
 				
 			}
-	    	differentialDrive.arcadeDrive(output, 0);
-			System.out.println("Output = " + output);
+
 
 		}
-	}
 	
+
 	public void intializeUltrasonicPIDFront(double distanceToDriveTo) {
 		moveWithUltrasonicPID(distanceToDriveTo);
 
@@ -173,6 +169,7 @@ public class DriveTrain extends Subsystem {
     public void move(double forwardBackSpeed, double rotateAmount) {
     	//Rotation was inverted, -rotation fixes that
     	differentialDrive.arcadeDrive(forwardBackSpeed, -rotateAmount);
+    	System.out.println("Output = " + forwardBackSpeed);
     }
     public void stop() {
     	differentialDrive.stopMotor();
