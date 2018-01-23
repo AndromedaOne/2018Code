@@ -15,6 +15,7 @@ public class MoveUsingEncoderPID extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	m_setpoint = setpoint;
+    	requires(Robot.driveTrain);
     }
 
     // Called just before this Command runs the first time
