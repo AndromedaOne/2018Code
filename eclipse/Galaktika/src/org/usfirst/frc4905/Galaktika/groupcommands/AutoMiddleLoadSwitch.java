@@ -5,8 +5,8 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoMiddleLoadSwitch extends AutoCommand {
-	private static final double LATERAL_DISTANCE_TO_RIGHT = 0;
-	private static final double LATERAL_DISTANCE_TO_LEFT = 0;
+	private static final double LATERAL_DISTANCE_TO_RIGHT = 116;
+	private static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
 	AutoMiddleLoadSwitch(){
 

@@ -32,8 +32,8 @@ public abstract class AutoCommand extends CommandGroup {
 
 	protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
 	protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
-	protected static final double FORWARD_DISTANCE_TO_MIDDLE = 0;
-	protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 0;
+	protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
+	protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
 
 	protected void turnRight() {
 		addSequential(new AutoTurnRight());

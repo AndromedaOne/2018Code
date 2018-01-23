@@ -3,7 +3,7 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 public class AutoCrossTheLine extends AutoCommand {
 	
 	static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
-	static final double LATERAL_DISTANCE_TO_EXCHANGE = 0;
+	static final double LATERAL_DISTANCE_TO_EXCHANGE = 31.13;
 
 	public AutoCrossTheLine() {
 		
