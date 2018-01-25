@@ -96,7 +96,7 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			move(0,-output);
+			move(0,output);
 		}
     }
     public void initGyroPIDDeltaAngle() {
