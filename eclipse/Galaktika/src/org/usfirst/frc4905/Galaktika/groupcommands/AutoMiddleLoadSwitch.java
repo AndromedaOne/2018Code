@@ -5,29 +5,33 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoMiddleLoadSwitch extends AutoCommand {
-	private static final double LATERAL_DISTANCE_TO_RIGHT = 116;
-	private static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
+	public AutoMiddleLoadSwitch(double delaySeconds) {
 
-	AutoMiddleLoadSwitch(){
-
+		if (delaySeconds > 0) {
+			delay(delaySeconds);
+		}
 		char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == 'R') {
 			driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 			turnRight();
 			driveForward(LATERAL_DISTANCE_TO_RIGHT);
 			turnLeft();
-			driveForward(AutoLoadSwitch.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
+			driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 			turnLeft();
-			driveForward(AutoLoadSwitch.LATERAL_DISTANCE_TO_SWITCH);
+			driveForward(AutoCommand.LATERAL_DISTANCE_TO_SWITCH);
 		} else {
 			driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 			turnLeft();
 			driveForward(LATERAL_DISTANCE_TO_LEFT);
 			turnRight();
-			driveForward(AutoLoadSwitch.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
+			driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 			turnRight();
-			driveForward(AutoLoadSwitch.LATERAL_DISTANCE_TO_SWITCH);
+			driveForward(AutoCommand.LATERAL_DISTANCE_TO_SWITCH);
 		}
+	}
+
+	public AutoMiddleLoadSwitch() {
+		this(0);
 	}
 
 }

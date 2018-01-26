@@ -29,11 +29,17 @@ public abstract class AutoCommand extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     }
-
+    
+	protected static final double FORWARD_DISTANCE_TO_SWITCH = 148.04;
+	protected static final double LATERAL_DISTANCE_TO_SWITCH = 28.72;
 	protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
 	protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
 	protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
 	protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
+	protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
+	protected static final double DELAY_SECONDS = 5.0;
+	protected static final double LATERAL_DISTANCE_TO_RIGHT = 116;
+	protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
 	protected void turnRight() {
 		addSequential(new AutoTurnRight());
@@ -47,5 +53,10 @@ public abstract class AutoCommand extends CommandGroup {
 
 	protected void driveForward(double forwardDistanceInches) {
 		addSequential(new AutoDriveForward(forwardDistanceInches));
+	}
+
+	protected void delay(double delaySeconds) {
+		// TODO Auto-generated method stub
+		
 	}
 }

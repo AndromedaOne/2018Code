@@ -1,9 +1,9 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
-public class AutoDelayedMiddleLoadSwitch extends FiveSecondDelay {
+public class AutoDelayedMiddleLoadSwitch extends AutoMiddleLoadSwitch {
 
 	AutoDelayedMiddleLoadSwitch() {
-		super(new AutoMiddleLoadSwitch());
+		super(DELAY_SECONDS); 
 	}
 
 }
