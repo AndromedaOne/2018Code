@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -14,22 +15,26 @@ public class MoveUsingEncoderPID extends Command {
     public MoveUsingEncoderPID(double setpoint) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	requires(Robot.driveTrain);
     	m_setpoint = setpoint;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.initializeEncoderPID();
-    	Robot.driveTrain.enableEncoderPID(m_setpoint);
+    	System.out.println("Starting command");
+    /*	Robot.driveTrain.initializeEncoderPID();
+    	Robot.driveTrain.enableEncoderPID(m_setpoint);*/
+    
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	System.out.println("Encoder Value: " + Robot.driveTrain.getEncoderTicks());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.driveTrain.isDoneEncoderPID();
+        return false;//Robot.driveTrain.isDoneEncoderPID();
     }
 
     // Called once after isFinished returns true
