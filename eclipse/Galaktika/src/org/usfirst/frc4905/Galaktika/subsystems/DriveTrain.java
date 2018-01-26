@@ -104,9 +104,6 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public double pidGet() {
-//			System.out.println("Distance = " + getDistanceFromFront());
-			Trace.getInstance().addTrace("DistanceFromFront",
-					new TracePair("getDistanceFromFront", getDistanceFromFront()));
 			return getDistanceFromFront();
 		}
 
@@ -134,7 +131,6 @@ public class DriveTrain extends Subsystem {
 		public void pidWrite(double output) {
 			
 	    	differentialDrive.arcadeDrive(output, 0, false);
-			System.out.println("Output = " + output);
 				
 			}
 
@@ -174,7 +170,6 @@ public class DriveTrain extends Subsystem {
     public void move(double forwardBackSpeed, double rotateAmount) {
     	//Rotation was inverted, -rotation fixes that
     	differentialDrive.arcadeDrive(forwardBackSpeed, -rotateAmount);
-    	System.out.println("Output = " + forwardBackSpeed);
     }
     public void stop() {
     	differentialDrive.stopMotor();
