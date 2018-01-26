@@ -79,13 +79,9 @@ public class DriveTrain extends Subsystem {
 
 	//Ultrasonic Code - Begins
 	private double m_oldDistance;
+	private double m_currentDistance;
 	public double getDistanceFromFront(){
-		double currentDistance = frontUltrasonic.getRangeInches();
-		if((currentDistance - m_oldDistance) > 200) {
-			return(m_oldDistance);
-		}
-		m_oldDistance = currentDistance;
-		return currentDistance;
+		return frontUltrasonic.getRangeInches();
 	}
 
 

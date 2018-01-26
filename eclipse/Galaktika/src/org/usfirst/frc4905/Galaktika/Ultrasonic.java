@@ -31,6 +31,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * flight).
  */
 public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
+
+		// This is the ping delay for the Ultrasonic
+		private double m_pingDelay = 0.02;
+	
   /**
    * The units to return when PIDGet is called.
    */
@@ -73,6 +77,15 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
    * certainly break. Make sure to disable automatic mode before changing anything with the
    * sensors!!
    */
+
+  public void SetUltrasonicPingDelay(double delay) {
+	  m_pingDelay = delay;
+  }
+  
+  public double GetUltrasonicPingDelay() {
+	  return m_pingDelay;
+  }
+  
   private class UltrasonicChecker extends Thread {
     @Override
     public synchronized void run() {
@@ -89,7 +102,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
           ultrasonic.m_pingChannel.pulse(kPingTime);
         }
         ultrasonic = ultrasonic.m_nextSensor;
-        Timer.delay(.02); // wait for ping to return
+        Timer.delay(m_pingDelay); // wait for ping to return
       }
     }
   }
@@ -315,8 +328,15 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
    * @return double Range in inches of the target returned from the ultrasonic sensor.
    */
   public double getRangeInches() {
+	  	double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+	  	double oldDistance = 0;
+	if((distance - oldDistance) > 3) {
+		distance = oldDistance;
+	}
+		oldDistance = distance;
+		
     if (isRangeValid()) {
-      return m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+      return distance;
     } else {
       return 0;
     }
