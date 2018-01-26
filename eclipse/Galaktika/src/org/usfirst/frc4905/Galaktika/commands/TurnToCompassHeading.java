@@ -28,12 +28,20 @@ public class TurnToCompassHeading extends Command {
     	if(modAngle < 0) {
     		modAngle += 360;
     	}
+    	
     	double deltaAngle = m_compassHeading - modAngle;
-    	//fixes long turns if delta is over 180
+    	
+    	//fixes long turns if delta is over 180: when tested it didn't work the first time.
+    	// ******TEST BEFORE FINALIZING!******
     	if(deltaAngle > 180) {
     		deltaAngle = 360 - deltaAngle;
     		System.out.println("Angle corrected for shortest method!");
     	}
+    	//******THIS CODE MAY NOT WORK!!! BE WARNED!!!******
+    	else {
+    		deltaAngle *= -1;
+    	}
+    	
     	Robot.driveTrain.initGyroPIDDeltaAngle();
     	Robot.driveTrain.enableGyroPID(deltaAngle);
     }
