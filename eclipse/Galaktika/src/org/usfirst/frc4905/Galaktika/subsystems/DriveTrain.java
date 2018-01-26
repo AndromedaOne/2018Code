@@ -130,6 +130,10 @@ public class DriveTrain extends Subsystem {
 	   return m_encoderPID.onTarget();
    }
    
+   public void disableEncoderPID() {
+	   //to be filled in
+   }
+   
 	private double getEncoderTicks() {
 		// TODO Auto-generated method stub
 		return leftBottomTalon.getSelectedSensorPosition(0);
