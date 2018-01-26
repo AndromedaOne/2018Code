@@ -17,30 +17,28 @@ public class MoveUsingEncoderPID extends Command {
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
     	m_setpoint = setpoint;
-    	requires(Robot.driveTrain);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	System.out.println("Starting command");
-    /*	Robot.driveTrain.initializeEncoderPID();
-    	Robot.driveTrain.enableEncoderPID(m_setpoint);*/
+    	Robot.driveTrain.initializeEncoderPID();
+    	Robot.driveTrain.enableEncoderPID(m_setpoint);
     
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	System.out.println("Encoder Value: " + Robot.driveTrain.getEncoderTicks());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;//Robot.driveTrain.isDoneEncoderPID();
+        return Robot.driveTrain.isDoneEncoderPID();
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.driveTrain.move(0, 0);
+    	Robot.driveTrain.disableEncoderPID();
     }
 
     // Called when another command which requires one or more of the same
