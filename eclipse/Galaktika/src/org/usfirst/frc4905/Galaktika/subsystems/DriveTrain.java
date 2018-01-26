@@ -128,6 +128,9 @@ public class DriveTrain extends Subsystem {
     	return m_gyroPIDSource.onTarget();
     }
 
+    public void stopGyroPid() {
+    	m_gyroPIDSource.disable();
+    }
 
     public void move(double forwardBackSpeed, double rotateAmount) {
     	//Rotation was inverted, -rotation fixes that
