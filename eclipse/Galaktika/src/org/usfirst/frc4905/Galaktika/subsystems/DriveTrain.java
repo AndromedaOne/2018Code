@@ -102,11 +102,11 @@ public class DriveTrain extends Subsystem {
     public void initGyroPIDDeltaAngle() {
     	GyroPIDIn gyroPIDIn = new GyroPIDIn();
     	GyroPIDOut gyroPIDOut = new GyroPIDOut();
-    	double gyroPIDP = 0.0;
+    	double gyroPIDP = 0.1;
     	double gyroPIDI = 0.0;
     	double gyroPIDD = 0.0;
     	double gyroPIDF = 0.0;
-    	double gyroPIDOutputRange = 1.0;
+    	double gyroPIDOutputRange = 0.5;
     	double gyroPIDAbsTolerance = 1;
     	m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
     	m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);
@@ -120,7 +120,7 @@ public class DriveTrain extends Subsystem {
     	
     }
     public boolean gyroPIDIsDone() {
-    	Trace.getInstance().addTrace("Gyro PID",
+    	Trace.getInstance().addTrace("GyroPID",
 				new TracePair("Target", m_gyroPIDSource.getSetpoint()),
 				new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()), 
 				new TracePair("Avg Error", m_gyroPIDSource.getError()),
