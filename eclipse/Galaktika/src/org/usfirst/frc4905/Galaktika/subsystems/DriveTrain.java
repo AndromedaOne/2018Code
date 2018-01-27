@@ -192,6 +192,9 @@ public class DriveTrain extends Subsystem {
     	return m_gyroPIDSource.onTarget();
     }
 
+    public void stopGyroPid() {
+    	m_gyroPIDSource.disable();
+    }
 
    
 	public double getEncoderTicks() {
