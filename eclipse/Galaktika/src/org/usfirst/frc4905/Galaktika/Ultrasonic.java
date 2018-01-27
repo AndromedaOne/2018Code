@@ -32,8 +32,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  */
 public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 
-		// This is the ping delay for the Ultrasonic
-		private double m_pingDelay = 0.02;
+	// This is the ping delay for the Ultrasonic
+	private double m_pingDelay;
+	// This is the distance taked before the newest
+	private double m_oldDistance;
+	// This is the ultrasonic noise tolerance
+	private double m_noiseTolerance;
+	
+	public Ultrasonic() {
+		m_pingDelay = 0.1;
+		m_oldDistance = 0;
+		m_noiseTolerance = Double.POSITIVE_INFINITY;
+	}
+	
+
+		
 	
   /**
    * The units to return when PIDGet is called.
@@ -320,6 +333,18 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
   public boolean isRangeValid() {
     return m_counter.get() > 1;
   }
+  
+  private boolean isOldDistanceValid() {
+	  return m_oldDistance > 0;
+  }
+  
+  public void SetUltrasonicNoiseTolerance(double tolerance) {
+	  tolerance = m_noiseTolerance;
+  }
+  
+  public double GetUltrasonicNoiseTolerance() {
+	  return m_noiseTolerance;
+  }
 
   /**
    * Get the range in inches from the ultrasonic sensor. If there is no valid value yet, i.e. at
@@ -327,19 +352,21 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
    *
    * @return double Range in inches of the target returned from the ultrasonic sensor.
    */
+
   public double getRangeInches() {
-	  	double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
-	  	double oldDistance = 0;
-	if((distance - oldDistance) > 3) {
-		distance = oldDistance;
-	}
-		oldDistance = distance;
-		
-    if (isRangeValid()) {
-      return distance;
-    } else {
-      return 0;
-    }
+	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+	  
+	   if(isOldDistanceValid()) {
+		  if((distance - m_oldDistance) > m_noiseTolerance) {
+			  distance = m_oldDistance;
+		  }
+	  } 
+	  if (isRangeValid()) {
+		  m_oldDistance = distance;
+		  return distance;
+	  } else {
+		  return 0;
+	  }
   }
 
   /**
