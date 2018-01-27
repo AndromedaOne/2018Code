@@ -24,6 +24,7 @@ public class TurnToCompassHeading extends Command {
     	//calculates the delta angle
     	double currentAngle = RobotMap.navX.getRobotAngle();
     	double modAngle = currentAngle % 360;
+    	System.out.println("currentangle =" +currentAngle + "," + "mod angle =" + modAngle);
     	//corrects negative Modulus
     	if(modAngle < 0) {
     		modAngle += 360;
@@ -33,16 +34,16 @@ public class TurnToCompassHeading extends Command {
     	
     	//fixes long turns if delta is over 180: when tested it didn't work the first time.
     	// ******TEST BEFORE FINALIZING!******
+    	System.out.println("delta angle = " + deltaAngle);
+
     	if(deltaAngle > 180) {
-    		deltaAngle = 360 - deltaAngle;
+    		deltaAngle = -(360 - deltaAngle);
     		System.out.println("Angle corrected for shortest method!");
-    	}
-    	//******THIS CODE MAY NOT WORK!!! BE WARNED!!!******
-    	else {
-    		deltaAngle *= -1;
     	}
     	
     	Robot.driveTrain.initGyroPIDDeltaAngle();
+    	System.out.println("Delta angle = " + deltaAngle);
+
     	Robot.driveTrain.enableGyroPID(deltaAngle);
     }
 
