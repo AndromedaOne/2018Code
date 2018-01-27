@@ -74,6 +74,7 @@ public class TeleOpDrive extends Command {
 			SavedAngle = robotAngle;
 		}
 		else if (rotateStickValue != 0) {
+			courseCorrectionDelay = 0;
 			correctionMode = 1;
 			SavedAngle = robotAngle;
 			Robot.driveTrain.move(forwardBackwardStickValue, rotateStickValue);
@@ -82,8 +83,10 @@ public class TeleOpDrive extends Command {
 			//disable correction for half a second after releasing the turn stick, to allow the driver
 			//to let the machine drift naturally, and not correct back to the gyro reading from
 			//the instant the driver released the turn stick.
-			
-			courseCorrectionDelay = 0;
+			//PROBLEM, corrects every 25 cycles cuz I'm dumb...
+			SavedAngle = robotAngle;
+			//reassign the correctionEquation to the latest direction that we've been "free driving" in
+			correctionEquation = (SavedAngle - robotAngle)*kProportion;
 			correctionMode = 2;
 			Robot.driveTrain.move(forwardBackwardStickValue, correctionEquation);
 		}
