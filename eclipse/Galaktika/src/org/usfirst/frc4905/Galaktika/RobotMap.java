@@ -99,7 +99,7 @@ public class RobotMap {
         driveTrainDifferentialDrive.setSafetyEnabled(true);
         driveTrainDifferentialDrive.setExpiration(0.1);
         driveTrainDifferentialDrive.setMaxOutput(1.0);
-
+        
         driveTrainCompressor = new Compressor(0);
         LiveWindow.addActuator("DriveTrain", "Compressor", driveTrainCompressor);
         
