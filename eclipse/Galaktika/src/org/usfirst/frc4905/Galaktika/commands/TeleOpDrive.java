@@ -80,6 +80,12 @@ public class TeleOpDrive extends Command {
 			rotateStickValue = 0;
 		}
 
+		
+		
+		
+		
+		
+		
 		//24=about half a second
 		if(m_slowmodedelaycounter > 24 && Utilities.ButtonsEnumerated.getLeftButton(drivecontroller)) {
 			m_slowmodedelaycounter = 0;
@@ -114,7 +120,7 @@ public class TeleOpDrive extends Command {
 			//to let the machine drift naturally, and not correct back to the gyro reading from
 			//the instant the driver released the turn stick.
 			//PROBLEM, corrects every 25 cycles cuz I'm dumb...
-			SavedAngle = robotAngle;
+			
 			//reassign the correctionEquation to the latest direction that we've been "free driving" in
 			correctionEquation = (SavedAngle - robotAngle)*kProportion;
 			correctionMode = 2;
@@ -122,8 +128,19 @@ public class TeleOpDrive extends Command {
 		}
 		else {
 			//should all cases fail, just drive normally
-			Robot.driveTrain.move(forwardBackwardStickValue, rotateStickValue);
+			Robot.driveTrain.move(forwardBackwardStickValue*mod, rotateStickValue*mod);
 		}
+		
+		
+		if(courseCorrectionDelay == 24){
+			//take the most recent course and make that our angle
+			SavedAngle = robotAngle;
+		}
+		
+		
+		
+		
+		
 		Trace.getInstance().addTrace("GyroCorrection",
 				new TracePair("forwardBackwardStickValue", forwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
