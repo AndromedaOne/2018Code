@@ -57,7 +57,6 @@ public class MoveUsingEncoder extends Command {
 		// Called just before this Command runs the first time
 		protected void initialize() {
 			
-			Robot.driveTrain.setControlModeSpeed();
 
 			m_velocityToMotorOutputRatio = 1.0 / m_path.getMaxVelocity();
 			m_accelerationToMotorOutputRatio = 1.0 / m_path.getMaxAcceleration();
@@ -65,7 +64,7 @@ public class MoveUsingEncoder extends Command {
 			Robot.driveTrain.initializePositionPID();
 			
 			m_initialTimeStamp = Timer.getFPGATimestamp();
-			m_initialEncoderPosition = Robot.driveTrain.getEncoderPosition();
+			m_initialEncoderPosition = Robot.driveTrain.getEncoderTicks();
 		}
 
 		// Called repeatedly when this Command is scheduled to run
@@ -93,7 +92,7 @@ public class MoveUsingEncoder extends Command {
 					new TracePair("ProjectedPosition", currentTrajectoryPoint.m_position),
 					new TracePair("Error", (currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))*100),
 					new TracePair("Zero", 0.0));
-			Robot.driveTrain.move((nextTrajectoryPoint.m_currentVelocity) + m_PIDOut, 0.0);
+			Robot.driveTrain.setAllDriveControllersVelocity((nextTrajectoryPoint.m_currentVelocity) + m_PIDOut);
 			
 		}
 
@@ -105,7 +104,7 @@ public class MoveUsingEncoder extends Command {
 
 		// Called once after isFinished returns true
 		protected void end() {
-			Robot.driveTrain.move(0.0,0.0);
+			Robot.driveTrain.setAllDriveControllersVelocity(0.0);
 			Trace.getInstance().flushTraceFiles();
 		}
 
