@@ -2,15 +2,27 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
 public abstract class AutoCommand extends CommandGroup {
+@Deprecated // ("Use the new Ultrasonic command")
+    public class MoveToWall extends Command {
 
-    public AutoCommand() {
+		@Override
+		protected boolean isFinished() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+	}
+
+	public AutoCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -43,8 +55,17 @@ public abstract class AutoCommand extends CommandGroup {
 		addSequential(new GyroPIDTurnDeltaAngle(-90));
 		
 	}
+	
+	protected void turnAround() {
+		addSequential(new GyroPIDTurnDeltaAngle(180));
+	}	
 
 	protected void driveForward(double forwardDistanceInches) {
 		addSequential(new MoveUsingEncoderPID(forwardDistanceInches));
+	}
+	
+	protected void driveForwardToWall(double forwardDistanceInches) {
+		driveForward(forwardDistanceInches);
+		addSequential(new MoveToWall());
 	}
 }

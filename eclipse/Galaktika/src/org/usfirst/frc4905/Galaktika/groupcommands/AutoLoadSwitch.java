@@ -26,7 +26,7 @@ public class AutoLoadSwitch extends AutoCommand {
 			} else {
 				turnRight();
 			}
-			driveForward(LATERAL_DISTANCE_TO_SWITCH);
+			driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 			loadPowerCubeOntoSwitch();
 		}
 
@@ -54,7 +54,7 @@ public class AutoLoadSwitch extends AutoCommand {
 			} else {
 				turnRight();
 			}
-			driveForward(LATERAL_DISTANCE_TO_SWITCH);
+			driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 			loadPowerCubeOntoSwitch();
 		}
 

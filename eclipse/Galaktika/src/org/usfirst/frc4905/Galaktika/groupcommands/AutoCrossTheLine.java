@@ -8,8 +8,7 @@ public class AutoCrossTheLine extends AutoCommand {
 	public AutoCrossTheLine() {
 		
 		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-		turnLeft();
-		turnLeft();
+		turnAround();
 		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 		turnRight();
 		driveForward(LATERAL_DISTANCE_TO_EXCHANGE);

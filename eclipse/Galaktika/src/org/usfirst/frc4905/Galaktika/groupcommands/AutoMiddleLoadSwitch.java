@@ -18,7 +18,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 			turnLeft();
 			driveForward(AutoLoadSwitch.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 			turnLeft();
-			driveForward(AutoLoadSwitch.LATERAL_DISTANCE_TO_SWITCH);
+			driveForwardToWall(AutoLoadSwitch.LATERAL_DISTANCE_TO_SWITCH);
 		} else {
 			driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 			turnLeft();
@@ -26,7 +26,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 			turnRight();
 			driveForward(AutoLoadSwitch.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 			turnRight();
-			driveForward(AutoLoadSwitch.LATERAL_DISTANCE_TO_SWITCH);
+			driveForwardToWall(AutoLoadSwitch.LATERAL_DISTANCE_TO_SWITCH);
 		}
 	}
 
