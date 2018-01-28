@@ -1,8 +1,7 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
-import org.usfirst.frc4905.Galaktika.commands.AutoDriveForward;
-import org.usfirst.frc4905.Galaktika.commands.AutoTurnLeft;
-import org.usfirst.frc4905.Galaktika.commands.AutoTurnRight;
+import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
+import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -36,16 +35,16 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
 
 	protected void turnRight() {
-		addSequential(new AutoTurnRight());
+		addSequential(new GyroPIDTurnDeltaAngle(90));
 		
 	}
 
 	protected void turnLeft() {
-		addSequential(new AutoTurnLeft());
+		addSequential(new GyroPIDTurnDeltaAngle(-90));
 		
 	}
 
 	protected void driveForward(double forwardDistanceInches) {
-		addSequential(new AutoDriveForward(forwardDistanceInches));
+		addSequential(new MoveUsingEncoderPID(forwardDistanceInches));
 	}
 }
