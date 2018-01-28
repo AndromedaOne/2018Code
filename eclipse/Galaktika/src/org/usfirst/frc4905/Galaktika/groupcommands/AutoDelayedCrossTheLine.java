@@ -1,9 +1,9 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
-public class AutoDelayedCrossTheLine extends FiveSecondDelay {
+public class AutoDelayedCrossTheLine extends AutoCrossTheLine {
 
 	public AutoDelayedCrossTheLine() {
-		super(new AutoCrossTheLine());
+		super(5);
 	}
 
 }
