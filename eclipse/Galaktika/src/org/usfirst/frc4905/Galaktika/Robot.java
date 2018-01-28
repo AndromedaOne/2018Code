@@ -20,6 +20,7 @@ import org.usfirst.frc4905.Galaktika.subsystems.Pneumatics;
 import org.usfirst.frc4905.Galaktika.subsystems.Ramps;
 
 import Utilities.Trace;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -107,6 +108,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        
     }
 
     @Override
