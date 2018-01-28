@@ -11,15 +11,15 @@
 
 package org.usfirst.frc4905.Galaktika;
 
-import org.usfirst.frc4905.Galaktika.Robot.AutoDelayedPlayoffs;
-import org.usfirst.frc4905.Galaktika.Robot.AutoDelayedQuals;
-import org.usfirst.frc4905.Galaktika.Robot.AutoPlayoffs;
-import org.usfirst.frc4905.Galaktika.Robot.AutoQuals;
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCrossTheLine;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoDelayedCrossTheLine;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoDelayedMiddleLoadSwitch;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoDelayedPlayoffs;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoDelayedQuals;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoMiddleLoadSwitch;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoPlayoffs;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoQuals;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 import org.usfirst.frc4905.Galaktika.subsystems.Elevator;
 import org.usfirst.frc4905.Galaktika.subsystems.Intake;
@@ -41,46 +41,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * the project.
  */
 public class Robot extends TimedRobot {
-	@Deprecated // use Ethan's code when available
-    public class AutoDelayedPlayoffs extends Command {
-
-		@Override
-		protected boolean isFinished() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-	}
-	@Deprecated // use Ethan's code when available
-	public class AutoPlayoffs extends Command {
-		
-		@Override
-		protected boolean isFinished() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-	}
-	@Deprecated // use Ethan's code when available
-	public class AutoDelayedQuals extends Command {
-
-		@Override
-		protected boolean isFinished() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-	}
-	@Deprecated // use Ethan's code when available
-	public class AutoQuals extends Command {
-
-		@Override
-		protected boolean isFinished() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-	}
 
 	Command autonomousCommand;
     static char initialRobotLocation;
