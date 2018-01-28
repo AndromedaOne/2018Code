@@ -85,6 +85,7 @@ public class OI {
         SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
         SmartDashboard.putData("TeleOpDrive", new TeleOpDrive());
         SmartDashboard.putData("RunIntakeIn", new RunIntakeIn());
+        SmartDashboard.putData("Move Using Ultrasonic", new MoveUsingFrontUltrasonic(10));
 
      
 
