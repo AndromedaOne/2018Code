@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.Ultrasonic;
+import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -72,11 +72,6 @@ public class DriveTrain extends Subsystem {
     public DriveTrain() {
     	leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
     	leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-    }
-    
-   
-
-    public DriveTrain() {
     	frontUltrasonic.setEnabled(true);
     	frontUltrasonic.setAutomaticMode(true);
 		UltrasonicPIDOutputFront ultraPIDOutput = new UltrasonicPIDOutputFront();
