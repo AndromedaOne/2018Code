@@ -43,6 +43,15 @@ public class Ramps extends Subsystem {
     	releaseSolenoid1.set(DoubleSolenoid.Value.kForward);
     	releaseSolenoid2.set(DoubleSolenoid.Value.kForward);
     }
+    
+    public void liftLeftRamp() {
+    	solenoid1.set(DoubleSolenoid.Value.kForward);
+    	solenoid2.set(DoubleSolenoid.Value.kForward);
+    }
+    public void liftRightRamp() {
+    	solenoid3.set(DoubleSolenoid.Value.kForward);
+    	solenoid4.set(DoubleSolenoid.Value.kForward);
+    }
 
     @Override
     public void initDefaultCommand() {
