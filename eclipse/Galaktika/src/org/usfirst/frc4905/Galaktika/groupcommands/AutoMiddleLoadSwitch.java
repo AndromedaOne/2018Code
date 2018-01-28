@@ -8,7 +8,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 	private static final double LATERAL_DISTANCE_TO_RIGHT = 116;
 	private static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
-	AutoMiddleLoadSwitch(){
+	public AutoMiddleLoadSwitch(){
 
 		char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == 'R') {
