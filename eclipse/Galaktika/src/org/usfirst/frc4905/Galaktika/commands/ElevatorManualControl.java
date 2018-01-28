@@ -19,11 +19,11 @@ public class ElevatorManualControl extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Joystick subsystemController = Robot.oi.getSubsystemController();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Joystick subsystemController = Robot.oi.getSubsystemController();
     	double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(subsystemController);
     	if((Robot.elevator.getTopLimitSwitch() == true) && (forwardBackwardStickValue > 0)) {
     		Robot.elevator.moveElevator(0);
