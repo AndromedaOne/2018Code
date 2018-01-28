@@ -41,12 +41,6 @@ public class AutoLoadScale extends AutoCommand {
 		driveForward(LATERAL_DISTANCE_TO_SCALE);
 		loadPowerCubeOntoScale();
 	}
-
-	private void loadPowerCubeOntoScale() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	
 
 	public void loadFarScalePlate(char robotPos) {

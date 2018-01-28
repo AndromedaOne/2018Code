@@ -88,7 +88,7 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
 		driveForward(LATERAL_DISTANCE_TO_SWITCH);
-		loadPowerCubeOntoScale();
+		loadPowerCubeOntoSwitch();
 	}
 
 	public void loadNearScalePlate(char robotPos) {
@@ -100,16 +100,6 @@ public class AutoQuals extends AutoCommand {
 		}
 		driveForward(LATERAL_DISTANCE_TO_SCALE);
 		loadPowerCubeOntoScale();
-	}
-
-	private void loadPowerCubeOntoScale() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void loadPowerCubeIntoExchange() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -59,4 +59,24 @@ public abstract class AutoCommand extends CommandGroup {
 		// TODO Auto-generated method stub
 		
 	}
+
+	protected void loadPowerCubeOntoSwitch() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void loadPowerCubeOntoScale() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void loadPowerCubeIntoExchange() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void driveBackward(double forwardDistanceToAutoLine) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -26,10 +26,6 @@ public class AutoLoadSwitch extends AutoCommand {
 			loadPowerCubeOntoSwitch();
 		}
 
-		private void loadPowerCubeOntoSwitch() {
-			// TODO Auto-generated method stub
-			
-		}
 
 		public void loadFarSwitchPlate(char robotPos) {
 			driveForward(FORWARD_DISTANCE_TO_MIDDLE);
