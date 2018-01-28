@@ -27,14 +27,18 @@ public class JawsOpenClose extends Command {
 		boolean isLeftBumperPressed = ButtonsEnumerated.getLeftButton(joystick);
 		boolean isRightBumperPressed = ButtonsEnumerated.getRightButton(joystick);
 		if(isRightBumperPressed && ! isLeftBumperPressed) {
-			//extend
+			//contract
+			Robot.intake.runIntake(RunIntakeIn.kIntakeSpeed);
 			Robot.jaws.contract();
+			
 
 		}else if(isLeftBumperPressed && ! isRightBumperPressed) {
-			//contract
+			//extend
 			Robot.jaws.extend();
+			
+			
 		}else {
-			//do nothing
+			Robot.jaws.stop();
 		}
 	}
 

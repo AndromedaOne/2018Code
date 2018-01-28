@@ -16,10 +16,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
@@ -87,11 +87,11 @@ public class RobotMap {
         driveTrainFrontUltrasonic = new Ultrasonic(0, 1);
         LiveWindow.addSensor("DriveTrain", "FrontUltrasonic", driveTrainFrontUltrasonic);
         
-        intakeLeftController = new VictorSP(0);
-        LiveWindow.addActuator("Intake", "LeftController", (VictorSP) intakeLeftController);
+        intakeLeftController = new Spark(0);
+        LiveWindow.addActuator("Intake", "LeftController", (Spark) intakeLeftController);
         intakeLeftController.setInverted(false);
-        intakeRightController = new VictorSP(1);
-        LiveWindow.addActuator("Intake", "RightController", (VictorSP) intakeRightController);
+        intakeRightController = new Spark(1);
+        LiveWindow.addActuator("Intake", "RightController", (Spark) intakeRightController);
         intakeRightController.setInverted(false);
         rampsSolenoid1 = new Solenoid(0, 0);
         LiveWindow.addActuator("Ramps", "Solenoid1", rampsSolenoid1);
