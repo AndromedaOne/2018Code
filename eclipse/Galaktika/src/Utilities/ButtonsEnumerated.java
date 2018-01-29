@@ -25,7 +25,9 @@ public enum ButtonsEnumerated {
 			return EnumeratedRawAxis.getRightTriggerButton(gamepad);
 		}
 	};
-	
+	public int getValue( ) {
+		return m_buttonValue;
+	}
 	
 
 	private int m_buttonValue;
