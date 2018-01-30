@@ -1,5 +1,6 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
+import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
@@ -53,13 +54,11 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
 	protected void turnRight() {
-		addSequential(new GyroPIDTurnDeltaAngle(90));
-		
+		addSequential(new GyroPIDTurnDeltaAngle(90));	
 	}
 
 	protected void turnLeft() {
 		addSequential(new GyroPIDTurnDeltaAngle(-90));
-		
 	}
 	
 	protected void turnAround() {
@@ -76,7 +75,7 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	protected void delay(double delaySeconds) {
-		// TODO Auto-generated method stub
+		addSequential(new Delay(delaySeconds));
 		
 	}
 
@@ -95,8 +94,7 @@ public abstract class AutoCommand extends CommandGroup {
 		
 	}
 
-	protected void driveBackward(double forwardDistanceToAutoLine) {
-		// TODO Auto-generated method stub
-		
+	protected void driveBackward(double forwardDistanceInches) {
+		addSequential(new MoveUsingEncoderPID( - forwardDistanceInches));	
 	}
 }

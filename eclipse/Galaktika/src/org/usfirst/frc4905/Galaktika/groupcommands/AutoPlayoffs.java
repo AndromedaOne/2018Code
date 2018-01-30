@@ -6,8 +6,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoPlayoffs extends AutoCommand {
 	static final double LATERAL_DISTANCE_TO_EXCHANGE = 31.13;
-	//TODO: get the correct number from CAD
-	private static final double LATERAL_DISTANCE_TO_FIRST_CUBE = 100;
+	private static final double LATERAL_DISTANCE_TO_FIRST_CUBE = 50.75;
+	private static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
+	private static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
 	
 	public AutoPlayoffs() {
 		// Add Commands here:
@@ -80,7 +81,20 @@ public class AutoPlayoffs extends AutoCommand {
 					driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
 					turnRight();
 				} else {
-					//TODO: Load Exchange then cross auto line
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					turnRight();
+					driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
+					turnRight();
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					loadPowerCubeIntoExchange();
+					driveBackward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					turnRight();
+					driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
+					turnRight();
+					driveForward(FORWARD_DISTANCE_TO_MIDDLE - FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					turnRight();
+					driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+					turnRight();
 				}
 			}
 		} else if (robotPos == 'R') {
@@ -108,7 +122,20 @@ public class AutoPlayoffs extends AutoCommand {
 					driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
 					turnLeft();
 				} else {
-					//TODO: Load Exchange then cross auto line
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					turnLeft();
+					driveForward(LATERAL_DISTANCE_TO_EXCHANGE_R);
+					turnLeft();
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					loadPowerCubeIntoExchange();
+					driveBackward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					turnLeft();
+					driveForward(LATERAL_DISTANCE_TO_EXCHANGE_R);
+					turnLeft();
+					driveForward(FORWARD_DISTANCE_TO_MIDDLE - FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+					turnLeft();
+					driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+					turnLeft();
 				}
 			}
 		} else {
@@ -147,28 +174,4 @@ public class AutoPlayoffs extends AutoCommand {
 		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 		loadPowerCubeIntoExchange();
 	}
-
-
-	public void loadNearSwitchPlate(char robotPos) {
-		driveForward(FORWARD_DISTANCE_TO_SWITCH);
-		if (robotPos == 'R') {
-			turnLeft();
-		} else {
-			turnRight();
-		}
-		driveForward(LATERAL_DISTANCE_TO_SWITCH);
-		loadPowerCubeOntoSwitch();
-	}
-
-	public void loadNearScalePlate(char robotPos) {
-		driveForward(FORWARD_DISTANCE_TO_SCALE);
-		if (robotPos == 'R') {
-			turnLeft();
-		} else {
-			turnRight();
-		}
-		driveForward(LATERAL_DISTANCE_TO_SCALE);
-		loadPowerCubeOntoScale();
-	}
-
 }
