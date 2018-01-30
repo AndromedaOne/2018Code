@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SensorBase;
+import edu.wpi.first.wpilibj.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 /**
@@ -16,6 +18,10 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
 	public double dummyValue() {
 		return .1234;
+	}
+
+	public VL6180() {
+		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 	}
 
 	@Override
