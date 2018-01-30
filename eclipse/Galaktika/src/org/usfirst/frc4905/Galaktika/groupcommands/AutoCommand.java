@@ -54,18 +54,22 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
 	protected void turnRight() {
+		System.out.println("top of AutoCommand turnRight");
 		addSequential(new GyroPIDTurnDeltaAngle(90));	
 	}
 
 	protected void turnLeft() {
+		System.out.println("top of AutoCommand turnLeft");
 		addSequential(new GyroPIDTurnDeltaAngle(-90));
 	}
 	
 	protected void turnAround() {
+		System.out.println("top of AutoCommand turnAround");
 		addSequential(new GyroPIDTurnDeltaAngle(180));
 	}	
 
 	protected void driveForward(double forwardDistanceInches) {
+		System.out.println("top of AutoCommand driveForward");
 		addSequential(new MoveUsingEncoderPID(forwardDistanceInches));
 	}
 	
