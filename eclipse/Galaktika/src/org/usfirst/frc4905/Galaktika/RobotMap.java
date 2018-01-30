@@ -100,7 +100,7 @@ public class RobotMap {
         driveTrainRightBottomTalon = new WPI_TalonSRX(4);
         
         
-        driveTrainRightSpeedController = new SpeedControllerGroup(driveTrainRightTopTalon, driveTrainRightBottomTalon , driveTrainRightBottomTalon );
+        driveTrainRightSpeedController = new SpeedControllerGroup(driveTrainRightTopTalon, driveTrainRightBottomTalon );
         LiveWindow.addActuator("DriveTrain", "RightSpeedController", driveTrainRightSpeedController);
         
         driveTrainDifferentialDrive = new DifferentialDrive(driveTrainLeftSpeedController, driveTrainRightSpeedController);
