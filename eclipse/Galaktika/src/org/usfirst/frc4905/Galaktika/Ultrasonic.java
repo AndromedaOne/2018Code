@@ -354,18 +354,16 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
   public double getRangeInches() {
 	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
 	  System.out.println("Distance = " + distance +
-			  ", Old Distance = " + m_oldDistance);
-	  if(isOldDistanceValid()) {
+			  ", Old Distance = " + m_oldDistance + 
+			  ", Noise Tolerance = " + m_noiseTolerance +
+			  ", Ping Delay = " + m_pingDelay);
+	/*  if(isOldDistanceValid()) {
 		  if(Math.abs(distance - m_oldDistance) > m_noiseTolerance) {
-			  System.out.println("Distance = " + distance +
-					  ", Old Distance = " + m_oldDistance + 
-					  ", Noise Tolerance = " + m_noiseTolerance +
-					  ", Ping Delay = " + m_pingDelay);
 			  distance = m_oldDistance;
 		  }
-	  }  
+	  }  */
 	  if (isRangeValid()) {
-		  m_oldDistance = distance;
+		  //m_oldDistance = distance;
 		  return distance;
 	  } else {
 		  return 0;
