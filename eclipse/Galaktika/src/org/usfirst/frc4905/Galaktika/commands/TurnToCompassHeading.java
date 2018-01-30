@@ -40,6 +40,9 @@ public class TurnToCompassHeading extends Command {
     		deltaAngle = -(360 - deltaAngle);
     		System.out.println("Angle corrected for shortest method!");
     	}
+    	else if(deltaAngle < -180) {
+    		deltaAngle = 360 + deltaAngle;
+    	}
     	
     	Robot.driveTrain.initGyroPIDDeltaAngle();
     	System.out.println("Delta angle = " + deltaAngle);
