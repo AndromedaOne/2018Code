@@ -21,6 +21,7 @@ import org.usfirst.frc4905.Galaktika.subsystems.Pneumatics;
 import org.usfirst.frc4905.Galaktika.subsystems.Ramps;
 import org.usfirst.frc4905.Galaktika.subsystems.Retractor;
 
+import Utilities.Trace;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -92,7 +93,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit(){
-
+    	Trace.getInstance().flushTraceFiles();
     }
 
     @Override
