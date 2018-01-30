@@ -82,8 +82,8 @@ public class DriveTrain extends Subsystem {
 		m_ultrasonicPID.setOutputRange(-m_maxSpeed, m_maxSpeed);
 		LiveWindow.add(m_ultrasonicPID);
 		m_ultrasonicPID.setName("DriveTrain","Ultrasonic PID");
-		//frontUltrasonic.SetUltrasonicNoiseTolerance(m_noiseTolerance);
-		//frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
+		frontUltrasonic.SetUltrasonicNoiseTolerance(m_noiseTolerance);
+		frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
     }
 
    	// Ultrasonic PID
@@ -94,7 +94,7 @@ public class DriveTrain extends Subsystem {
 	private double m_maxSpeed=1;
 	private double m_f=0;
 	private double m_tolerance=1;
-	private double m_noiseTolerance = 5;
+	private double m_noiseTolerance = 64;
 	private double m_pingDelay = 0.02;
 	
 
@@ -142,11 +142,9 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			
-	    	differentialDrive.arcadeDrive(output, 0, false);
-				
-			}
+			move(output, 0);
 		}
+	}
 
 	public void intializeUltrasonicPIDFront(double distanceToDriveTo) {
 		moveWithUltrasonicPID(distanceToDriveTo);

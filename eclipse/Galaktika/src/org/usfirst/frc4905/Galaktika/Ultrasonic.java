@@ -37,17 +37,11 @@ import static java.util.Objects.requireNonNull;
 public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	
 	// This is the ping delay for the Ultrasonic
-	private double m_pingDelay;
+	private double m_pingDelay = 0.1;
 	// This is the distance taked before the newest
-	private double m_oldDistance;
+	private double m_oldDistance = 0;
 	// This is the ultrasonic noise tolerance
-	private double m_noiseTolerance;
-	
-	public Ultrasonic() {
-		m_pingDelay = 0.1;
-		m_oldDistance = 0;
-		m_noiseTolerance = Double.POSITIVE_INFINITY;
-	}
+	private double m_noiseTolerance = Double.POSITIVE_INFINITY;
 	
   /**
    * The units to return when PIDGet is called.
@@ -338,7 +332,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	  }
 	  
 	  public void SetUltrasonicNoiseTolerance(double tolerance) {
-		  tolerance = m_noiseTolerance;
+		  m_noiseTolerance = tolerance;
 	  }
 	  
 	  public double GetUltrasonicNoiseTolerance() {
@@ -357,13 +351,13 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 			  ", Old Distance = " + m_oldDistance + 
 			  ", Noise Tolerance = " + m_noiseTolerance +
 			  ", Ping Delay = " + m_pingDelay);
-	/*  if(isOldDistanceValid()) {
+	  if(isOldDistanceValid()) {
 		  if(Math.abs(distance - m_oldDistance) > m_noiseTolerance) {
 			  distance = m_oldDistance;
 		  }
-	  }  */
+	  }  
 	  if (isRangeValid()) {
-		  //m_oldDistance = distance;
+		  m_oldDistance = distance;
 		  return distance;
 	  } else {
 		  return 0;
