@@ -8,9 +8,14 @@ import Utilities.Trace;
 import Utilities.TracePair;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import kinematics.GettingOfTrajectoryPoint;
 import kinematics.Kinematics;
 import kinematics.Kinematics.*;
+import kinematics.KinematicsTester;
+import kinematics.CheckerExceptions.*;
 
+import kinematics.Path;
+import kinematics.TrajectoryPoint;
 
 /**
  *
@@ -29,12 +34,12 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 		double m_velocityToMotorOutputRatio;
 		double m_accelerationToMotorOutputRatio;
 		double m_PIDOut;
-		double m_positionToEncoderRevolutionsRatio = 5.0;
+		double m_positionToEncoderRevolutionsRatio = 1.0;
 		double m_initialEncoderPosition;
 		Kinematics m_kinematics = new Kinematics();
 
-		Kinematics.TrajectoryPoint currentTrajectoryPoint = Robot.kinematics.new TrajectoryPoint();
-		Kinematics.TrajectoryPoint nextTrajectoryPoint = Robot.kinematics.new TrajectoryPoint();
+		TrajectoryPoint currentTrajectoryPoint = new TrajectoryPoint();
+		TrajectoryPoint nextTrajectoryPoint = new TrajectoryPoint();
 
 		Vector<String> m_header = new Vector<String>();
 
@@ -65,6 +70,7 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 			
 			m_initialTimeStamp = Timer.getFPGATimestamp();
 			m_initialEncoderPosition = Robot.driveTrain.getEncoderTicks();
+			
 		}
 
 		// Called repeatedly when this Command is scheduled to run
@@ -74,8 +80,8 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 			currentTrajectoryPoint = nextTrajectoryPoint;
 			m_currentTimeStamp = Timer.getFPGATimestamp();
 			deltaTime = m_currentTimeStamp - m_initialTimeStamp;
-			nextTrajectoryPoint = Robot.kinematics.getTrajectoryPoint(m_path,
-					(deltaTime / 60));
+			nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path,
+					(deltaTime));
 			
 			m_PIDOut = Robot.driveTrain.getPositionPIDOut(currentTrajectoryPoint.m_position + m_initialEncoderPosition);
 			entry.add(Robot.driveTrain.getVelocity());
@@ -92,8 +98,13 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 					new TracePair("ProjectedPosition", currentTrajectoryPoint.m_position),
 					new TracePair("Error", (currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))*100),
 					new TracePair("Zero", 0.0));
-			Robot.driveTrain.setAllDriveControllersVelocity((nextTrajectoryPoint.m_currentVelocity) + m_PIDOut);
-			
+			Robot.driveTrain.setAllDriveControllersVelocity((nextTrajectoryPoint.m_currentVelocity)/10 + m_PIDOut);
+			System.out.println("(nextTrajectoryPoint.m_currentVelocity): " + (nextTrajectoryPoint.m_currentVelocity));
+			System.out.println("deltaTime: " + deltaTime);
+			System.out.println("(nextTrajectoryPoint.m_position): " + nextTrajectoryPoint.m_position);
+			System.out.println("End delta time: " + m_path.getSetpointVector().get(0).getEndDeltaTime());
+			System.out.println("Final Position: " + GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_path.getSetpointVector().get(0).getEndDeltaTime()).m_position);
+			System.out.println("m_path.getSetpointVector().get(0): " + m_path.getSetpointVector().get(0).getm_X());
 		}
 
 		// Make this return true when this Command no longer needs to run execute()

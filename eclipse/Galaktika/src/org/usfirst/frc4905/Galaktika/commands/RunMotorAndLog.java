@@ -44,7 +44,7 @@ public class RunMotorAndLog extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		Robot.driveTrain.setAllDriveControllersPercentVBus(0.5);
+		Robot.driveTrain.setAllDriveControllersPercentVBus(1.0);
 		
 		Vector<Double> entry = new Vector<Double>();
 		double currentTimeStamp = Timer.getFPGATimestamp();

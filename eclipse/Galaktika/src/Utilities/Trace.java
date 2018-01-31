@@ -187,7 +187,7 @@ public class Trace
 		try {
 			if(!m_traces.containsKey(fileName)) {
 				BufferedWriter outputFile = null;
-				String fullFileName = new String(m_pathOfTraceDir + m_dirNumb  + "/" + fileName + ".csv");
+				String fullFileName = new String(m_pathOfTraceDir + "/" + fileName + m_dirNumb  + ".csv");
 				FileWriter fstream = new FileWriter(fullFileName, false);
 				outputFile = new BufferedWriter(fstream);
 				m_traces.put(fileName, new TraceEntry(outputFile, header.length));

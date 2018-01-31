@@ -59,9 +59,9 @@ public class DriveTrain extends Subsystem {
     private final Compressor compressor = RobotMap.driveTrainCompressor;
     private final Ultrasonic frontUltrasonic = RobotMap.driveTrainFrontUltrasonic;
 
-    private double m_positionPIDkp = 200.0;//500.0;
-	private double m_positionPIDki = 5.0;//50.0;
-	private double m_positionPIDkd = 100.0;//1.0;
+    private double m_positionPIDkp = 0;
+	private double m_positionPIDki = 0;
+	private double m_positionPIDkd = 0;
 	private double m_positionPIDIAccum = 0.0;
 	private double m_positionPIDPreviousPositionError = Double.NaN;
 	private double m_positionPIDPreviousPosition = Double.NaN;
@@ -256,7 +256,7 @@ public class DriveTrain extends Subsystem {
 	}
     
     public double getVelocity() {
-		return leftBottomTalon.getSelectedSensorVelocity(0);
+		return leftBottomTalon.getSelectedSensorVelocity(0)*10;
 	}
     
     public double getEncoderPosition() {
@@ -264,6 +264,7 @@ public class DriveTrain extends Subsystem {
 	}
     
     public void setAllDriveControllersVelocity(double value) {
+    	System.out.println("THe value being put into the speed controllers is: " + value);
 	    	leftBottomTalon.set(ControlMode.Velocity, value);
 	    	rightBottomTalon.set(ControlMode.Velocity, -value);
 	    	leftTopTalon.set(ControlMode.Velocity, value);
