@@ -12,6 +12,7 @@
 package org.usfirst.frc4905.Galaktika.subsystems;
 
 import org.usfirst.frc4905.Galaktika.RobotMap;
+import org.usfirst.frc4905.Galaktika.Ultrasonic;
 //import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
@@ -28,8 +29,6 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import org.usfirst.frc4905.Galaktika.Ultrasonic;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
