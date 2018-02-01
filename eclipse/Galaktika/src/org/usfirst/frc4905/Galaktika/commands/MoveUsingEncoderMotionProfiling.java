@@ -8,14 +8,9 @@ import Utilities.Trace;
 import Utilities.TracePair;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import kinematics.GettingOfTrajectoryPoint;
 import kinematics.Kinematics;
 import kinematics.Kinematics.*;
 import kinematics.KinematicsTester;
-import kinematics.KinematicsException.*;
-
-import kinematics.Path;
-import kinematics.TrajectoryPoint;
 
 /**
  *
@@ -38,8 +33,8 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 		double m_initialEncoderPosition;
 		Kinematics m_kinematics = new Kinematics();
 
-		TrajectoryPoint currentTrajectoryPoint = new TrajectoryPoint();
-		TrajectoryPoint nextTrajectoryPoint = new TrajectoryPoint();
+		TrajectoryPoint currentTrajectoryPoint = m_kinematics.new TrajectoryPoint();
+		TrajectoryPoint nextTrajectoryPoint = m_kinematics.new TrajectoryPoint();
 
 		Vector<String> m_header = new Vector<String>();
 
@@ -80,7 +75,7 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 			currentTrajectoryPoint = nextTrajectoryPoint;
 			m_currentTimeStamp = Timer.getFPGATimestamp();
 			deltaTime = m_currentTimeStamp - m_initialTimeStamp;
-			nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path,
+			nextTrajectoryPoint = m_kinematics.getTrajectoryPoint(m_path.getTrajectoryVector(),
 					(deltaTime));
 			
 			m_PIDOut = Robot.driveTrain.getPositionPIDOut(currentTrajectoryPoint.m_position + m_initialEncoderPosition);
@@ -103,7 +98,7 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 			System.out.println("deltaTime: " + deltaTime);
 			System.out.println("(nextTrajectoryPoint.m_position): " + nextTrajectoryPoint.m_position);
 			System.out.println("End delta time: " + m_path.getSetpointVector().get(0).getEndDeltaTime());
-			System.out.println("Final Position: " + GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_path.getSetpointVector().get(0).getEndDeltaTime()).m_position);
+			System.out.println("Final Position: " + m_kinematics.getTrajectoryPoint(m_path.getTrajectoryVector(), m_path.getSetpointVector().get(0).getEndDeltaTime()).m_position);
 			System.out.println("m_path.getSetpointVector().get(0): " + m_path.getSetpointVector().get(0).getm_X());
 		}
 
