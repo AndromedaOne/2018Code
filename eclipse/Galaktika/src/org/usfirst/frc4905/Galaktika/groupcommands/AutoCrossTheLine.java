@@ -3,8 +3,8 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 import org.usfirst.frc4905.Galaktika.Robot;
 
 public class AutoCrossTheLine extends AutoCommand {
-	
-	AutoCrossTheLine(int delaySeconds) {
+
+	public AutoCrossTheLine(double delaySeconds) {
 		if (delaySeconds > 0) {
 			delay(delaySeconds);
 		}
