@@ -14,6 +14,7 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.EnumeratedRawAxis;
+import Utilities.PDPLogging;
 import Utilities.Trace;
 import Utilities.TracePair;
 import edu.wpi.first.wpilibj.Joystick;
@@ -158,6 +159,7 @@ public class TeleOpDrive extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
+		PDPLogging.pdpLog();
 		return false;
 	}
 
