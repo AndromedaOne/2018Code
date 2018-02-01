@@ -1,5 +1,8 @@
 package org.usfirst.frc4905.Galaktika;
 
+import java.nio.ByteBuffer;
+
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Sendable;
@@ -16,18 +19,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
-	public double dummyValue() {
-		return .1234;
+	private static final byte kAddress = 0x29;
+	private static final int kModelID = 0x000;
+	private double m_fakeReading = .1234;
+	private I2C m_i2c;
+
+	private void readingChange() {
+		m_fakeReading = m_fakeReading + .0001;
 	}
 
-	public VL6180() {
-		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
+	private double getSensorReading() {
+		ByteBuffer id = ByteBuffer.allocate(1);
+		boolean readSuccessful;
+		readingChange();
+		readSuccessful = m_i2c.read(kModelID, 1, id);
+		System.out.println(String.format("0x%02X, readSuccessful = %b", id.get(0), readSuccessful));
+		return m_fakeReading;
 	}
+
+
+	public VL6180(I2C.Port port) {
+		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
+		m_i2c = new I2C(port, kAddress);
+	}
+
+
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.setSmartDashboardType("VL6180");
-		builder.addDoubleProperty("Value", this::dummyValue, null);
+		builder.setSmartDashboardType("Ultrasonic");
+		builder.addDoubleProperty("Value", this::getSensorReading, null);
 		// TODO Auto-generated method stub
 
 	}
