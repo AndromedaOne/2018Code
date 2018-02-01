@@ -8,11 +8,9 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import Utilities.Trace;
 import Utilities.TracePair;
 import kinematics.Kinematics;
-import kinematics.CheckerExceptions.*;
-import kinematics.CheckerExceptions.InvalidAccelerationException;
+import kinematics.KinematicsException;
 
 public class KinematicsTester {
-	CheckerExceptions m_checkerExceptions = new CheckerExceptions();
 	
 	public static void main(String[] args) {
 		try {
@@ -36,9 +34,7 @@ public class KinematicsTester {
 
 			UnitCases.createRandomTestCases();
 			
-		} catch (InvalidAccelerationException | InvalidVelocityException | InvalidNextVelocityFromLastAcceleration
-				| InvalidFinalPosition | InvalidTrajectoryLogic | NaNException
-				| InvalidJerkException | InvalidDimentionException e) {
+		} catch (KinematicsException | InvalidDimentionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

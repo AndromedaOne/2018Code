@@ -2,35 +2,28 @@ package kinematics;
 
 import java.util.Random;
 
-import kinematics.CheckerExceptions.*;
+import kinematics.KinematicsException.*;
 
 public class UnitCases {
 	static double m_deltaTimeFromOriginalPoint = 0.01;
 	static Kinematics m_kinematics = new Kinematics();
 
-	private static void createUnitCase(Double... setpoints) throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	private static void createUnitCase(Double... setpoints) throws InvalidDimentionException, KinematicsException {
 		createUnitCase(false, false, setpoints);
 	}
 
 	private static void createUnitCase(boolean printMode, Double... setpoints) throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+		KinematicsException {
 		createUnitCase(printMode, false, setpoints);
 	}
 
 	private static void createUnitCase(boolean printMode, boolean debugMode, Double... setpoints)
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(2.0, 0.5, 0.25, printMode, debugMode, setpoints);
 	}
 
 	private static void createUnitCase(double maxV, double maxA, double maxJ, boolean printMode, boolean debugMode, 
-			Double... setpoints) throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+			Double... setpoints) throws InvalidDimentionException, KinematicsException {
 
 		int numberOfSetpoints = 0;
 		int setpointIndex = 0;
@@ -46,29 +39,22 @@ public class UnitCases {
 	}
 
 	private static void createUnitCase(CustomMaxVelocitySetpoint... setpoints) throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+		KinematicsException {
 		createUnitCase(false, false, setpoints);
 	}
 
 	private static void createUnitCase(boolean printMode, CustomMaxVelocitySetpoint... setpoints)
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(printMode, false, setpoints);
 	}
 	
 	private static void createUnitCase(boolean printMode, boolean debugMode, CustomMaxVelocitySetpoint... setpoints)
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(2.0, 0.5, 0.25, printMode, debugMode,  setpoints);
 	}
 
 	private static void createUnitCase(double maxV, double maxA, double maxJ, boolean printMode, boolean debugMode, 
-			CustomMaxVelocitySetpoint... setpoints) throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+			CustomMaxVelocitySetpoint... setpoints) throws InvalidDimentionException, KinematicsException {
 		Path myPath = new Path();
 		KinematicsTester kinematicsTester = new KinematicsTester();
 		for (CustomMaxVelocitySetpoint setpoint : setpoints) {
@@ -82,16 +68,14 @@ public class UnitCases {
 
 	}
 
-	public static void realTests() throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	public static void realTests() throws InvalidDimentionException, 
+	KinematicsException {
 		createUnitCase(12460.0, (4.97) * Math.pow(10, 7), 63460.0 * 1000000.0, true, true, 100000.0);
 
 	}
 
-	static void createSingleSetpointCases() throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	static void createSingleSetpointCases() throws InvalidDimentionException, 
+	KinematicsException {
 		createUnitCase(14.0);
 		createUnitCase(8.0);
 		createUnitCase(-14.0);
@@ -101,25 +85,19 @@ public class UnitCases {
 		realTests();
 	}
 
-	static void createChangingDirectionCases() throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	static void createChangingDirectionCases() throws InvalidDimentionException, KinematicsException {
 		createChangingDirectionCasesFirstPointReachesMaxVAndMaxA();
 		createChangingDirectionCasesFirstPointReachesMaxANotMaxV();
 		createChangingDirectionCasesFirstPointDoesNotReachMaxAOrMaxV();
 	}
 
-	static void createSameDirectionCases() throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	static void createSameDirectionCases() throws InvalidDimentionException, KinematicsException {
 		createSameDirectionCasesFirstPointReachesMaxVAndMaxA();
 		createSameDirectionCasesFirstPointReachesMaxANotMaxV();
 		createSameDirectionCasesFirstPointDoesNotReachMaxAOrMaxV();
 	}
 
-	static void createSingleSetpointCasesWithCustomMaxV() throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	static void createSingleSetpointCasesWithCustomMaxV() throws InvalidDimentionException, KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-14.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(1.5, 1.0));
@@ -129,40 +107,35 @@ public class UnitCases {
 	}
 
 	static void createSameDirectionCasesFirstPointWithCustomMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createSameDirectionCasesFirstPointReachesMaxVAndMaxAFirstPointWithCustomMaxV();
 		createSameDirectionCasesFirstPointReachesMaxANotMaxVFirstPointWithCustomMaxV();
 		createSameDirectionCasesFirstPointDoesNotReachMaxAOrMaxVFirstPointWithCustomMaxV();
 	}
 
 	static void createSameDirectionCasesSecondPointWithCustomMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createSameDirectionCasesFirstPointReachesMaxVAndMaxASecondPointWithCustomMaxV();
 		createSameDirectionCasesFirstPointReachesMaxANotMaxVSecondPointWithCustomMaxV();
 		createSameDirectionCasesFirstPointDoesNotReachMaxAOrMaxVSecondPointWithCustomMaxV();
 	}
 
 	static void createChangingDirectionCasesFirstPointWithCustomMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createChangingDirectionCasesFirstPointReachesMaxAAndMaxVFirstPointWithCustomMaxV();
 		createChangingDirectionCasesFirstPointReachesMaxANotMaxVFirstPointWithCustomMaxV();
 		createChangingDirectionCasesFirstPointDoesNotReachMaxAOrMaxVFirstPointWithCustomMaxV();
 	}
 
 	static void createChangingDirectionCasesSecondPointWithCustomMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createChangingDirectionCasesFirstPointReachesMaxAAndMaxVSecondPointWithCustomMaxV();
 		createChangingDirectionCasesFirstPointReachesMaxANotMaxVSecondPointWithCustomMaxV();
 		createChangingDirectionCasesFirstPointDoesNotReachMaxAOrMaxVSecondPointWithCustomMaxV();
 	}
 
 	private static void createChangingDirectionCasesFirstPointReachesMaxVAndMaxA() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createUnitCase(14.0, -6.0);
 		createUnitCase(-14.0, 6.0);
 		createUnitCase(14.0, 6.0);
@@ -172,8 +145,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointReachesMaxANotMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createUnitCase(6.0, -12.0);
 		createUnitCase(-6.0, 12.0);
 		createUnitCase(6.0, 0.0);
@@ -183,8 +155,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointDoesNotReachMaxAOrMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createUnitCase(1.0, -14.0);
 		createUnitCase(-1.0, 14.0);
 		createUnitCase(1.0, -4.0);
@@ -194,8 +165,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointReachesMaxVAndMaxA() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createUnitCase(14.0, 28.0);
 		createUnitCase(-14.0, -28.0);
 		createUnitCase(14.0, 20.0);
@@ -205,8 +175,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointReachesMaxANotMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createUnitCase(6.0, 20.0);
 		createUnitCase(-6.0, -20.0);
 		createUnitCase(6.0, 10.0);
@@ -216,8 +185,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointDoesNotReachMaxAOrMaxV() throws InvalidDimentionException,
-			InvalidVelocityException, InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException,
-			InvalidFinalPosition, InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	KinematicsException {
 		createUnitCase(1.0, 16.0);
 		createUnitCase(-1.0, -16.0);
 		createUnitCase(1.0, 6.0);
@@ -227,9 +195,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointReachesMaxVAndMaxAFirstPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0, 1.0), new CustomMaxVelocitySetpoint(28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-14.0, 1.0), new CustomMaxVelocitySetpoint(-28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0, 1.0), new CustomMaxVelocitySetpoint(20.0));
@@ -239,9 +205,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointReachesMaxANotMaxVFirstPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0, 1.0), new CustomMaxVelocitySetpoint(28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-6.0, 1.0), new CustomMaxVelocitySetpoint(-28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0, 1.0), new CustomMaxVelocitySetpoint(12.0));
@@ -251,9 +215,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointDoesNotReachMaxAOrMaxVFirstPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0, 1.0), new CustomMaxVelocitySetpoint(28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-1.0, 1.0), new CustomMaxVelocitySetpoint(-28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0, 1.0), new CustomMaxVelocitySetpoint(6.0));
@@ -263,9 +225,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointReachesMaxVAndMaxASecondPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0), new CustomMaxVelocitySetpoint(28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-14.0), new CustomMaxVelocitySetpoint(-28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0), new CustomMaxVelocitySetpoint(20.0, 1.0));
@@ -275,9 +235,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointReachesMaxANotMaxVSecondPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0), new CustomMaxVelocitySetpoint(28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-6.0), new CustomMaxVelocitySetpoint(-28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0), new CustomMaxVelocitySetpoint(12.0, 1.0));
@@ -287,9 +245,7 @@ public class UnitCases {
 	}
 
 	private static void createSameDirectionCasesFirstPointDoesNotReachMaxAOrMaxVSecondPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0), new CustomMaxVelocitySetpoint(28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-1.0), new CustomMaxVelocitySetpoint(-28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0), new CustomMaxVelocitySetpoint(7.0, 1.0));
@@ -299,9 +255,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointReachesMaxAAndMaxVFirstPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0, 1.0), new CustomMaxVelocitySetpoint(-28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-14.0, 1.0), new CustomMaxVelocitySetpoint(28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0, 1.0), new CustomMaxVelocitySetpoint(8.0));
@@ -311,9 +265,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointReachesMaxANotMaxVFirstPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException{
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0, 1.0), new CustomMaxVelocitySetpoint(-28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-6.0, 1.0), new CustomMaxVelocitySetpoint(28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0, 1.0), new CustomMaxVelocitySetpoint(0.0));
@@ -323,9 +275,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointDoesNotReachMaxAOrMaxVFirstPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0, 1.0), new CustomMaxVelocitySetpoint(-28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-1.0, 1.0), new CustomMaxVelocitySetpoint(28.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0, 1.0), new CustomMaxVelocitySetpoint(-5.0));
@@ -335,9 +285,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointReachesMaxAAndMaxVSecondPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException{
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0), new CustomMaxVelocitySetpoint(-28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-14.0), new CustomMaxVelocitySetpoint(28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(14.0), new CustomMaxVelocitySetpoint(8.0, 1.0));
@@ -347,9 +295,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointReachesMaxANotMaxVSecondPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException,KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0), new CustomMaxVelocitySetpoint(-28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-6.0), new CustomMaxVelocitySetpoint(28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(6.0), new CustomMaxVelocitySetpoint(0.0, 1.0));
@@ -359,9 +305,7 @@ public class UnitCases {
 	}
 
 	private static void createChangingDirectionCasesFirstPointDoesNotReachMaxAOrMaxVSecondPointWithCustomMaxV()
-			throws InvalidDimentionException, InvalidVelocityException, InvalidNextVelocityFromLastAcceleration,
-			InvalidAccelerationException, InvalidFinalPosition, InvalidTrajectoryLogic, NaNException,
-			InvalidJerkException {
+			throws InvalidDimentionException, KinematicsException {
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0), new CustomMaxVelocitySetpoint(-28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(-1.0), new CustomMaxVelocitySetpoint(28.0, 1.0));
 		createUnitCase(new CustomMaxVelocitySetpoint(1.0), new CustomMaxVelocitySetpoint(-5.0, 1.0));
@@ -370,9 +314,7 @@ public class UnitCases {
 		createUnitCase(new CustomMaxVelocitySetpoint(-1.0), new CustomMaxVelocitySetpoint(0.0, 1.0));
 	}
 
-	static void createRandomTestCases() throws InvalidDimentionException, InvalidVelocityException,
-			InvalidNextVelocityFromLastAcceleration, InvalidAccelerationException, InvalidFinalPosition,
-			InvalidTrajectoryLogic, NaNException, InvalidJerkException {
+	static void createRandomTestCases() throws InvalidDimentionException,KinematicsException {
 		for (int i = 0; i < 10000; i++) {
 			Random random = new Random();
 			Path myPath = new Path();

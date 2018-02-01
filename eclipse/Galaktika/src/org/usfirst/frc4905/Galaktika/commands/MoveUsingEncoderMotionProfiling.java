@@ -12,7 +12,7 @@ import kinematics.GettingOfTrajectoryPoint;
 import kinematics.Kinematics;
 import kinematics.Kinematics.*;
 import kinematics.KinematicsTester;
-import kinematics.CheckerExceptions.*;
+import kinematics.KinematicsException.*;
 
 import kinematics.Path;
 import kinematics.TrajectoryPoint;

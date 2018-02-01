@@ -98,7 +98,7 @@ public class Kinematics {
 			}
 			setpoint.maxAcceleration = Key.maxAcceleration;
 
-			MaxVelocityAndMaxAccelerationReachability maxVelocityAndMaxAccelerationTrajectoryType = getWillCruiseAtMaxVelocityAndWillCruiseAtMaxAcceleration(
+			MaxVelocityAndMaxAccelerationReachability maxVelocityAndMaxAccelerationTrajectoryType = getWillReachMaxVelocityAndWillReachAtMaxAcceleration(
 					Key, setpoint, previousSetpoint, debugMode);
 
 			switch (maxVelocityAndMaxAccelerationTrajectoryType) {
@@ -415,163 +415,50 @@ public class Kinematics {
 				+ (1.0 / 6.0) * (-1 * Key.maxJerk) * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
 	}
 
-	private MaxVelocityAndMaxAccelerationReachability getWillCruiseAtMaxVelocityAndWillCruiseAtMaxAcceleration(Path Key, Point setpoint,
+	private MaxVelocityAndMaxAccelerationReachability getWillReachMaxVelocityAndWillReachAtMaxAcceleration(Path Key, Point setpoint,
 			Point previousSetpoint, boolean debugMode) {
+		
+		double distance = setpoint.m_x - previousSetpoint.m_x;
 		
 		boolean willReachMaxAcceleration = true;
 		boolean willReachMaxVelocity = true;
+		
+		double maxVelocityDistance = distance/2;
+		double velocityCoveredWhileAccelerationIsChangingFrom0ToMaxAcceleration = Math.pow(Key.maxAcceleration,2)/(2*Key.maxJerk);
+		double maxPossibleDistanceCoveredWhileAccelerating;
+		
+		if(2*velocityCoveredWhileAccelerationIsChangingFrom0ToMaxAcceleration > setpoint.maxVelocity) {
+			double maxAccelerationVelocity = Key.maxVelocity/2;
+			double timeAccelerationIsChanging = Math.sqrt(maxAccelerationVelocity*2/Key.maxJerk);
+			double distanceCoveredWhileAccelerationIsIncreasing = (1.0/6.0)*Key.maxJerk*Math.pow(timeAccelerationIsChanging, 3);
+			setpoint.maxAcceleration = Key.maxJerk*timeAccelerationIsChanging;
+			double distanceCoveredWhileAccelerationIsDecreasing = maxAccelerationVelocity*timeAccelerationIsChanging + 0.5*setpoint.maxAcceleration*Math.pow(timeAccelerationIsChanging,2) + (1.0/6.0)*Key.maxJerk*Math.pow(timeAccelerationIsChanging,3);
+			
+			maxPossibleDistanceCoveredWhileAccelerating = distanceCoveredWhileAccelerationIsIncreasing + distanceCoveredWhileAccelerationIsDecreasing;
+		}else {
+			double velocityAfterCruisingAtMaxAcceleration = velocityCoveredWhileAccelerationIsChangingFrom0ToMaxAcceleration + Key.maxVelocity - 2*velocityCoveredWhileAccelerationIsChangingFrom0ToMaxAcceleration;
+			double timeWhenAccelerationIsChangingFrom0ToMaxAcceleration = Key.maxAcceleration/Key.maxJerk;
+			double distanceCoveredWhileAccelerationIsIncreasing = (1.0/6.0)*Key.maxJerk*Math.pow(timeWhenAccelerationIsChangingFrom0ToMaxAcceleration,3);
+			 
+			double distanceCoveredWhileCruisingAtMaxAcceleration = (Math.pow(velocityAfterCruisingAtMaxAcceleration, 2) - Math.pow(velocityCoveredWhileAccelerationIsChangingFrom0ToMaxAcceleration, 2))/(2*Key.maxJerk);
+			
+			double distanceCoveredWhileAccelerationIsDecreasing = velocityAfterCruisingAtMaxAcceleration*timeWhenAccelerationIsChangingFrom0ToMaxAcceleration + 0.5*Key.maxAcceleration*Math.pow(timeWhenAccelerationIsChangingFrom0ToMaxAcceleration, 2) - (1.0/6.0)*Key.maxJerk*Math.pow(timeWhenAccelerationIsChangingFrom0ToMaxAcceleration, 3);
+			
+			maxPossibleDistanceCoveredWhileAccelerating = distanceCoveredWhileAccelerationIsIncreasing + distanceCoveredWhileCruisingAtMaxAcceleration + distanceCoveredWhileAccelerationIsDecreasing;
+		}
+		
+		
 		
 		if(willReachMaxAcceleration && willReachMaxVelocity) {
 			return MaxVelocityAndMaxAccelerationReachability.willReachMaxVelocityAndMaxAcceleration;
 		}else if(willReachMaxAcceleration && !willReachMaxVelocity){
 			return MaxVelocityAndMaxAccelerationReachability.willReachMaxAccelerationNotMaxVelocity;
 		}else if(!willReachMaxAcceleration && willReachMaxVelocity) {
-			
+			return MaxVelocityAndMaxAccelerationReachability.willReachMaxVelocityNotMaxAcceleration;
 		}else {
-			
+			return MaxVelocityAndMaxAccelerationReachability.willNotReachMaxVelocityOrMaxAcceleration;
 		}
-		
-		return MaxVelocityAndMaxAccelerationReachability.willReachMaxAccelerationNotMaxVelocity;
-		/*
-		trajectoryDistanceAndVelocityParameters.distance = Math.abs(setpoint.m_x - previousSetpoint.m_x);
-		trajectoryDistanceAndVelocityParameters.jerkTime = Key.maxAcceleration / Key.maxJerk;
-		trajectoryDistanceAndVelocityParameters.jerkVelocityCovered = 0.5 * Key.maxJerk
-				* Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 2);
-
-		double deltaInitialAccelerationFromMaxAcceleration = setpoint.maxAcceleration - setpoint.ai;
-		trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered = deltaInitialAccelerationFromMaxAcceleration
-				/ Key.maxJerk;
-		trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered = Math
-				.abs(setpoint.vi * trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered
-						+ 0.5 * setpoint.ai
-								* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 2)
-						+ (1.0 / 6.0) * Key.maxJerk
-								* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 3));
-		trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2)
-				- Math.pow(setpoint.ai, 2)) / (2 * Key.maxJerk);
-		if(trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered*2 > Key.maxVelocity) {
-			
-		}
-
-		double initialSecondJerkDistanceCovered = Math
-				.abs(Key.maxVelocity * trajectoryDistanceAndVelocityParameters.jerkTime
-						- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3));
-		trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered = setpoint.maxAcceleration / 2.0
-				* trajectoryDistanceAndVelocityParameters.jerkTime;
-
-		double initialStartMaxAccelerationVelocity = setpoint.vi
-				+ trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered;
-		double initialEndMaxAccelerationVelocity = setpoint.maxVelocity
-				- trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered;
-		double initialDistanceCoveredWhileAtMaxAcceleration = (Math.pow(initialEndMaxAccelerationVelocity, 2)
-				- Math.pow(initialStartMaxAccelerationVelocity, 2)) / (2 * setpoint.maxAcceleration);
-		boolean willReachMaxAcceleration = true;
-		if (trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered
-				+ trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered < Key.maxVelocity) {
-			initialDistanceCoveredWhileAtMaxAcceleration = 0;
-			willReachMaxAcceleration = false;
-		}
-
-		trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered = trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered
-				+ initialSecondJerkDistanceCovered + initialDistanceCoveredWhileAtMaxAcceleration;
-
-		double deltaFinalAccelerationFromMaxAcceleration = setpoint.maxAcceleration - setpoint.af;
-		trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered = deltaFinalAccelerationFromMaxAcceleration
-				/ Key.maxJerk;
-		trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered = Math
-				.abs(setpoint.vf * trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered
-						+ 0.5 * setpoint.af
-								* Math.pow(trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered, 2)
-						+ (1.0 / 6.0) * Key.maxJerk
-								* Math.pow(trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered, 3));
-		trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2)
-				- Math.pow(setpoint.af, 2)) / (2 * Key.maxJerk);
-
-		double finalFirstJerkDistanceCovered = Math
-				.abs(Key.maxVelocity * trajectoryDistanceAndVelocityParameters.jerkTime
-						- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3));
-		double finalFirstJerkVelocityCovered = setpoint.maxAcceleration / 2.0
-				* trajectoryDistanceAndVelocityParameters.jerkTime;
-
-		double finalStartMaxAccelerationVelocity = Key.maxVelocity - finalFirstJerkVelocityCovered;
-		double finalEndMaxAccelerationVelocity = setpoint.vf
-				+ trajectoryDistanceAndVelocityParameters.finalSecondJerkVelocityCovered;
-		double finalDistanceCoveredWhileAtMaxAcceleration = (Math.pow(finalEndMaxAccelerationVelocity, 2)
-				- Math.pow(finalStartMaxAccelerationVelocity, 2)) / (-2 * setpoint.maxAcceleration);
-
-		trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered = trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered
-				+ finalFirstJerkDistanceCovered + finalDistanceCoveredWhileAtMaxAcceleration;
-
-		if (setpoint.vi == 0.0 && setpoint.ai != 0) {
-			double velocityCoveredDuringBothJerkTimes = Math.pow(setpoint.ai, 2) / (2 * Key.maxJerk);
-			double timeCoveredBetweenAiand0 = setpoint.ai / Key.maxJerk;
-			double finalMaxAcceleration = Math.sqrt(2 * Key.maxJerk * (velocityCoveredDuringBothJerkTimes / 2));
-			double finalJerkTime = finalMaxAcceleration / Key.maxJerk;
-			double finalFirstJerkInitialVelocity = setpoint.ai / 2 * timeCoveredBetweenAiand0;
-			double finalSecondJerkInitialVelocity = finalFirstJerkInitialVelocity
-					+ finalMaxAcceleration / 2 * finalJerkTime;
-			trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered = 0.5 * setpoint.ai
-					* Math.pow(timeCoveredBetweenAiand0, 2)
-					- (1.0 / 6.0) * Key.maxJerk * Math.pow(timeCoveredBetweenAiand0, 3)
-					+ finalFirstJerkInitialVelocity * finalJerkTime
-					- (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3)
-					+ finalSecondJerkInitialVelocity * finalJerkTime
-					- 0.5 * finalMaxAcceleration * Math.pow(finalJerkTime, 2)
-					+ (1.0 / 6.0) * Key.maxJerk * Math.pow(finalJerkTime, 3);
-
-		} else {
-			double initialmaxAccelerationInitialVelocity = setpoint.vi
-					+ setpoint.ai * trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered
-					+ 0.5 * Key.maxJerk
-							* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 2);
-			double initialSecondJerkDistanceCoveredNoMaxAccelerationCruising = initialmaxAccelerationInitialVelocity
-					* trajectoryDistanceAndVelocityParameters.jerkTime
-					+ 0.5 * setpoint.maxAcceleration * trajectoryDistanceAndVelocityParameters.jerkTime
-					- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
-
-			double finalMaxAccelerationFinalVelocity = setpoint.vf
-					+ setpoint.af * trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered
-					+ 0.5 * Key.maxJerk
-							* Math.pow(trajectoryDistanceAndVelocityParameters.finalSecondJerkTimeCovered, 2);
-			double finalFirstJerkDistanceCoveredNoMaxAccelerationCruising = finalMaxAccelerationFinalVelocity
-					* trajectoryDistanceAndVelocityParameters.jerkTime
-					+ 0.5 * setpoint.maxAcceleration * trajectoryDistanceAndVelocityParameters.jerkTime
-					- (1.0 / 6.0) * Key.maxJerk * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
-
-			trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered = trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered
-					+ initialSecondJerkDistanceCoveredNoMaxAccelerationCruising
-					+ finalFirstJerkDistanceCoveredNoMaxAccelerationCruising
-					+ trajectoryDistanceAndVelocityParameters.finalSecondJerkDistanceCovered;
-		}
-
-		if (debugMode) {
-			System.out.println("");
-			System.out.println("initialFirstJerkVelocityCovered: "
-					+ trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered);
-			System.out.println("jerkVelocityCovered: " + trajectoryDistanceAndVelocityParameters.jerkVelocityCovered);
-			System.out.println("setpoint.ai: " + setpoint.ai);
-			System.out.println("Key.maxJerk: " + Key.maxJerk);
-			System.out.println("trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered: "
-					+ trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered);
-			System.out.println("initialSecondJerkDistanceCovered: " + initialSecondJerkDistanceCovered);
-			System.out.println(
-					"initialDistanceCoveredWhileAtMaxAcceleration: " + initialDistanceCoveredWhileAtMaxAcceleration);
-			System.out.println("");
-		}
-		if (trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered
-				+ trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
-			if (willReachMaxAcceleration) {
-				trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxVelocityAndMaxAcceleration;
-			} else {
-
-			}
-		} else if (trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
-			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxAccelerationNotMaxVelocity;
-		} else {
-			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willNotCruiseAtMaxVelocityOrMaxAcceleration;
-		}
-
-		return trajectoryDistanceAndVelocityParameters;*/ 
+	
 	}
 
 	private void getVf_Vi_Ai_Af(Vector<Point> setpointVector, Path Key, boolean debugMode) {
