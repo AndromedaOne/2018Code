@@ -36,12 +36,11 @@ import static java.util.Objects.requireNonNull;
 
 public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	
-	// This is the ping delay for the Ultrasonic
 	private double m_pingDelay = 0.1;
-	// This is the distance taked before the newest
 	private double m_oldDistance = 0;
-	// This is the ultrasonic noise tolerance
 	private double m_noiseTolerance = Double.POSITIVE_INFINITY;
+	private double m_timesAveraged = 0;
+	private double m_averagedUltrasonic = 0;
 	
   /**
    * The units to return when PIDGet is called.
@@ -338,6 +337,33 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	  public double GetUltrasonicNoiseTolerance() {
 		  return m_noiseTolerance;
 	  }
+	  
+	  public void SetUltrasonicAveragedAmount(double timesAveraged) {
+		  m_timesAveraged = timesAveraged;
+	  }
+	  
+	  public double GetUltrasonicAveragedAmount() {
+		  return m_timesAveraged;
+	  }
+
+	  public double AverageUltrasonicDistance() {
+		  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+		  int i = 0;
+		  while(i++ < m_timesAveraged) {
+			  m_averagedUltrasonic = distance + m_averagedUltrasonic;
+		  }
+		  if(i == m_timesAveraged) {
+			  i = 0;
+			  double averagedDistance = m_averagedUltrasonic / m_timesAveraged;
+			  m_averagedUltrasonic = 0;
+			  System.out.println("Averaged Distance = " + averagedDistance);
+			  return averagedDistance;
+		  }else if(m_oldDistance < 0) {
+			  return distance;
+		  }else {
+			  return m_oldDistance;
+		  }
+	  }
 
   /**
    * Get the range in inches from the ultrasonic sensor. If there is no valid value yet, i.e. at
@@ -346,11 +372,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
    * @return double Range in inches of the target returned from the ultrasonic sensor.
    */
   public double getRangeInches() {
-	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
-	  System.out.println("Distance = " + distance +
-			  ", Old Distance = " + m_oldDistance + 
-			  ", Noise Tolerance = " + m_noiseTolerance +
-			  ", Ping Delay = " + m_pingDelay);
+	  double distance = AverageUltrasonicDistance();
 	  if(isOldDistanceValid()) {
 		  if(Math.abs(distance - m_oldDistance) > m_noiseTolerance) {
 			  distance = m_oldDistance;
