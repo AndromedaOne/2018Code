@@ -129,7 +129,9 @@ public class Robot extends TimedRobot {
     		delaySeconds = SmartDashboard.getNumber("Autonomous Delay", 5.0);
         autonomousCommand = chooser.getSelected();
         initialRobotLocation = locationChooser.getSelected();
-        System.out.println("middle of Robot autonomousInit - robot location = " + initialRobotLocation);
+        System.out.println("middle of Robot autonomousInit - robot location = "
+        		+ initialRobotLocation +
+        		" delaySeconds = " + delaySeconds);
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
     }
