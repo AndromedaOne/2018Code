@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoQuals extends AutoCommand {
 	static final double LATERAL_DISTANCE_TO_EXCHANGE = 31.13;
-	
+
 	public AutoQuals() {
 		// Add Commands here:
         // e.g. addSequential(new Command1());
@@ -24,11 +24,11 @@ public class AutoQuals extends AutoCommand {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-		this(0);
-	
+		this(false);
+
 	}
-	
-	public AutoQuals(double delaySeconds) {
+
+	public AutoQuals(boolean useDelay) {
 		// Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -46,10 +46,9 @@ public class AutoQuals extends AutoCommand {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
 		System.out.println("top of AutoQuals constructor");
-		if (delaySeconds > 0) {
-			delay(delaySeconds);
-			
-		}
+	    if (useDelay) {
+            delay(Robot.getAutonomousDelay());
+        }
 		char robotPos = Robot.getInitialRobotLocation();
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
@@ -66,9 +65,9 @@ public class AutoQuals extends AutoCommand {
 
 
 	private void crossAutoLine() {
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);		
+		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 	}
-	
+
 	private void returnToLoadExchange() {
 		turnLeft();
 		turnLeft();
@@ -80,7 +79,7 @@ public class AutoQuals extends AutoCommand {
 		loadPowerCubeIntoExchange();
 	}
 
-	
+
 	public void loadNearSwitchPlate(char robotPos) {
 		System.out.println("top of AutoQuals loadNearSwitchPlate");
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);

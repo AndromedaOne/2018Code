@@ -5,10 +5,10 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoMiddleLoadSwitch extends AutoCommand {
-    public AutoMiddleLoadSwitch(double delaySeconds) {
+    public AutoMiddleLoadSwitch(boolean useDelay) {
 
-        if (delaySeconds > 0) {
-            delay(delaySeconds);
+    	    if (useDelay) {
+            delay(Robot.getAutonomousDelay());
         }
         char platePos = Robot.getSwitchPlatePosition();
         if (platePos == 'R') {
@@ -31,7 +31,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
     }
 
     public AutoMiddleLoadSwitch() {
-        this(0);
+        this(false);
     }
 
 }

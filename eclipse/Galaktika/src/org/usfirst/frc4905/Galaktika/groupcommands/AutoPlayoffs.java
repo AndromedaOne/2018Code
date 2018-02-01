@@ -27,11 +27,11 @@ public class AutoPlayoffs extends AutoCommand {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-        this(0);
+        this(false);
 
     }
 
-    public AutoPlayoffs(double delaySeconds) {
+    public AutoPlayoffs(boolean useDelay) {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -48,8 +48,8 @@ public class AutoPlayoffs extends AutoCommand {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-        if (delaySeconds > 0) {
-            delay(delaySeconds);
+        if (useDelay) {
+            delay(Robot.getAutonomousDelay());
 
         }
         char robotPos = Robot.getInitialRobotLocation();

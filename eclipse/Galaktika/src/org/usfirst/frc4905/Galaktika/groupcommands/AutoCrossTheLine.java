@@ -4,10 +4,10 @@ import org.usfirst.frc4905.Galaktika.Robot;
 
 public class AutoCrossTheLine extends AutoCommand {
 
-	public AutoCrossTheLine(double delaySeconds) {
-		if (delaySeconds > 0) {
-			delay(delaySeconds);
-		}
+	public AutoCrossTheLine(boolean useDelay) {
+	    if (useDelay) {
+            delay(Robot.getAutonomousDelay());
+        }
 		char robotPos = Robot.getInitialRobotLocation();
 		if (robotPos == 'M') {
 			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
@@ -21,7 +21,7 @@ public class AutoCrossTheLine extends AutoCommand {
 	}
 
 	public AutoCrossTheLine() {
-		this(5);
+		this(false);
 	}
 
 }
