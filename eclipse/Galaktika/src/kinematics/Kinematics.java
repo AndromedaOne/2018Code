@@ -98,27 +98,24 @@ public class Kinematics {
 			}
 			setpoint.maxAcceleration = Key.maxAcceleration;
 
-			TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters = setTrajectoryDistanceAndVelocityParameters(
+			MaxVelocityAndMaxAccelerationReachability maxVelocityAndMaxAccelerationTrajectoryType = getWillCruiseAtMaxVelocityAndWillCruiseAtMaxAcceleration(
 					Key, setpoint, previousSetpoint, debugMode);
 
-			switch (trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType) {
-			case willCruiseAtMaxVelocityAndMaxAcceleration:
+			switch (maxVelocityAndMaxAccelerationTrajectoryType) {
+			case willReachMaxVelocityAndMaxAcceleration:
 				setTrajectoryTimesWhenMaxVelocityAndMaxAccelerationAreReached(Key, setpoint,
 						trajectoryDistanceAndVelocityParameters, debugMode);
 				break;
-			case willCruiseAtMaxAccelerationNotMaxVelocity:
+			case willReachMaxAccelerationNotMaxVelocity:
 				setTrajectoryTimesWhenMaxAccelerationIsReached(Key, setpoint, trajectoryDistanceAndVelocityParameters);
 				break;
-			case willNotCruiseAtMaxVelocityOrMaxAcceleration:
+			case willNotReachMaxVelocityOrMaxAcceleration:
 				setTrajectoryTimesWhenNietherMaxAccelerationOrMaxVelocityAreReached(Key, setpoint,
 						trajectoryDistanceAndVelocityParameters);
 
 			}
 			if (debugMode) {
 				System.out.println("");
-				// System.out.println("trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType:
-				// " +
-				// trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType);
 				System.out
 						.println("trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType: "
 								+ trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType);
@@ -133,6 +130,11 @@ public class Kinematics {
 				System.out.println(
 						"secondEndAccelerationCruisingDeltaTime: " + setpoint.secondEndAccelerationCruisingDeltaTime);
 				System.out.println("Key.maxJerk: " + Key.maxJerk);
+				System.out.println("");
+				System.out
+						.println("trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType: "
+								+ trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType);
+				System.out.println("");
 			}
 			// Needs to do this so that the last time through the code the max velocity is
 			// not left at some obscure value
@@ -413,10 +415,24 @@ public class Kinematics {
 				+ (1.0 / 6.0) * (-1 * Key.maxJerk) * Math.pow(trajectoryDistanceAndVelocityParameters.jerkTime, 3);
 	}
 
-	private TrajectoryDistanceAndVelocityParameters setTrajectoryDistanceAndVelocityParameters(Path Key, Point setpoint,
+	private MaxVelocityAndMaxAccelerationReachability getWillCruiseAtMaxVelocityAndWillCruiseAtMaxAcceleration(Path Key, Point setpoint,
 			Point previousSetpoint, boolean debugMode) {
-		TrajectoryDistanceAndVelocityParameters trajectoryDistanceAndVelocityParameters = new TrajectoryDistanceAndVelocityParameters();
-
+		
+		boolean willReachMaxAcceleration = true;
+		boolean willReachMaxVelocity = true;
+		
+		if(willReachMaxAcceleration && willReachMaxVelocity) {
+			return MaxVelocityAndMaxAccelerationReachability.willReachMaxVelocityAndMaxAcceleration;
+		}else if(willReachMaxAcceleration && !willReachMaxVelocity){
+			return MaxVelocityAndMaxAccelerationReachability.willReachMaxAccelerationNotMaxVelocity;
+		}else if(!willReachMaxAcceleration && willReachMaxVelocity) {
+			
+		}else {
+			
+		}
+		
+		return MaxVelocityAndMaxAccelerationReachability.willReachMaxAccelerationNotMaxVelocity;
+		/*
 		trajectoryDistanceAndVelocityParameters.distance = Math.abs(setpoint.m_x - previousSetpoint.m_x);
 		trajectoryDistanceAndVelocityParameters.jerkTime = Key.maxAcceleration / Key.maxJerk;
 		trajectoryDistanceAndVelocityParameters.jerkVelocityCovered = 0.5 * Key.maxJerk
@@ -433,6 +449,9 @@ public class Kinematics {
 								* Math.pow(trajectoryDistanceAndVelocityParameters.initialFirstJerkTimeCovered, 3));
 		trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered = (Math.pow(setpoint.maxAcceleration, 2)
 				- Math.pow(setpoint.ai, 2)) / (2 * Key.maxJerk);
+		if(trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered*2 > Key.maxVelocity) {
+			
+		}
 
 		double initialSecondJerkDistanceCovered = Math
 				.abs(Key.maxVelocity * trajectoryDistanceAndVelocityParameters.jerkTime
@@ -446,6 +465,12 @@ public class Kinematics {
 				- trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered;
 		double initialDistanceCoveredWhileAtMaxAcceleration = (Math.pow(initialEndMaxAccelerationVelocity, 2)
 				- Math.pow(initialStartMaxAccelerationVelocity, 2)) / (2 * setpoint.maxAcceleration);
+		boolean willReachMaxAcceleration = true;
+		if (trajectoryDistanceAndVelocityParameters.initialFirstJerkVelocityCovered
+				+ trajectoryDistanceAndVelocityParameters.initialSecondJerkVelocityCovered < Key.maxVelocity) {
+			initialDistanceCoveredWhileAtMaxAcceleration = 0;
+			willReachMaxAcceleration = false;
+		}
 
 		trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered = trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered
 				+ initialSecondJerkDistanceCovered + initialDistanceCoveredWhileAtMaxAcceleration;
@@ -526,18 +551,27 @@ public class Kinematics {
 			System.out.println("jerkVelocityCovered: " + trajectoryDistanceAndVelocityParameters.jerkVelocityCovered);
 			System.out.println("setpoint.ai: " + setpoint.ai);
 			System.out.println("Key.maxJerk: " + Key.maxJerk);
+			System.out.println("trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered: "
+					+ trajectoryDistanceAndVelocityParameters.initialFirstJerkDistanceCovered);
+			System.out.println("initialSecondJerkDistanceCovered: " + initialSecondJerkDistanceCovered);
+			System.out.println(
+					"initialDistanceCoveredWhileAtMaxAcceleration: " + initialDistanceCoveredWhileAtMaxAcceleration);
 			System.out.println("");
 		}
 		if (trajectoryDistanceAndVelocityParameters.initialAccelerationDistanceCovered
 				+ trajectoryDistanceAndVelocityParameters.finalAccelerationDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
-			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxVelocityAndMaxAcceleration;
+			if (willReachMaxAcceleration) {
+				trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxVelocityAndMaxAcceleration;
+			} else {
+
+			}
 		} else if (trajectoryDistanceAndVelocityParameters.justJerkDistanceCovered <= trajectoryDistanceAndVelocityParameters.distance) {
 			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willCruiseAtMaxAccelerationNotMaxVelocity;
 		} else {
 			trajectoryDistanceAndVelocityParameters.maxVelocityAndMaxAccelerationTrajectoryType = MaxVelocityAndMaxAccelerationTrajectoryType.willNotCruiseAtMaxVelocityOrMaxAcceleration;
 		}
 
-		return trajectoryDistanceAndVelocityParameters;
+		return trajectoryDistanceAndVelocityParameters;*/ 
 	}
 
 	private void getVf_Vi_Ai_Af(Vector<Point> setpointVector, Path Key, boolean debugMode) {

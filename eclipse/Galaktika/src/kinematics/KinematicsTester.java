@@ -32,7 +32,7 @@ public class KinematicsTester {
 			
 			UnitCases.createSameDirectionCasesSecondPointWithCustomMaxV();
 
-			UnitCases.realTest();
+			UnitCases.realTests();
 
 			UnitCases.createRandomTestCases();
 			

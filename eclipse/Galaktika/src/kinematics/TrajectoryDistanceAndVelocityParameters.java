@@ -2,7 +2,7 @@ package kinematics;
 
 public class TrajectoryDistanceAndVelocityParameters {
 
-	MaxVelocityAndMaxAccelerationTrajectoryType maxVelocityAndMaxAccelerationTrajectoryType;
+	MaxVelocityAndMaxAccelerationReachability maxVelocityAndMaxAccelerationTrajectoryType;
 
 	double distance;
 
