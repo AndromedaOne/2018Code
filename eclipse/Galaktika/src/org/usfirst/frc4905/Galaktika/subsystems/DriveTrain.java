@@ -12,6 +12,7 @@
 package org.usfirst.frc4905.Galaktika.subsystems;
 
 import org.usfirst.frc4905.Galaktika.RobotMap;
+import org.usfirst.frc4905.Galaktika.Ultrasonic;
 //import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
@@ -79,9 +80,8 @@ public class DriveTrain extends Subsystem {
 	private double m_tolerance=1;
 	private double m_noiseTolerance = 64;
 	private double m_pingDelay = 0.02;
-	private double m_timesDistanceAveraged = 5;
+	private int m_timesDistanceAveraged = 5;
 	
-    
     
     public DriveTrain() {
     	leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
