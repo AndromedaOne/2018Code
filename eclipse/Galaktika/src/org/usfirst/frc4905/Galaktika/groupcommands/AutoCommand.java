@@ -1,5 +1,6 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
+import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
@@ -67,8 +68,12 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForward(double forwardDistanceInches) {
-        System.out.println("top of AutoCommand driveForward");
-        addSequential(new MoveUsingEncoderPID(forwardDistanceInches));
+        double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
+        System.out.println("top of AutoCommand driveForward, Forward Distance = " +
+        forwardDistanceInches +
+        "Scale Factor = " + distanceScaleFactor +
+        "Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
+		addSequential(new MoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor));
     }
 
     protected void driveForwardToWall(double forwardDistanceInches) {
@@ -96,7 +101,7 @@ public abstract class AutoCommand extends CommandGroup {
 
     }
 
-    protected void driveBackward(double forwardDistanceInches) {
-        addSequential(new MoveUsingEncoderPID( - forwardDistanceInches));
+    protected void driveBackward(double backwardDistanceInches) {
+        driveForward(- backwardDistanceInches);
     }
 }
