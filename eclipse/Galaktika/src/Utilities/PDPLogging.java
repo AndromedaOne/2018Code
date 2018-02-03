@@ -2,6 +2,9 @@ package Utilities;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
+
 public class PDPLogging {
 	public static void pdpLog() {
 		Trace pdpTrace = Trace.getInstance();
