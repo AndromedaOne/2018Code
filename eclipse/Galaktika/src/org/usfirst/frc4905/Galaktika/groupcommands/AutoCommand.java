@@ -1,6 +1,8 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.ConditionalGyroPIDTurnDeltaAngle;
+import org.usfirst.frc4905.Galaktika.commands.ConditionalMoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
@@ -52,32 +54,32 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double LATERAL_DISTANCE_TO_RIGHT = 116;
     protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
-    protected void turnRight() {
+    protected void turnRight(char scaleSide, char switchSide) {
             debug("top of turnRight");
-        addSequential(new GyroPIDTurnDeltaAngle(90));
+            addSequential(new ConditionalGyroPIDTurnDeltaAngle(90, scaleSide, switchSide));
     }
 
-    protected void turnLeft() {
+    protected void turnLeft(char scaleSide, char switchSide) {
         debug("top of turnLeft");
-        addSequential(new GyroPIDTurnDeltaAngle(-90));
+        addSequential(new ConditionalGyroPIDTurnDeltaAngle(-90, scaleSide, switchSide));
     }
 
-    protected void turnAround() {
+    protected void turnAround(char scaleSide, char switchSide) {
         debug("top of turnAround");
-        addSequential(new GyroPIDTurnDeltaAngle(180));
+        addSequential(new ConditionalGyroPIDTurnDeltaAngle(180, scaleSide, switchSide));
     }
 
-    protected void driveForward(double forwardDistanceInches) {
+    protected void driveForward(double forwardDistanceInches, char scaleSide, char switchSide) {
         double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
         debug("top of driveForward, Forward Distance = " +
 	        forwardDistanceInches +
 	        "Scale Factor = " + distanceScaleFactor +
 	        "Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
-		addSequential(new MoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor));
+		addSequential(new ConditionalMoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor, scaleSide, switchSide));
     }
 
-	protected void driveForwardToWall(double forwardDistanceInches) {
-        driveForward(forwardDistanceInches);
+	protected void driveForwardToWall(double forwardDistanceInches, char scaleSide, char switchSide) {
+        driveForward(forwardDistanceInches, scaleSide, switchSide);
         addSequential(new MoveToWall());
     }
 
@@ -86,23 +88,23 @@ public abstract class AutoCommand extends CommandGroup {
 
     }
 
-    protected void loadPowerCubeOntoSwitch() {
+    protected void loadPowerCubeOntoSwitch(char scaleSide, char switchSide) {
         // TODO Auto-generated method stub
 
     }
 
-    protected void loadPowerCubeOntoScale() {
+    protected void loadPowerCubeOntoScale(char scaleSide, char switchSide) {
         // TODO Auto-generated method stub
 
     }
 
-    public void loadPowerCubeIntoExchange() {
+    public void loadPowerCubeIntoExchange(char scaleSide, char switchSide) {
         // TODO Auto-generated method stub
 
     }
 
-    protected void driveBackward(double backwardDistanceInches) {
-        driveForward(- backwardDistanceInches);
+    protected void driveBackward(double backwardDistanceInches, char scaleSide, char switchSide) {
+        driveForward(- backwardDistanceInches, scaleSide, switchSide);
     }
 
     protected void debug(String information) {

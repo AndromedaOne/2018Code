@@ -50,59 +50,81 @@ public class AutoQuals extends AutoCommand {
             delay(Robot.getAutonomousDelay());
         }
 		char robotPos = Robot.getInitialRobotLocation();
-		char switchPlatePos = Robot.getSwitchPlatePosition();
-		char scalePlatePos = Robot.getScalePlatePosition();
-		if (switchPlatePos == robotPos) {
-			loadNearSwitchPlate(robotPos);
-		} else if (scalePlatePos == robotPos){
-			loadNearScalePlate(robotPos);
-		} else {
-			crossAutoLine();
-			returnToLoadExchange();
-		}
+		loadNearSwitchPlate(robotPos);
+		loadNearScalePlate(robotPos);
+		crossAutoLine(robotPos);
+		returnToLoadExchange(robotPos);
 		debug("bottom of AutoQuals constructor");
 	}
 
-
-	private void crossAutoLine() {
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+	private void crossAutoLine(char robotPos) {
+		char scalePos;
+		char switchPos;
+		if (robotPos == 'R') {
+			scalePos = 'L';
+			switchPos = 'L';
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE, scalePos, switchPos);
+		} else if (robotPos == 'L') {
+			scalePos = 'R';
+			switchPos = 'R';
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE, scalePos, switchPos);
+		}
 	}
 
-	private void returnToLoadExchange() {
-		turnLeft();
-		turnLeft();
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-		turnRight();
-		driveForward(LATERAL_DISTANCE_TO_EXCHANGE);
-		turnLeft();
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-		loadPowerCubeIntoExchange();
+	private void returnToLoadExchange(char robotPos) {
+		char scalePos;
+		char switchPos;
+		if (robotPos == 'R') {
+			scalePos = 'L';
+			switchPos = 'L';
+			turnAround(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			turnRight(scalePos, switchPos);
+			driveForward(LATERAL_DISTANCE_TO_EXCHANGE, scalePos, switchPos);
+			turnLeft(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			loadPowerCubeIntoExchange(scalePos, switchPos);
+		} else if (robotPos == 'L') {
+			scalePos = 'R';
+			switchPos = 'R';
+			turnAround(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			turnLeft(scalePos, switchPos);
+			driveForward(LATERAL_DISTANCE_TO_EXCHANGE, scalePos, switchPos);
+			turnRight(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			loadPowerCubeIntoExchange(scalePos, switchPos);
+		}
 	}
 
 
 	public void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
-		driveForward(FORWARD_DISTANCE_TO_SWITCH);
+		char scaleSide = '*';
+		char switchSide = robotPos;
+		driveForward(FORWARD_DISTANCE_TO_SWITCH, scaleSide, switchSide);
 		if (robotPos == 'R') {
-			turnLeft();
+			turnLeft(scaleSide, switchSide);
 		} else {
-			turnRight();
+			turnRight(scaleSide, switchSide);
 		}
-		driveForward(LATERAL_DISTANCE_TO_SWITCH);
-		loadPowerCubeOntoSwitch();
+		driveForward(LATERAL_DISTANCE_TO_SWITCH, scaleSide, switchSide);
+		loadPowerCubeOntoSwitch(scaleSide, switchSide);
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	public void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
-		driveForward(FORWARD_DISTANCE_TO_SCALE);
+		char scaleSide = robotPos;
+		char switchSide = '*';
+		driveForward(FORWARD_DISTANCE_TO_SCALE, scaleSide, switchSide);
 		if (robotPos == 'R') {
-			turnLeft();
+			turnLeft(scaleSide, switchSide);
 		} else {
-			turnRight();
+			turnRight(scaleSide, switchSide);
 		}
-		driveForward(LATERAL_DISTANCE_TO_SCALE);
-		loadPowerCubeOntoScale();
+		driveForward(LATERAL_DISTANCE_TO_SCALE, scaleSide, switchSide);
+		loadPowerCubeOntoScale(scaleSide, switchSide);
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 

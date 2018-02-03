@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class GyroPIDTurnDeltaAngle extends Command {
 
-	private double m_deltaAngleToTurn = 0.0;
+	protected double m_deltaAngleToTurn = 0.0;
 
 	public GyroPIDTurnDeltaAngle() {
 		requires(Robot.driveTrain);
@@ -52,7 +52,7 @@ public class GyroPIDTurnDeltaAngle extends Command {
     		end();
     }
 
-    private void debug(String information) {
+    protected void debug(String information) {
 		System.out.println("In GyroPIDTurnDeltaAngle.java Angle in Degrees = " +
     m_deltaAngleToTurn + " " +
     information);

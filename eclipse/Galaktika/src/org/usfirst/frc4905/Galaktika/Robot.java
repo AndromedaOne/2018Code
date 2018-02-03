@@ -177,21 +177,21 @@ public class Robot extends TimedRobot {
     }
 
     public static char getSwitchPlatePosition() {
-    	debug("top of Robot getSwitchPlatePosition");
-    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
-    	if (gameData.length() <= SWITCH) {
-    	return 'L';
-    	}
-	return gameData.charAt(SWITCH);
+	    	debug("top of Robot getSwitchPlatePosition");
+	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
+	    	if (gameData.length() <= SWITCH) {
+	    		return 'L';
+	    	}
+	    	return gameData.charAt(SWITCH);
     }
 
     public static char getScalePlatePosition() {
-    	debug("top of Robot getScalePlatePosition");
-    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
-    	if (gameData.length() <= SCALE) {
-    	return 'L';
-    	}
-    	return gameData.charAt(SCALE);
+	    	debug("top of Robot getScalePlatePosition");
+	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
+	    	if (gameData.length() <= SCALE) {
+	    		return 'L';
+	    	}
+	    	return gameData.charAt(SCALE);
     }
 
     public static char getInitialRobotLocation() {
