@@ -142,5 +142,9 @@ public class RobotMap {
         navX = new NavxGyro();
         jawsSolenoid = new DoubleSolenoid(0, 4, 5);
         
+        //LED PWM Port assignments
+        redVal = new PWM(2);
+        blueVal = new PWM(3);
+        greenVal = new PWM(4);
     }
 }
