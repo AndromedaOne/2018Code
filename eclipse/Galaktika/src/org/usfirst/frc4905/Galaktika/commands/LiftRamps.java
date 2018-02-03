@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class LiftRamps extends Command {
 
+	
+	Joystick driveController;
     public LiftRamps() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -18,14 +20,15 @@ public class LiftRamps extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	driveController = Robot.oi.getDriveController();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Joystick joystick = Robot.oi.getSubsystemController();
-    	boolean isLeftDPadPressed = ButtonsEnumerated.getLeftButton(joystick);
-    	boolean isRightDPadPressed = ButtonsEnumerated.getRightButton(joystick);
-    	if (isLeftDPadPressed) {
+    	
+    	boolean isYButtonPressed = ButtonsEnumerated.getYButton(driveController);
+    	boolean isRightDPadPressed = ButtonsEnumerated.getRightButton(driveController);
+    	if (isYButtonPressed) {
     		Robot.ramps.liftLeftRamp();
     	} else if (isRightDPadPressed) {
     		Robot.ramps.liftRightRamp();
