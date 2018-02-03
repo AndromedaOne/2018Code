@@ -29,7 +29,10 @@ public class ElevatorManualControl extends Command {
     @Override
 	protected void execute() {
     	double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(subsystemController);
-    	if((Robot.elevator.getTopLimitSwitch() == true) && (forwardBackwardStickValue > 0)) {
+    	Robot.elevator.moveElevator(forwardBackwardStickValue);
+
+
+    	/*if((Robot.elevator.getTopLimitSwitch() == true) && (forwardBackwardStickValue > 0)) {
     		Robot.elevator.moveElevator(0);
     	}
     	else if ((Robot.elevator.getBottomLimitSwitch() == true) && (forwardBackwardStickValue < 0)) {
@@ -37,7 +40,10 @@ public class ElevatorManualControl extends Command {
     	}
     	else {
     		Robot.elevator.moveElevator(forwardBackwardStickValue);
-    	}
+    	}*/
+
+
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
