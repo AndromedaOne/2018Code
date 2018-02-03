@@ -2,7 +2,7 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import Utilities.ButtonsEnumerated;
+import Utilities.ControllerButtons.ButtonsEnumerated;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -26,11 +26,12 @@ public class LiftRamps extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	
-    	boolean isYButtonPressed = ButtonsEnumerated.getYButton(driveController);
-    	boolean isRightDPadPressed = ButtonsEnumerated.getRightButton(driveController);
-    	if (isYButtonPressed) {
+    	boolean isBackButtonPressed = ButtonsEnumerated.getBackButton(driveController);
+    	boolean isStartButtonPressed = ButtonsEnumerated.getStartButton(driveController);
+    	if (isBackButtonPressed) {
     		Robot.ramps.liftLeftRamp();
-    	} else if (isRightDPadPressed) {
+    	} 
+    	if (isStartButtonPressed) {
     		Robot.ramps.liftRightRamp();
     	}
     }

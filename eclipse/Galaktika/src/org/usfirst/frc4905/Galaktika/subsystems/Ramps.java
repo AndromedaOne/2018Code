@@ -43,6 +43,12 @@ public class Ramps extends Subsystem {
     	releaseSolenoid1.set(false);
     	releaseSolenoid2.set(false);
     }
+    public void releaseLeftRamp() {
+    	releaseSolenoid1.set(false);
+    }
+    public void releaseRightRamp() {
+    	releaseSolenoid2.set(false);
+    }
     
     public void liftLeftRamp() {
     	solenoid1.set(true);

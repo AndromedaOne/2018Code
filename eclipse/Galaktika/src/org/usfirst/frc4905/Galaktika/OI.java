@@ -16,9 +16,8 @@ import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
 
+import Utilities.*;
 import Utilities.ControllerButtons.ButtonsEnumerated;
-import Utilities.LEDColor;
-import Utilities.ButtonsEnumerated;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
