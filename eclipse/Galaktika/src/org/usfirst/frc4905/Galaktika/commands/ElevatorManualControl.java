@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ElevatorManualControl extends Command {
 
+
+	Joystick subsystemController;
     public ElevatorManualControl() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -18,12 +20,14 @@ public class ElevatorManualControl extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
-    	Joystick subsystemController = Robot.oi.getSubsystemController();
+    @Override
+	protected void initialize() {
+    	subsystemController = Robot.oi.getSubsystemController();
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
+    @Override
+	protected void execute() {
     	double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(subsystemController);
     	if((Robot.elevator.getTopLimitSwitch() == true) && (forwardBackwardStickValue > 0)) {
     		Robot.elevator.moveElevator(0);
@@ -37,18 +41,21 @@ public class ElevatorManualControl extends Command {
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
+    @Override
+	protected boolean isFinished() {
         return false;
     }
 
     // Called once after isFinished returns true
-    protected void end() {
+    @Override
+	protected void end() {
     	Robot.elevator.moveElevator(0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
-    protected void interrupted() {
+    @Override
+	protected void interrupted() {
     	Robot.elevator.moveElevator(0);
     }
 }
