@@ -1,33 +1,30 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class GyroPIDTurnDeltaAngle extends Command {
+public class MoveUsingEncoderPID extends Command {
 	
-	private double m_deltaAngleToTurn = 0.0;
-	
-	public GyroPIDTurnDeltaAngle() {
-		requires(Robot.driveTrain);
-		m_deltaAngleToTurn = 90; 
-	}
-	
-    public GyroPIDTurnDeltaAngle(double deltaAngleToTurn) {
-    	m_deltaAngleToTurn = deltaAngleToTurn;
-    	requires(Robot.driveTrain); 
+	private double m_setpoint = 0;
+
+    public MoveUsingEncoderPID(double setpoint) {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
+    	requires(Robot.driveTrain);
+    	m_setpoint = setpoint;
     }
 
-    
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.initGyroPIDDeltaAngle();
-    	Robot.driveTrain.enableGyroPID(m_deltaAngleToTurn);
-    }
+    	Robot.driveTrain.initializeEncoderPID();
+    	Robot.driveTrain.enableEncoderPID(m_setpoint);
     
+    }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
@@ -35,13 +32,13 @@ public class GyroPIDTurnDeltaAngle extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.driveTrain.gyroPIDIsDone();
+        return Robot.driveTrain.isDoneEncoderPID();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.stop();
-    	Robot.driveTrain.stopGyroPid();
+    	Robot.driveTrain.move(0, 0);
+    	Robot.driveTrain.disableEncoderPID();
     }
 
     // Called when another command which requires one or more of the same
