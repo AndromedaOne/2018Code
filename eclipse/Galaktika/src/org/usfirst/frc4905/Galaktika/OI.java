@@ -15,6 +15,7 @@ import org.usfirst.frc4905.Galaktika.commands.*;
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
+import Utilities.LEDColor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -84,6 +85,9 @@ public class OI {
 
         SmartDashboard.putData("JawsOpenClose", new JawsOpenClose());
         SmartDashboard.putData("RetratExtendArms", new RetractExtendArms());
+        SmartDashboard.putData("LEDRed", new LEDCommand(LEDColor.RED));
+        SmartDashboard.putData("LEDBlue", new LEDCommand(LEDColor.BLUE));
+        SmartDashboard.putData("LEDYellow", new LEDCommand(LEDColor.GREEN));
         
     }
 
