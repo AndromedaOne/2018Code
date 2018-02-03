@@ -20,8 +20,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
 	private static final byte kAddress = 0x29;
-	private static final int kModelID = 0x000;
+	private static final short kModelID = 0x000;
 	private double m_fakeReading = .1234;
+	private boolean m_readOnce = true;
 	private I2C m_i2c;
 
 	private void readingChange() {
@@ -30,10 +31,17 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
 	private double getSensorReading() {
 		ByteBuffer id = ByteBuffer.allocate(1);
+		ByteBuffer index = ByteBuffer.allocate(2);
+		index.putShort(kModelID);
 		boolean readSuccessful;
 		readingChange();
-		readSuccessful = m_i2c.read(kModelID, 1, id);
-		System.out.println(String.format("0x%02X, readSuccessful = %b", id.get(0), readSuccessful));
+		if (m_readOnce) {
+			readSuccessful = m_i2c.transaction(index, 2, id, 1);
+			System.out.println(String.format("0x%02X, readSuccessful = %b", id.get(0), readSuccessful));
+			if (readSuccessful) {
+				m_readOnce = false;
+			}
+		}
 		return m_fakeReading;
 	}
 
