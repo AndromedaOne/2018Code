@@ -13,7 +13,7 @@ package org.usfirst.frc4905.Galaktika;
 
 import org.usfirst.frc4905.Galaktika.commands.*;
 
-import Utilities.ButtonsEnumerated;
+import Utilities.ControllerButtons.ButtonsEnumerated;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
