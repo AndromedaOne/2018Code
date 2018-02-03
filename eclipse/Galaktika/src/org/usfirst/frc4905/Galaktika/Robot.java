@@ -137,6 +137,8 @@ public class Robot extends TimedRobot {
         initialRobotLocation = locationChooser.getSelected();
         debug("middle of autonomousInit - robot location = " +
         		initialRobotLocation +
+        		" Scale = " + Robot.getScalePlatePosition() +
+    			" Switch = " + Robot.getSwitchPlatePosition() +
         		" delaySeconds = " + delaySeconds +
         		" distanceScaleFactor = " + distanceScaleFactor +
         		" autonomousCommand " + autonomousCommand.getClass().getSimpleName());
@@ -193,7 +195,6 @@ public class Robot extends TimedRobot {
     }
 
     public static char getInitialRobotLocation() {
-	    	debug("getInitialRobotLocation returning " + initialRobotLocation);
 	    	return initialRobotLocation;
     }
 

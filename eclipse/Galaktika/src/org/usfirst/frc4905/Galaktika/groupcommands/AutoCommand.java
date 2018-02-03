@@ -106,11 +106,9 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void debug(String information) {
-    		System.out.println("In AutoCommand.java Field Setup: Robot = " +
-    				Robot.getInitialRobotLocation() +
-    				" Scale = " + Robot.getScalePlatePosition() +
-    				" Switch = " + Robot.getSwitchPlatePosition() +
-    				information);
-
+    		// char location = Robot.getInitialRobotLocation();
+    		// System.out.println("In AutoCommand.java Field Setup: Robot = " +
+    		//		location + "? " +
+    		//		information);
 	}
 }

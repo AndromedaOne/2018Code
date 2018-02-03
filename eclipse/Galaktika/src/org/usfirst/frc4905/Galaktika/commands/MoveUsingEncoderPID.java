@@ -21,6 +21,7 @@ public class MoveUsingEncoderPID extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    		debug("Initializing");
 	    	Robot.driveTrain.initializeEncoderPID();
 	    	Robot.driveTrain.enableEncoderPID(m_setpoint);
     }
@@ -36,6 +37,7 @@ public class MoveUsingEncoderPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+		debug("Done");
 	    	Robot.driveTrain.move(0, 0);
 	    	Robot.driveTrain.disableEncoderPID();
     }
@@ -44,5 +46,12 @@ public class MoveUsingEncoderPID extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
 	    	end();
+    }
+
+    protected void debug(String information) {
+		System.out.println("In MoveUsingEncoderPID.java Field Setup: Robot = " +
+				Robot.getInitialRobotLocation() +
+				"Done Encoder Ticks " + m_setpoint + " " +
+				information);
     }
 }
