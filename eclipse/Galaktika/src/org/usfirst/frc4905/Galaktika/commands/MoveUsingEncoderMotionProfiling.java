@@ -80,7 +80,7 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 					new TracePair("ProjectedVelocity", currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", (Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition)),
 					new TracePair("ProjectedPosition", currentTrajectoryPoint.m_position),
-					new TracePair("Error", (currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))/10),
+					new TracePair("Error", (currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))),
 					new TracePair("MotorOutput", (nextTrajectoryPoint.m_currentVelocity*Robot.driveTrain.m_velocityToMotorOutputRatio)*10000),
 					new TracePair("Zero", 0.0));
 			Robot.driveTrain.moveVelocity(nextTrajectoryPoint.m_currentVelocity + m_PIDOut);

@@ -62,9 +62,9 @@ public class DriveTrain extends Subsystem {
     private final Compressor compressor = RobotMap.driveTrainCompressor;
     private final Ultrasonic frontUltrasonic = RobotMap.driveTrainFrontUltrasonic;
 
-    private double m_positionPIDkp = 0;
-	private double m_positionPIDki = 0;
-	private double m_positionPIDkd = 0;
+    private double m_positionPIDkp = 2.0;
+	private double m_positionPIDki = 0.0;//3;
+	private double m_positionPIDkd = 0.0;//1435;
 	private double m_positionPIDIAccum = 0.0;
 	private double m_positionPIDPreviousPositionError = Double.NaN;
 	private double m_positionPIDPreviousPosition = Double.NaN;
@@ -89,8 +89,8 @@ public class DriveTrain extends Subsystem {
     private double m_encoderPIDTolerance = 1000;
     
     
-    private double m_maxVelocity = 127253.0; // Encoder ticks per second
-    private double m_maxAcceleration = (1.0	)*Math.pow(10, 6); // Encoder ticks per second^2
+    private double m_maxVelocity = 127920.0; // Encoder ticks per second
+    private double m_maxAcceleration = (5.0	)*Math.pow(10, 5); // Encoder ticks per second^2
     public double m_velocityToMotorOutputRatio = 1.0 / m_maxVelocity;
 	private double m_accelerationToMotorOutputRatio = 1.0 / m_maxAcceleration;
     
