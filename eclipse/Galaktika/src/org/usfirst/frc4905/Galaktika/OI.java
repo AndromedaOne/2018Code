@@ -105,7 +105,7 @@ public class OI {
         SmartDashboard.putData("RetratExtendArms", new RetractExtendArms());
         SmartDashboard.putData("LEDRed", new LEDCommand(LEDColor.RED));
         SmartDashboard.putData("LEDBlue", new LEDCommand(LEDColor.BLUE));
-        SmartDashboard.putData("LEDYellow", new LEDCommand(LEDColor.GREEN));
+        SmartDashboard.putData("LEDGreenishYellow", new LEDCommand(LEDColor.GREEN));
         SmartDashboard.putData("GyroPIDTurnDeltaAngle", new GyroPIDTurnDeltaAngle());  
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
        
