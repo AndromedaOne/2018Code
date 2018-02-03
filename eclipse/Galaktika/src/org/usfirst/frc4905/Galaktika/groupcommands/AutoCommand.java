@@ -53,30 +53,30 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
 
     protected void turnRight() {
-            System.out.println("top of AutoCommand turnRight");
+            debug("top of turnRight");
         addSequential(new GyroPIDTurnDeltaAngle(90));
     }
 
     protected void turnLeft() {
-        System.out.println("top of AutoCommand turnLeft");
+        debug("top of turnLeft");
         addSequential(new GyroPIDTurnDeltaAngle(-90));
     }
 
     protected void turnAround() {
-        System.out.println("top of AutoCommand turnAround");
+        debug("top of turnAround");
         addSequential(new GyroPIDTurnDeltaAngle(180));
     }
 
     protected void driveForward(double forwardDistanceInches) {
         double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
-        System.out.println("top of AutoCommand driveForward, Forward Distance = " +
-        forwardDistanceInches +
-        "Scale Factor = " + distanceScaleFactor +
-        "Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
+        debug("top of driveForward, Forward Distance = " +
+	        forwardDistanceInches +
+	        "Scale Factor = " + distanceScaleFactor +
+	        "Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
 		addSequential(new MoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor));
     }
 
-    protected void driveForwardToWall(double forwardDistanceInches) {
+	protected void driveForwardToWall(double forwardDistanceInches) {
         driveForward(forwardDistanceInches);
         addSequential(new MoveToWall());
     }
@@ -104,4 +104,13 @@ public abstract class AutoCommand extends CommandGroup {
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
+
+    protected void debug(String information) {
+    		System.out.println("In AutoCommand.java Field Setup: Robot = " +
+    				Robot.getInitialRobotLocation() +
+    				" Scale = " + Robot.getScalePlatePosition() +
+    				" Switch = " + Robot.getSwitchPlatePosition() +
+    				information);
+
+	}
 }

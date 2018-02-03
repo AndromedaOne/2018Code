@@ -45,7 +45,7 @@ public class AutoQuals extends AutoCommand {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-		System.out.println("top of AutoQuals constructor");
+		debug("top of AutoQuals constructor");
 	    if (useDelay) {
             delay(Robot.getAutonomousDelay());
         }
@@ -60,7 +60,7 @@ public class AutoQuals extends AutoCommand {
 			crossAutoLine();
 			returnToLoadExchange();
 		}
-		System.out.println("bottom of AutoQuals constructor");
+		debug("bottom of AutoQuals constructor");
 	}
 
 
@@ -81,7 +81,7 @@ public class AutoQuals extends AutoCommand {
 
 
 	public void loadNearSwitchPlate(char robotPos) {
-		System.out.println("top of AutoQuals loadNearSwitchPlate");
+		debug("top of AutoQuals loadNearSwitchPlate");
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -90,11 +90,11 @@ public class AutoQuals extends AutoCommand {
 		}
 		driveForward(LATERAL_DISTANCE_TO_SWITCH);
 		loadPowerCubeOntoSwitch();
-		System.out.println("bottom of AutoQuals loadNearSwitchPlate");
+		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	public void loadNearScalePlate(char robotPos) {
-		System.out.println("top of AutoQuals loadNearScalePlate");
+		debug("top of AutoQuals loadNearScalePlate");
 		driveForward(FORWARD_DISTANCE_TO_SCALE);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -103,7 +103,7 @@ public class AutoQuals extends AutoCommand {
 		}
 		driveForward(LATERAL_DISTANCE_TO_SCALE);
 		loadPowerCubeOntoScale();
-		System.out.println("bottom of AutoQuals loadNearScalePlate");
+		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
 }
