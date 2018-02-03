@@ -57,10 +57,6 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 		// Called just before this Command runs the first time
 		protected void initialize() {
 			
-
-			m_velocityToMotorOutputRatio = 1.0 / m_path.getMaxVelocity();
-			m_accelerationToMotorOutputRatio = 1.0 / m_path.getMaxAcceleration();
-			
 			Robot.driveTrain.initializePositionPID();
 			
 			m_initialTimeStamp = Timer.getFPGATimestamp();
@@ -79,21 +75,15 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 					(deltaTime));
 			
 			m_PIDOut = Robot.driveTrain.getPositionPIDOut(currentTrajectoryPoint.m_position + m_initialEncoderPosition);
-			entry.add(Robot.driveTrain.getVelocity());
-			entry.add(currentTrajectoryPoint.m_currentVelocity);
-			entry.add((Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition));
-			entry.add(currentTrajectoryPoint.m_position);
-			entry.addElement((currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))*100);
-			entry.add(0.0);
-			entry.add(Robot.driveTrain.getDTerm()*10);
-			Trace.getInstance().addTrace("MoveWithEncoderData", 
+			Trace.getInstance().addTrace("MotionProfilingData", 
 					new TracePair("ActualVelocity", Robot.driveTrain.getVelocity()),
 					new TracePair("ProjectedVelocity", currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", (Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition)),
 					new TracePair("ProjectedPosition", currentTrajectoryPoint.m_position),
-					new TracePair("Error", (currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))*100),
+					new TracePair("Error", (currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))/10),
+					new TracePair("MotorOutput", (nextTrajectoryPoint.m_currentVelocity*Robot.driveTrain.m_velocityToMotorOutputRatio)*10000),
 					new TracePair("Zero", 0.0));
-			Robot.driveTrain.setAllDriveControllersVelocity((nextTrajectoryPoint.m_currentVelocity)/10 + m_PIDOut);
+			Robot.driveTrain.moveVelocity(nextTrajectoryPoint.m_currentVelocity + m_PIDOut);
 			System.out.println("(nextTrajectoryPoint.m_currentVelocity): " + (nextTrajectoryPoint.m_currentVelocity));
 			System.out.println("deltaTime: " + deltaTime);
 			System.out.println("(nextTrajectoryPoint.m_position): " + nextTrajectoryPoint.m_position);
@@ -107,10 +97,10 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 			
 			return false;
 		}
-
+		
 		// Called once after isFinished returns true
 		protected void end() {
-			Robot.driveTrain.setAllDriveControllersVelocity(0.0);
+			Robot.driveTrain.move(0.0,0.0);
 			Trace.getInstance().flushTraceFiles();
 		}
 

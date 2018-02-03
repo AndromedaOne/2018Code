@@ -89,6 +89,12 @@ public class DriveTrain extends Subsystem {
     private double m_encoderPIDTolerance = 1000;
     
     
+    private double m_maxVelocity = 127253.0; // Encoder ticks per second
+    private double m_maxAcceleration = (1.0	)*Math.pow(10, 6); // Encoder ticks per second^2
+    public double m_velocityToMotorOutputRatio = 1.0 / m_maxVelocity;
+	private double m_accelerationToMotorOutputRatio = 1.0 / m_maxAcceleration;
+    
+    
     public DriveTrain() {
     	leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
     	leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -347,21 +353,16 @@ public class DriveTrain extends Subsystem {
     public double getEncoderPosition() {
 		return leftBottomTalon.getSelectedSensorPosition(0);
 	}
-    
-    public void setAllDriveControllersVelocity(double value) {
-    	System.out.println("THe value being put into the speed controllers is: " + value);
-	    	leftBottomTalon.set(ControlMode.Velocity, value);
-	    	rightBottomTalon.set(ControlMode.Velocity, -value);
-	    	leftTopTalon.set(ControlMode.Velocity, value);
-	    	rightTopTalon.set(ControlMode.Velocity, -value);
-
-	}
-    public void setAllDriveControllersPercentVBus(double value) {
-    	leftBottomTalon.set(ControlMode.PercentOutput, value);
-    	rightBottomTalon.set(ControlMode.PercentOutput, -value);
-    	leftTopTalon.set(ControlMode.PercentOutput, value);
-    	rightTopTalon.set(ControlMode.PercentOutput, -value);
-
+ 
+    public void moveVelocity(double velocity) {
+    	move(velocity*m_velocityToMotorOutputRatio, 0);
 }
+    public double getMaxVelocity() {
+    	return m_maxVelocity;
+    }
+    
+    public double getMaxAcceleration() {
+    	return m_maxAcceleration;
+    }
 }
 

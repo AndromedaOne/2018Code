@@ -44,7 +44,7 @@ public class RunMotorAndLog extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		Robot.driveTrain.setAllDriveControllersPercentVBus(1.0);
+		Robot.driveTrain.move(1.0, 0.0);
 		
 		Vector<Double> entry = new Vector<Double>();
 		double currentTimeStamp = Timer.getFPGATimestamp();
@@ -79,7 +79,7 @@ public class RunMotorAndLog extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		Robot.driveTrain.setAllDriveControllersPercentVBus(0.0);
+		Robot.driveTrain.move(0.0,0.0);
 
 		Trace.getInstance().flushTraceFiles();
 

@@ -2,6 +2,7 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import kinematics.Kinematics;
@@ -35,13 +36,13 @@ public class MotionProfilingTest extends CommandGroup {
     	
     		Path myFirstPath = m_kinematics.new Path();
 		try {
-			Robot.kinematics.addPointToPath(myFirstPath, m_kinematics.new Point(100000));
+			Robot.kinematics.addPointToPath(myFirstPath, m_kinematics.new Point(100000.0));
 		} catch (InvalidDimentionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// CHECK TO SEE IF THE GRAPH'S CURRENT POSITION REPRESENTATION IS BEHIND THE PROJECTED POSITION.
-		Robot.kinematics.createTrajectory(myFirstPath, (12460), (4.97)*Math.pow(10, 7));//63460.0*1000000.0);
+		Robot.kinematics.createTrajectory(myFirstPath, Robot.driveTrain.getMaxVelocity()*0.9, Robot.driveTrain.getMaxAcceleration());//63460.0*1000000.0);
 		
 
 		addSequential(new MoveUsingEncoderMotionProfiling(myFirstPath));
