@@ -350,6 +350,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
   }
   
   private double AveragedDistance() {
+	  System.out.println("- Using Averaged Distance -");
 	  double averageDistance;
 	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
 	  while(m_increment++ < m_timesAveraged) {
@@ -364,6 +365,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 		  System.out.println("Averaged Distance = " + averageDistance);
 		  return averageDistance;
 	  } else {
+		  System.out.println(" = Using Regular Distance");
 		  return distance;
 	  }
   } 
