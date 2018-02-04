@@ -1,6 +1,8 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.MoveForwardUntilScaleBump;
+import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,7 +19,9 @@ public class AutoRampPlacement extends CommandGroup {
         //      addSequential(new Command2());
         // these will run in order.
     	addSequential(new TurnToCompassHeading(90));
+    	addSequential(new MoveForwardUntilScaleBump());
     	addSequential(new TurnToCompassHeading(0));
+    	addSequential(new MoveUsingFrontUltrasonic(5));
         // To run multiple commands at the same time,
         // use addParallel()
         // e.g. addParallel(new Command1());

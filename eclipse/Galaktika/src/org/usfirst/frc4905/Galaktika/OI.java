@@ -14,7 +14,7 @@ package org.usfirst.frc4905.Galaktika;
 import org.usfirst.frc4905.Galaktika.commands.*;
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
-
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoRampPlacement;
 
 import Utilities.ControllerButtons.ButtonsEnumerated;
 import Utilities.LEDColor;
@@ -110,6 +110,7 @@ public class OI {
         SmartDashboard.putData("LEDGreenishYellow", new LEDCommand(LEDColor.GREEN));
         SmartDashboard.putData("GyroPIDTurnDeltaAngle", new GyroPIDTurnDeltaAngle());  
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
+        SmartDashboard.putData("AutoRampPlacement", new AutoRampPlacement());
        
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
         
