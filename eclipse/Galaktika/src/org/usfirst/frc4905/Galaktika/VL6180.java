@@ -24,6 +24,7 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	private double m_fakeReading = .1234;
 	private boolean m_readOnce = true;
 	private I2C m_i2c;
+	private byte[] m_placeHolderByte;
 
 	private void readingChange() {
 		m_fakeReading = m_fakeReading + .0001;
@@ -45,9 +46,16 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		return m_fakeReading;
 	}
 
-	private double readFromSensor() {
+	private void writeToSensor() {
+		m_i2c.writeBulk(m_placeHolderByte, 2);
 	}
-	
+
+	private ByteBuffer readFromSensor() {
+		ByteBuffer index = ByteBuffer.allocate(2);
+		m_i2c.read(1, 2, index);
+		return index;
+	}
+
 	public VL6180(I2C.Port port) {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
