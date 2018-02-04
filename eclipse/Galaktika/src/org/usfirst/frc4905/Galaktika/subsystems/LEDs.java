@@ -20,19 +20,7 @@ public class LEDs extends Subsystem {
 		red.setRaw(255);
 		blue.setRaw(255);
 	}
-	public void setRed()  {
-		clearColor();
-		red.setRaw(255);
-	}
-	public void setBlue()  {
-		clearColor();
-		blue.setRaw(255);
-	}
-	public void setYellow()  {
-		clearColor();
-		red.setRaw(255);
-		green.setRaw(255);
-	}
+
 	public void setColor(int Red, int Green, int Blue) {
 		clearColor();
 		red.setRaw(Red);
@@ -55,5 +43,6 @@ public class LEDs extends Subsystem {
 		clearColor();
 		red.setRaw(255);
 	}
+	
 
 }
