@@ -38,14 +38,16 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		if (m_readOnce) {
 			readSuccessful = m_i2c.transaction(index, 2, id, 1);
 			System.out.println(String.format("0x%02X, readSuccessful = %b", id.get(0), readSuccessful));
-			if (readSuccessful) {
+			if (readSuccessful = false) {
 				m_readOnce = false;
 			}
 		}
 		return m_fakeReading;
 	}
 
-
+	private double readFromSensor() {
+	}
+	
 	public VL6180(I2C.Port port) {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
