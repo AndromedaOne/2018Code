@@ -11,6 +11,7 @@
 
 package org.usfirst.frc4905.Galaktika.subsystems;
 
+import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorManualControl;
 
@@ -96,7 +97,7 @@ public class Elevator extends Subsystem {
 	private class EncoderPIDOut implements PIDOutput{
 		@Override
 		public void pidWrite(double output) {
-			elevatorController.set(output);
+			moveElevatorSafely(output);
 		}
 	}
 
@@ -146,4 +147,15 @@ public class Elevator extends Subsystem {
 	public void moveElevator(double velocity) {
 		elevatorController.set(velocity);
 	}
+	public void moveElevatorSafely(double velocity) { 
+		if(getTopLimitSwitch() == true && (velocity > 0)) {
+		moveElevator(0);
+		}
+		else if ((Robot.elevator.getBottomLimitSwitch() == true) && (velocity < 0)) {
+		moveElevator(0);
+		}
+		else {
+		moveElevator(velocity);
+		}
+	}		
 }
