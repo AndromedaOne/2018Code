@@ -2,7 +2,7 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import Utilities.EnumeratedRawAxis;
+import Utilities.ControllerButtons.EnumeratedRawAxis;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 

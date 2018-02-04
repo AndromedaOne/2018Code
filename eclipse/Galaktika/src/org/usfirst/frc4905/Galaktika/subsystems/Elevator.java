@@ -45,7 +45,7 @@ public class Elevator extends Subsystem {
 	private DigitalInput elevatorBottomLimitSwitch = RobotMap.elevatorBottomLimitSwitch;
 	private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
-	private double m_encoderPIDP = 0.0001;
+	private double m_encoderPIDP = 0.0000;
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
