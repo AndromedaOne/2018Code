@@ -60,8 +60,15 @@ public class Intake extends Subsystem {
     // here. Call these from Commands.
     
     public void runIntake(double speed) {
-    	leftController.set(speed);
-    	rightController.set(-speed);
+    	
+    	int kIRDistanceCubeIn = 1000;
+    	if(RobotMap.intakeIRDistanceSensor.getValue() >= kIRDistanceCubeIn) {
+    		stopIntake();
+    	} else {
+    		leftController.set(speed);
+    		rightController.set(-speed);
+    	}
+    	
     }
     
    public void stopIntake() {
