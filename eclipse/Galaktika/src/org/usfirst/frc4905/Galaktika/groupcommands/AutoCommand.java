@@ -25,6 +25,8 @@ public abstract class AutoCommand extends CommandGroup {
            }
     }
 
+	protected boolean m_needsInitialization = true;
+
     public AutoCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -108,9 +110,12 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void debug(String information) {
-    		// char location = Robot.getInitialRobotLocation();
-    		// System.out.println("In AutoCommand.java Field Setup: Robot = " +
-    		//		location + "? " +
-    		//		information);
+    		 char location = Robot.getInitialRobotLocation();
+    		 System.out.println("In AutoCommand.java ! ");
+    		 System.out.flush();
+    		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
+     				location + "! " +
+     				information);
+    		 System.out.flush();
 	}
 }

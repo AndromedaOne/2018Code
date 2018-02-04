@@ -6,28 +6,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoQuals extends AutoCommand {
 	static final double LATERAL_DISTANCE_TO_EXCHANGE = 31.13;
-
-	public AutoQuals() {
-		// Add Commands here:
-        // e.g. addSequential(new Command1());
-        //      addSequential(new Command2());
-        // these will run in order.
-
-        // To run multiple commands at the same time,
-        // use addParallel()
-        // e.g. addParallel(new Command1());
-        //      addSequential(new Command2());
-        // Command1 and Command2 will run in parallel.
-
-        // A command group will require all of the subsystems that each member
-        // would require.
-        // e.g. if Command1 requires chassis, and Command2 requires arm,
-        // a CommandGroup containing them would require both the chassis and the
-        // arm.
-		this(false);
-
-	}
-
 	public AutoQuals(boolean useDelay) {
 		// Add Commands here:
         // e.g. addSequential(new Command1());
@@ -49,13 +27,20 @@ public class AutoQuals extends AutoCommand {
 	    if (useDelay) {
             delay(Robot.getAutonomousDelay());
         }
-		char robotPos = Robot.getInitialRobotLocation();
-		loadNearSwitchPlate(robotPos);
-		loadNearScalePlate(robotPos);
-		crossAutoLine(robotPos);
-		returnToLoadExchange(robotPos);
-		debug("bottom of AutoQuals constructor");
+	    debug("bottom of AutoQuals constructor");
 	}
+
+	protected void initialize() {
+	    if (m_needsInitialization) {
+			char robotPos = Robot.getInitialRobotLocation();
+			loadNearSwitchPlate(robotPos);
+			loadNearScalePlate(robotPos);
+			crossAutoLine(robotPos);
+			returnToLoadExchange(robotPos);
+			m_needsInitialization = false;
+	    }
+		super.initialize();
+	 }
 
 	private void crossAutoLine(char robotPos) {
 		char scalePos;
