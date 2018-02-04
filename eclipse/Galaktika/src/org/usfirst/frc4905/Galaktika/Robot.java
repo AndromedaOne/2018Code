@@ -24,7 +24,7 @@ import org.usfirst.frc4905.Galaktika.subsystems.Pneumatics;
 import org.usfirst.frc4905.Galaktika.subsystems.Ramps;
 import org.usfirst.frc4905.Galaktika.subsystems.Retractor;
 
-import Utilities.Trace;
+import Utilities.Tracing.Trace;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
