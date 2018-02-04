@@ -45,8 +45,6 @@ public class RunMotorAndLog extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		Robot.driveTrain.move(1.0, 0.0);
-		
-		Vector<Double> entry = new Vector<Double>();
 		double currentTimeStamp = Timer.getFPGATimestamp();
 		double deltaTimeFromLastExecute = currentTimeStamp - m_previousTimeStamp;
 
@@ -61,10 +59,10 @@ public class RunMotorAndLog extends Command {
 		m_totalDeltaTimeFromLastExecute+=deltaTimeFromLastExecute;
 		m_numberofDeltaTimesFromLastExecute++;
 		
-		Trace.getInstance().addTrace("MotionProfilingData", 
+		Trace.getInstance().addTrace("KinematicLimits", 
 				new TracePair("Velocities", currentVelocity),
-				new TracePair("Acceleration", currentAcceleration),
-				new TracePair("Jerk", currentJerk/1000000),
+				new TracePair("Acceleration", currentAcceleration/500),
+				new TracePair("Jerk", currentJerk/100000),
 				new TracePair("Position", Robot.driveTrain.getEncoderPosition()));
 
 		m_previousTimeStamp = currentTimeStamp;
