@@ -50,12 +50,12 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		m_i2c.writeBulk(m_placeHolderByte, 2);
 	}
 
-	private ByteBuffer readFromSensor() {
+	private double readFromSensor() {
 		ByteBuffer index = ByteBuffer.allocate(2);
 		m_i2c.read(1, 2, index);
 		index.get();
 		System.out.println("Index = " + index.get());
-		return index;
+		return .5;
 	}
 
 	public VL6180(I2C.Port port) {
@@ -68,7 +68,7 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	@Override
 	public void initSendable(SendableBuilder builder) {
 		builder.setSmartDashboardType("Ultrasonic");
-		builder.addDoubleProperty("Value", this::getSensorReading, null);
+		builder.addDoubleProperty("Value", this::readFromSensor, null);
 		// TODO Auto-generated method stub
 
 	}
