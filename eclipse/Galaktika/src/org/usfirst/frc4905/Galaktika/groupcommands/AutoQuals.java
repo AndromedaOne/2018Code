@@ -30,7 +30,7 @@ public class AutoQuals extends AutoCommand {
 	    debug("bottom of AutoQuals constructor");
 	}
 
-	protected void initialize() {
+	public void start() {
 	    if (m_needsInitialization) {
 			char robotPos = Robot.getInitialRobotLocation();
 			loadNearSwitchPlate(robotPos);
@@ -39,7 +39,7 @@ public class AutoQuals extends AutoCommand {
 			returnToLoadExchange(robotPos);
 			m_needsInitialization = false;
 	    }
-		super.initialize();
+		super.start();
 	 }
 
 	private void crossAutoLine(char robotPos) {

@@ -12,7 +12,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
         }
     }
 
-	protected void initialize() {
+	public void start() {
 	    if (m_needsInitialization) {
 		    	char robotPos = Robot.getInitialRobotLocation();
 		    	char scaleSide = '*';
@@ -34,6 +34,6 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 		    	driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH, scaleSide, switchSide);
 			m_needsInitialization = false;
 	    }
-		super.initialize();
+		super.start();
 	 }
 }
