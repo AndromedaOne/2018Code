@@ -53,6 +53,8 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	private ByteBuffer readFromSensor() {
 		ByteBuffer index = ByteBuffer.allocate(2);
 		m_i2c.read(1, 2, index);
+		index.get();
+		System.out.println("Index = " + index.get());
 		return index;
 	}
 
