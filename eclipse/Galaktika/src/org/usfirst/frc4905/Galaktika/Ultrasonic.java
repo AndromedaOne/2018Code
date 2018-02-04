@@ -41,9 +41,9 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	private double m_pingDelay = 0.1;
 	private double m_oldDistance = 0;
 	private double m_noiseTolerance = Double.POSITIVE_INFINITY;
-	private double[] m_averageDistances;
 	private int m_increment = 0;
 	public int m_timesAveraged = 0;
+	private double[] m_averageDistances;
 	
   /**
    * The units to return when PIDGet is called.
@@ -343,46 +343,59 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
   
   public void SetUltrasonicAveragedAmount(int timesAveraged) {
 	  m_timesAveraged = timesAveraged;
+	  m_averageDistances = new double[m_timesAveraged];
   }
   
   public int GetUltrasonicAveragedAmount() {
 	  return m_timesAveraged;
   }
   
-  private double AveragedDistance() {
-	  System.out.println("- Using Averaged Distance -");
-	  double averageDistance;
-	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
-	  while(m_increment++ < m_timesAveraged) {
-		  m_averageDistances[m_increment] = distance;
-	  }
-	  if(m_increment == m_timesAveraged) {
-		  m_increment = 0;
-	  }
-	  if(m_averageDistances[m_timesAveraged] > 0) {
-		  averageDistance = DoubleStream.of(m_averageDistances).sum();
-		  averageDistance = averageDistance / m_timesAveraged;
-		  System.out.println("Averaged Distance = " + averageDistance);
-		  return averageDistance;
-	  } else {
-		  System.out.println(" = Using Regular Distance");
-		  return distance;
-	  }
-  } 
-
   /**
    * Get the range in inches from the ultrasonic sensor. If there is no valid value yet, i.e. at
    * least one measurement hasn't completed, then return 0.
    *
    * @return double Range in inches of the target returned from the ultrasonic sensor.
    */
+  private double m_lastSum = 0;
+  private boolean m_notReady = true;
+  private double AveragedUltrasonicDistance() {
+	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+	  double averageDistance = 0;
+	  System.out.println(distance);
+	  System.out.println("Increment = " + m_increment);
+	  System.out.println("Size of Array" + m_averageDistances.length);
+	  if(m_notReady) {
+		  m_averageDistances[m_increment] = distance;
+		  ++m_increment;
+		  m_lastSum += distance;
+		  distance = m_lastSum / m_increment;
+		  if(m_increment >= m_timesAveraged) {
+			  m_increment = 0;
+			  m_notReady = false;  
+		  }
+		  return distance;
+	  }else{
+		  m_lastSum -= m_averageDistances[m_increment] + distance;
+		  m_averageDistances[m_increment] = distance;
+		  ++m_increment;
+		  if(m_increment >= m_timesAveraged) {
+			  m_increment = 0;
+		  }
+		  return m_lastSum / m_timesAveraged;
+	  }
+  }
   
   public double getRangeInches() {
-	  double distance = AveragedDistance();
+	  System.out.println(" -= Asked For Distance =- ");
+	  double distance = 0;
+	  if(m_timesAveraged < 1) {
+		  distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+	  } else {
+		  distance = AveragedUltrasonicDistance();
+	  } 
 	  if(isOldDistanceValid()) {
 		  if(Math.abs(distance - m_oldDistance) > m_noiseTolerance) {
 			  distance = m_oldDistance;
-			  System.out.println("Distance = " + distance);
 		  }
 	  }  
 	  if (isRangeValid()) {
@@ -392,6 +405,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 		  return 0;
 	  }
   }
+
   /**
    * Get the range in millimeters from the ultrasonic sensor. If there is no valid value yet, i.e.
    * at least one measurement hasn't completed, then return 0.

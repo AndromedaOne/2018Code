@@ -105,6 +105,7 @@ public class DriveTrain extends Subsystem {
 	//Ultrasonic Code - Begins
 	
 	public double getDistanceFromFront(){
+		System.out.println(" / Asking For Get Distance / ");
 		return frontUltrasonic.getRangeInches();
 	}
 
