@@ -64,6 +64,8 @@ public class Trace
 	private MultipleOutputStream m_err;
 	private static String m_matchStartFname = "matchStarted";
 	
+	private static int m_dirNumb = 0;
+	
 	private class TraceEntry {
 		private BufferedWriter m_file;
 		private int m_numbOfValues;
@@ -121,7 +123,6 @@ public class Trace
 			}
 			// open the trace dir number file to retrieve the number to concatenate
 			// to the trace dir
-			int dirNumb = 0;
 			String traceNumFileName = m_basePathOfTraceDirs + "/" + m_traceDirNumberFile;
 			File traceNumbFile = new File(traceNumFileName);
 			if(!traceNumbFile.exists()) {
@@ -141,7 +142,7 @@ public class Trace
 					return;
 				}
 				m_pathOfTraceDir = m_basePathOfTraceDirs + "/trace" + line;
-				dirNumb = Integer.parseInt(line);
+				m_dirNumb = Integer.parseInt(line);
 			}
 			File traceDir = new File(m_pathOfTraceDir);
 			if(!traceDir.exists()) {
@@ -157,8 +158,8 @@ public class Trace
 			FileWriter fstream = new FileWriter(traceNumFileName, false);
 			BufferedWriter dirNumbFile = new BufferedWriter(fstream);
 			System.out.println("Created trace file " + m_basePathOfTraceDirs + m_traceDirNumberFile);
-			++dirNumb;
-			dirNumbFile.write(Integer.toString(dirNumb));
+			++m_dirNumb;
+			dirNumbFile.write(Integer.toString(m_dirNumb));
 			dirNumbFile.close();
 		}
 		catch(SecurityException e) {
@@ -186,7 +187,7 @@ public class Trace
 		try {
 			if(!m_traces.containsKey(fileName)) {
 				BufferedWriter outputFile = null;
-				String fullFileName = new String(m_pathOfTraceDir  + "/" + fileName + ".csv");
+				String fullFileName = new String(m_pathOfTraceDir  + "/" + fileName + m_dirNumb + ".csv");
 				FileWriter fstream = new FileWriter(fullFileName, false);
 				outputFile = new BufferedWriter(fstream);
 				m_traces.put(fileName, new TraceEntry(outputFile, header.length));
