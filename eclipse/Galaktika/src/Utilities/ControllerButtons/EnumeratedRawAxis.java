@@ -1,4 +1,4 @@
-package Utilities;
+package Utilities.ControllerButtons;
 
 import edu.wpi.first.wpilibj.Joystick;
 

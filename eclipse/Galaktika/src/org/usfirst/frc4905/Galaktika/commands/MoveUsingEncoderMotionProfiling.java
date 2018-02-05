@@ -4,8 +4,8 @@ import java.util.Vector;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import Utilities.Trace;
-import Utilities.TracePair;
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import kinematics.GettingOfTrajectoryPoint;
