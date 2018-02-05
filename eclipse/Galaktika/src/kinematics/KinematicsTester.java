@@ -7,8 +7,7 @@ import java.util.Vector;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import Utilities.Trace;
-import Utilities.TracePair;
+
 import kinematics.Kinematics;
 import kinematics.KinematicsException;
 

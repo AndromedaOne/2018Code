@@ -1,4 +1,4 @@
-package Utilities;
+package Utilities.Tracing;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -63,7 +63,8 @@ public class Trace
 	private MultipleOutputStream m_out;
 	private MultipleOutputStream m_err;
 	private static String m_matchStartFname = "matchStarted";
-	private int m_dirNumb = 0;
+	
+	private static int m_dirNumb = 0;
 	
 	private class TraceEntry {
 		private BufferedWriter m_file;
@@ -122,7 +123,6 @@ public class Trace
 			}
 			// open the trace dir number file to retrieve the number to concatenate
 			// to the trace dir
-			m_dirNumb = 0;
 			String traceNumFileName = m_basePathOfTraceDirs + "/" + m_traceDirNumberFile;
 			File traceNumbFile = new File(traceNumFileName);
 			if(!traceNumbFile.exists()) {
@@ -187,7 +187,7 @@ public class Trace
 		try {
 			if(!m_traces.containsKey(fileName)) {
 				BufferedWriter outputFile = null;
-				String fullFileName = new String(m_pathOfTraceDir + "/" + fileName + m_dirNumb  + ".csv");
+				String fullFileName = new String(m_pathOfTraceDir  + "/" + fileName + (m_dirNumb-1) + ".csv");
 				FileWriter fstream = new FileWriter(fullFileName, false);
 				outputFile = new BufferedWriter(fstream);
 				m_traces.put(fileName, new TraceEntry(outputFile, header.length));
