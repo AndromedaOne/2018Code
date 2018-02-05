@@ -112,6 +112,9 @@ public class OI {
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
        
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
+        SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
+        SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
+        
         
         
     }
