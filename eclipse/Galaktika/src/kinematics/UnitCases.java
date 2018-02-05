@@ -70,7 +70,10 @@ public class UnitCases {
 
 	public static void realTests() throws InvalidDimentionException, 
 	KinematicsException {
-		createUnitCase(12460.0, (4.97) * Math.pow(10, 7), 63460.0 * 1000000.0, true, true, 100000.0);
+		Kinematics.setTrajectoryPointInterval(0.00001);
+		createUnitCase(12460.0, (4.97) * Math.pow(10, 7), 63460.0 * 1000000.0, true, false, 100000.0);
+		
+		Kinematics.setTrajectoryPointInterval(1.0);
 
 	}
 
@@ -83,7 +86,7 @@ public class UnitCases {
 		createUnitCase(2.0);
 		createUnitCase(-2.0);
 		createUnitCase(2.0, 8.0, 0.25, false, false, 14.0);
-		createUnitCase(2.0, 8.0, 0.25, true, true, -14.0);
+		createUnitCase(2.0, 8.0, 0.25, false, false, -14.0);
 		realTests();
 	}
 
@@ -444,6 +447,10 @@ public class UnitCases {
 		for (int i = 0; i < Key.getSetpointVector().size(); i++) {
 			endDeltatTimeFromStartOfPath += Key.getSetpointVector().get(i).getEndDeltaTime();
 		}
+		double originalTrajectoryPointInterval = Kinematics.getTrajectoryPointInterval();
+		if(originalTrajectoryPointInterval < 1.0) {
+			Kinematics.setTrajectoryPointInterval(1.0);
+		}
 
 		for (double i = 0.0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
 			TrajectoryPoint currentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, i, true);
@@ -478,6 +485,9 @@ public class UnitCases {
 
 		}
 		System.out.println("");
+		if(originalTrajectoryPointInterval != Kinematics.getTrajectoryPointInterval()) {
+			Kinematics.setTrajectoryPointInterval(originalTrajectoryPointInterval);
+		}
 
 	}
 }

@@ -6,6 +6,10 @@ public class Kinematics {
 
 	private boolean alreadyPrinted = true;
 	private static double m_trajectoryPointInterval = 1.0;
+	
+	public static void setTrajectoryPointInterval(double trajectoryPointInterval) {
+		m_trajectoryPointInterval = trajectoryPointInterval;
+	}
 
 	public static double getTrajectoryPointInterval() {
 		return m_trajectoryPointInterval;
