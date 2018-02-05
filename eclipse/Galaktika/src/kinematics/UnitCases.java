@@ -82,6 +82,8 @@ public class UnitCases {
 		createUnitCase(-8.0);
 		createUnitCase(2.0);
 		createUnitCase(-2.0);
+		createUnitCase(2.0, 8.0, 0.25, false, false, 14.0);
+		createUnitCase(2.0, 8.0, 0.25, true, true, -14.0);
 		realTests();
 	}
 
@@ -443,7 +445,7 @@ public class UnitCases {
 			endDeltatTimeFromStartOfPath += Key.getSetpointVector().get(i).getEndDeltaTime();
 		}
 
-		for (double i = 0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
+		for (double i = 0.0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
 			TrajectoryPoint currentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, i, true);
 
 			double currentAcceleration = getAccelerationOfPoint(Key, currentPoint);

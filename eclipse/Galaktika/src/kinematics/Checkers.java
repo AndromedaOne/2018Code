@@ -74,18 +74,15 @@ public class Checkers {
 		for (int i = 0; i < Key.getSetpointVector().size(); i++) {
 			endDeltatTimeFromStartOfPath += Key.getSetpointVector().get(i).getEndDeltaTime();
 		}
-		for (double currentTime = 0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
+		for (double currentTime = 0.0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
 			TrajectoryPoint trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
+			
 			originalTrajectoryPointsPath.add(trajectoryPoint);
 		}
 		for (int i = 0; i < originalTrajectoryPointsPath.size(); i++) {
 			TrajectoryPoint originalTrajectoryPoint = originalTrajectoryPointsPath.get(i);
 			double calculatedVelocity = UnitCases.getVelocityOfPoint(Key, originalTrajectoryPoint);
-			if (calculatedVelocity == 17091.9392) {
-				System.out.println(
-						"originalTrajectoryPoint.m_currentVelocity: " + originalTrajectoryPoint.m_currentVelocity);
-			}
 			velocityCalculatedFromPositionVector.add(calculatedVelocity);
 		}
 
