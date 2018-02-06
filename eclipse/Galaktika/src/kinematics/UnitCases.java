@@ -2,6 +2,8 @@ package kinematics;
 
 import java.util.Random;
 
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
+
 import kinematics.KinematicsException.*;
 
 public class UnitCases {
@@ -70,8 +72,8 @@ public class UnitCases {
 
 	public static void realTests() throws InvalidDimentionException, 
 	KinematicsException {
-		Kinematics.setTrajectoryPointInterval(0.00001);
-		createUnitCase(12460.0, (4.97) * Math.pow(10, 7), 63460.0 * 1000000.0, true, false, 100000.0);
+		Kinematics.setTrajectoryPointInterval(0.0000001);
+		createUnitCase(DriveTrain.getMaxVelocity(), DriveTrain.getMaxAcceleration(), DriveTrain.getMaxJerk(), true, false, 100000.0);
 		
 		Kinematics.setTrajectoryPointInterval(1.0);
 
@@ -448,8 +450,8 @@ public class UnitCases {
 			endDeltatTimeFromStartOfPath += Key.getSetpointVector().get(i).getEndDeltaTime();
 		}
 		double originalTrajectoryPointInterval = Kinematics.getTrajectoryPointInterval();
-		if(originalTrajectoryPointInterval < 1.0) {
-			Kinematics.setTrajectoryPointInterval(1.0);
+		if(originalTrajectoryPointInterval < 0.1) {
+			Kinematics.setTrajectoryPointInterval(0.1);
 		}
 
 		for (double i = 0.0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {

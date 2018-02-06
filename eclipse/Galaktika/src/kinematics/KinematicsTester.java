@@ -3,6 +3,7 @@
 package kinematics;
 
 import java.util.Random;
+
 import java.util.Vector;
 
 import org.usfirst.frc4905.Galaktika.Robot;
