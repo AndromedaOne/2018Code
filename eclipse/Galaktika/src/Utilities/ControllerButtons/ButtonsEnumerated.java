@@ -1,4 +1,4 @@
-package Utilities;
+package Utilities.ControllerButtons;
 
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -25,7 +25,9 @@ public enum ButtonsEnumerated {
 			return EnumeratedRawAxis.getRightTriggerButton(gamepad);
 		}
 	};
-	
+	public int getValue( ) {
+		return m_buttonValue;
+	}
 	
 
 	private int m_buttonValue;

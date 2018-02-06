@@ -13,9 +13,10 @@ package org.usfirst.frc4905.Galaktika.commands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 
-import Utilities.EnumeratedRawAxis;
-import Utilities.Trace;
-import Utilities.TracePair;
+import Utilities.PDPLogging;
+import Utilities.ControllerButtons.EnumeratedRawAxis;
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -87,7 +88,7 @@ public class TeleOpDrive extends Command {
 		
 		
 		//24=about half a second
-		if(m_slowmodedelaycounter > 24 && Utilities.ButtonsEnumerated.getLeftButton(drivecontroller)) {
+		if(m_slowmodedelaycounter > 24 && Utilities.ControllerButtons.ButtonsEnumerated.getLeftButton(drivecontroller)) {
 			m_slowmodedelaycounter = 0;
 			if (!slowMoEnabled) {
 				mod = 0.6;
@@ -158,6 +159,7 @@ public class TeleOpDrive extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
+		PDPLogging.pdpLog();
 		return false;
 	}
 
