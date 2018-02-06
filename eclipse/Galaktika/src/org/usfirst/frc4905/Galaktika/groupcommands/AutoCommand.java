@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public abstract class AutoCommand extends CommandGroup {
+    private boolean m_preparedToStart = false;
     @Deprecated // ("Use the new Ultrasonic command")
     public class MoveToWall extends Command {
 
@@ -113,4 +114,17 @@ public abstract class AutoCommand extends CommandGroup {
     				information);
 
 	}
+
+    public void start() {
+        if (m_preparedToStart) {
+            prepareToStart();
+            m_preparedToStart = false;
+        }
+        super.start();
+     }
+
+    private void prepareToStart() {
+        // TODO Auto-generated method stub
+
+    }
 }
