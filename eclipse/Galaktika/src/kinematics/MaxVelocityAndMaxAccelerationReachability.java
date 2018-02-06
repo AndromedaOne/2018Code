@@ -1,0 +1,5 @@
+package kinematics;
+
+public enum MaxVelocityAndMaxAccelerationReachability {
+	willReachMaxVelocityAndMaxAcceleration, willReachMaxAccelerationNotMaxVelocity, willNotReachMaxVelocityOrMaxAcceleration, willReachMaxVelocityNotMaxAcceleration
+}
