@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static java.util.Objects.requireNonNull;
 
@@ -360,10 +361,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
   private boolean m_notReady = true;
   private double AveragedUltrasonicDistance() {
 	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
-	  double averageDistance = 0;
-	  System.out.println(distance);
-	  System.out.println("Increment = " + m_increment);
-	  System.out.println("Size of Array" + m_averageDistances.length);
+	  SmartDashboard.putNumber("Raw Distance ", distance);
 	  if(m_notReady) {
 		  m_averageDistances[m_increment] = distance;
 		  ++m_increment;
@@ -375,7 +373,7 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 		  }
 		  return distance;
 	  }else{
-		  m_lastSum -= m_averageDistances[m_increment] + distance;
+		  m_lastSum = m_lastSum - m_averageDistances[m_increment] + distance;
 		  m_averageDistances[m_increment] = distance;
 		  ++m_increment;
 		  if(m_increment >= m_timesAveraged) {
@@ -386,7 +384,6 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
   }
   
   public double getRangeInches() {
-	  System.out.println(" -= Asked For Distance =- ");
 	  double distance = 0;
 	  if(m_timesAveraged < 1) {
 		  distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
@@ -400,10 +397,11 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	  }  
 	  if (isRangeValid()) {
 		  m_oldDistance = distance;
-		  return distance;
 	  } else {
-		  return 0;
+		  distance = 0;
 	  }
+	  SmartDashboard.putNumber("Ultrasonic Reading ", distance);
+	  return distance;
   }
 
   /**

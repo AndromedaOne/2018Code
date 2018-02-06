@@ -72,7 +72,7 @@ public class DriveTrain extends Subsystem {
     
    	// Ultrasonic PID
 	private PIDController m_ultrasonicPID;
-	private double m_P=.02;
+	private double m_P=.2;
 	private double m_I=.00000;
 	private double m_D=.0;
 	private double m_maxSpeed=1;
@@ -105,7 +105,6 @@ public class DriveTrain extends Subsystem {
 	//Ultrasonic Code - Begins
 	
 	public double getDistanceFromFront(){
-		System.out.println(" / Asking For Get Distance / ");
 		return frontUltrasonic.getRangeInches();
 	}
 
@@ -129,6 +128,10 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean doneUltrasonicFrontPID() {
+		Trace.getInstance().addTrace("MoveWithUltrasonic", 
+				new TracePair("Current Distance", getDistanceFromFront()),
+				new TracePair("PID Error", m_ultrasonicPID.getError()),
+				new TracePair("PID Output", m_ultrasonicPID.get()));
 		return m_ultrasonicPID.onTarget();
 	}
 
