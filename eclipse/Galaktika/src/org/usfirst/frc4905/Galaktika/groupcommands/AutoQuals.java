@@ -106,4 +106,18 @@ public class AutoQuals extends AutoCommand {
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
+    protected void prepareToStart() {
+        char robotPos = Robot.getInitialRobotLocation();
+        char switchPlatePos = Robot.getSwitchPlatePosition();
+        char scalePlatePos = Robot.getScalePlatePosition();
+        if (switchPlatePos == robotPos) {
+            loadNearSwitchPlate(robotPos);
+        } else if (scalePlatePos == robotPos){
+            loadNearScalePlate(robotPos);
+        } else {
+            crossAutoLine();
+            returnToLoadExchange();
+        }
+    }
+
 }
