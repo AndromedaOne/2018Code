@@ -20,47 +20,43 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
 	private static final byte kAddress = 0x29;
-	private static final short kModelID = 0x000;
-	private double m_fakeReading = .1234;
-	private boolean m_readOnce = true;
-	private I2C m_i2c;
-	private byte[] m_placeHolderByte;
 
-	private void readingChange() {
-		m_fakeReading = m_fakeReading + .0001;
-	}
+	private static final short kModelID = 0x000;
+	private static final short kFreshOutReset = 0x016;
+	private static final short kSYSRangeStart = 0x018;
+	private static final short kResultRange = 0x062;
+
+	private I2C m_i2c;
 
 	private double getSensorReading() {
-		ByteBuffer id = ByteBuffer.allocate(1);
-		ByteBuffer index = ByteBuffer.allocate(2);
-		index.putShort(kModelID);
-		boolean readSuccessful;
-		readingChange();
-		if (m_readOnce) {
-			readSuccessful = m_i2c.transaction(index, 2, id, 1);
-			System.out.println(String.format("0x%02X, readSuccessful = %b", id.get(0), readSuccessful));
-			if (readSuccessful = false) {
-				m_readOnce = false;
-			}
-		}
-		return m_fakeReading;
+		byte distance = readByteFromSensor(kResultRange);
+		return distance;
 	}
 
-	private void writeToSensor() {
-		m_i2c.writeBulk(m_placeHolderByte, 2);
+	private void writeByteToSensor(short index, byte value) {
+		ByteBuffer writeBuff = ByteBuffer.allocate(3);
+		writeBuff.putShort(index);
+		writeBuff.put(value);
+		m_i2c.writeBulk(writeBuff, 3);
 	}
 
-	private double readFromSensor() {
-		ByteBuffer index = ByteBuffer.allocate(2);
-		m_i2c.read(1, 2, index);
-		index.get();
-		System.out.println("Index = " + index.get());
-		return .5;
+	private byte readByteFromSensor(short index) {
+		ByteBuffer indexBuff = ByteBuffer.allocate(2);
+		ByteBuffer resultBuff = ByteBuffer.allocate(1);
+		indexBuff.putShort(index);
+		m_i2c.transaction(indexBuff, 2, resultBuff, 1);
+		return resultBuff.get();
 	}
 
 	public VL6180(I2C.Port port) {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
+		System.out.println(String.format("modelID: 0x%02X", readByteFromSensor(kModelID)));
+		System.out.println(String.format("freshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
+		writeByteToSensor(kFreshOutReset, (byte) 0);
+		System.out.println(String.format("newFreshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
+		writeByteToSensor(kSYSRangeStart, (byte) 3);
+		System.out.println(String.format("SYSRangeStart: 0x%02X", readByteFromSensor(kSYSRangeStart)));
 	}
 
 
@@ -68,7 +64,7 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	@Override
 	public void initSendable(SendableBuilder builder) {
 		builder.setSmartDashboardType("Ultrasonic");
-		builder.addDoubleProperty("Value", this::readFromSensor, null);
+		builder.addDoubleProperty("Value", this::getSensorReading, null);
 		// TODO Auto-generated method stub
 
 	}
