@@ -5,29 +5,6 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoQuals extends AutoCommand {
-	static final double LATERAL_DISTANCE_TO_EXCHANGE = 31.13;
-
-	public AutoQuals() {
-		// Add Commands here:
-        // e.g. addSequential(new Command1());
-        //      addSequential(new Command2());
-        // these will run in order.
-
-        // To run multiple commands at the same time,
-        // use addParallel()
-        // e.g. addParallel(new Command1());
-        //      addSequential(new Command2());
-        // Command1 and Command2 will run in parallel.
-
-        // A command group will require all of the subsystems that each member
-        // would require.
-        // e.g. if Command1 requires chassis, and Command2 requires arm,
-        // a CommandGroup containing them would require both the chassis and the
-        // arm.
-		this(false);
-
-	}
-
 	public AutoQuals(boolean useDelay) {
 		// Add Commands here:
         // e.g. addSequential(new Command1());
@@ -49,60 +26,89 @@ public class AutoQuals extends AutoCommand {
 	    if (useDelay) {
             delay(Robot.getAutonomousDelay());
         }
-		char robotPos = Robot.getInitialRobotLocation();
-		char switchPlatePos = Robot.getSwitchPlatePosition();
-		char scalePlatePos = Robot.getScalePlatePosition();
-		if (switchPlatePos == robotPos) {
+	    debug("bottom of AutoQuals constructor");
+	}
+
+	public void start() {
+	    if (m_needsInitialization) {
+			char robotPos = Robot.getInitialRobotLocation();
 			loadNearSwitchPlate(robotPos);
-		} else if (scalePlatePos == robotPos){
 			loadNearScalePlate(robotPos);
-		} else {
-			crossAutoLine();
-			returnToLoadExchange();
+			crossAutoLine(robotPos);
+			returnToLoadExchange(robotPos);
+			m_needsInitialization = false;
+	    }
+		super.start();
+	 }
+
+	private void crossAutoLine(char robotPos) {
+		char scalePos;
+		char switchPos;
+		if (robotPos == 'R') {
+			scalePos = 'L';
+			switchPos = 'L';
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE, scalePos, switchPos);
+		} else if (robotPos == 'L') {
+			scalePos = 'R';
+			switchPos = 'R';
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE, scalePos, switchPos);
 		}
-		debug("bottom of AutoQuals constructor");
 	}
 
-
-	private void crossAutoLine() {
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-	}
-
-	private void returnToLoadExchange() {
-		turnLeft();
-		turnLeft();
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-		turnRight();
-		driveForward(LATERAL_DISTANCE_TO_EXCHANGE);
-		turnLeft();
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-		loadPowerCubeIntoExchange();
+	private void returnToLoadExchange(char robotPos) {
+		char scalePos;
+		char switchPos;
+		if (robotPos == 'R') {
+			scalePos = 'L';
+			switchPos = 'L';
+			turnAround(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			turnRight(scalePos, switchPos);
+			driveForward(LATERAL_DISTANCE_TO_EXCHANGE, scalePos, switchPos);
+			turnLeft(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			loadPowerCubeIntoExchange(scalePos, switchPos);
+		} else if (robotPos == 'L') {
+			scalePos = 'R';
+			switchPos = 'R';
+			turnAround(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			turnLeft(scalePos, switchPos);
+			driveForward(LATERAL_DISTANCE_TO_EXCHANGE, scalePos, switchPos);
+			turnRight(scalePos, switchPos);
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
+			loadPowerCubeIntoExchange(scalePos, switchPos);
+		}
 	}
 
 
 	public void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
-		driveForward(FORWARD_DISTANCE_TO_SWITCH);
+		char scaleSide = '*';
+		char switchSide = robotPos;
+		driveForward(FORWARD_DISTANCE_TO_SWITCH, scaleSide, switchSide);
 		if (robotPos == 'R') {
-			turnLeft();
+			turnLeft(scaleSide, switchSide);
 		} else {
-			turnRight();
+			turnRight(scaleSide, switchSide);
 		}
-		driveForward(LATERAL_DISTANCE_TO_SWITCH);
-		loadPowerCubeOntoSwitch();
+		driveForward(LATERAL_DISTANCE_TO_SWITCH, scaleSide, switchSide);
+		loadPowerCubeOntoSwitch(scaleSide, switchSide);
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	public void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
-		driveForward(FORWARD_DISTANCE_TO_SCALE);
+		char scaleSide = robotPos;
+		char switchSide = '*';
+		driveForward(FORWARD_DISTANCE_TO_SCALE, scaleSide, switchSide);
 		if (robotPos == 'R') {
-			turnLeft();
+			turnLeft(scaleSide, switchSide);
 		} else {
-			turnRight();
+			turnRight(scaleSide, switchSide);
 		}
-		driveForward(LATERAL_DISTANCE_TO_SCALE);
-		loadPowerCubeOntoScale();
+		driveForward(LATERAL_DISTANCE_TO_SCALE, scaleSide, switchSide);
+		loadPowerCubeOntoScale(scaleSide, switchSide);
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -120,4 +126,18 @@ public class AutoQuals extends AutoCommand {
         }
     }
 
+    private void crossAutoLine() {
+        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+    }
+
+    private void returnToLoadExchange() {
+        turnLeft();
+        turnLeft();
+        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+        turnRight();
+        driveForward(LATERAL_DISTANCE_TO_EXCHANGE);
+        turnLeft();
+        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+        loadPowerCubeIntoExchange();
+    }
 }

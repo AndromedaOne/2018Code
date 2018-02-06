@@ -8,26 +8,27 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class GyroPIDTurnDeltaAngle extends Command {
-	
-	private double m_deltaAngleToTurn = 0.0;
-	
+
+	protected double m_deltaAngleToTurn = 0.0;
+
 	public GyroPIDTurnDeltaAngle() {
 		requires(Robot.driveTrain);
-		m_deltaAngleToTurn = 90; 
+		m_deltaAngleToTurn = 90;
 	}
-	
+
     public GyroPIDTurnDeltaAngle(double deltaAngleToTurn) {
-    	m_deltaAngleToTurn = deltaAngleToTurn;
-    	requires(Robot.driveTrain); 
+	    	m_deltaAngleToTurn = deltaAngleToTurn;
+	    	requires(Robot.driveTrain);
     }
 
-    
+
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.initGyroPIDDeltaAngle();
-    	Robot.driveTrain.enableGyroPID(m_deltaAngleToTurn);
+		debug("Initializing");
+	    	Robot.driveTrain.initGyroPIDDeltaAngle();
+	    	Robot.driveTrain.enableGyroPID(m_deltaAngleToTurn);
     }
-    
+
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
@@ -40,13 +41,20 @@ public class GyroPIDTurnDeltaAngle extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.stop();
-    	Robot.driveTrain.stopGyroPid();
+		debug("Done");
+	    	Robot.driveTrain.stop();
+	    	Robot.driveTrain.stopGyroPid();
     }
 
-    // Called when another command which requires one or more of the same
+	// Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
+    		end();
     }
+
+    protected void debug(String information) {
+		System.out.println("In GyroPIDTurnDeltaAngle.java Angle in Degrees = " +
+    m_deltaAngleToTurn + " " +
+    information);
+	}
 }
