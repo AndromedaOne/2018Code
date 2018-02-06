@@ -29,86 +29,50 @@ public class AutoQuals extends AutoCommand {
 	    debug("bottom of AutoQuals constructor");
 	}
 
-	public void start() {
-	    if (m_needsInitialization) {
-			char robotPos = Robot.getInitialRobotLocation();
-			loadNearSwitchPlate(robotPos);
-			loadNearScalePlate(robotPos);
-			crossAutoLine(robotPos);
-			returnToLoadExchange(robotPos);
-			m_needsInitialization = false;
-	    }
-		super.start();
-	 }
-
 	private void crossAutoLine(char robotPos) {
-		char scalePos;
-		char switchPos;
-		if (robotPos == 'R') {
-			scalePos = 'L';
-			switchPos = 'L';
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE, scalePos, switchPos);
-		} else if (robotPos == 'L') {
-			scalePos = 'R';
-			switchPos = 'R';
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE, scalePos, switchPos);
-		}
+	    driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 	}
 
 	private void returnToLoadExchange(char robotPos) {
-		char scalePos;
-		char switchPos;
-		if (robotPos == 'R') {
-			scalePos = 'L';
-			switchPos = 'L';
-			turnAround(scalePos, switchPos);
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
-			turnRight(scalePos, switchPos);
-			driveForward(LATERAL_DISTANCE_TO_EXCHANGE, scalePos, switchPos);
-			turnLeft(scalePos, switchPos);
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
-			loadPowerCubeIntoExchange(scalePos, switchPos);
-		} else if (robotPos == 'L') {
-			scalePos = 'R';
-			switchPos = 'R';
-			turnAround(scalePos, switchPos);
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
-			turnLeft(scalePos, switchPos);
-			driveForward(LATERAL_DISTANCE_TO_EXCHANGE, scalePos, switchPos);
-			turnRight(scalePos, switchPos);
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0, scalePos, switchPos);
-			loadPowerCubeIntoExchange(scalePos, switchPos);
+	    turnAround();
+        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+        if (robotPos == 'R' || robotPos == 'M') {
+            turnRight();
+			driveForward(LATERAL_DISTANCE_TO_EXCHANGE_R);
+			turnLeft();
+		} else {
+			turnLeft();
+			driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
+			turnRight();
 		}
+        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+        loadPowerCubeIntoExchange();
 	}
 
 
 	public void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
-		char scaleSide = '*';
-		char switchSide = robotPos;
-		driveForward(FORWARD_DISTANCE_TO_SWITCH, scaleSide, switchSide);
+		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
-			turnLeft(scaleSide, switchSide);
+			turnLeft();
 		} else {
-			turnRight(scaleSide, switchSide);
+			turnRight();
 		}
-		driveForward(LATERAL_DISTANCE_TO_SWITCH, scaleSide, switchSide);
-		loadPowerCubeOntoSwitch(scaleSide, switchSide);
+		driveForward(LATERAL_DISTANCE_TO_SWITCH);
+		loadPowerCubeOntoSwitch();
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	public void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
-		char scaleSide = robotPos;
-		char switchSide = '*';
-		driveForward(FORWARD_DISTANCE_TO_SCALE, scaleSide, switchSide);
+		driveForward(FORWARD_DISTANCE_TO_SCALE);
 		if (robotPos == 'R') {
-			turnLeft(scaleSide, switchSide);
+			turnLeft();
 		} else {
-			turnRight(scaleSide, switchSide);
+			turnRight();
 		}
-		driveForward(LATERAL_DISTANCE_TO_SCALE, scaleSide, switchSide);
-		loadPowerCubeOntoScale(scaleSide, switchSide);
+		driveForward(LATERAL_DISTANCE_TO_SCALE);
+		loadPowerCubeOntoScale();
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -121,13 +85,9 @@ public class AutoQuals extends AutoCommand {
         } else if (scalePlatePos == robotPos){
             loadNearScalePlate(robotPos);
         } else {
-            crossAutoLine();
-            returnToLoadExchange();
+            crossAutoLine(robotPos);
+            returnToLoadExchange(robotPos);
         }
-    }
-
-    private void crossAutoLine() {
-        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
     }
 
     private void returnToLoadExchange() {
@@ -135,7 +95,7 @@ public class AutoQuals extends AutoCommand {
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
         turnRight();
-        driveForward(LATERAL_DISTANCE_TO_EXCHANGE);
+        driveForward(LATERAL_DISTANCE_TO_EXCHANGE_M);
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
         loadPowerCubeIntoExchange();
