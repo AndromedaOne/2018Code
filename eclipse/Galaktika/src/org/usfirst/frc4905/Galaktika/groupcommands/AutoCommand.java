@@ -22,6 +22,9 @@ public abstract class AutoCommand extends CommandGroup {
 
 	}
 
+private boolean m_preparedToStart;
+protected double LATERAL_DISTANCE_TO_RIGHT;
+
 	public AutoCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -48,24 +51,37 @@ public abstract class AutoCommand extends CommandGroup {
 
 	protected void turnRight() {
 		addSequential(new GyroPIDTurnDeltaAngle(90));
-		
+
 	}
 
 	protected void turnLeft() {
 		addSequential(new GyroPIDTurnDeltaAngle(-90));
-		
+
 	}
-	
+
 	protected void turnAround() {
 		addSequential(new GyroPIDTurnDeltaAngle(180));
-	}	
+	}
 
 	protected void driveForward(double forwardDistanceInches) {
 		addSequential(new MoveUsingEncoderPID(forwardDistanceInches));
 	}
-	
+
 	protected void driveForwardToWall(double forwardDistanceInches) {
 		driveForward(forwardDistanceInches);
 		addSequential(new MoveToWall());
 	}
+
+    public void start() {
+        if (m_preparedToStart) {
+            prepareToStart();
+            m_preparedToStart = false;
+        }
+        super.start();
+     }
+
+    private void prepareToStart() {
+        // TODO Auto-generated method stub
+
+    }
 }
