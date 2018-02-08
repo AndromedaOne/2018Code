@@ -6,6 +6,7 @@ import org.usfirst.frc4905.Galaktika.commands.ConditionalMoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
+import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -111,8 +112,7 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall(double forwardDistanceInches) {
-        driveForward(forwardDistanceInches);
-        addSequential(new MoveToWall());
+        addSequential(new MoveUsingFrontUltrasonic(forwardDistanceInches));
     }
 
     protected void loadPowerCubeOntoSwitch() {
