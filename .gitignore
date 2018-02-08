@@ -79,3 +79,6 @@ local.properties
 .buildpath
 
 sysProps.xml
+
+# GitKracken merge
+*.java-*

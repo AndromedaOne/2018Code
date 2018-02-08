@@ -15,7 +15,9 @@ import org.usfirst.frc4905.Galaktika.commands.*;
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
+
 import Utilities.ButtonsEnumerated;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -106,6 +108,9 @@ public class OI {
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
        
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
+        SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
+        SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
+        
         
         
     }
