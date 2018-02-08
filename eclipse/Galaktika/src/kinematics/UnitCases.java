@@ -72,8 +72,8 @@ public class UnitCases {
 
 	public static void realTests() throws InvalidDimentionException, 
 	KinematicsException {
-		Kinematics.setTrajectoryPointInterval(0.0000001);
-		createUnitCase(DriveTrain.getMaxVelocity(), DriveTrain.getMaxAcceleration(), DriveTrain.getMaxJerk(), true, false, 100000.0);
+		Kinematics.setTrajectoryPointInterval(0.000001);
+		createUnitCase(DriveTrain.getMaxVelocity(), DriveTrain.getMaxAcceleration(), DriveTrain.getMaxJerk(), false, false, 100000.0);
 		
 		Kinematics.setTrajectoryPointInterval(1.0);
 
@@ -81,15 +81,24 @@ public class UnitCases {
 
 	static void createSingleSetpointCases() throws InvalidDimentionException, 
 	KinematicsException {
-		createUnitCase(14.0);
+		createUnitCase(true, 14.0);
+		System.out.println("1");
 		createUnitCase(8.0);
+		System.out.println("2");
 		createUnitCase(-14.0);
+		System.out.println("3");
 		createUnitCase(-8.0);
+		System.out.println("4");
 		createUnitCase(2.0);
+		System.out.println("5");
 		createUnitCase(-2.0);
+		System.out.println("6");
 		createUnitCase(2.0, 8.0, 0.25, false, false, 14.0);
+		System.out.println("7");
 		createUnitCase(2.0, 8.0, 0.25, false, false, -14.0);
+		System.out.println("8");
 		realTests();
+		System.out.println("9");
 	}
 
 	static void createChangingDirectionCases() throws InvalidDimentionException, KinematicsException {
@@ -326,7 +335,7 @@ public class UnitCases {
 			Random random = new Random();
 			Path myPath = new Path();
 			KinematicsTester kinematicsTester = new KinematicsTester();
-			int numberOfSetpoints = random.nextInt(10) + 1;
+			int numberOfSetpoints = 1;//random.nextInt(10);
 			int maxVelocityInt = random.nextInt(6);
 
 			double maxVelocity = Math.abs(random.nextDouble() + maxVelocityInt);

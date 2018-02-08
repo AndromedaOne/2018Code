@@ -60,9 +60,9 @@ public class DriveTrain extends Subsystem {
     private final Compressor compressor = RobotMap.driveTrainCompressor;
     private final Ultrasonic frontUltrasonic = RobotMap.driveTrainFrontUltrasonic;
 
-    private double m_positionPIDkp = 0;
-	private double m_positionPIDki = 0;
-	private double m_positionPIDkd = 0;
+    private double m_positionPIDkp = 0.0;
+	private double m_positionPIDki = 0.0;
+	private double m_positionPIDkd = 0.0;
 	private double m_positionPIDIAccum = 0.0;
 	private double m_positionPIDPreviousPosition = Double.NaN;
 	
@@ -338,7 +338,7 @@ public class DriveTrain extends Subsystem {
     
     public void moveVelocity(double value) {
     	System.out.println("The value being put into the speed controllers is: " + value);
-    		move(value*kVelocityToOutputRatio,0);
+    		differentialDrive.arcadeDrive(value*kVelocityToOutputRatio, 0, false);
 	}
  
 }

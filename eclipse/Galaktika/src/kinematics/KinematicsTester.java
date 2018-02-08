@@ -18,6 +18,8 @@ public class KinematicsTester {
 		try {
 			UnitCases.createSingleSetpointCases();
 			
+			UnitCases.createRandomTestCases();
+			
 			UnitCases.createChangingDirectionCases();
 			
 			UnitCases.createSameDirectionCases();
@@ -34,7 +36,7 @@ public class KinematicsTester {
 
 			UnitCases.realTests();
 
-			UnitCases.createRandomTestCases();
+			
 			
 		} catch (KinematicsException | InvalidDimentionException e) {
 			// TODO Auto-generated catch block
