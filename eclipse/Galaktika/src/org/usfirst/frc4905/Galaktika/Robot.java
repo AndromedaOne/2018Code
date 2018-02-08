@@ -165,6 +165,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
         		autonomousCommand.start();
         }
+        debug("bottom of autonomousInit");
     }
 
 	private static void debug(String information) {

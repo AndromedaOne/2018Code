@@ -1,11 +1,10 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
-import org.usfirst.frc4905.Galaktika.commands.ConditionalGyroPIDTurnDeltaAngle;
-import org.usfirst.frc4905.Galaktika.commands.ConditionalMoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
+import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -58,6 +57,7 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
+	private static final double BUMPER_WIDTH = 1.5;
 
     protected void driveForward(double forwardDistanceInches) {
         double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
@@ -75,7 +75,7 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void debug(String information) {
     		 char location = Robot.safelyGetInitialRobotLocation();
-    		 System.out.println("In AutoCommand.java ! ");
+    		 System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
     		 System.out.flush();
     		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
      				location + "! " +
@@ -84,16 +84,18 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
     public void start() {
-        if (m_preparedToStart) {
+    		debug("top of start");
+        if ( ! m_preparedToStart) {
             prepareToStart();
-            m_preparedToStart = false;
+            m_preparedToStart = true;
         }
         super.start();
+		debug("bottom of start");
      }
 
-    private void prepareToStart() {
-        // TODO Auto-generated method stub
-
+    protected void prepareToStart() {
+		debug("top of AutoCommand prepareToStart");
+		debug("bottom of AutoCommand prepareToStart");
     }
 
     protected void turnRight() {
@@ -110,9 +112,8 @@ public abstract class AutoCommand extends CommandGroup {
         addSequential(new GyroPIDTurnDeltaAngle(180));
     }
 
-    protected void driveForwardToWall(double forwardDistanceInches) {
-        driveForward(forwardDistanceInches);
-        addSequential(new MoveToWall());
+    protected void driveForwardToWall() {
+        addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
     }
 
     protected void loadPowerCubeOntoSwitch() {

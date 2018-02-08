@@ -30,7 +30,9 @@ public class AutoQuals extends AutoCommand {
 	}
 
 	private void crossAutoLine(char robotPos) {
+		debug("top of crossAutoLine");
 	    driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+		debug("bottom of crossAutoLine");
 	}
 
 	private void returnToLoadExchange(char robotPos) {
@@ -50,7 +52,7 @@ public class AutoQuals extends AutoCommand {
 	}
 
 
-	public void loadNearSwitchPlate(char robotPos) {
+	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
@@ -63,7 +65,7 @@ public class AutoQuals extends AutoCommand {
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
-	public void loadNearScalePlate(char robotPos) {
+	private void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
 		driveForward(FORWARD_DISTANCE_TO_SCALE);
 		if (robotPos == 'R') {
@@ -77,6 +79,7 @@ public class AutoQuals extends AutoCommand {
 	}
 
     protected void prepareToStart() {
+    		debug("top of prepareToStart");
         char robotPos = Robot.getInitialRobotLocation();
         char switchPlatePos = Robot.getSwitchPlatePosition();
         char scalePlatePos = Robot.getScalePlatePosition();
@@ -88,6 +91,7 @@ public class AutoQuals extends AutoCommand {
             crossAutoLine(robotPos);
             returnToLoadExchange(robotPos);
         }
+		debug("bottom of prepareToStart");
     }
 
     private void returnToLoadExchange() {

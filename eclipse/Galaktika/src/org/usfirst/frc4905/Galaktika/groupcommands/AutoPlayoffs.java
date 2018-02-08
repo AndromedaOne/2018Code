@@ -49,7 +49,7 @@ public class AutoPlayoffs extends AutoCommand {
 	            if (switchPlatePos == 'L') {
 	                driveForward(FORWARD_DISTANCE_TO_SWITCH);
 	                turnRight();
-	                driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
+	                driveForwardToWall();
 	                loadPowerCubeOntoSwitch();
 	                driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 	                turnLeft();
@@ -90,7 +90,7 @@ public class AutoPlayoffs extends AutoCommand {
 	            if (switchPlatePos == 'R') {
 	                driveForward(FORWARD_DISTANCE_TO_SWITCH);
 	                turnLeft();
-	                driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
+	                driveForwardToWall();
 	                loadPowerCubeOntoSwitch();
 	                driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 	                turnRight();
@@ -123,7 +123,7 @@ public class AutoPlayoffs extends AutoCommand {
 	            turnLeft();
 	            driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 	            turnLeft();
-	            driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
+	            driveForwardToWall();
 	        } else {
 	            driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	            turnLeft();
@@ -131,7 +131,7 @@ public class AutoPlayoffs extends AutoCommand {
 	            turnRight();
 	            driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 	            turnRight();
-	            driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
+	            driveForwardToWall();
 	        }
 	    }
 	}
