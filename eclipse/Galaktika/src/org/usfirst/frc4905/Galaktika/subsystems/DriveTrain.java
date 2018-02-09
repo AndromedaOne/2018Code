@@ -169,7 +169,7 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			move(output, 0);
+			move(output, 0, false);
 		}
 	}
 
@@ -309,7 +309,11 @@ public class DriveTrain extends Subsystem {
 	}
     public void move(double forwardBackSpeed, double rotateAmount) {
     	//Rotation was inverted, -rotation fixes that
-    	differentialDrive.arcadeDrive(forwardBackSpeed, -rotateAmount);
+    	move(forwardBackSpeed, rotateAmount, true);
+    }
+    public void move(double forwardBackSpeed, double rotateAmount, boolean squaredInput) {
+    	//Rotation was inverted, -rotation fixes that
+    	differentialDrive.arcadeDrive(forwardBackSpeed, -rotateAmount, squaredInput);
     }
     public void stop() {
     	differentialDrive.stopMotor();
