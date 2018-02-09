@@ -48,6 +48,20 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		return resultBuff.get();
 	}
 
+	private void enableSensor() {
+		if (readByteFromSensor(kFreshOutReset) == 1) {
+			writeByteToSensor(kFreshOutReset, (byte) 0);
+			writeByteToSensor(kSYSRangeStart, (byte) 3);
+		}
+	}
+
+	private void disableSensor() {
+		if (readByteFromSensor(kFreshOutReset) == 0) {
+			writeByteToSensor(kSYSRangeStart, (byte) 3);
+			writeByteToSensor(kFreshOutReset, (byte) 1);
+		}
+	}
+
 	public VL6180(I2C.Port port) {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
@@ -57,6 +71,9 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		System.out.println(String.format("newFreshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
 		writeByteToSensor(kSYSRangeStart, (byte) 3);
 		System.out.println(String.format("SYSRangeStart: 0x%02X", readByteFromSensor(kSYSRangeStart)));
+		disableSensor();
+		enableSensor();
+
 	}
 
 
