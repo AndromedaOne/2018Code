@@ -67,7 +67,7 @@ public class RobotMap {
 	
 
     public static DigitalInput elevatorBottomLimitSwitch;
-    public static DigitalInput elevatorTopLimitSwitch;
+    //public static DigitalInput elevatorTopLimitSwitch;
 
     private static class LiveWindow {
 
@@ -140,7 +140,7 @@ public class RobotMap {
         navX = new NavxGyro();
         elevatorBottomLimitSwitch = new DigitalInput(2);
         jawsSolenoid = new DoubleSolenoid(0, 4, 5);
-        elevatorTopLimitSwitch = new DigitalInput(3);
+        //elevatorTopLimitSwitch = new DigitalInput(3);
         //LED PWM Port assignments
         redVal = new PWM(2);
         blueVal = new PWM(3);
