@@ -19,8 +19,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.wpilibj.hal.HAL;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static java.util.Objects.requireNonNull;
+
+import java.util.stream.DoubleStream;
 
 /**
  * Ultrasonic rangefinder class. The Ultrasonic rangefinder measures absolute distance based on the
@@ -36,18 +39,12 @@ import static java.util.Objects.requireNonNull;
 
 public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
 	
-	// This is the ping delay for the Ultrasonic
-	private double m_pingDelay;
-	// This is the distance taked before the newest
-	private double m_oldDistance;
-	// This is the ultrasonic noise tolerance
-	private double m_noiseTolerance;
-	
-	public Ultrasonic() {
-		m_pingDelay = 0.1;
-		m_oldDistance = 0;
-		m_noiseTolerance = Double.POSITIVE_INFINITY;
-	}
+	private double m_pingDelay = 0.1;
+	private double m_oldDistance = 0;
+	private double m_noiseTolerance = Double.POSITIVE_INFINITY;
+	private int m_increment = 0;
+	public int m_timesAveraged = 0;
+	private double[] m_averageDistances;
 	
   /**
    * The units to return when PIDGet is called.
@@ -330,47 +327,83 @@ public class Ultrasonic extends SensorBase implements PIDSource, Sendable {
    * @return true if the range is valid
    */
   public boolean isRangeValid() {
-	    return m_counter.get() > 1;
-	  }
-	  
-	  private boolean isOldDistanceValid() {
-		  return m_oldDistance > 0;
-	  }
-	  
-	  public void SetUltrasonicNoiseTolerance(double tolerance) {
-		  tolerance = m_noiseTolerance;
-	  }
-	  
-	  public double GetUltrasonicNoiseTolerance() {
-		  return m_noiseTolerance;
-	  }
+	  return m_counter.get() > 1;
+  }
 
+  private boolean isOldDistanceValid() {
+	  return m_oldDistance > 0;
+  }
+
+  public void SetUltrasonicNoiseTolerance(double tolerance) {
+	  m_noiseTolerance = tolerance;
+  }
+
+  public double GetUltrasonicNoiseTolerance() {
+	  return m_noiseTolerance;
+  }
+  
+  public void SetUltrasonicAveragedAmount(int timesAveraged) {
+	  m_timesAveraged = timesAveraged;
+	  m_averageDistances = new double[m_timesAveraged];
+  }
+  
+  public int GetUltrasonicAveragedAmount() {
+	  return m_timesAveraged;
+  }
+  
   /**
    * Get the range in inches from the ultrasonic sensor. If there is no valid value yet, i.e. at
    * least one measurement hasn't completed, then return 0.
    *
    * @return double Range in inches of the target returned from the ultrasonic sensor.
    */
-  public double getRangeInches() {
+  private double m_lastSum = 0;
+  private boolean m_notReady = true;
+  private double AveragedUltrasonicDistance() {
 	  double distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
-	  System.out.println("Distance = " + distance +
-			  ", Old Distance = " + m_oldDistance);
+	  SmartDashboard.putNumber("Raw Distance ", distance);
+	  if(m_notReady) {
+		  m_averageDistances[m_increment] = distance;
+		  ++m_increment;
+		  m_lastSum += distance;
+		  distance = m_lastSum / m_increment;
+		  if(m_increment >= m_timesAveraged) {
+			  m_increment = 0;
+			  m_notReady = false;  
+		  }
+		  return distance;
+	  }else{
+		  m_lastSum = m_lastSum - m_averageDistances[m_increment] + distance;
+		  m_averageDistances[m_increment] = distance;
+		  ++m_increment;
+		  if(m_increment >= m_timesAveraged) {
+			  m_increment = 0;
+		  }
+		  return m_lastSum / m_timesAveraged;
+	  }
+  }
+  
+  public double getRangeInches() {
+	  double distance = 0;
+	  if(m_timesAveraged < 1) {
+		  distance = m_counter.getPeriod() * kSpeedOfSoundInchesPerSec / 2.0;
+	  } else {
+		  distance = AveragedUltrasonicDistance();
+	  } 
 	  if(isOldDistanceValid()) {
 		  if(Math.abs(distance - m_oldDistance) > m_noiseTolerance) {
-			  System.out.println("Distance = " + distance +
-					  ", Old Distance = " + m_oldDistance + 
-					  ", Noise Tolerance = " + m_noiseTolerance +
-					  ", Ping Delay = " + m_pingDelay);
 			  distance = m_oldDistance;
 		  }
 	  }  
 	  if (isRangeValid()) {
 		  m_oldDistance = distance;
-		  return distance;
 	  } else {
-		  return 0;
+		  distance = 0;
 	  }
+	  SmartDashboard.putNumber("Ultrasonic Reading ", distance);
+	  return distance;
   }
+
   /**
    * Get the range in millimeters from the ultrasonic sensor. If there is no valid value yet, i.e.
    * at least one measurement hasn't completed, then return 0.
