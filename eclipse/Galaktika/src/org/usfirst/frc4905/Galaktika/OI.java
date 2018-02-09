@@ -111,7 +111,7 @@ public class OI {
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
-        
+        SmartDashboard.putData("DriveSquare", new DriveSquare());
         
         
     }
