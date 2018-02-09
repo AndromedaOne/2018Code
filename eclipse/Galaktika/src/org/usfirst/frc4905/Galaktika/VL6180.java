@@ -24,6 +24,7 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	private static final short kModelID = 0x000;
 	private static final short kFreshOutReset = 0x016;
 	private static final short kSYSRangeStart = 0x018;
+	private static final short kSYSRangeIgnore = 0x026;
 	private static final short kResultRange = 0x062;
 
 	private I2C m_i2c;
@@ -46,6 +47,21 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		indexBuff.putShort(index);
 		m_i2c.transaction(indexBuff, 2, resultBuff, 1);
 		return resultBuff.get();
+	}
+
+	private void writeWordToSensor(short index, short value) {
+		ByteBuffer writeBuff = ByteBuffer.allocate(4);
+		writeBuff.putShort(index);
+		writeBuff.putShort(value);
+		m_i2c.writeBulk(writeBuff, 4);
+	}
+
+	private short readWordFromSensor(short index) {
+		ByteBuffer indexBuff = ByteBuffer.allocate(2);
+		ByteBuffer resultBuff = ByteBuffer.allocate(2);
+		indexBuff.putShort(index);
+		m_i2c.transaction(indexBuff, 2, resultBuff, 2);
+		return resultBuff.getShort();
 	}
 
 	private void enableSensor() {
@@ -71,6 +87,7 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		System.out.println(String.format("newFreshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
 		writeByteToSensor(kSYSRangeStart, (byte) 3);
 		System.out.println(String.format("SYSRangeStart: 0x%02X", readByteFromSensor(kSYSRangeStart)));
+		System.out.println(String.format("SYSRangeIgnore: 0x%04X", readWordFromSensor(kSYSRangeIgnore)));
 		disableSensor();
 		enableSensor();
 
