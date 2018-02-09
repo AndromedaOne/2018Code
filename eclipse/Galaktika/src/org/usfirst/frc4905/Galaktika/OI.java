@@ -12,12 +12,10 @@
 package org.usfirst.frc4905.Galaktika;
 
 import org.usfirst.frc4905.Galaktika.commands.*;
-import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
-import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 
-
-import Utilities.ButtonsEnumerated;
-
+import Utilities.LEDColor;
+import Utilities.ControllerButtons.ButtonsEnumerated;
+import Utilities.LEDColor.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -104,6 +102,9 @@ public class OI {
 
         SmartDashboard.putData("JawsOpenClose", new JawsOpenClose());
         SmartDashboard.putData("RetratExtendArms", new RetractExtendArms());
+        SmartDashboard.putData("LEDRed", new LEDCommand(LEDColor.RED));
+        SmartDashboard.putData("LEDBlue", new LEDCommand(LEDColor.BLUE));
+        SmartDashboard.putData("LEDGreenishYellow", new LEDCommand(LEDColor.GREEN));
         SmartDashboard.putData("GyroPIDTurnDeltaAngle", new GyroPIDTurnDeltaAngle());  
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
        
