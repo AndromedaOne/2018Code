@@ -15,25 +15,39 @@ public class LEDs extends Subsystem {
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
 	}
-	public void setPurple()  {
-		clearColor();
-		red.updateDutyCycle(1);
-		blue.updateDutyCycle(1);
+
+	private double validateBrightness(double brightness) {
+		if (brightness > 1.0) {
+			brightness = 1.0;
+		} else if (brightness < 0) {
+			brightness = 0;
+		}
+		return brightness;
 	}
 
-	public void setRed()  {
+	public void setPurple(double brightness)  {
 		clearColor();
-		red.updateDutyCycle(1);
+		brightness = validateBrightness(brightness);
+		red.updateDutyCycle(brightness);
+		blue.updateDutyCycle(brightness);
 	}
-	public void setBlue()  {
+
+	public void setRed(double brightness)  {
 		clearColor();
-		blue.updateDutyCycle(1);
+		brightness = validateBrightness(brightness);
+		red.updateDutyCycle(brightness);
 	}
-	public void setGreen()  {
+	public void setBlue(double brightness)  {
 		clearColor();
-		red.updateDutyCycle(1);
-		green.updateDutyCycle(1);
+		brightness = validateBrightness(brightness);
+		blue.updateDutyCycle(brightness);
 	}
+	public void setGreen(double brightness)  {
+		clearColor();
+		brightness = validateBrightness(brightness);
+		green.updateDutyCycle(brightness);
+	}
+
 	public void setColor(int Red, int Green, int Blue) {
 		clearColor();
 /*		red.setRaw(Red);
