@@ -13,7 +13,7 @@ public class Jaws extends Subsystem {
 	
    public void initDefaultCommand() {
     //	setDefaultCommand(new JawsOpenClose());
-	   // CHANGE THIS BACK!!! I ONLY CHANGED THIS BECAUSE I NEEDED TO COMMENT OUT THE SOLENOID TO GET TRID OF ERRORS
+	   // CHANGE THIS BACK!!! I ONLY CHANGED THIS BECAUSE I NEEDED TO COMMENT OUT THE SOLENOID TO GET RID OF ERRORS
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }

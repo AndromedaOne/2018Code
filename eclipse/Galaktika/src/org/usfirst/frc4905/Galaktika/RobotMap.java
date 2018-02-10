@@ -110,13 +110,13 @@ public class RobotMap {
         driveTrainDifferentialDrive.setExpiration(0.1);
         driveTrainDifferentialDrive.setMaxOutput(1.0);
         
-        driveTrainCompressor = new Compressor(0);
-        LiveWindow.addActuator("DriveTrain", "Compressor", driveTrainCompressor);
+        // driveTrainCompressor = new Compressor(0);
+        // LiveWindow.addActuator("DriveTrain", "Compressor", driveTrainCompressor);
         
         driveTrainFrontUltrasonic = new Ultrasonic(0, 1);
         LiveWindow.addSensor("DriveTrain", "FrontUltrasonic", driveTrainFrontUltrasonic);
         
-        intakeLeftController = new Spark(0);
+        /*intakeLeftController = new Spark(0);
         LiveWindow.addActuator("Intake", "LeftController", (Spark) intakeLeftController);
         intakeLeftController.setInverted(false);
         intakeRightController = new Spark(1);
@@ -134,7 +134,7 @@ public class RobotMap {
         rampsSolenoid4 = new Solenoid(0, 3);
         LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);*/
         
-        elevatorElevatorContoller = new WPI_TalonSRX(5);
+        //elevatorElevatorContoller = new WPI_TalonSRX(5);
         
         
 
@@ -143,8 +143,8 @@ public class RobotMap {
         // jawsSolenoid = new DoubleSolenoid(0, 4, 5);
         
         //LED PWM Port assignments
-        redVal = new PWM(2);
+        /*redVal = new PWM(2);
         blueVal = new PWM(3);
-        greenVal = new PWM(4);
+        greenVal = new PWM(4);*/
     }
 }
