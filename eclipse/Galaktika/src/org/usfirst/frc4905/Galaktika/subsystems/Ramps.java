@@ -47,6 +47,13 @@ public class Ramps extends Subsystem {
     	solenoid3.set(Value.kForward);
     	solenoid4.set(Value.kForward);
     }
+    
+    public void holdRamps() {
+    	solenoid1.set(Value.kReverse);
+    	solenoid2.set(Value.kReverse);
+    	solenoid3.set(Value.kReverse);
+    	solenoid4.set(Value.kReverse);
+    }
 
     @Override
     public void initDefaultCommand() {
