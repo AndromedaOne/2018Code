@@ -226,7 +226,8 @@ public class DriveTrain extends Subsystem {
     }
     private class EncoderPIDOut implements PIDOutput{
     	public void pidWrite(double output) {
-    		move(output, 0);
+    		// Negation causes forward movement for positive values
+    		move(-output, 0);
     	}
     }
 
