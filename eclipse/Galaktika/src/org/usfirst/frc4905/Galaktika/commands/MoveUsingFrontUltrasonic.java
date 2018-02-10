@@ -1,7 +1,10 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.RobotMap;
 
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -23,6 +26,10 @@ public class MoveUsingFrontUltrasonic extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Trace.getInstance().addTrace("GyroTrace",
+				new TracePair("ZVelocity", (double) RobotMap.navX.getAHRS().getVelocityZ()),
+				new TracePair("ZPos", (double) RobotMap.navX.getAHRS().getDisplacementZ()),
+				new TracePair("ZAccel", (double) RobotMap.navX.getAHRS().getWorldLinearAccelZ()));
     }
 
     // Make this return true when this Command no longer needs to run execute()

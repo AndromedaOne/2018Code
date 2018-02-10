@@ -150,6 +150,7 @@ public class TeleOpDrive extends Command {
 				new TracePair("correctionEquation", correctionEquation),
 				new TracePair("correctionMode", (double)correctionMode));
 		
+		
 		courseCorrectionDelay++;
     }
 		
