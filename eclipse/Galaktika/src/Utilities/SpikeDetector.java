@@ -8,8 +8,8 @@ public class SpikeDetector {
 	protected int windowSize;
 	protected double sdevThreshold;
 	protected double supressionWeight;
-	public double mean;
-	public double sdev;
+	protected double mean;
+	protected double sdev;
 	public SpikeDetector(int windowSize, double sdevThreshold, double supressionWeight) {
 		
 		window = new ArrayDeque<>();
@@ -25,9 +25,10 @@ public class SpikeDetector {
 			add(point);
 			return 0;
 		}else {
-			if (Math.abs(mean - point) > sdevThreshold * sdev) {
-				add(point * supressionWeight);
-				return (point - mean) / sdev;
+			if (Math.abs(mean - point)/sdev > sdevThreshold) {
+				double outlierness = (point - mean) / sdev;
+				add(window.getLast() * (1-supressionWeight) + point * supressionWeight);
+				return outlierness;
 			}else {
 				add(point);
 				return 0;
@@ -53,17 +54,6 @@ public class SpikeDetector {
 		}
 		mean = m;
 		sdev = (n<=1)?Double.NaN:Math.sqrt(S / (n-1));
-	}
-	
-	public static void main(String[] args) {
-		SpikeDetector sd = new SpikeDetector(100, 1, .5);
-		double[] values = {1,-1,2,3,0,4.02,5};
-		for (int i=0;i<values.length; i++) {
-			double spike = sd.update(values[i]);
-			System.out.println(spike + " " + sd.mean + " " + sd.sdev);
-		}
-		
-		
 	}
 
 }
