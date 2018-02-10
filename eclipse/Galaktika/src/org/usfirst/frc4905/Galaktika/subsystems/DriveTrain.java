@@ -108,10 +108,8 @@ public class DriveTrain extends Subsystem {
 	private static final double kProportion = .1;
 
 	private double courseCorrectionDelay = 0;
-
+    
 	private double SavedAngle = 0;
-
-
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
 		leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -155,11 +153,19 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean doneUltrasonicFrontPID() {
-		Trace.getInstance().addTrace("MoveWithUltrasonic", 
+		debug("top of doneUltrasonicFrontPID");
+		Trace.getInstance().addTrace("MoveWithUltrasonic",
 				new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
 				new TracePair("PID Output", m_ultrasonicPID.get()));
-		return m_ultrasonicPID.onTarget();
+		boolean done = m_ultrasonicPID.onTarget();
+		debug("bottom of doneUltrasonicFrontPID returning " + done);
+		return done;
+	}
+
+	private void debug(String information) {
+		 System.out.println("In DriveTrain.java " + information);
+		 System.out.flush();
 	}
 
 	public void stopUltrasonicFrontPID() {
@@ -177,13 +183,13 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			move(output, 0, false);
 		}
 	}
 
 	public void intializeUltrasonicPIDFront(double distanceToDriveTo) {
+		debug("top of intializeUltrasonicPIDFront");
 		moveWithUltrasonicPID(distanceToDriveTo);
-
+		debug("bottom of intializeUltrasonicPIDFront");
 	}
 
 	// Ultrasonic Code - Ends
@@ -234,7 +240,8 @@ public class DriveTrain extends Subsystem {
 
 	private class EncoderPIDOut implements PIDOutput {
 		public void pidWrite(double output) {
-			move(output, 0);
+    		// Negation causes forward movement for positive values
+    		move(-output, 0);
 		}
 	}
 
@@ -325,7 +332,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void move(double forwardBackSpeed, double rotateAmount) {
-		// Rotation was inverted, -rotation fixes that
+    	//Rotation was inverted, -rotation fixes that
 		move(forwardBackSpeed, rotateAmount, true);
 	}
 	public void move(double forwardBackSpeed, double rotateAmount, boolean squaredInput) {
@@ -334,7 +341,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void stop() {
-		differentialDrive.stopMotor();
+    	differentialDrive.stopMotor();
 	}
 	public void gyroCorrectMove(double forwardBackwardStickValue, double rotateStickValue, double mod) {
 		double robotAngle = RobotMap.navX.getRobotAngle();
@@ -393,9 +400,9 @@ public class DriveTrain extends Subsystem {
 		public void pidWrite(double output) {
 			moveVelocity(output);
 		}
-		
+    
 	}
-	
+    
 	public void initializePositionMP() {
 		EncoderPIDIn encoderPIDIn = new EncoderPIDIn();
 		PositionPIDOut positionPIDOut = new PositionPIDOut();
@@ -404,7 +411,7 @@ public class DriveTrain extends Subsystem {
 		m_motionProfilingController.setAbsoluteTolerance(m_encoderPIDTolerance);
 
 	}
-	
+    
 	public void enablePositionMP(double setpoint) {
 		m_motionProfilingController.setSetpoint(setpoint);
 		m_motionProfilingController.enable();
@@ -413,11 +420,11 @@ public class DriveTrain extends Subsystem {
 	public boolean isDonePositionMP(){
 		return m_motionProfilingController.onTarget();
 	}
-	
+
 	public void disablePositionMP() {
 		m_motionProfilingController.disable();
-	}
-	
+}
+
 	public void runPositionMP() {
 		m_motionProfilingController.run();
 	}

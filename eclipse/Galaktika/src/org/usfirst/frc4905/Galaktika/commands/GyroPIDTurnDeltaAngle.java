@@ -12,11 +12,11 @@ public class GyroPIDTurnDeltaAngle extends Command {
 	protected double m_deltaAngleToTurn = 0.0;
 
 	public GyroPIDTurnDeltaAngle() {
-		requires(Robot.driveTrain);
-		m_deltaAngleToTurn = 90;
+		this(90);
 	}
 
     public GyroPIDTurnDeltaAngle(double deltaAngleToTurn) {
+    		debug("top of constructor");
 	    	m_deltaAngleToTurn = deltaAngleToTurn;
 	    	requires(Robot.driveTrain);
     }
