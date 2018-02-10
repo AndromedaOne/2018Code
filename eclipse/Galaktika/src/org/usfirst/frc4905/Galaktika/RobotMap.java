@@ -132,9 +132,9 @@ public class RobotMap {
         LiveWindow.addActuator("Ramps", "Solenoid3", rampsSolenoid3);
         
         rampsSolenoid4 = new Solenoid(0, 3);
-        LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);
+        LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);*/
         
-        elevatorElevatorContoller = new WPI_TalonSRX(5);*/
+        elevatorElevatorContoller = new WPI_TalonSRX(5);
         
         
 
