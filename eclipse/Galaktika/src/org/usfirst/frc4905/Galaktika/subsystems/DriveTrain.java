@@ -11,6 +11,7 @@
 
 package org.usfirst.frc4905.Galaktika.subsystems;
 
+import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
@@ -148,11 +149,19 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean doneUltrasonicFrontPID() {
+		debug("top of doneUltrasonicFrontPID");
 		Trace.getInstance().addTrace("MoveWithUltrasonic",
 				new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
 				new TracePair("PID Output", m_ultrasonicPID.get()));
-		return m_ultrasonicPID.onTarget();
+		boolean done = m_ultrasonicPID.onTarget();
+		debug("bottom of doneUltrasonicFrontPID returning " + done);
+		return done;
+	}
+
+	private void debug(String information) {
+		 System.out.println("In DriveTrain.java " + information);
+		 System.out.flush();
 	}
 
 	public void stopUltrasonicFrontPID() {
@@ -175,8 +184,9 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void intializeUltrasonicPIDFront(double distanceToDriveTo) {
+		debug("top of intializeUltrasonicPIDFront");
 		moveWithUltrasonicPID(distanceToDriveTo);
-
+		debug("bottom of intializeUltrasonicPIDFront");
 	}
 
 	//Ultrasonic Code - Ends

@@ -15,6 +15,7 @@ public class MoveUsingEncoderPID extends Command {
     public MoveUsingEncoderPID(double setpointInches) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    		debug("top of constructor, inches = " + setpointInches);
 	    	requires(Robot.driveTrain);
 	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
     }
@@ -49,9 +50,9 @@ public class MoveUsingEncoderPID extends Command {
     }
 
     protected void debug(String information) {
-		System.out.println("In MoveUsingEncoderPID.java Field Setup: Robot = " +
-				Robot.getInitialRobotLocation() +
+		System.out.println("In MoveUsingEncoderPID.java " +
 				"Done Encoder Ticks " + m_setpoint + " " +
 				information);
+		System.out.flush();
     }
 }
