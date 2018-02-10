@@ -32,18 +32,7 @@ public class MotionProfilingTest extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    		Path myFirstPath = new Path();
-		try {
-			Robot.kinematics.addPointToPath(myFirstPath, new Point(100000));
-		} catch (InvalidDimentionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// CHECK TO SEE IF THE GRAPH'S CURRENT POSITION REPRESENTATION IS BEHIND THE PROJECTED POSITION.
-		Robot.kinematics.createTrajectory(myFirstPath, DriveTrain.getMaxVelocity(), DriveTrain.getMaxAcceleration(), DriveTrain.getMaxJerk());
-		
-
-		addSequential(new MoveUsingEncoderMotionProfiling(myFirstPath));
+    		addSequential(new MoveUsingEncoderPID(50));
 		
     }
 }

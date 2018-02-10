@@ -8,6 +8,7 @@ import kinematics.KinematicsException.*;
 
 public class UnitCases {
 	static double m_deltaTimeFromOriginalPoint = 0.01;
+	
 	static Kinematics m_kinematics = new Kinematics();
 
 	private static void createUnitCase(Double... setpoints) throws InvalidDimentionException, KinematicsException {
