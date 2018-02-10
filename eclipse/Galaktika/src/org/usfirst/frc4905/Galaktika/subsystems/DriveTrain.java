@@ -102,7 +102,7 @@ public class DriveTrain extends Subsystem {
 	private double m_pingDelay = 0.02;
 	private int m_timesDistanceAveraged = 5;
 	//Gyro Correction for move
-	private static final double kProportion = .1;
+	private static final double kProportion = .05;
 
 	private double courseCorrectionDelay = 0;
 
