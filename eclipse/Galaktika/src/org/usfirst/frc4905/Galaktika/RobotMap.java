@@ -77,7 +77,7 @@ public class RobotMap {
 		}
 
 		public static void addSensor(String moduleType, String channel, Sendable component) {
-			component.setName(moduleType, channel);;
+			component.setName(moduleType, channel);
 		}
 
     }

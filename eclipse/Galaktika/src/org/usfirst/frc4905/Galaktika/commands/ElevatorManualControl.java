@@ -30,7 +30,8 @@ public class ElevatorManualControl extends Command {
 	protected void execute() {
     	double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(subsystemController);
     	//Robot.elevator.moveElevator(forwardBackwardStickValue);
-    	Robot.elevator.moveElevatorSafely(forwardBackwardStickValue);
+    	//Changed from move safely to move for testing
+    	Robot.elevator.moveElevator(forwardBackwardStickValue);
 
     	
 
