@@ -103,7 +103,7 @@ public class DriveTrain extends Subsystem {
 		m_ultrasonicPID.setName("DriveTrain", "Ultrasonic PID");
 		// frontUltrasonic.SetUltrasonicNoiseTolerance(m_noiseTolerance);
 		// frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
-		setDefaultCommand(new TeleOpDrive());
+		
 	}
 
 	// Ultrasonic PID

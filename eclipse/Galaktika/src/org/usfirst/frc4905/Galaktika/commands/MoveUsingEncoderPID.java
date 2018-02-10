@@ -36,8 +36,9 @@ public class MoveUsingEncoderPID extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		System.out.println("Running");
+		
 		if(useMotionProfilng) {
+			System.out.println("Running");
 			Robot.driveTrain.runPositionMP();
 		}
 	}
@@ -65,6 +66,7 @@ public class MoveUsingEncoderPID extends Command {
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
+		System.out.println("CALLING INTERUPTED!!!!!!!");
 		end();
 	}
 
