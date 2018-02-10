@@ -121,14 +121,6 @@ public class DriveTrain extends Subsystem {
 		frontUltrasonic.SetUltrasonicAveragedAmount(m_timesDistanceAveraged);
 	}
 
-	// Ultrasonic PID
-	private double m_P = .02;
-	private double m_I = .00000;
-	private double m_D = .0;
-	private double m_maxSpeed = 1;
-	private double m_f = 0;
-	private double m_tolerance = 1;
-
 	// Ultrasonic Code - Begins
 
 	public double getDistanceFromFront() {
