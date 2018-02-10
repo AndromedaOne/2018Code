@@ -2,59 +2,73 @@ package org.usfirst.frc4905.Galaktika.subsystems;
 
 import org.usfirst.frc4905.Galaktika.RobotMap;
 
-import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class LEDs extends Subsystem {
 
 
-	private static PWM red = RobotMap.redVal;
-	private static PWM blue = RobotMap.blueVal;
-	private static PWM green = RobotMap.greenVal;
+	private static DigitalOutput red = RobotMap.redVal;
+	private static DigitalOutput blue = RobotMap.blueVal;
+	private static DigitalOutput green = RobotMap.greenVal;
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
 	}
-	public void setPurple()  {
-		clearColor();
-		red.setRaw(255);
-		blue.setRaw(255);
+
+	private double validateBrightness(double brightness) {
+		if (brightness > 1.0) {
+			brightness = 1.0;
+		} else if (brightness < 0) {
+			brightness = 0;
+		}
+		return brightness;
 	}
 
-	public void setRed()  {		 
-		clearColor();		
-		red.setRaw(255);		
-	}		
-	public void setBlue()  {		
-		clearColor();		
-		blue.setRaw(255);		
-	}		
-	public void setGreen()  {		
-		clearColor();		
-		red.setRaw(255);		
-		green.setRaw(255);		
+	public void setPurple(double brightness)  {
+		clearColor();
+		brightness = validateBrightness(brightness);
+		red.updateDutyCycle(brightness);
+		blue.updateDutyCycle(brightness);
 	}
+
+	public void setRed(double brightness)  {
+		clearColor();
+		brightness = validateBrightness(brightness);
+		red.updateDutyCycle(brightness);
+	}
+	public void setBlue(double brightness)  {
+		clearColor();
+		brightness = validateBrightness(brightness);
+		blue.updateDutyCycle(brightness);
+	}
+	public void setGreen(double brightness)  {
+		clearColor();
+		brightness = validateBrightness(brightness);
+		green.updateDutyCycle(brightness);
+	}
+
 	public void setColor(int Red, int Green, int Blue) {
 		clearColor();
-		red.setRaw(Red);
+/*		red.setRaw(Red);
 		blue.setRaw(Blue);
-		green.setRaw(Green);
+		green.setRaw(Green); */
 	}
 
 	public void clearColor() {
-		red.setRaw(0);
-		blue.setRaw(0);
-		green.setRaw(0);
+		red.updateDutyCycle(0);
+		blue.updateDutyCycle(0);
+		green.updateDutyCycle(0);
 	}
 
 	public void setStatusGood() {
 		clearColor();
-		green.setRaw(255);
+		green.updateDutyCycle(1);
 	}
 
 	public void setStatusBad() {
 		clearColor();
-		red.setRaw(255);
+		red.updateDutyCycle(1);
 	}
 
 
