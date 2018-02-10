@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MoveUsingEncoderPID extends Command {
 
 	private double m_setpoint = 0;
-	private boolean useMotionProfilng = true;
+	private final boolean useMotionProfilng = true;
 
 	public MoveUsingEncoderPID(double setpointInches) {
 		// Use requires() here to declare subsystem dependencies

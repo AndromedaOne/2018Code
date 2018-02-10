@@ -48,6 +48,7 @@ public class MotionProfilingController {
 	public void disable() {
 		enableStatus = false;
 		m_pidOutput.pidWrite(0.0);
+		System.out.println("FLUSHING");
 		Trace.getInstance().flushTraceFiles();
 	}
 
