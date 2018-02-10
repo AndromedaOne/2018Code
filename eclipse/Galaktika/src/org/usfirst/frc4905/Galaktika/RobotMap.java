@@ -124,16 +124,16 @@ public class RobotMap {
         intakeRightController = new Spark(1);
         LiveWindow.addActuator("Intake", "RightController", (Spark) intakeRightController);
         intakeRightController.setInverted(false);
-        rampsSolenoid1 = new DoubleSolenoid(6, 0);
+        rampsSolenoid1 = new DoubleSolenoid(6, 0, 1);
         LiveWindow.addActuator("Ramps", "Solenoid1", rampsSolenoid1);
         
-        rampsSolenoid2 = new DoubleSolenoid(6, 1);
+        rampsSolenoid2 = new DoubleSolenoid(6, 2, 3);
         LiveWindow.addActuator("Ramps", "Solenoid2", rampsSolenoid2);
         
-        rampsSolenoid3 = new DoubleSolenoid(6, 2);
+        rampsSolenoid3 = new DoubleSolenoid(6, 4, 5);
         LiveWindow.addActuator("Ramps", "Solenoid3", rampsSolenoid3);
         
-        rampsSolenoid4 = new DoubleSolenoid(6, 3);
+        rampsSolenoid4 = new DoubleSolenoid(6, 6, 7);
         LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);
         
         elevatorElevatorContoller = new WPI_TalonSRX(5);
