@@ -1,4 +1,4 @@
-package org.usfirst.frc4905.Galaktika;
+package org.usfirst.frc4905.Galaktika.Sensors;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
