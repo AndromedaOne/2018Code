@@ -104,6 +104,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+    	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
     }
 
