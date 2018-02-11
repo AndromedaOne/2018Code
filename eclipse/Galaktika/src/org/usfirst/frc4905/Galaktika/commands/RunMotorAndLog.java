@@ -46,7 +46,8 @@ public class RunMotorAndLog extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		Robot.driveTrain.move(1.0, 0.0);
+		double initialTime = Timer.getFPGATimestamp();
+		Robot.driveTrain.gyroCorrectMove(1.0, 0.0,1.0);
 		double currentTimeStamp = Timer.getFPGATimestamp();
 		double deltaTimeFromLastExecute = currentTimeStamp - m_previousTimeStamp;
 
@@ -70,6 +71,9 @@ public class RunMotorAndLog extends Command {
 		m_previousTimeStamp = currentTimeStamp;
 		m_previousVelocity = currentVelocity;
 		m_previousAcceleration = currentAcceleration;
+		double finalTime = Timer.getFPGATimestamp();
+		double executeDeltaTime = finalTime - initialTime;
+		Trace.getInstance().addTrace("DeltaTime", new TracePair("deltaTime", executeDeltaTime));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

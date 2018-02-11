@@ -54,14 +54,13 @@ public class MotionProfilingController {
 
 	public void enable() {
 		m_initialTimeStamp = Timer.getFPGATimestamp();
-		m_kinematics.createTrajectory(m_path, m_maxVelocity, m_maxAcceleration, m_maxJerk);
+		m_kinematics.createTrajectory(m_path, m_maxVelocity*0.9, m_maxAcceleration, m_maxJerk);
 		m_endDeltaTime = m_path.getSetpointVector().get(0).endDeltaTime;
 		m_initialPosition = m_pidSource.pidGet();
 		enableStatus = true;
 	}
 	
 	public void run() {
-		System.out.println("enableStatus: " + enableStatus);
 		if(enableStatus) {
 			double currentTimestamp = Timer.getFPGATimestamp();
 			m_deltaTime = currentTimestamp - m_initialTimeStamp;
@@ -71,13 +70,12 @@ public class MotionProfilingController {
 			double pidOut = getPIDOut(m_currentTrajectoryPoint.m_position, deltaPosition);
 			double output = nextTrajectoryPoint.m_currentVelocity + pidOut;
 			m_pidOutput.pidWrite(output);
-			System.out.println("Robot.driveTrain.getVelocity(): " + Robot.driveTrain.getVelocity());
 			Trace.getInstance().addTrace("MotionProfilingData", 
 					new TracePair("ActualVelocity", Robot.driveTrain.getVelocity()),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", (deltaPosition)),
 					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
-					new TracePair("Error", (deltaPosition - m_currentTrajectoryPoint.m_position)/100),
+					new TracePair("Error", (deltaPosition - m_currentTrajectoryPoint.m_position)),
 					new TracePair("Zero", 0.0));
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
 		}

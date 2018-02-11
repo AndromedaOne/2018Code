@@ -39,7 +39,7 @@ public class MoveUsingEncoderPID extends Command {
 	protected void execute() {
 		
 		if(useMotionProfilng) {
-			System.out.println("Running");
+			
 			Robot.driveTrain.runPositionMP();
 		}
 	}
@@ -72,7 +72,7 @@ public class MoveUsingEncoderPID extends Command {
 	}
 
 	protected void debug(String information) {
-		System.out.println("In MoveUsingEncoderPID.java " +
+		System.out.println("In MoveUsingEncoderPID.java " );
 		System.out.flush();
 	}
 }
