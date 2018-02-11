@@ -20,23 +20,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
 	private static final byte kAddress = 0x29;
-
 	private static final short kModelID = 0x000;
-	private static final short kSYSRangeCrossTalkCompensationRate = 0x01E;
+	private static final short kSystemInterruptClear = 0x015;
 	private static final short kFreshOutReset = 0x016;
 	private static final short kSYSRangeStart = 0x018;
+	private static final short kSYSRangeCrossTalkCompensationRate = 0x01E;
 	private static final short kSYSRangeIgnore = 0x026;
+	private static final short kResultInterruptStatusGPIO = 0x04F;
 	private static final short kResultRange = 0x062;
 
 	private I2C m_i2c;
 	private byte m_distance;
 
 	private double getSensorReading() {
-		System.out.println(String.format("NewSampleThresholdPoll: 0x%02X", readByteFromSensor((short) 0x4f)));
-		System.out.println(String.format("RangeResult: %d", readByteFromSensor((short) 0x62)));
-		writeByteToSensor((short) 0x15, (byte) 0x07);
-		System.out.println(String.format("Interrupt Clear: 0x%02X", readByteFromSensor((short) 0x15)));
-		m_distance = readByteFromSensor(kResultRange);
+		//System.out.println(String.format("NewSampleThresholdPoll: 0x%02X", readByteFromSensor((short) 0x4f)));
+		if (readByteFromSensor(kResultInterruptStatusGPIO) == 4) {
+			m_distance = readByteFromSensor(kResultRange);
+			writeByteToSensor(kSystemInterruptClear, (byte) 0x07);
+			disableSensor();
+			enableSensor();
+		}
 		return m_distance;
 	}
 
@@ -102,12 +105,14 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	public VL6180(I2C.Port port) {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
+		disableSensor();
+		while (readByteFromSensor((short)0x4D) == 0) {
+			System.out.println(String.format("resultRangeStatus; 0x%02x", readByteFromSensor((short)0x4D)));
+		}
 		System.out.println(String.format("modelID: 0x%02X", readByteFromSensor(kModelID)));
 		System.out.println(String.format("freshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
-		writeByteToSensor(kFreshOutReset, (byte) 0);
 		System.out.println(String.format("newFreshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
-// Following code taken from the AN4545 VL6180 Application Note
-		writeByteToSensor(kSYSRangeStart, (byte) 3);
+		// Following code taken from the AN4545 VL6180 Application Note
 		writeByteToSensor((short) 0x0207, (byte) 0x01);
 		writeByteToSensor((short) 0x0208, (byte) 0x01);
 		writeByteToSensor((short) 0x0096, (byte) 0x00);
@@ -150,7 +155,6 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		System.out.println(String.format("SYSRangeStart: 0x%02X", readByteFromSensor(kSYSRangeStart)));
 		System.out.println(String.format("SYSRangeIgnore: 0x%08X", readIntFromSensor(kSYSRangeIgnore)));
 		System.out.println(String.format("SYSRangeCrossTalkCompensationRate: 0x%04X", readWordFromSensor(kSYSRangeCrossTalkCompensationRate)));
-		disableSensor();
 		enableSensor();
 
 	}
