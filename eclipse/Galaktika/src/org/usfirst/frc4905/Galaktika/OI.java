@@ -109,6 +109,7 @@ public class OI {
         SmartDashboard.putData("GyroPIDTurnDeltaAngle", new GyroPIDTurnDeltaAngle());
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(20));
+        SmartDashboard.putData("TestDriveToWall", new TestDriveToWall());
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
     }
