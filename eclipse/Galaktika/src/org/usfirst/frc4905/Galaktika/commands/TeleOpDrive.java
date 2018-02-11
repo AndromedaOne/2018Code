@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TeleOpDrive extends Command {
 	public static final double kDeadzone = 0.15;
 
+	private double startingTicks;
 	private int m_slowmodedelaycounter = 0;
 
 	private boolean slowMoEnabled = false;
@@ -51,6 +52,8 @@ public class TeleOpDrive extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
+		startingTicks = Robot.driveTrain.getEncoderTicks();
+
 	}
 
 
@@ -90,10 +93,8 @@ public class TeleOpDrive extends Command {
 		m_slowmodedelaycounter++;
 
 		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod, true, true);
+		System.out.println("Ticks Travelled = " + (Robot.driveTrain.getEncoderTicks() - startingTicks));
 	}
-
-
-
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
