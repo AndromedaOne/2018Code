@@ -340,6 +340,8 @@ public class DriveTrain extends Subsystem {
 		if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
 			correctionMode = 0;
 			SavedAngle = robotAngle;
+			newForwardBackwardStickValue = 0;
+			newRotateStickValue = 0;
 		}
 		else if (rotateStickValue != 0) {
 			courseCorrectionDelay = 0;
@@ -358,8 +360,8 @@ public class DriveTrain extends Subsystem {
 			correctionEquation = (SavedAngle - robotAngle)*kProportion;
 			correctionMode = 2;
 			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
-			newRotateStickValue = rotateStickValue*mod;
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
+			newRotateStickValue = correctionEquation;
+
 		}
 		else {
 			//should all cases fail, just drive normally
@@ -386,7 +388,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("correctionMode", (double)correctionMode));
 
 		courseCorrectionDelay++;
-		Robot.driveTrain.move(newForwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
+		Robot.driveTrain.move(newForwardBackwardStickValue, newRotateStickValue, squaredInput);
 	}
 
 	public void initializePositionPID() {
