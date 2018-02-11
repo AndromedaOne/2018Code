@@ -1,5 +1,6 @@
 package org.usfirst.frc4905.Galaktika;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -32,7 +33,7 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	private I2C m_i2c;
 	private int m_distance;
 
-	private double getSensorReading() {
+	private double getSensorReading() throws IOException {
 		if (readByteFromSensor(kResultInterruptStatusGPIO) == 4) {
 			m_distance = Byte.toUnsignedInt(readByteFromSensor(kResultRange));
 			writeByteToSensor(kSystemInterruptClear, (byte) 0x07);
@@ -40,66 +41,84 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		return m_distance;
 	}
 
-	private void writeByteToSensor(short index, byte value) {
+	private void writeByteToSensor(short index, byte value) throws IOException {
 		ByteBuffer writeBuff = ByteBuffer.allocate(3);
 		writeBuff.putShort(index);
 		writeBuff.put(value);
-		m_i2c.writeBulk(writeBuff, 3);
+		if (m_i2c.writeBulk(writeBuff, 3)) {
+			// Transaction was aborted
+			throw new IOException("writeByteToSensor: VL6180 i2c writeBulk aborted");
+		}
 	}
 
-	private byte readByteFromSensor(short index) {
+	private byte readByteFromSensor(short index) throws IOException {
 		ByteBuffer indexBuff = ByteBuffer.allocate(2);
 		ByteBuffer resultBuff = ByteBuffer.allocate(1);
 		indexBuff.putShort(index);
-		m_i2c.transaction(indexBuff, 2, resultBuff, 1);
+		if (m_i2c.transaction(indexBuff, 2, resultBuff, 1)) {
+			// Transaction was aborted
+			throw new IOException("readByteFromSensor: VL6180 i2c transaction aborted");
+		}
 		return resultBuff.get();
 	}
 
-	private void writeWordToSensor(short index, short value) {
+	private void writeWordToSensor(short index, short value) throws IOException {
 		ByteBuffer writeBuff = ByteBuffer.allocate(4);
 		writeBuff.putShort(index);
 		writeBuff.putShort(value);
-		m_i2c.writeBulk(writeBuff, 4);
+		if (m_i2c.writeBulk(writeBuff, 4)) {
+			// Transaction was aborted
+			throw new IOException("writeWordToSensor: VL6180 i2c writeBulk aborted");
+		}
 	}
 
-	private short readWordFromSensor(short index) {
+	private short readWordFromSensor(short index) throws IOException {
 		ByteBuffer indexBuff = ByteBuffer.allocate(2);
 		ByteBuffer resultBuff = ByteBuffer.allocate(2);
 		indexBuff.putShort(index);
-		m_i2c.transaction(indexBuff, 2, resultBuff, 2);
+		if (m_i2c.transaction(indexBuff, 2, resultBuff, 2)) {
+			// Transaction was aborted
+			throw new IOException("readWordFromSensor: VL6180 i2c transaction aborted");
+		}
 		return resultBuff.getShort();
 	}
 
-	private void writeIntToSensor(short index, int value) {
+	private void writeIntToSensor(short index, int value) throws IOException {
 		ByteBuffer writeBuff = ByteBuffer.allocate(6);
 		writeBuff.putShort(index);
 		writeBuff.putInt(value);
-		m_i2c.writeBulk(writeBuff, 6);
+		if (m_i2c.writeBulk(writeBuff, 6)) {
+			// Transaction was aborted
+			throw new IOException("writeIntToSensor: VL6180 i2c writeBulk aborted");
+		}
 	}
 
-	private int readIntFromSensor(short index) {
+	private int readIntFromSensor(short index) throws IOException {
 		ByteBuffer indexBuff = ByteBuffer.allocate(2);
 		ByteBuffer resultBuff = ByteBuffer.allocate(4);
 		indexBuff.putShort(index);
-		m_i2c.transaction(indexBuff, 2, resultBuff, 4);
+		if (m_i2c.transaction(indexBuff, 2, resultBuff, 4)) {
+			// Transaction was aborted
+			throw new IOException("readIntFromSensor: VL6180 i2c transaction aborted");
+		}
 		return resultBuff.getInt();
 	}
 
-	private void enableSensor() {
+	private void enableSensor() throws IOException {
 		if (readByteFromSensor(kFreshOutReset) == 1) {
 			writeByteToSensor(kFreshOutReset, (byte) 0);
 			writeByteToSensor(kSYSRangeStart, (byte) 3);
 		}
 	}
 
-	private void disableSensor() {
+	private void disableSensor() throws IOException {
 		if (readByteFromSensor(kFreshOutReset) == 0) {
 			writeByteToSensor(kSYSRangeStart, (byte) 3);
 			writeByteToSensor(kFreshOutReset, (byte) 1);
 		}
 	}
 
-	public VL6180(I2C.Port port) {
+	public VL6180(I2C.Port port) throws IOException {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
 		disableSensor();
@@ -155,14 +174,12 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	@Override
 	public void initSendable(SendableBuilder builder) {
 		builder.setSmartDashboardType("Ultrasonic");
-		builder.addDoubleProperty("Value", this::getSensorReading, null);
-		// TODO Auto-generated method stub
+		builder.addDoubleProperty("Value", this::pidGet, null);
 
 	}
 
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
-		// TODO Auto-generated method stub
 		if (!pidSource.equals(PIDSourceType.kDisplacement)) {
 			throw new IllegalArgumentException("Only displacement PID is allowed for VL6180");
 		}
@@ -170,14 +187,17 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 
 	@Override
 	public PIDSourceType getPIDSourceType() {
-		// TODO Auto-generated method stub
 		return PIDSourceType.kDisplacement;
 	}
 
 	@Override
 	public double pidGet() {
-		// TODO Auto-generated method stub
-		return getSensorReading();
+		try {
+			return getSensorReading();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 }
