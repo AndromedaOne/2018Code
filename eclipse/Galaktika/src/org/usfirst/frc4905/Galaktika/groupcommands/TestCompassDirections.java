@@ -17,12 +17,12 @@ public class TestCompassDirections extends AutoCommand {
 
     protected void prepareToStart() {
         driveForward(5);
-        turnToCompassHeading(90.0);
+        turnToCompassHeading(90);
+        driveForward(-5);
+        turnToCompassHeading(270);
         driveForward(5);
-        turnToCompassHeading(270.0);
-        driveForward(5);
-        turnToCompassHeading(0.0);
-        driveForward(5);
-        turnToCompassHeading(180.0);
+        turnToCompassHeading(0);
+        driveForward(-5);
+        turnToCompassHeading(180);
     }
 }
