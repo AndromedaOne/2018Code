@@ -335,6 +335,8 @@ public class DriveTrain extends Subsystem {
 		double robotAngle = RobotMap.navX.getRobotAngle();
 		double correctionEquation = (SavedAngle - robotAngle)*kProportion;
 		int correctionMode = -1;
+		double newForwardBackwardStickValue = 0;
+		double newRotateStickValue = 0;
 		if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
 			correctionMode = 0;
 			SavedAngle = robotAngle;
@@ -343,7 +345,8 @@ public class DriveTrain extends Subsystem {
 			courseCorrectionDelay = 0;
 			correctionMode = 1;
 			SavedAngle = robotAngle;
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, rotateStickValue*mod, squaredInput);
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = rotateStickValue*mod;
 		}
 		else if(courseCorrectionDelay > 25) {
 			//disable correction for half a second after releasing the turn stick, to allow the driver
@@ -354,11 +357,14 @@ public class DriveTrain extends Subsystem {
 			//reassign the correctionEquation to the latest direction that we've been "free driving" in
 			correctionEquation = (SavedAngle - robotAngle)*kProportion;
 			correctionMode = 2;
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = rotateStickValue*mod;
 			Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
 		}
 		else {
 			//should all cases fail, just drive normally
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, rotateStickValue*mod, squaredInput);
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = rotateStickValue*mod;
 		}
 
 
@@ -372,7 +378,7 @@ public class DriveTrain extends Subsystem {
 
 
 		Trace.getInstance().addTrace("GyroCorrection",
-				new TracePair("forwardBackwardStickValue", forwardBackwardStickValue),
+				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
@@ -380,6 +386,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("correctionMode", (double)correctionMode));
 
 		courseCorrectionDelay++;
+		Robot.driveTrain.move(newForwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
 	}
 
 	public void initializePositionPID() {
