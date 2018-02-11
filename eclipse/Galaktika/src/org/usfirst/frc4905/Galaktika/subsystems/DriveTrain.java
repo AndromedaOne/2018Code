@@ -155,7 +155,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean doneUltrasonicFrontPID() {
-		Trace.getInstance().addTrace("MoveWithUltrasonic",
+		Trace.getInstance().addTrace(false, "MoveWithUltrasonic",
 				new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
 				new TracePair("PID Output", m_ultrasonicPID.get()));
@@ -298,7 +298,7 @@ public class DriveTrain extends Subsystem {
 
 	}
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace("GyroPID",
+		Trace.getInstance().addTrace(false, "GyroPID",
 				new TracePair("Target", m_gyroPIDSource.getSetpoint()),
 				new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
 				new TracePair("Avg Error", m_gyroPIDSource.getError()),
@@ -379,7 +379,7 @@ public class DriveTrain extends Subsystem {
 
 
 
-		Trace.getInstance().addTrace("GyroCorrection",
+		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
