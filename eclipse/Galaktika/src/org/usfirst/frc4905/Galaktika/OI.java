@@ -11,22 +11,12 @@
 
 package org.usfirst.frc4905.Galaktika;
 
-import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
-import org.usfirst.frc4905.Galaktika.commands.DriveSquare;
-import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
-import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
-import org.usfirst.frc4905.Galaktika.commands.LEDBrightness;
-import org.usfirst.frc4905.Galaktika.commands.LEDCommand;
-import org.usfirst.frc4905.Galaktika.commands.MotionProfilingTest;
-import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
-import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
-import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
-import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
-import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
-import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
-import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
+import org.usfirst.frc4905.Galaktika.commands.*;
 
-import Utilities.LEDColor;
+
+
+import Utilities.*;
+import Utilities.ControllerButtons.ButtonsEnumerated;
 import Utilities.ControllerButtons.ButtonsEnumerated;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -125,6 +115,7 @@ public class OI {
 
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
+        SmartDashboard.putData("Lift Ramps", new LiftRamps());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
         SmartDashboard.putData("DriveSquare", new DriveSquare());
 
