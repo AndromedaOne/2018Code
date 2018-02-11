@@ -8,7 +8,7 @@ import Utilities.Tracing.TracePair;
 public class PDPLogging {
 	public static void pdpLog() {
 		Trace pdpTrace = Trace.getInstance();
-		pdpTrace.addTrace("PDPTrace", 
+		pdpTrace.addTrace(false, "PDPTrace", 
 				new TracePair("Voltage", Robot.pdp.getVoltage()),
 				new TracePair("TotalCurrent", Robot.pdp.getTotalCurrent()),
 				new TracePair("TotalPower", Robot.pdp.getTotalPower()),
