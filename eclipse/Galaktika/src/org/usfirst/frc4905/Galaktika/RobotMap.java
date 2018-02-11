@@ -23,12 +23,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Utilities.NavxGyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 
@@ -62,6 +63,12 @@ public class RobotMap {
     public static VL6180 rangeFinder;
 
     public static NavxGyro navX;
+    public static DoubleSolenoid jawsSolenoid;
+
+    public static DigitalOutput redVal;
+	public static DigitalOutput greenVal;
+	public static DigitalOutput blueVal;
+
 
     private static class LiveWindow {
 
@@ -93,7 +100,7 @@ public class RobotMap {
         driveTrainRightBottomTalon = new WPI_TalonSRX(4);
 
 
-        driveTrainRightSpeedController = new SpeedControllerGroup(driveTrainRightTopTalon, driveTrainRightBottomTalon);
+        driveTrainRightSpeedController = new SpeedControllerGroup(driveTrainRightTopTalon, driveTrainRightBottomTalon );
         LiveWindow.addActuator("DriveTrain", "RightSpeedController", driveTrainRightSpeedController);
 
         driveTrainDifferentialDrive = new DifferentialDrive(driveTrainLeftSpeedController, driveTrainRightSpeedController);
@@ -102,19 +109,19 @@ public class RobotMap {
         driveTrainDifferentialDrive.setExpiration(0.1);
         driveTrainDifferentialDrive.setMaxOutput(1.0);
 
-        driveTrainCompressor = new Compressor(0);
-        LiveWindow.addActuator("DriveTrain", "Compressor", driveTrainCompressor);
+        // driveTrainCompressor = new Compressor(0);
+        // LiveWindow.addActuator("DriveTrain", "Compressor", driveTrainCompressor);
 
         driveTrainFrontUltrasonic = new Ultrasonic(0, 1);
         LiveWindow.addSensor("DriveTrain", "FrontUltrasonic", driveTrainFrontUltrasonic);
 
-        intakeLeftController = new VictorSP(0);
-        LiveWindow.addActuator("Intake", "LeftController", (VictorSP) intakeLeftController);
+        /*intakeLeftController = new Spark(0);
+        LiveWindow.addActuator("Intake", "LeftController", (Spark) intakeLeftController);
         intakeLeftController.setInverted(false);
-        intakeRightController = new VictorSP(1);
-        LiveWindow.addActuator("Intake", "RightController", (VictorSP) intakeRightController);
+        intakeRightController = new Spark(1);
+        LiveWindow.addActuator("Intake", "RightController", (Spark) intakeRightController);
         intakeRightController.setInverted(false);
-        rampsSolenoid1 = new Solenoid(0, 0);
+        /*rampsSolenoid1 = new Solenoid(0, 0);
         LiveWindow.addActuator("Ramps", "Solenoid1", rampsSolenoid1);
 
         rampsSolenoid2 = new Solenoid(0, 1);
@@ -124,9 +131,9 @@ public class RobotMap {
         LiveWindow.addActuator("Ramps", "Solenoid3", rampsSolenoid3);
 
         rampsSolenoid4 = new Solenoid(0, 3);
-        LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);
+        LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);*/
 
-        elevatorElevatorContoller = new WPI_TalonSRX(5);
+        //elevatorElevatorContoller = new WPI_TalonSRX(5);
 
 
 
@@ -140,7 +147,14 @@ public class RobotMap {
 		}
         LiveWindow.addSensor("DriveTrain", "RangeFinder", rangeFinder);
         navX = new NavxGyro();
+        // jawsSolenoid = new DoubleSolenoid(0, 4, 5);
 
-
+        //LED PWM Port assignments
+        redVal = new DigitalOutput(2);
+        redVal.enablePWM(0);
+        blueVal = new DigitalOutput(3);
+        blueVal.enablePWM(0);
+        greenVal = new DigitalOutput(4);
+        greenVal.enablePWM(0);
     }
 }

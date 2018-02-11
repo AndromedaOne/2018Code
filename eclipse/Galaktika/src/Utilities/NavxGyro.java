@@ -2,6 +2,8 @@ package Utilities;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -55,7 +57,7 @@ public class NavxGyro {
 			SmartDashboard.putNumber("Raw Anlge", m_navX.getAngle());
 			SmartDashboard.putNumber("Get Robot Angle", correctedAngle);
 		}
-		Trace.getInstance().addTrace(m_traceFileName,
+		Trace.getInstance().addTrace(false, m_traceFileName, 
 				new TracePair("Raw Angle", m_navX.getAngle()),
 				new TracePair("Corrected Angle", correctedAngle),
 				new TracePair("X Accel", (double) m_navX.getWorldLinearAccelX()),
