@@ -30,15 +30,12 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	private static final short kResultRange = 0x062;
 
 	private I2C m_i2c;
-	private byte m_distance;
+	private int m_distance;
 
 	private double getSensorReading() {
-		//System.out.println(String.format("NewSampleThresholdPoll: 0x%02X", readByteFromSensor((short) 0x4f)));
 		if (readByteFromSensor(kResultInterruptStatusGPIO) == 4) {
-			m_distance = readByteFromSensor(kResultRange);
+			m_distance = Byte.toUnsignedInt(readByteFromSensor(kResultRange));
 			writeByteToSensor(kSystemInterruptClear, (byte) 0x07);
-			disableSensor();
-			enableSensor();
 		}
 		return m_distance;
 	}
@@ -109,9 +106,6 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		while (readByteFromSensor((short)0x4D) == 0) {
 			System.out.println(String.format("resultRangeStatus; 0x%02x", readByteFromSensor((short)0x4D)));
 		}
-		System.out.println(String.format("modelID: 0x%02X", readByteFromSensor(kModelID)));
-		System.out.println(String.format("freshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
-		System.out.println(String.format("newFreshOutReset: 0x%02X", readByteFromSensor(kFreshOutReset)));
 		// Following code taken from the AN4545 VL6180 Application Note
 		writeByteToSensor((short) 0x0207, (byte) 0x01);
 		writeByteToSensor((short) 0x0208, (byte) 0x01);
@@ -152,9 +146,6 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 		writeByteToSensor((short) 0x001b, (byte) 0x09);
 		writeByteToSensor((short) 0x003e, (byte) 0x31);
 		writeByteToSensor((short) 0x0014, (byte) 0x24);
-		System.out.println(String.format("SYSRangeStart: 0x%02X", readByteFromSensor(kSYSRangeStart)));
-		System.out.println(String.format("SYSRangeIgnore: 0x%08X", readIntFromSensor(kSYSRangeIgnore)));
-		System.out.println(String.format("SYSRangeCrossTalkCompensationRate: 0x%04X", readWordFromSensor(kSYSRangeCrossTalkCompensationRate)));
 		enableSensor();
 
 	}
@@ -172,19 +163,21 @@ public class VL6180 extends SensorBase implements PIDSource, Sendable {
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
 		// TODO Auto-generated method stub
-
+		if (!pidSource.equals(PIDSourceType.kDisplacement)) {
+			throw new IllegalArgumentException("Only displacement PID is allowed for VL6180");
+		}
 	}
 
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		// TODO Auto-generated method stub
-		return null;
+		return PIDSourceType.kDisplacement;
 	}
 
 	@Override
 	public double pidGet() {
 		// TODO Auto-generated method stub
-		return 0;
+		return getSensorReading();
 	}
 
 }
