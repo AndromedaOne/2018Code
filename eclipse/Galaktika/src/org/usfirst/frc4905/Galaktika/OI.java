@@ -67,6 +67,10 @@ public class OI {
     JoystickButton TurnToWest;
     JoystickButton TurnToNorth;
     JoystickButton TurnToSouth;
+    
+    public JoystickButton liftLeftRampButton;
+    public JoystickButton liftRightRampButton;
+    
     public OI() {
     	//Button Presets for compass headings
     	 TurnToWest = new JoystickButton(driveController, ButtonsEnumerated.XBUTTON.getValue());
@@ -87,7 +91,10 @@ public class OI {
         runIntakeButton.whileHeld(new RunIntakeIn());
         runIntakeButton.whileHeld(new RunIntakeIn());
         driveController = new Joystick(0);
-
+        liftLeftRampButton = new JoystickButton(driveController, ButtonsEnumerated.BACKBUTTON.getValue());
+        liftLeftRampButton.whenPressed(new LiftLeftRamp());
+        liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
+        liftRightRampButton.whenPressed(new LiftRightRamps());
 
 
         // SmartDashboard Buttons
@@ -115,7 +122,8 @@ public class OI {
 
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
-        SmartDashboard.putData("Lift Ramps", new LiftRamps());
+        SmartDashboard.putData("Lift Left Ramp", new LiftLeftRamp());
+        SmartDashboard.putData("Lift Right Ramp", new LiftRightRamps());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
         SmartDashboard.putData("DriveSquare", new DriveSquare());
 
