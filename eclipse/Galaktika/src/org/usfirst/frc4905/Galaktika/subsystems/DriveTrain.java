@@ -351,7 +351,6 @@ public class DriveTrain extends Subsystem {
 		double correctionEquation = (SavedAngle - robotAngle)*kProportion;
 		int correctionMode = -1;
 		if (!useDelay) {
-			System.out.println("Attempting to use gyroCorrectMove");
 			SavedAngle = robotAngle;
 			Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
 		} else if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
