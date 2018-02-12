@@ -11,24 +11,12 @@
 
 package org.usfirst.frc4905.Galaktika;
 
-import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
-import org.usfirst.frc4905.Galaktika.commands.DriveSquare;
-import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
-import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
-import org.usfirst.frc4905.Galaktika.commands.LEDBrightness;
-import org.usfirst.frc4905.Galaktika.commands.LEDCommand;
-import org.usfirst.frc4905.Galaktika.commands.MotionProfilingTest;
-import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
-import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
-import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
-import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
-import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
-import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
-import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
+import org.usfirst.frc4905.Galaktika.commands.*;
 
-import Utilities.LEDColor;
+
 
 import Utilities.*;
+import Utilities.ControllerButtons.ButtonsEnumerated;
 import Utilities.ControllerButtons.ButtonsEnumerated;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -79,6 +67,10 @@ public class OI {
     JoystickButton TurnToWest;
     JoystickButton TurnToNorth;
     JoystickButton TurnToSouth;
+    
+    public JoystickButton liftLeftRampButton;
+    public JoystickButton liftRightRampButton;
+    
     public OI() {
     	//Button Presets for compass headings
     	 TurnToWest = new JoystickButton(driveController, ButtonsEnumerated.XBUTTON.getValue());
@@ -99,7 +91,10 @@ public class OI {
         runIntakeButton.whileHeld(new RunIntakeIn());
         runIntakeButton.whileHeld(new RunIntakeIn());
         driveController = new Joystick(0);
-
+        liftLeftRampButton = new JoystickButton(driveController, ButtonsEnumerated.BACKBUTTON.getValue());
+        liftLeftRampButton.whenPressed(new LiftLeftRamp());
+        liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
+        liftRightRampButton.whenPressed(new LiftRightRamps());
 
 
         // SmartDashboard Buttons
@@ -126,10 +121,12 @@ public class OI {
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
 
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
-
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
+        SmartDashboard.putData("Lift Left Ramp", new LiftLeftRamp());
+        SmartDashboard.putData("Lift Right Ramp", new LiftRightRamps());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
         SmartDashboard.putData("DriveSquare", new DriveSquare());
+
 
     }
 
