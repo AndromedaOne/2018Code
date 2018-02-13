@@ -14,12 +14,14 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.PDPLogging;
+import Utilities.Signal;
 import Utilities.SpikeDetector;
 import Utilities.ControllerButtons.EnumeratedRawAxis;
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -53,7 +55,7 @@ public class TeleOpDrive extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		spikeDetector = new SpikeDetector(250, 7.0, 0.05);
+	
 	}
 
 
@@ -94,19 +96,9 @@ public class TeleOpDrive extends Command {
 		
 		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod);
 		
-
-		double accel = (double) RobotMap.navX.getAHRS().getRoll();
+		SmartDashboard.putNumber("Pitch", RobotMap.navX.getAHRS().getPitch());
+		SmartDashboard.putNumber("Roll", RobotMap.navX.getAHRS().getRoll());
 		
-		double spike = spikeDetector.update(accel);
-		
-			
-    	
-		Trace.getInstance().addTrace("ErisTrace",
-				
-				new TracePair("Pitch", (double) RobotMap.navX.getAHRS().getPitch()),
-				new TracePair("Roll", (double) RobotMap.navX.getAHRS().getRoll()),
-				new TracePair("Yaw", (double) RobotMap.navX.getAHRS().getYaw()),
-				new TracePair("Spike", spike));
 	}
 		
 

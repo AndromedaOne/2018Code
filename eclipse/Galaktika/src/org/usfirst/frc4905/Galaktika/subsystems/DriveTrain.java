@@ -284,7 +284,7 @@ public class DriveTrain extends Subsystem {
 		double gyroPIDI = 0.0;
 		double gyroPIDD = 0.0;
 		double gyroPIDF = 0.0;
-		double gyroPIDOutputRange = 0.5;
+		double gyroPIDOutputRange = 0.8;
 		double gyroPIDAbsTolerance = 1;
 		m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
 		m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);

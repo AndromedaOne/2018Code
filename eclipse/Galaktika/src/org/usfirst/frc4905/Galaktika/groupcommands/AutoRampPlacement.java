@@ -19,9 +19,9 @@ public class AutoRampPlacement extends CommandGroup {
         //      addSequential(new Command2());
         // these will run in order.
     	//addSequential(new TurnToCompassHeading(90));
-    	//addSequential(new MoveForwardUntilScaleBump());
-    	//addSequential(new TurnToCompassHeading(0));
-    	addSequential(new MoveUsingFrontUltrasonic(5));
+    	addSequential(new MoveForwardUntilScaleBump());
+    	addSequential(new TurnToCompassHeading(325));
+    	//addSequential(new MoveUsingFrontUltrasonic(5));
         // To run multiple commands at the same time,
         // use addParallel()
         // e.g. addParallel(new Command1());
