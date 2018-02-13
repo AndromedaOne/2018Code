@@ -9,21 +9,21 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MoveUsingEncoderPID extends Command {
-	
+
 	private double m_setpoint = 0;
 
-    public MoveUsingEncoderPID(double setpoint) {
+    public MoveUsingEncoderPID(double setpointInches) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
-    	m_setpoint = setpoint;
+    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.driveTrain.initializeEncoderPID();
     	Robot.driveTrain.enableEncoderPID(m_setpoint);
-    
+
     }
 
     // Called repeatedly when this Command is scheduled to run

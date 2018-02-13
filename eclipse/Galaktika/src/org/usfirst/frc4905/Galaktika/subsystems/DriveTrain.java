@@ -103,12 +103,13 @@ public class DriveTrain extends Subsystem {
 	private int m_timesDistanceAveraged = 5;
 	//Gyro Correction for move
 	private static final double kProportion = .05;
+	public static final double ENCODER_TICKS_PER_INCH = 1665;
 
 	private double courseCorrectionDelay = 0;
 
 	private double SavedAngle = 0;
 
-	
+
 
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
