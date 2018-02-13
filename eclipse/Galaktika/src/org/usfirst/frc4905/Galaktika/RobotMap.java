@@ -19,12 +19,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Utilities.NavxGyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.Ultrasonic;
+import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 

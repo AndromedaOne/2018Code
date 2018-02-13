@@ -13,6 +13,10 @@ package org.usfirst.frc4905.Galaktika;
 
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.DriveSquare;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveGroundLevel;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveLowScale;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.LEDBrightness;
