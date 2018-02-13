@@ -3,6 +3,8 @@ package org.usfirst.frc4905.Galaktika.commands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -38,10 +40,6 @@ public class MoveUsingEncoderPID extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		
-		if(useMotionProfilng) {
-			
-			Robot.driveTrain.runPositionMP();
-		}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -62,6 +60,7 @@ public class MoveUsingEncoderPID extends Command {
 		} else {
 			Robot.driveTrain.disablePositionMP();
 		}
+		Trace.getInstance().flushTraceFiles();
 	}
 
 	// Called when another command which requires one or more of the same
