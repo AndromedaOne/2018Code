@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -107,7 +108,7 @@ public class DriveTrain extends Subsystem {
 
 	private double SavedAngle = 0;
 
-
+	
 
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
@@ -127,7 +128,7 @@ public class DriveTrain extends Subsystem {
 		m_ultrasonicPID.setName("Ultrasonic","Ultrasonic PID");
 		initializeEncoderPID();
 		initGyroPIDDeltaAngle();
-    }
+	}
 
 
 	//Ultrasonic Code - Begins
@@ -233,7 +234,6 @@ public class DriveTrain extends Subsystem {
 
 	}
 	private class EncoderPIDOut implements PIDOutput{
-    	@Override
 		public void pidWrite(double output) {
 			move(output, 0);
 		}
@@ -264,15 +264,12 @@ public class DriveTrain extends Subsystem {
 	}
 	private PIDController m_gyroPIDSource;
 	private class GyroPIDIn implements PIDSource {
-    	@Override
 		public void setPIDSourceType(PIDSourceType PIDSource) {
 
 		}
-    	@Override
 		public PIDSourceType getPIDSourceType() {
 			return PIDSourceType.kDisplacement;
 		}
-		@Override
 		public double pidGet() {
 			return RobotMap.navX.getRobotAngle();
 		}
