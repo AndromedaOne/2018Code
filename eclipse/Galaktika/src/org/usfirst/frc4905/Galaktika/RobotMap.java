@@ -54,7 +54,7 @@ public class RobotMap {
 	public static DoubleSolenoid rampsSolenoid2;
 	public static DoubleSolenoid rampsSolenoid3;
 	public static DoubleSolenoid rampsSolenoid4;
-	public static WPI_TalonSRX elevatorElevatorContoller;
+	public static WPI_TalonSRX elevatorElevatorController;
 	public static Servo leftDeployServo;
 	public static Servo rightDeployServo;
 
