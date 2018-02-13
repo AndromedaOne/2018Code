@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class LiftRightRamps extends Command {
+public class LiftRightRamp extends Command {
 
-    public LiftRightRamps() {
+    public LiftRightRamp() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.ramps);
@@ -21,7 +21,10 @@ public class LiftRightRamps extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.ramps.liftRightRamp();
+    	if(Robot.ramps.getRightRampDeployedStatus()){
+    		Robot.ramps.liftRightRamp();
+    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()

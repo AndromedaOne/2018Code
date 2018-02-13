@@ -12,7 +12,7 @@ public class LiftLeftRamp extends Command {
     public LiftLeftRamp() {
      requires(Robot.ramps);
     	// Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(Robot.ramps);
     }
 
     // Called just before this Command runs the first time
@@ -22,7 +22,9 @@ public class LiftLeftRamp extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    Robot.ramps.liftLeftRamp();
+    	if(Robot.ramps.getLeftRampDeployedStatus()){
+    		 Robot.ramps.liftLeftRamp();
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

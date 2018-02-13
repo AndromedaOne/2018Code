@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ReleaseRamps extends Command {
 
-
-
+	private boolean isLeftPOVPressed = false, isRightPOVPressed = false;
+	private boolean safetiesEnabled;
+	private double timeRemaining;
 	Joystick driveController;
 	public ReleaseRamps() {
 		// Use requires() here to declare subsystem dependencies
@@ -31,26 +32,31 @@ public class ReleaseRamps extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 
-		boolean isLeftPOVPressed = POVDirectionNames.getPOVWest(driveController);
-		boolean isRightPOVPressed = POVDirectionNames.getPOVEast(driveController);
-		boolean safetiesEnabled = Robot.ramps.returnSafetyStatus();
-		double timeRemaining = Robot.ramps.getTimeRemainingInMatchPeriod();
+		isLeftPOVPressed = POVDirectionNames.getPOVWest(driveController);
+		isRightPOVPressed = POVDirectionNames.getPOVEast(driveController);
+		safetiesEnabled = Robot.ramps.returnSafetyStatus();
+		timeRemaining = Robot.ramps.getTimeRemainingInMatchPeriod();
 
+		
 
 		if(safetiesEnabled){
 			if (isLeftPOVPressed && timeRemaining < 30) {
-				Robot.ramps.releaseLeftRamp();
+				Robot.ramps.moveLeftServo(0);
+				Robot.ramps.setLeftRampDeployed();
 			}
 			if (isRightPOVPressed && timeRemaining < 30) {
-				Robot.ramps.releaseRightRamp();
+				Robot.ramps.moveRightServo(0);
+				Robot.ramps.setRightRampDeployed();
 			}
 		}
 		else{
 			if (isLeftPOVPressed) {
-				Robot.ramps.releaseLeftRamp();
+				Robot.ramps.moveLeftServo(0);
+				Robot.ramps.setLeftRampDeployed();
 			}
 			if (isRightPOVPressed) {
-				Robot.ramps.releaseRightRamp();
+				Robot.ramps.moveRightServo(0);
+				Robot.ramps.setRightRampDeployed();
 			}
 		}
 

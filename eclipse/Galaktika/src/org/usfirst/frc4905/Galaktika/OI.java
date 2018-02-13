@@ -94,7 +94,7 @@ public class OI {
         liftLeftRampButton = new JoystickButton(driveController, ButtonsEnumerated.BACKBUTTON.getValue());
         liftLeftRampButton.whenPressed(new LiftLeftRamp());
         liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
-        liftRightRampButton.whenPressed(new LiftRightRamps());
+        liftRightRampButton.whenPressed(new LiftRightRamp());
 
 
         // SmartDashboard Buttons
@@ -123,7 +123,7 @@ public class OI {
         SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100000));
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
         SmartDashboard.putData("Lift Left Ramp", new LiftLeftRamp());
-        SmartDashboard.putData("Lift Right Ramp", new LiftRightRamps());
+        SmartDashboard.putData("Lift Right Ramp", new LiftRightRamp());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
         SmartDashboard.putData("DriveSquare", new DriveSquare());
 
