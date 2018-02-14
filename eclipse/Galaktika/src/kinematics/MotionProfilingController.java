@@ -140,7 +140,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	public void setSetpoint(double setpoint) {
-
+		m_currentSetpoint = setpoint;
 		try {
 			m_kinematics.addPointToPath(m_path, new Point(setpoint));
 		} catch (InvalidDimentionException e) {
