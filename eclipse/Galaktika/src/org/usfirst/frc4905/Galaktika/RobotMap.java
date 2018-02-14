@@ -140,11 +140,12 @@ public class RobotMap {
 
         try {
 			rangeFinder = new VL6180(I2C.Port.kOnboard);
+			LiveWindow.addSensor("DriveTrain", "RangeFinder", rangeFinder);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        LiveWindow.addSensor("DriveTrain", "RangeFinder", rangeFinder);
+
         navX = new NavxGyro();
         // jawsSolenoid = new DoubleSolenoid(0, 4, 5);
 
