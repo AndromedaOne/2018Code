@@ -1,7 +1,10 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.RobotMap;
 
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
