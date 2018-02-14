@@ -173,6 +173,7 @@ public class DriveTrain extends Subsystem {
 
 	private double SavedAngle = 0;
 
+
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
 		leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -183,11 +184,13 @@ public class DriveTrain extends Subsystem {
 		m_ultrasonicPID = new PIDController(m_P, m_I, m_D, m_f, pdIn, ultraPIDOutput);
 		m_ultrasonicPID.setAbsoluteTolerance(m_tolerance);
 		m_ultrasonicPID.setOutputRange(-m_maxSpeed, m_maxSpeed);
-		LiveWindow.add(m_ultrasonicPID);
-		m_ultrasonicPID.setName("DriveTrain", "Ultrasonic PID");
 		frontUltrasonic.SetUltrasonicNoiseTolerance(m_noiseTolerance);
 		frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
 		frontUltrasonic.SetUltrasonicAveragedAmount(m_timesDistanceAveraged);
+		LiveWindow.add(m_ultrasonicPID);
+		m_ultrasonicPID.setName("Ultrasonic","Ultrasonic PID");
+		initializeEncoderPID();
+		initGyroPIDDeltaAngle();
 		
 		initializeEncoderMP();
 		initializeGyroMP();
@@ -220,7 +223,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean doneUltrasonicFrontPID() {
-		debug("top of doneUltrasonicFrontPID");
+		Trace.getInstance().addTrace(false, "MoveWithUltrasonic",
 		Trace.getInstance().addTrace("MoveWithUltrasonic", new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
 				new TracePair("PID Output", m_ultrasonicPID.get()));
@@ -318,6 +321,8 @@ public class DriveTrain extends Subsystem {
 				encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
+		LiveWindow.add(m_encoderPID);
+		m_encoderPID.setName("DriveTrain","Encoder PID");
 	}
 
 	public void enableEncoderPID(double setpoint) {
@@ -370,6 +375,8 @@ public class DriveTrain extends Subsystem {
 		m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
 		m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
+		LiveWindow.add(m_gyroPIDSource);
+		m_gyroPIDSource.setName("Gyro","Gyro PID");
 
 	}
 
@@ -381,7 +388,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace("GyroPID", new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
+		Trace.getInstance().addTrace(false, "GyroPID",
 				new TracePair("Avg Error", m_gyroPIDSource.getError()), new TracePair("Output", m_gyroPIDSource.get()));
 		return m_gyroPIDSource.onTarget();
 	}
@@ -457,7 +464,7 @@ public class DriveTrain extends Subsystem {
 			SavedAngle = robotAngle;
 		}
 
-		Trace.getInstance().addTrace("GyroCorrection",
+		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle), new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion), new TracePair("correctionEquation", correctionEquation),
