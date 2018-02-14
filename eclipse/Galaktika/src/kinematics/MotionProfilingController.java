@@ -105,7 +105,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			m_pidOutput.pidWrite(output);
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
-			Trace.getInstance().addTrace("MotionProfilingData",
+			Trace.getInstance().addTrace(true, "MotionProfilingData",
 					new TracePair("ActualVelocity", Robot.driveTrain.getTalonVelocity()),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", (deltaPosition)),

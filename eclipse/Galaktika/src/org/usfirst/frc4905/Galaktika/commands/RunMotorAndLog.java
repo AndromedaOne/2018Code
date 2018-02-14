@@ -73,7 +73,9 @@ public class RunMotorAndLog extends Command {
 		m_numberofDeltaTimesFromLastExecute++;
 
 		Trace.getInstance().addTrace(true, "KinematicLimits", 
-				new TracePair("Acceleration", currentAcceleration / 500), new TracePair("Jerk", currentJerk / 100000),
+				new TracePair("Velocities", currentVelocity),
+				new TracePair("Acceleration", currentAcceleration/500),
+				new TracePair("Jerk", currentJerk/100000),
 				new TracePair("Position", Robot.driveTrain.getEncoderPosition() - m_initialPosition));
 
 		m_previousTimeStamp = currentTimeStamp;
@@ -81,7 +83,6 @@ public class RunMotorAndLog extends Command {
 		m_previousAcceleration = currentAcceleration;
 		double finalTime = Timer.getFPGATimestamp();
 		double executeDeltaTime = finalTime - initialTime;
-		Trace.getInstance().addTrace("DeltaTime", new TracePair("deltaTime", executeDeltaTime));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

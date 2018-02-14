@@ -67,7 +67,6 @@ public class DriveTrain extends Subsystem {
 	private static final double kEncoderMaxVelocity = 130000.0; // Encoder ticks per second
 	private static final double kEncoderMaxAcceleration = 98556.82501503047;// *500; // Encoder ticks per second^2
 	private static final double kEncoderMaxJerk = 630168.7582546938;// *100000; // Encoder ticks per second^3
-	private static final double kEncoderVelocityToOutputRatio = 1.0 / kEncoderMaxVelocity;
 
 	public static double getMaxVelocity() {
 		return kEncoderMaxVelocity;
@@ -88,14 +87,14 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderMPVelocitykp = 0.0;
 	private double m_encoderMPVelocityki = 0.0;
 	private double m_encoderMPVelocitykd = 0.0;
-	private double m_encoderMPVelocitykf = kEncoderVelocityToOutputRatio;
+	private double m_encoderMPVelocitykf = 1.0 / kEncoderMaxVelocity;
 
 	private double kEncoderMPTolerance = 1000;
 	private MotionProfilingController m_encoderMotionProfilingController;
+
 	public MotionProfilingController getEncoderMPController() {
 		return m_encoderMotionProfilingController;
 	}
-
 
 	private static final double kGyroMaxVelocity = 0.0; // degrees per second
 	private static final double kGyroMaxAcceleration = 0.0; // degrees per second^2
@@ -125,6 +124,7 @@ public class DriveTrain extends Subsystem {
 
 	private double kgyroMPTolerance = 1000;
 	private MotionProfilingController m_gyroMotionProfilingController;
+
 	public MotionProfilingController getGyroMPController() {
 		return m_gyroMotionProfilingController;
 	}
@@ -132,7 +132,6 @@ public class DriveTrain extends Subsystem {
 	private double m_gyroPreviousPosition = Double.NaN;
 	private double m_gyroPreviousTime = 0.0;
 
-	
 	private double m_ultrasonicMPPositionkp = 10.0;
 	private double m_ultrasonicMPPositionki = 0.0;
 	private double m_ultrasonicMPPositionkd = 0.0;
@@ -140,6 +139,7 @@ public class DriveTrain extends Subsystem {
 
 	private double kUltrasonicMPTolerance = 1000;
 	private MotionProfilingController m_ultrasonicMotionProfilingController;
+
 	public MotionProfilingController getUltrasonicMPController() {
 		return m_ultrasonicMotionProfilingController;
 	}
@@ -173,7 +173,6 @@ public class DriveTrain extends Subsystem {
 
 	private double SavedAngle = 0;
 
-
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
 		leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -188,10 +187,10 @@ public class DriveTrain extends Subsystem {
 		frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
 		frontUltrasonic.SetUltrasonicAveragedAmount(m_timesDistanceAveraged);
 		LiveWindow.add(m_ultrasonicPID);
-		m_ultrasonicPID.setName("Ultrasonic","Ultrasonic PID");
+		m_ultrasonicPID.setName("Ultrasonic", "Ultrasonic PID");
 		initializeEncoderPID();
 		initGyroPIDDeltaAngle();
-		
+
 		initializeEncoderMP();
 		initializeGyroMP();
 		initializeUltrasonicMP();
@@ -224,7 +223,7 @@ public class DriveTrain extends Subsystem {
 
 	public boolean doneUltrasonicFrontPID() {
 		Trace.getInstance().addTrace(false, "MoveWithUltrasonic",
-		Trace.getInstance().addTrace("MoveWithUltrasonic", new TracePair("Current Distance", getDistanceFromFront()),
+				new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
 				new TracePair("PID Output", m_ultrasonicPID.get()));
 		boolean done = m_ultrasonicPID.onTarget();
@@ -322,7 +321,7 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
 		LiveWindow.add(m_encoderPID);
-		m_encoderPID.setName("DriveTrain","Encoder PID");
+		m_encoderPID.setName("DriveTrain", "Encoder PID");
 	}
 
 	public void enableEncoderPID(double setpoint) {
@@ -376,7 +375,7 @@ public class DriveTrain extends Subsystem {
 		m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
 		LiveWindow.add(m_gyroPIDSource);
-		m_gyroPIDSource.setName("Gyro","Gyro PID");
+		m_gyroPIDSource.setName("Gyro", "Gyro PID");
 
 	}
 
@@ -388,8 +387,8 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace(false, "GyroPID",
-				new TracePair("Avg Error", m_gyroPIDSource.getError()), new TracePair("Output", m_gyroPIDSource.get()));
+		Trace.getInstance().addTrace(false, "GyroPID", new TracePair("Avg Error", m_gyroPIDSource.getError()),
+				new TracePair("Output", m_gyroPIDSource.get()));
 		return m_gyroPIDSource.onTarget();
 	}
 
