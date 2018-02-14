@@ -139,5 +139,10 @@ public class RobotMap {
         blueVal.enablePWM(0);
         greenVal = new DigitalOutput(4);
         greenVal.enablePWM(0);
+        
+        LiveWindow.addActuator("MP", "EncoderMP", Robot.driveTrain.getEncoderMPController());
+        LiveWindow.addActuator("MP", "GyroMP", Robot.driveTrain.getGyroMPController());
+        LiveWindow.addActuator("MP", "UltrasonicMP", Robot.driveTrain.getUltrasonicMPController());
+
     }
 }
