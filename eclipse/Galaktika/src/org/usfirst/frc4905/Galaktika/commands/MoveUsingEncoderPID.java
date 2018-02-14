@@ -32,8 +32,8 @@ public class MoveUsingEncoderPID extends Command {
 			Robot.driveTrain.initializeEncoderPID();
 			Robot.driveTrain.enableEncoderPID(m_setpoint);
 		} else {
-			Robot.driveTrain.initializePositionMP();
-			Robot.driveTrain.enablePositionMP(m_setpoint);
+			Robot.driveTrain.initializeEncoderMP();
+			Robot.driveTrain.enableEncoderMP(m_setpoint);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class MoveUsingEncoderPID extends Command {
 		if (!useMotionProfilng) {
 			return Robot.driveTrain.isDoneEncoderPID();
 		} else {
-			return Robot.driveTrain.isDonePositionMP();
+			return Robot.driveTrain.isDoneEncoderMP();
 		}
 	}
 
@@ -58,7 +58,7 @@ public class MoveUsingEncoderPID extends Command {
 		if (!useMotionProfilng) {
 			Robot.driveTrain.disableEncoderPID();
 		} else {
-			Robot.driveTrain.disablePositionMP();
+			Robot.driveTrain.disableEncoderMP();
 		}
 		Trace.getInstance().flushTraceFiles();
 	}
