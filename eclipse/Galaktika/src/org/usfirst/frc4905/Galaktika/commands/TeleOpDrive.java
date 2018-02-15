@@ -88,10 +88,10 @@ public class TeleOpDrive extends Command {
 			}
 		}
 		m_slowmodedelaycounter++;
-		
-		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod);
+
+		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod, true, true);
 	}
-		
+
 
 
 
