@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.subsystems;
 
 import org.usfirst.frc4905.Galaktika.RobotMap;
+import org.usfirst.frc4905.Galaktika.commands.LEDFortySecondsLeft;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,6 +14,7 @@ public class LEDs extends Subsystem {
 	private static DigitalOutput green = RobotMap.greenVal;
 	@Override
 	protected void initDefaultCommand() {
+		setDefaultCommand(new LEDFortySecondsLeft());
 		// TODO Auto-generated method stub
 	}
 
