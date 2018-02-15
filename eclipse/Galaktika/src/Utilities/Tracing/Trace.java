@@ -179,7 +179,10 @@ public class Trace
 		}
 	}
 
-	public void addTrace(String fileName, TracePair... header) {
+	public void addTrace(boolean enable, String fileName, TracePair... header) {
+		if(!enable) {
+			return;
+		}
 		if(m_pathOfTraceDir == null)
 		{
 			return;

@@ -114,12 +114,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+    	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
         autonomousCommand = chooser.getSelected();
+        RobotMap.navX.setInitialAngleReading();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
     }

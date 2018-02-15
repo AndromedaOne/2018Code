@@ -61,7 +61,7 @@ public class RunMotorAndLog extends Command {
 		m_totalDeltaTimeFromLastExecute+=deltaTimeFromLastExecute;
 		m_numberofDeltaTimesFromLastExecute++;
 		
-		Trace.getInstance().addTrace("KinematicLimits", 
+		Trace.getInstance().addTrace(true, "KinematicLimits", 
 				new TracePair("Velocities", currentVelocity),
 				new TracePair("Acceleration", currentAcceleration/500),
 				new TracePair("Jerk", currentJerk/100000),
