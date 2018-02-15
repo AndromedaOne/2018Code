@@ -514,7 +514,8 @@ public class DriveTrain extends Subsystem {
 				m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration, kEncoderMaxJerk, encoderMPIn,
 				encoderPIDOut);
 		m_encoderMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
-
+		LiveWindow.add(m_encoderMotionProfilingController);
+		m_gyroPIDSource.setName("EncoderMP", "EncoderMP");
 	}
 
 	public void enableEncoderMP(double setpoint) {
@@ -568,6 +569,8 @@ public class DriveTrain extends Subsystem {
 				m_gyroMPPositionkd, m_gyroMPVelocitykp, m_gyroMPVelocityki, m_gyroMPVelocitykd, m_gyroMPVelocitykf,
 				kGyroMaxVelocity, kGyroMaxAcceleration, kGyroMaxJerk, gyroMPIn, gyroMPOut);
 		m_gyroMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
+		LiveWindow.add(m_gyroMotionProfilingController);
+		m_gyroPIDSource.setName("GyroMP", "GyroMP");
 	}
 
 	public void enableGyroMP(double setpoint) {
@@ -635,6 +638,8 @@ public class DriveTrain extends Subsystem {
 				m_encoderMPVelocitykd, m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration,
 				kEncoderMaxJerk, ultrasonicMPIn, ultrasonicMPOut);
 		m_ultrasonicMotionProfilingController.setAbsoluteTolerance(kUltrasonicMPTolerance);
+		LiveWindow.add(m_ultrasonicMotionProfilingController);
+		m_gyroPIDSource.setName("UltrasonicMP", "UltrasonicMP");
 	}
 
 	public void enableUltrasonicMP(double setpoint) {
