@@ -21,4 +21,9 @@ public class PIDCalculator {
 		m_previousError = error;
 		return pTerm + iTerm + dTerm;
 	}
+	
+	public void reset() {
+		m_iAccum = 0.0;
+		m_previousError = Double.NaN;
+	}
 }

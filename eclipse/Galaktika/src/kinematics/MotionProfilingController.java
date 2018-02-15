@@ -83,6 +83,9 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	public void enable() {
+		m_velocityPIDCalculator.reset();
+		m_positionPIDCalculator.reset();
+		
 		m_initialTimeStamp = Timer.getFPGATimestamp();
 		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk);
 		m_endDeltaTime = m_path.getSetpointVector().get(0).endDeltaTime;
@@ -108,12 +111,12 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
 					new TracePair("ActualVelocity", Robot.driveTrain.getTalonVelocity()),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
-					new TracePair("ActualPosition", (deltaPosition)),
-					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
+					new TracePair("velocityPIDOut", (velocityPIDOut)),
+					new TracePair("m_velocityF", m_velocityF),
 					new TracePair("Error", (deltaPosition - m_currentTrajectoryPoint.m_position)),
+					new TracePair("NextVelocity", nextTrajectoryPoint.m_currentVelocity),
 					new TracePair("NextVelocity", nextVelocity),
-					new TracePair("Output", output),
-					new TracePair("Zero", 0.0));
+					new TracePair("Output", output));
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
 		}

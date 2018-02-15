@@ -80,11 +80,11 @@ public class DriveTrain extends Subsystem {
 		return kEncoderMaxJerk;
 	}
 
-	private double m_encoderMPPositionkp = 10.0;
-	private double m_encoderMPPositionki = 0.0;
+	private double m_encoderMPPositionkp = 5.0;
+	private double m_encoderMPPositionki = 1.0;
 	private double m_encoderMPPositionkd = 0.0;
 
-	private double m_encoderMPVelocitykp = 0.0;
+	private double m_encoderMPVelocitykp = 0.00001;
 	private double m_encoderMPVelocityki = 0.0;
 	private double m_encoderMPVelocitykd = 0.0;
 	private double m_encoderMPVelocitykf = 1.0 / kEncoderMaxVelocity;
@@ -96,10 +96,9 @@ public class DriveTrain extends Subsystem {
 		return m_encoderMotionProfilingController;
 	}
 
-	private static final double kGyroMaxVelocity = 0.0; // degrees per second
-	private static final double kGyroMaxAcceleration = 0.0; // degrees per second^2
-	private static final double kGyroMaxJerk = 0.0; // degrees per second^3
-	private static final double kGyroVelocityToOutputRatio = 1.0 / kEncoderMaxVelocity;
+	private static final double kGyroMaxVelocity = 300.0; // degrees per second
+	private static final double kGyroMaxAcceleration = 100.0*500.0; // degrees per second^2
+	private static final double kGyroMaxJerk = 10000.0*100000; // degrees per second^3
 
 	public static double getGyroMaxVelocity() {
 		return kGyroMaxVelocity;
@@ -113,16 +112,17 @@ public class DriveTrain extends Subsystem {
 		return kGyroMaxJerk;
 	}
 
-	private double m_gyroMPPositionkp = 10.0;
+	private double m_gyroMPPositionkp = 0.0;
 	private double m_gyroMPPositionki = 0.0;
 	private double m_gyroMPPositionkd = 0.0;
+	private double m_gyroMPiInitialPosition = 0.0;
 
 	private double m_gyroMPVelocitykp = 0.0;
 	private double m_gyroMPVelocityki = 0.0;
 	private double m_gyroMPVelocitykd = 0.0;
-	private double m_gyroMPVelocitykf = kGyroVelocityToOutputRatio;
+	private double m_gyroMPVelocitykf = 1.0/kGyroMaxVelocity;
 
-	private double kgyroMPTolerance = 1000;
+	private double kgyroMPTolerance = 3;
 	private MotionProfilingController m_gyroMotionProfilingController;
 
 	public MotionProfilingController getGyroMPController() {
@@ -190,7 +190,7 @@ public class DriveTrain extends Subsystem {
 		m_ultrasonicPID.setName("Ultrasonic", "Ultrasonic PID");
 		initializeEncoderPID();
 		initGyroPIDDeltaAngle();
-
+		
 		initializeEncoderMP();
 		initializeGyroMP();
 		initializeUltrasonicMP();
@@ -358,7 +358,7 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			move(0, output);
+			gyroCorrectMove(0.0, output, 1.0, false);
 		}
 	}
 
@@ -504,7 +504,7 @@ public class DriveTrain extends Subsystem {
 				m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration, kEncoderMaxJerk, encoderMPIn,
 				encoderPIDOut);
 		m_encoderMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
-
+		
 	}
 
 	public void enableEncoderMP(double setpoint) {
@@ -559,7 +559,6 @@ public class DriveTrain extends Subsystem {
 				m_gyroMPPositionkd, m_gyroMPVelocitykp, m_gyroMPVelocityki, m_gyroMPVelocitykd, m_gyroMPVelocitykf,
 				kGyroMaxVelocity, kGyroMaxAcceleration, kGyroMaxJerk, gyroMPIn, gyroMPOut);
 		m_gyroMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
-
 	}
 
 	public void enableGyroMP(double setpoint) {
@@ -578,7 +577,7 @@ public class DriveTrain extends Subsystem {
 	public double getGyroVelocity() {
 		double currentTime = Timer.getFPGATimestamp();
 		double currentAngle = getGyroPosition();
-		if (Double.isNaN(m_gyroPreviousPosition) || Math.abs(currentTime - m_gyroPreviousTime) > 0.5) {
+		if (Double.isNaN(m_gyroPreviousPosition) || Math.abs(currentTime - m_gyroPreviousTime) > 2.5) {
 			m_gyroPreviousPosition = currentAngle;
 			m_gyroPreviousTime = currentTime;
 			return 0.0;
@@ -586,7 +585,8 @@ public class DriveTrain extends Subsystem {
 		double changeInPosition = currentAngle - m_gyroPreviousPosition;
 		double changeInTime = Math.abs(currentTime - m_gyroPreviousTime);
 		double velocity = changeInPosition / changeInTime;
-
+		m_gyroPreviousPosition = currentAngle;
+		m_gyroPreviousTime = currentTime;
 		return velocity;
 	}
 
@@ -626,7 +626,6 @@ public class DriveTrain extends Subsystem {
 				m_encoderMPVelocitykd, m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration,
 				kEncoderMaxJerk, ultrasonicMPIn, ultrasonicMPOut);
 		m_ultrasonicMotionProfilingController.setAbsoluteTolerance(kUltrasonicMPTolerance);
-
 	}
 
 	public void enableUltrasonicMP(double setpoint) {

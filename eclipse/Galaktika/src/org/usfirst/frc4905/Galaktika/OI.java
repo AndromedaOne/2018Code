@@ -124,6 +124,7 @@ public class OI {
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
         SmartDashboard.putData("DriveSquare", new DriveSquare());
+        SmartDashboard.putData("TurnDeltaAgnle", new GyroPIDTurnDeltaAngle(90.0));
         
         
     }
