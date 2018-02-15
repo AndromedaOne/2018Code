@@ -136,7 +136,7 @@ public class Elevator extends Subsystem {
 	public void moveElevator(double velocity) {
 		elevatorController.set(velocity);
 	}
-	/* Disabled for now until sensors are hooked up
+	// Disabled for now until sensors are hooked up
 	  
 	   public void moveElevatorSafely(double velocity) { 
 		if((getElevatorPosition() > m_encoderTopPosition) == true && (velocity > 0)) {
@@ -144,17 +144,20 @@ public class Elevator extends Subsystem {
 		}
 		else if ((Robot.elevator.getBottomLimitSwitch() == true) && (velocity < 0)) {
 		moveElevator(0);
+		resetEncoder();
 		}
 		else {
 		moveElevator(velocity);
 		}
-	}	*/	
+	}	
 	public void stopElevator() {
 		moveElevator(0);
 	}
 
 	public void resetEncoder() {
-		m_encoderZeroPostion = elevatorController.getSelectedSensorPosition(0);
+		if (getBottomLimitSwitch()) {
+			elevatorController.setSelectedSensorPosition(0, 0, 10);
+		}
 	}
 	public double getElevatorPosition() {
 		
