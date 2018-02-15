@@ -19,10 +19,9 @@ public class MoveUsingEncoderPID extends Command {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
     		debug("top of constructor, inches = " + setpointInches);
-<<<<<<< HEAD
 		requires(Robot.driveTrain);
-		m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
-		
+	    	// -1 multiplier so that positive input send us in a positive direction
+	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH * -1;
 	}
 
 	// Called just before this Command runs the first time
@@ -54,31 +53,6 @@ public class MoveUsingEncoderPID extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-=======
-	    	requires(Robot.driveTrain);
-	    	// -1 multiplier so that positive input send us in a positive direction
-	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH * -1;
-    }
-
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    		debug("Initializing");
-	    	Robot.driveTrain.initializeEncoderPID();
-	    	Robot.driveTrain.enableEncoderPID(m_setpoint);
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    }
-
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return Robot.driveTrain.isDoneEncoderPID();
-    }
-
-    // Called once after isFinished returns true
-    protected void end() {
->>>>>>> WeekZeroCode
 		debug("Done");
 		Robot.driveTrain.move(0, 0);
 		if (!useMotionProfilng) {

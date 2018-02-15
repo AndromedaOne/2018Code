@@ -49,9 +49,9 @@ public class RunMotorAndLog extends Command {
 	protected void execute() {
 		double initialTime = Timer.getFPGATimestamp();
 		if (encoderMode) {
-			Robot.driveTrain.gyroCorrectMove(1.0, 0.0, 1.0);
+			Robot.driveTrain.gyroCorrectMove(1.0, 0.0, 1.0, false);
 		} else {
-			Robot.driveTrain.gyroCorrectMove(0.0, 1.0, 1.0);
+			Robot.driveTrain.gyroCorrectMove(0.0, 1.0, 1.0, false);
 		}
 		double currentTimeStamp = Timer.getFPGATimestamp();
 		double deltaTimeFromLastExecute = currentTimeStamp - m_previousTimeStamp;

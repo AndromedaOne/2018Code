@@ -1,4 +1,4 @@
-package kinematics;
+	package kinematics;
 
 import java.util.TimerTask;
 
@@ -109,7 +109,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
-					new TracePair("ActualVelocity", Robot.driveTrain.getTalonVelocity()),
+					new TracePair("ActualVelocity", m_mpSource.getVelocity()),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("velocityPIDOut", (velocityPIDOut)),
 					new TracePair("m_velocityF", m_velocityF),
