@@ -1,6 +1,10 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
-import org.usfirst.frc4905.Galaktika.subsystems.LEDs;
+
+
+
+import org.usfirst.frc4905.Galaktika.Robot;
+
 
 import Utilities.LEDColor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,16 +21,15 @@ public class LEDCommand extends Command {
     // Called just before this Command runs the first time
     @Override
 	protected void initialize() {
-    	LEDs led = new LEDs();
     	 if (m_color == LEDColor.RED) {
 
-         	led.setRed(1);
+         	Robot.led.setRed(1);
        }
        else if(m_color == LEDColor.BLUE) {
-       	led.setBlue(1);
+       	Robot.led.setBlue(1);
        }
        else {
-     	  led.setGreen(1);
+     	  Robot.led.setGreen(1);
        }
 
     }

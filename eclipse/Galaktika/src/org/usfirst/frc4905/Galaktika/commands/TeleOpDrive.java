@@ -93,7 +93,18 @@ public class TeleOpDrive extends Command {
 			}
 		}
 		m_slowmodedelaycounter++;
-		
+		//GYRO Tipping code
+		if(RobotMap.navX.getAHRS().getRoll() >= 10) {
+			Robot.led.setRed(100);
+			System.out.println("THE ROBOT IS TIPPING!!");
+		} else if(RobotMap.navX.getAHRS().getYaw() >= 10) {
+			Robot.led.setRed(100);
+			System.out.println("THE ROBOT IS TIPPING!!");
+		}
+		else {
+			Robot.led.setBlue(100);
+		}
+		//End GYRO Tipping code
 		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod);
 		
 		SmartDashboard.putNumber("Pitch", RobotMap.navX.getAHRS().getPitch());
