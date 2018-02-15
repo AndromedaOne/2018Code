@@ -361,9 +361,14 @@ public class DriveTrain extends Subsystem {
 		double robotAngle = RobotMap.navX.getRobotAngle();
 		double correctionEquation = (SavedAngle - robotAngle)*kProportion;
 		
+		double newForwardBackwardStickValue = 0;
+		double newRotateStickValue = 0;
+		
 		if (!useDelay) {
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = correctionEquation;
 			
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
+			
 		} else if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
 			
 			SavedAngle = robotAngle;
@@ -381,12 +386,12 @@ public class DriveTrain extends Subsystem {
 			//disable correction for half a second after releasing the turn stick, to allow the driver
 			//to let the machine drift naturally, and not correct back to the gyro reading from
 			//the instant the driver released the turn stick.
-			//PROBLEM, corrects every 25 cycles because I'm dumb...
 
 			//reassign the correctionEquation to the latest direction that we've been "free driving" in
 			correctionEquation = (SavedAngle - robotAngle)*kProportion;
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = correctionEquation;
 			
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
 		}
 		else {
 			//should all cases fail, just drive normally
@@ -396,13 +401,9 @@ public class DriveTrain extends Subsystem {
 
 
 		if(courseCorrectionDelay == 24){
-			//take the most recent course and make that our angle
+			//take the most recent course after half a second and make that our angle
 			SavedAngle = robotAngle;
 		}
-
-
-
-
 
 		Trace.getInstance().addTrace("GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
@@ -411,7 +412,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("kProportion", kProportion),
 				new TracePair("correctionEquation", correctionEquation));
 				
-
+		Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
 		courseCorrectionDelay++;
 		
 	}
