@@ -367,12 +367,15 @@ public class DriveTrain extends Subsystem {
 		} else if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
 			
 			SavedAngle = robotAngle;
+			newForwardBackwardStickValue = 0;
+			newRotateStickValue = 0;
 		}
 		else if (rotateStickValue != 0) {
 			courseCorrectionDelay = 0;
 			
 			SavedAngle = robotAngle;
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, rotateStickValue*mod, squaredInput);
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = rotateStickValue*mod;
 		}
 		else if(courseCorrectionDelay > 25) {
 			//disable correction for half a second after releasing the turn stick, to allow the driver
@@ -387,7 +390,8 @@ public class DriveTrain extends Subsystem {
 		}
 		else {
 			//should all cases fail, just drive normally
-			Robot.driveTrain.move(forwardBackwardStickValue*mod, rotateStickValue*mod, squaredInput);
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = rotateStickValue*mod;
 		}
 
 
@@ -401,7 +405,7 @@ public class DriveTrain extends Subsystem {
 
 
 		Trace.getInstance().addTrace("GyroCorrection",
-				new TracePair("forwardBackwardStickValue", forwardBackwardStickValue),
+				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
