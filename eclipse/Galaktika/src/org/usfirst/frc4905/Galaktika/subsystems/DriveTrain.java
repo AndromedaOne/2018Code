@@ -131,13 +131,14 @@ public class DriveTrain extends Subsystem {
 
 	private double m_gyroPreviousPosition = Double.NaN;
 	private double m_gyroPreviousTime = 0.0;
-
+	
+	// these constants might be the exact same as the encoder MP ones.
 	private double m_ultrasonicMPPositionkp = 10.0;
 	private double m_ultrasonicMPPositionki = 0.0;
 	private double m_ultrasonicMPPositionkd = 0.0;
-	private double m_ultrasonicMPSetpoint = 0.0;
+	private double m_ultrasonicMPInitialPosition = 0.0;
 
-	private double kUltrasonicMPTolerance = 1000;
+	private double kUltrasonicMPTolerance = 1.0;
 	private MotionProfilingController m_ultrasonicMotionProfilingController;
 
 	public MotionProfilingController getUltrasonicMPController() {
@@ -616,7 +617,7 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public double getPosition() {
-			return (m_ultrasonicMPSetpoint - getDistanceFromFront()) * DriveTrain.ENCODER_TICKS_PER_INCH;
+			return (m_ultrasonicMPInitialPosition - getDistanceFromFront()) * DriveTrain.ENCODER_TICKS_PER_INCH;
 		}
 
 		@Override
@@ -637,9 +638,9 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void enableUltrasonicMP(double setpoint) {
-		double currentUltrasonicPosition = getDistanceFromFront();
-		double distanceToTravel = currentUltrasonicPosition - setpoint;
-		m_ultrasonicMPSetpoint = setpoint;
+		m_ultrasonicMPInitialPosition = getDistanceFromFront();
+		double distanceToTravel = m_ultrasonicMPInitialPosition - setpoint;
+		
 		m_ultrasonicMotionProfilingController.setSetpoint(distanceToTravel * DriveTrain.ENCODER_TICKS_PER_INCH);
 		m_ultrasonicMotionProfilingController.enable();
 	}
