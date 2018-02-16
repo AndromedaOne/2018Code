@@ -7,37 +7,38 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class LiftLeftRamp extends Command {
+public class ExtendIntakeInAuto extends Command {
 
-    public LiftLeftRamp() {
-     requires(Robot.ramps);
-    	// Use requires() here to declare subsystem dependencies
-        requires(Robot.ramps);
+    public ExtendIntakeInAuto() {
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
-    
+    @Override
+	protected void initialize() {
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	if(Robot.ramps.getLeftRampDeployedStatus()){
-    		 Robot.ramps.liftLeftRamp();
-    	}
+    @Override
+	protected void execute() {
+    	Robot.retractor.extendIntake();
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
+    @Override
+	protected boolean isFinished() {
         return true;
     }
 
     // Called once after isFinished returns true
-    protected void end() {
+    @Override
+	protected void end() {
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
-    protected void interrupted() {
+    @Override
+	protected void interrupted() {
     }
 }

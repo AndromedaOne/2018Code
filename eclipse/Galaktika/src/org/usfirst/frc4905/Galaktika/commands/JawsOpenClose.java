@@ -30,15 +30,14 @@ public class JawsOpenClose extends Command {
 			//contract
 			Robot.intake.runIntake(RunIntakeIn.kIntakeSpeed);
 			Robot.jaws.contract();
-			
 
 		}else if(isLeftBumperPressed && ! isRightBumperPressed) {
 			//extend
 			Robot.jaws.extend();
-			
-			
+
 		}else {
 			Robot.jaws.stop();
+			Robot.intake.runIntake(0);
 		}
 	}
 

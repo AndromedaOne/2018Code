@@ -2,17 +2,17 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
  */
-public class LiftRightRamp extends Command {
+public class AutoTimedArmsClose extends TimedCommand {
 
-    public LiftRightRamp() {
+    public AutoTimedArmsClose(double timeout) {
+        super(timeout);
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.ramps);
+        requires(Robot.jaws);
     }
 
     // Called just before this Command runs the first time
@@ -21,18 +21,10 @@ public class LiftRightRamp extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.ramps.getRightRampDeployedStatus()){
-    		Robot.ramps.liftRightRamp();
-    	}
-    	
+    	Robot.jaws.contract();
     }
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return true;
-    }
-
-    // Called once after isFinished returns true
+    // Called once after timeout
     protected void end() {
     }
 

@@ -9,21 +9,23 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class MoveUsingEncoderPID extends Command {
-	
+
 	private double m_setpoint = 0;
 
-    public MoveUsingEncoderPID(double setpoint) {
+    public MoveUsingEncoderPID(double setpointInches) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.driveTrain);
-    	m_setpoint = setpoint;
+    		debug("top of constructor, inches = " + setpointInches);
+	    	requires(Robot.driveTrain);
+	    	// -1 multiplier so that positive input send us in a positive direction
+	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH * -1;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.driveTrain.initializeEncoderPID();
-    	Robot.driveTrain.enableEncoderPID(m_setpoint);
-    
+    		debug("Initializing");
+	    	Robot.driveTrain.initializeEncoderPID();
+	    	Robot.driveTrain.enableEncoderPID(m_setpoint);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -37,13 +39,21 @@ public class MoveUsingEncoderPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.move(0, 0);
-    	Robot.driveTrain.disableEncoderPID();
+		debug("Done");
+	    	Robot.driveTrain.move(0, 0);
+	    	Robot.driveTrain.disableEncoderPID();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	end();
+	    	end();
+    }
+
+    protected void debug(String information) {
+		System.out.println("In MoveUsingEncoderPID.java " +
+				"Done Encoder Ticks " + m_setpoint + " " +
+				information);
+		System.out.flush();
     }
 }
