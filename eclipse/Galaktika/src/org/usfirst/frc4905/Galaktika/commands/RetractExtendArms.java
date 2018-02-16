@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class RetractExtendArms extends Command {
 
-	Joystick subystemController = Robot.oi.getSubsystemController();
+	Joystick subystemController;
 	
     public RetractExtendArms() {
         // Use requires() here to declare subsystem dependencies
@@ -21,6 +21,7 @@ public class RetractExtendArms extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	subystemController = Robot.oi.getSubsystemController();
     }
 
     // Called repeatedly when this Command is scheduled to run
