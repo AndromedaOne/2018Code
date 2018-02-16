@@ -98,24 +98,24 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			double currentTimestamp = Timer.getFPGATimestamp();
 			m_deltaTime = currentTimestamp - m_initialTimeStamp;
 			TrajectoryPoint nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_deltaTime);
-			double deltaPosition = m_mpSource.getPosition() - m_initialPosition;
+			double deltaPosition = getDeltaPosition(m_mpSource.getPosition());
 			double positionPidOut = m_positionPIDCalculator.getPIDOut(m_currentTrajectoryPoint.m_position, deltaPosition);
 			double nextVelocity = nextTrajectoryPoint.m_currentVelocity + positionPidOut;
 			
-			double velocityPIDOut = m_velocityPIDCalculator.getPIDOut(nextVelocity, m_mpSource.getVelocity());
+			double velocity = m_mpSource.getVelocity();
+			double velocityPIDOut = m_velocityPIDCalculator.getPIDOut(nextVelocity, velocity);
 			double output = nextVelocity*m_velocityF + velocityPIDOut;
 			
 			m_pidOutput.pidWrite(output);
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
-					new TracePair("ActualVelocity", m_mpSource.getVelocity()),
+					new TracePair("ActualVelocity", velocity),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("velocityPIDOut", (velocityPIDOut)),
-					new TracePair("Error", (deltaPosition - m_currentTrajectoryPoint.m_position)),
-					new TracePair("NextVelocity", nextTrajectoryPoint.m_currentVelocity),
-					
-					new TracePair("Output", output));
+					new TracePair("ActualPosition", getDeltaPosition(m_mpSource.getPosition())),
+					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
+					new TracePair("PositionError", (deltaPosition - m_currentTrajectoryPoint.m_position)));
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
 		}
@@ -123,8 +123,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	public boolean onTarget() {
 
-		// change this to work!!!!!!!!!!
-		double currentPosition = m_mpSource.getPosition() - m_initialPosition;
+		double currentPosition = getDeltaPosition(m_mpSource.getPosition());
 		if (m_deltaTime >= m_endDeltaTime) {
 			return (m_currentSetpoint - m_tolerance <= currentPosition)
 					&& (currentPosition <= m_currentSetpoint + m_tolerance);
@@ -150,6 +149,10 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			e.printStackTrace();
 		}
 
+	}
+	
+	private double getDeltaPosition(double currentPosition) {
+		return currentPosition - m_initialPosition;
 	}
 
 	private double getPositionP() {

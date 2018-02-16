@@ -97,8 +97,8 @@ public class DriveTrain extends Subsystem {
 	}
 
 	private static final double kGyroMaxVelocity = 300.0; // degrees per second
-	private static final double kGyroMaxAcceleration = 100.0 * 500.0; // degrees per second^2
-	private static final double kGyroMaxJerk = 10000.0 * 100000; // degrees per second^3
+	private static final double kGyroMaxAcceleration = 100.0 * 10.0; // degrees per second^2
+	private static final double kGyroMaxJerk = 10000.0 * 10.0; // degrees per second^3
 
 	public static double getGyroMaxVelocity() {
 		return kGyroMaxVelocity;
@@ -122,7 +122,7 @@ public class DriveTrain extends Subsystem {
 	private double m_gyroMPVelocitykd = 0.0;
 	private double m_gyroMPVelocitykf = 1.0 / kGyroMaxVelocity;
 
-	private double kgyroMPTolerance = 3;
+	private double kGyroMPTolerance = 3;
 	private MotionProfilingController m_gyroMotionProfilingController;
 
 	public MotionProfilingController getGyroMPController() {
@@ -475,7 +475,6 @@ public class DriveTrain extends Subsystem {
 			// take the most recent course after half a second and make that our angle
 			SavedAngle = robotAngle;
 		}
-
 		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle), new TracePair("robotAngle", robotAngle),
@@ -546,7 +545,6 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			System.out.println("INSIDE THE PIDWRITE GYRO MP. THE OUTPUT IS: " + output);
 			gyroCorrectMove(0.0, output, 1.0, true, false);
 		}
 
@@ -571,7 +569,7 @@ public class DriveTrain extends Subsystem {
 		m_gyroMotionProfilingController = new MotionProfilingController(m_gyroMPPositionkp, m_gyroMPPositionki,
 				m_gyroMPPositionkd, m_gyroMPVelocitykp, m_gyroMPVelocityki, m_gyroMPVelocitykd, m_gyroMPVelocitykf,
 				kGyroMaxVelocity, kGyroMaxAcceleration, kGyroMaxJerk, gyroMPIn, gyroMPOut);
-		m_gyroMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
+		m_gyroMotionProfilingController.setAbsoluteTolerance(kGyroMPTolerance);
 		LiveWindow.add(m_gyroMotionProfilingController);
 		m_gyroPIDSource.setName("GyroMP", "GyroMP");
 	}
@@ -592,7 +590,7 @@ public class DriveTrain extends Subsystem {
 	public double getGyroVelocity() {
 		double currentTime = Timer.getFPGATimestamp();
 		double currentAngle = getGyroPosition();
-		if (Double.isNaN(m_gyroPreviousPosition) || Math.abs(currentTime - m_gyroPreviousTime) > 2.5) {
+		if (Double.isNaN(m_gyroPreviousPosition) || Math.abs(currentTime - m_gyroPreviousTime) > 0.5) {
 			m_gyroPreviousPosition = currentAngle;
 			m_gyroPreviousTime = currentTime;
 			return 0.0;
@@ -600,8 +598,17 @@ public class DriveTrain extends Subsystem {
 		double changeInPosition = currentAngle - m_gyroPreviousPosition;
 		double changeInTime = Math.abs(currentTime - m_gyroPreviousTime);
 		double velocity = changeInPosition / changeInTime;
+		
+		System.out.println("");
+		System.out.println("change in pos: " + changeInPosition);
+		System.out.println("currentAngle: " + currentAngle);
+		System.out.println("m_gyroPreviousPosition: " + m_gyroPreviousPosition);
+		System.out.println("changeInTime: " + changeInTime);
+		System.out.println("");
+		
 		m_gyroPreviousPosition = currentAngle;
 		m_gyroPreviousTime = currentTime;
+		
 		return velocity;
 	}
 
