@@ -25,11 +25,11 @@ public class Retractor extends Subsystem {
     }
     
     public void retractIntake(){
-    	retractor.set(DoubleSolenoid.Value.kForward);
+    	retractor.set(DoubleSolenoid.Value.kReverse);
     }
     
     public void extendIntake(){
-    	retractor.set(DoubleSolenoid.Value.kReverse);
+    	retractor.set(DoubleSolenoid.Value.kForward);
     }
     
     public void stopIntakeExtension(){

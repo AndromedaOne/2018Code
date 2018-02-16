@@ -10,6 +10,7 @@ import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
+import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoder;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 
@@ -119,7 +120,8 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall() {
-        addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
+    	//already traveled 5 feet
+        addSequential(new MoveUsingEncoderPID(FORWARD_DISTANCE_TO_SWITCH - 60));
     }
 
     protected void moveElevatorToSwitchHeight() {
@@ -142,6 +144,7 @@ public abstract class AutoCommand extends CommandGroup {
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
+    
 
     protected void CloseArmsInAuto() {
     		addSequential(new AutoTimedArmsClose(0.5));
@@ -154,6 +157,10 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void ResetEncoderInElevator() {
 		addSequential(new ResetElevatorEncoder());
+    }
+
+    protected void turnToCompassHeading(double compassHeading) {
+        addSequential(new TurnToCompassHeading(compassHeading));
     }
 
 }
