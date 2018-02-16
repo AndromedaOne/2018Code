@@ -17,7 +17,8 @@ public class MoveUsingEncoderPID extends Command {
         // eg. requires(chassis);
     		debug("top of constructor, inches = " + setpointInches);
 	    	requires(Robot.driveTrain);
-	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
+	    	// -1 multiplier so that positive input send us in a positive direction
+	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH * -1;
     }
 
     // Called just before this Command runs the first time
