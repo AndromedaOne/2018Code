@@ -48,7 +48,7 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-        loadPowerCubeIntoExchange();
+        moveElevatorToExchangeHeight();
 	}
 
 
@@ -61,7 +61,7 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
 		driveForward(LATERAL_DISTANCE_TO_SWITCH);
-		loadPowerCubeOntoSwitch();
+		moveElevatorToSwitchHeight();
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
@@ -74,7 +74,7 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
 		driveForward(LATERAL_DISTANCE_TO_SCALE);
-		loadPowerCubeOntoScale();
+		moveElevatorToScaleHeight();
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -102,6 +102,6 @@ public class AutoQuals extends AutoCommand {
         driveForward(LATERAL_DISTANCE_TO_EXCHANGE_M);
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-        loadPowerCubeIntoExchange();
+        moveElevatorToExchangeHeight();
     }
 }
