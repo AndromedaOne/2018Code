@@ -406,7 +406,7 @@ public class DriveTrain extends Subsystem {
 		}
 
 
-		if(courseCorrectionDelay == 24){
+		if(courseCorrectionDelay == 24 && useDelay){
 			//take the most recent course after half a second and make that our angle
 			SavedAngle = robotAngle;
 		}
