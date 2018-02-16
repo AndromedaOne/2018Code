@@ -134,6 +134,11 @@ public abstract class AutoCommand extends CommandGroup {
         addParallel(new ElevatorMoveExchange());
     }
 
+    protected void resetElevatorInAuto() {
+        addSequential(new ResetElevatorEncoder());
+    }
+
+
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
