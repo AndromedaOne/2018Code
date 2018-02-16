@@ -25,7 +25,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
             turnRight();
         }
         driveForwardToWall();
-        loadPowerCubeOntoSwitch();
+       
     }
 
 }
