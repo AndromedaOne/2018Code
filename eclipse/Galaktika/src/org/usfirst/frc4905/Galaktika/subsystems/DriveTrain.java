@@ -408,12 +408,12 @@ public class DriveTrain extends Subsystem {
 			SavedAngle = robotAngle;
 		}
 
-		Trace.getInstance().addTrace("GyroCorrection",
+	/*	Trace.getInstance().addTrace("GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
-				new TracePair("correctionEquation", correctionEquation));
+				new TracePair("correctionEquation", correctionEquation)); */
 				
 		Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
 		courseCorrectionDelay++;
