@@ -158,6 +158,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean doneUltrasonicFrontPID() {
+		debug("top of doneUltrasonicFrontPID");
 		Trace.getInstance().addTrace(false, "MoveWithUltrasonic",
 				new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
@@ -257,6 +258,8 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID = new PIDController(m_encoderPIDP, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn, encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
+		LiveWindow.add(m_encoderPID);
+		m_encoderPID.setName("DriveTrain","Encoder PID");
 		
 		//grab a saved angle to correct to when using the encoder pid
 		SavedAngle = RobotMap.navX.getRobotAngle();
@@ -408,14 +411,14 @@ public class DriveTrain extends Subsystem {
 			SavedAngle = robotAngle;
 		}
 
-	/*	Trace.getInstance().addTrace("GyroCorrection",
+		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
 				new TracePair("correctionEquation", correctionEquation)); */
 				
-		Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
+		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
 		courseCorrectionDelay++;
 		
 	}
