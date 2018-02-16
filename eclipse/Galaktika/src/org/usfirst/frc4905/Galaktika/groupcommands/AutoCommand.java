@@ -114,7 +114,7 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall() {
-        addSequential(new MoveUsingEncoderPID(LATERAL_DISTANCE_TO_SWITCH));
+        addSequential(new MoveUsingEncoderPID(FORWARD_DISTANCE_TO_SWITCH));
     }
 
     protected void loadPowerCubeOntoSwitch() {
