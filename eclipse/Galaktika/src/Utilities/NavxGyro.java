@@ -23,7 +23,7 @@ public class NavxGyro {
 	private static final double gyroEncoderKf = 0.000;
 	private static final double gyroEncoderTolerance = 1.0;
 	private static final double gyroEncoderOutputMax = 0.6 ;
-	private double m_initialAngleReading = 0;
+	private double m_initialAngleReading = Double.NaN;
 
 	private static String m_traceFileName = "GyroValues";
 
@@ -44,7 +44,9 @@ public class NavxGyro {
 		return m_navX;
 	}
 	public void setInitialAngleReading() {
-		m_initialAngleReading = m_navX.getAngle();
+		if(Double.isNaN(m_initialAngleReading)) {
+			m_initialAngleReading = m_navX.getAngle();
+		}
 	}
 
 	 
