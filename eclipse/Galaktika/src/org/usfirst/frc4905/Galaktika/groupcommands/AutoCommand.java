@@ -1,11 +1,17 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveExchange;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
+import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
+import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoder;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -118,25 +124,40 @@ public abstract class AutoCommand extends CommandGroup {
         addSequential(new MoveUsingEncoderPID(FORWARD_DISTANCE_TO_SWITCH - 60));
     }
 
-    protected void loadPowerCubeOntoSwitch() {
-        // TODO Auto-generated method stub
-
+    protected void moveElevatorToSwitchHeight() {
+        addParallel(new ElevatorMoveSwitch());
     }
 
-    protected void loadPowerCubeOntoScale() {
-        // TODO Auto-generated method stub
-
+    protected void moveElevatorToScaleHeight() {
+        addParallel(new ElevatorMoveHighScale());
     }
 
-    protected void loadPowerCubeIntoExchange() {
-        // TODO Auto-generated method stub
-
+    protected void moveElevatorToExchangeHeight() {
+        addParallel(new ElevatorMoveExchange());
     }
+
+    protected void resetElevatorInAuto() {
+        addSequential(new ResetElevatorEncoder());
+    }
+
 
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
     
+
+    protected void CloseArmsInAuto() {
+    		addSequential(new AutoTimedArmsClose(0.5));
+    }
+
+
+    protected void ExtendIntakeAuto() {
+		addSequential(new ExtendIntakeInAuto());
+    }
+
+    protected void ResetEncoderInElevator() {
+		addSequential(new ResetElevatorEncoder());
+    }
 
     protected void turnToCompassHeading(double compassHeading) {
         addSequential(new TurnToCompassHeading(compassHeading));
