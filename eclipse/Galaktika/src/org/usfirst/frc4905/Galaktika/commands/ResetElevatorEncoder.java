@@ -13,7 +13,7 @@ public class ResetElevatorEncoder extends Command {
 	
     public ResetElevatorEncoder() {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(Robot.elevator);
     }
 
     // Called just before this Command runs the first time
@@ -29,7 +29,7 @@ public class ResetElevatorEncoder extends Command {
     	if (Robot.elevator.getBottomLimitSwitch()) {
     		Robot.elevator.stopElevator();
     	} else {
-    		Robot.elevator.moveElevator(0.1);
+    		Robot.elevator.moveElevator(-0.1);
     	}
     }
 

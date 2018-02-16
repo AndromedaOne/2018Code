@@ -40,11 +40,11 @@ public class ReleaseRamps extends Command {
 		
 
 		if(safetiesEnabled){
-			if (isLeftPOVPressed && timeRemaining < 30) {
+			if (isLeftPOVPressed && timeRemaining < 31) {
 				Robot.ramps.moveLeftServo(0);
 				Robot.ramps.setLeftRampDeployed();
 			}
-			if (isRightPOVPressed && timeRemaining < 30) {
+			if (isRightPOVPressed && timeRemaining < 31) {
 				Robot.ramps.moveRightServo(0);
 				Robot.ramps.setRightRampDeployed();
 			}

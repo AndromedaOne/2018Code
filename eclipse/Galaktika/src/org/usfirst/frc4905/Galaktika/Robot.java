@@ -181,6 +181,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
     		debug("top of autonomousInit");
+        RobotMap.navX.setInitialAngleReading();
 	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
 	    	if (gameData.length() > SCALE) {
 		    scalePlatePosition =	gameData.charAt(SCALE);
