@@ -5,6 +5,7 @@ import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
+import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -113,7 +114,7 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall() {
-        addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
+        addSequential(new MoveUsingEncoderPID(FORWARD_DISTANCE_TO_SWITCH));
     }
 
     protected void loadPowerCubeOntoSwitch() {
@@ -135,5 +136,9 @@ public abstract class AutoCommand extends CommandGroup {
         driveForward(- backwardDistanceInches);
     }
     
+
+    protected void turnToCompassHeading(double compassHeading) {
+        addSequential(new TurnToCompassHeading(compassHeading));
+    }
 
 }

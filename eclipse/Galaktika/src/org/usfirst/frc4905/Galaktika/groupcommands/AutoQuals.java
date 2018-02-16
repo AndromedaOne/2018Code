@@ -61,7 +61,7 @@ public class AutoQuals extends AutoCommand {
 		} else {
 			turnRight();
 		}
-		driveForward(LATERAL_DISTANCE_TO_SWITCH);
+		driveForwardToWall();
 		loadPowerCubeOntoSwitch();
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}

@@ -110,7 +110,7 @@ public class DriveTrain extends Subsystem {
 
 	private double SavedAngle = 0;
 
-	
+
 
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
@@ -416,7 +416,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
-				new TracePair("correctionEquation", correctionEquation));
+				new TracePair("correctionEquation", correctionEquation)); 
 				
 		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
 		courseCorrectionDelay++;
