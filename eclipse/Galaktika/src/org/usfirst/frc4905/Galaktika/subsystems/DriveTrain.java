@@ -418,7 +418,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("kProportion", kProportion),
 				new TracePair("correctionEquation", correctionEquation));
 				
-		Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
+		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
 		courseCorrectionDelay++;
 		
 	}

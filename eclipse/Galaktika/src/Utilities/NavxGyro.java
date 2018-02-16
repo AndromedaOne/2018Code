@@ -44,8 +44,8 @@ public class NavxGyro {
 		return m_navX;
 	}
 	public void setInitialAngleReading() {
-		if(m_initialAngleReading == Double.NaN) {
-		m_initialAngleReading = m_navX.getAngle();
+		if(Double.isNaN(m_initialAngleReading)) {
+			m_initialAngleReading = m_navX.getAngle();
 		}
 	}
 
