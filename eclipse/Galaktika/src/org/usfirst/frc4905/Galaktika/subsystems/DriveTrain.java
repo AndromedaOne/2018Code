@@ -546,7 +546,8 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			gyroCorrectMove(0.0, output, 1.0, false, false);
+			System.out.println("INSIDE THE PIDWRITE GYRO MP. THE OUTPUT IS: " + output);
+			gyroCorrectMove(0.0, output, 1.0, true, false);
 		}
 
 	}

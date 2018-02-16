@@ -112,10 +112,9 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 					new TracePair("ActualVelocity", m_mpSource.getVelocity()),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("velocityPIDOut", (velocityPIDOut)),
-					new TracePair("m_velocityF", m_velocityF),
 					new TracePair("Error", (deltaPosition - m_currentTrajectoryPoint.m_position)),
 					new TracePair("NextVelocity", nextTrajectoryPoint.m_currentVelocity),
-					new TracePair("NextVelocity", nextVelocity),
+					
 					new TracePair("Output", output));
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
