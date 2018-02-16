@@ -28,14 +28,23 @@ public class ElevatorManualControl extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
 	protected void execute() {
-    	double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(subsystemController);
+    	double forwardBackwardStickValue = EnumeratedRawAxis.getRightStickVertical(subsystemController);
     	//Robot.elevator.moveElevator(forwardBackwardStickValue);
     	//Changed from move safely to move for testing
-    	Robot.elevator.moveElevator(forwardBackwardStickValue);
-
     	
+    	if(forwardBackwardStickValue < 0){
+    		//slow down the elevator on the way down cuz it is sketchy.
+    		forwardBackwardStickValue *= 0.2;
+    	}
+    	
+    	if(forwardBackwardStickValue == 0){
+    		Robot.elevator.enableEncoderPID(Robot.elevator.getElevatorPosition());
+    	}
+    	else{
+    		Robot.elevator.disableEncoderPID();
+    		Robot.elevator.moveElevator(forwardBackwardStickValue);
 
-
+    	}
 
     }
 
