@@ -14,6 +14,7 @@ package org.usfirst.frc4905.Galaktika;
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCrossTheLine;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoMiddleLoadSwitch;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoMiddleRightLoadSwitch;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoPlayoffs;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoQuals;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
@@ -124,18 +125,21 @@ public class Robot extends TimedRobot {
         chooser.addObject("Qualifier Match Starting from Left", new Pair<>(new AutoQuals(false), 'L'));
         chooser.addObject("Qualifier Match Starting from Right", new Pair<>(new AutoQuals(false), 'R'));
         chooser.addObject("Load Switch from Middle", new Pair<>(new AutoMiddleLoadSwitch(false), 'M'));
-        chooser.addObject("Delay and Load Switch from Middle", new Pair<>(new AutoMiddleLoadSwitch(true), 'M'));
+        chooser.addObject("Load Switch from Middle Right", new Pair<>(new AutoMiddleRightLoadSwitch(false), 'M'));
         chooser.addObject("Cross The Line from Left", new Pair<>(new AutoCrossTheLine(false), 'L'));
         chooser.addObject("Cross The Line from Middle", new Pair<>(new AutoCrossTheLine(false), 'M'));
         chooser.addObject("Cross The Line from Right", new Pair<>(new AutoCrossTheLine(false), 'R'));
-        chooser.addObject("Delay and Cross The Line from Left", new Pair<>(new AutoCrossTheLine(true), 'L'));
-        chooser.addObject("Delay and Cross The Line from Middle", new Pair<>(new AutoCrossTheLine(true), 'M'));
-        chooser.addObject("Delay and Cross The Line from Right", new Pair<>(new AutoCrossTheLine(true), 'R'));
-        chooser.addObject("Delay and Qualifier Match Starting from Left", new Pair<>(new AutoQuals(true), 'L'));
-        chooser.addObject("Delay and Qualifier Match Starting from Right", new Pair<>(new AutoQuals(true), 'R'));
         chooser.addObject("Playoff Match Starting from Left", new Pair<>(new AutoPlayoffs(false), 'L'));
         chooser.addObject("Playoff Match Starting from Middle", new Pair<>(new AutoPlayoffs(false), 'M'));
         chooser.addObject("Playoff Match Starting from Right", new Pair<>(new AutoPlayoffs(false), 'R'));
+
+        chooser.addObject("Delay and Qualifier Match Starting from Left", new Pair<>(new AutoQuals(true), 'L'));
+        chooser.addObject("Delay and Qualifier Match Starting from Right", new Pair<>(new AutoQuals(true), 'R'));
+        chooser.addObject("Delay and Load Switch from Middle", new Pair<>(new AutoMiddleLoadSwitch(true), 'M'));
+        chooser.addObject("Delay and Load Switch from Middle Right", new Pair<>(new AutoMiddleRightLoadSwitch(true), 'M'));
+        chooser.addObject("Delay and Cross The Line from Left", new Pair<>(new AutoCrossTheLine(true), 'L'));
+        chooser.addObject("Delay and Cross The Line from Middle", new Pair<>(new AutoCrossTheLine(true), 'M'));
+        chooser.addObject("Delay and Cross The Line from Right", new Pair<>(new AutoCrossTheLine(true), 'R'));
         chooser.addObject("Delay and Playoff Match Starting from Left", new Pair<>(new AutoPlayoffs(true), 'L'));
         chooser.addObject("Delay and Playoff Match Starting from Middle", new Pair<>(new AutoPlayoffs(true), 'M'));
         chooser.addObject("Delay and Playoff Match Starting from Right", new Pair<>(new AutoPlayoffs(true), 'R'));
@@ -174,12 +178,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+    	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
     		debug("top of autonomousInit");
+    		RobotMap.navX.setInitialAngleReading();
 	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
 	    	if (gameData.length() > SCALE) {
 		    scalePlatePosition =	gameData.charAt(SCALE);
@@ -223,6 +229,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+    	 RobotMap.navX.setInitialAngleReading();
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove

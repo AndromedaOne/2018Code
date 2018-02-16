@@ -123,11 +123,13 @@ public class DriveTrain extends Subsystem {
 				pdIn, ultraPIDOutput);
 		m_ultrasonicPID.setAbsoluteTolerance(m_tolerance);
 		m_ultrasonicPID.setOutputRange(-m_maxSpeed, m_maxSpeed);
-		LiveWindow.add(m_ultrasonicPID);
-		m_ultrasonicPID.setName("DriveTrain","Ultrasonic PID");
 		frontUltrasonic.SetUltrasonicNoiseTolerance(m_noiseTolerance);
 		frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
 		frontUltrasonic.SetUltrasonicAveragedAmount(m_timesDistanceAveraged);
+		LiveWindow.add(m_ultrasonicPID);
+		m_ultrasonicPID.setName("Ultrasonic","Ultrasonic PID");
+		initializeEncoderPID();
+		initGyroPIDDeltaAngle();
 	}
 
 	//Ultrasonic Code - Begins
@@ -157,7 +159,7 @@ public class DriveTrain extends Subsystem {
 
 	public boolean doneUltrasonicFrontPID() {
 		debug("top of doneUltrasonicFrontPID");
-		Trace.getInstance().addTrace("MoveWithUltrasonic",
+		Trace.getInstance().addTrace(false, "MoveWithUltrasonic",
 				new TracePair("Current Distance", getDistanceFromFront()),
 				new TracePair("PID Error", m_ultrasonicPID.getError()),
 				new TracePair("PID Output", m_ultrasonicPID.get()));
@@ -256,6 +258,8 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID = new PIDController(m_encoderPIDP, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn, encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
+		LiveWindow.add(m_encoderPID);
+		m_encoderPID.setName("DriveTrain","Encoder PID");
 		
 		//grab a saved angle to correct to when using the encoder pid
 		SavedAngle = RobotMap.navX.getRobotAngle();
@@ -314,6 +318,8 @@ public class DriveTrain extends Subsystem {
 		m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
 		m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
+		LiveWindow.add(m_gyroPIDSource);
+		m_gyroPIDSource.setName("Gyro","Gyro PID");
 
 	}
 	public void enableGyroPID(double setPoint) {
@@ -323,7 +329,7 @@ public class DriveTrain extends Subsystem {
 
 	}
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace("GyroPID",
+		Trace.getInstance().addTrace(false, "GyroPID",
 				new TracePair("Target", m_gyroPIDSource.getSetpoint()),
 				new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
 				new TracePair("Avg Error", m_gyroPIDSource.getError()),
@@ -400,19 +406,19 @@ public class DriveTrain extends Subsystem {
 		}
 
 
-		if(courseCorrectionDelay == 24){
+		if(courseCorrectionDelay == 24 && useDelay){
 			//take the most recent course after half a second and make that our angle
 			SavedAngle = robotAngle;
 		}
 
-		Trace.getInstance().addTrace("GyroCorrection",
+		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
-				new TracePair("correctionEquation", correctionEquation));
+				new TracePair("correctionEquation", correctionEquation)); 
 				
-		Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
+		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
 		courseCorrectionDelay++;
 		
 	}
