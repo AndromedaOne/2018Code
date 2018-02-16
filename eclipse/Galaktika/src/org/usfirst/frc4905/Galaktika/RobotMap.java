@@ -143,7 +143,8 @@ public class RobotMap {
 			LiveWindow.addSensor("DriveTrain", "RangeFinder", rangeFinder);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			//Not running for Week Zero, no need for code
 		}
 
         navX = new NavxGyro();
