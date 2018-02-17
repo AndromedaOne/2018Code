@@ -18,6 +18,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 
+
 import Utilities.NavxGyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.VictorSP;
 
 import org.usfirst.frc4905.Galaktika.Ultrasonic;
 
@@ -127,11 +129,11 @@ public class RobotMap {
 		driveTrainFrontUltrasonic = new Ultrasonic(0, 1);
 		LiveWindow.addSensor("DriveTrain", "FrontUltrasonic", driveTrainFrontUltrasonic);
 
-		intakeLeftController = new Spark(0);
-		LiveWindow.addActuator("Intake", "LeftController", (Spark) intakeLeftController);
+		intakeLeftController = new VictorSP(0);
+		LiveWindow.addActuator("Intake", "LeftController", (VictorSP) intakeLeftController);
 		intakeLeftController.setInverted(false);
-		intakeRightController = new Spark(1);
-		LiveWindow.addActuator("Intake", "RightController", (Spark) intakeRightController);
+		intakeRightController = new VictorSP(1);
+		LiveWindow.addActuator("Intake", "RightController", (VictorSP) intakeRightController);
 		intakeRightController.setInverted(false);
 		
 		leftRampSolenoid = new DoubleSolenoid(0, 0, 1);

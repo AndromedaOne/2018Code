@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class TeleOpDrive extends Command {
-	public static final double kDeadzone = 0.15;
+	public static final double kDeadzone = 0.00;
 
 	private int m_slowmodedelaycounter = 0;
 

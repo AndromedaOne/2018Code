@@ -19,7 +19,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
     protected void prepareToStart() {
         char platePos = Robot.getSwitchPlatePosition();
-        closeArmsInAuto();
+        closeArmsInAuto(5);
         extendIntakeAuto();
         resetElevatorInAuto();
         moveElevatorToSwitchHeight();

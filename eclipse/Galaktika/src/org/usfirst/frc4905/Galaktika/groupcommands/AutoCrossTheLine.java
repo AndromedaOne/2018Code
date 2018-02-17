@@ -17,7 +17,7 @@ public class AutoCrossTheLine extends AutoCommand {
 
     protected void prepareToStart() {
         char robotPos = Robot.getInitialRobotLocation();
-        closeArmsInAuto();
+        closeArmsInAuto(10);
         extendIntakeAuto();
         moveElevatorToSwitchHeight();
         if (robotPos == 'M') {

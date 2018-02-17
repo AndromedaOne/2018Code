@@ -147,8 +147,8 @@ public abstract class AutoCommand extends CommandGroup {
     }
     
 
-    protected void closeArmsInAuto() {
-    		addSequential(new AutoTimedArmsClose(0.5));
+    protected void closeArmsInAuto(double timeout) {
+    		addParallel(new AutoTimedArmsClose(timeout));
     }
     
     protected void openArmsInAuto() {
@@ -157,7 +157,7 @@ public abstract class AutoCommand extends CommandGroup {
 
 
     protected void extendIntakeAuto() {
-		addSequential(new ExtendIntakeInAuto());
+		addParallel(new ExtendIntakeInAuto());
     }
 
     protected void resetEncoderInElevator() {

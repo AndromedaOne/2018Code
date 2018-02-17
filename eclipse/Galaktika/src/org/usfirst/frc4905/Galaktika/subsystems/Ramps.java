@@ -120,6 +120,14 @@ public class Ramps extends Subsystem {
     	 return safetiesEnabled;
     }
     
+    public void holdRampsIn(){
+    	leftRampSolenoid.set(Value.kReverse);
+    	rightRampSolenoid.set(Value.kReverse);
+    }
     
+    public void lockRampsIn(){
+    	Robot.ramps.moveLeftServo(0.5);
+        Robot.ramps.moveRightServo(0.5);
+    }
 
 }

@@ -31,7 +31,7 @@ public class ElevatorManualControl extends Command {
     	double forwardBackwardStickValue = EnumeratedRawAxis.getRightStickVertical(subsystemController);
     	//Robot.elevator.moveElevator(forwardBackwardStickValue);
     	//Changed from move safely to move for testing
-    	
+    	/*
     	if(forwardBackwardStickValue < 0){
     		//slow down the elevator on the way down cuz it is sketchy.
     		forwardBackwardStickValue *= 0.2;
@@ -49,7 +49,8 @@ public class ElevatorManualControl extends Command {
     		Robot.elevator.moveElevator(forwardBackwardStickValue);
 
     	}
-
+		*/
+    	Robot.elevator.moveElevator(forwardBackwardStickValue);
     }
 
     // Make this return true when this Command no longer needs to run execute()

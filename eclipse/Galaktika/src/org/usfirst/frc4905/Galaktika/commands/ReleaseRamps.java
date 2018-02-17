@@ -38,7 +38,7 @@ public class ReleaseRamps extends Command {
 		safetiesEnabled = Robot.ramps.returnSafetyStatus();
 		timeRemaining = Robot.ramps.getTimeRemainingInMatchPeriod();
 
-		System.out.println("hitting button to deploy ramps" + isLeftPOVPressed);
+		
 		
 
 		if(safetiesEnabled){

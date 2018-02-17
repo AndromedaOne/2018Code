@@ -16,7 +16,7 @@ public class Retractor extends Subsystem {
 
 	
 	private final DoubleSolenoid retractor = RobotMap.retractIntake;
-	
+	private boolean shouldIntakeBeUp = true;
 	
     public void initDefaultCommand() {
     	setDefaultCommand (new RetractExtendArms());
@@ -34,6 +34,19 @@ public class Retractor extends Subsystem {
     
     public void stopIntakeExtension(){
     	retractor.set(DoubleSolenoid.Value.kOff);
+    }
+    
+    public void setShouldIntakeBeUpBoolean(boolean state){
+    	shouldIntakeBeUp = state;
+    }
+    
+    public void setIntakeToCorrectState(){
+    	if(shouldIntakeBeUp){
+    		retractIntake();
+    	}
+    	else{
+    		extendIntake();
+    	}
     }
     
 }

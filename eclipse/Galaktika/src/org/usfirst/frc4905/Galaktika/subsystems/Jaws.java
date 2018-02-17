@@ -19,6 +19,10 @@ public class Jaws extends Subsystem {
     }
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
+   
+   	private boolean shouldJawsBeOpen = false;
+   
+   
 	public void extend() {
 	    RobotMap.jawsSolenoid.set(DoubleSolenoid.Value.kForward);
 	   }
@@ -29,6 +33,20 @@ public class Jaws extends Subsystem {
 	   public void stop() {
 	    RobotMap.jawsSolenoid.set(DoubleSolenoid.Value.kOff);
 	  
+	   }
+	   
+	   public void setShouldJawsBeOpenBoolean(boolean state){
+		   //true = they should be open, false = they should not be open
+		   shouldJawsBeOpen = state;
+	   }
+	   
+	   public void setJawsToCorrectState(){
+		   if(shouldJawsBeOpen){
+			   extend();
+		   }
+		   else{
+			   contract();
+		   }
 	   }
 
  

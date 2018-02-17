@@ -165,8 +165,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("RAMP SAFETIES", rampSafeties);
         
         
-        Robot.ramps.moveLeftServo(0.5);
-        Robot.ramps.moveRightServo(0.5);
+        Robot.ramps.lockRampsIn();
     }
     
     
@@ -178,6 +177,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit(){
     	Trace.getInstance().flushTraceFiles();
+    	Robot.ramps.lockRampsIn();
     }
 
     @Override
@@ -247,7 +247,8 @@ public class Robot extends TimedRobot {
         	Robot.ramps.setSafetyBooleanStatus(false);
         }
         
-        
+        Robot.ramps.holdRampsIn();
+        Robot.ramps.lockRampsIn();
     }
 
     /**
