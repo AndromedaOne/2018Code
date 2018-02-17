@@ -110,6 +110,10 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 	public VL53L0X(I2C.Port port) throws IOException {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
+		staticInit();
+		performRefCalibration();
+		performRefSpadManagement();
+		setDeviceMode();
 		disableSensor();		
 		enableSensor();
 
@@ -145,5 +149,21 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 			return 0;
 		}
 	}
+	
+	 public void staticInit(){
+		
+	}
+	 
+	 public void performRefCalibration() {
+		 
+	 }
+	 
+	 public void performRefSpadManagement() {
+		 
+	 }
+	 
+	 public void setDeviceMode() {
+		 
+	 }
 
 }
