@@ -47,10 +47,9 @@ public class AutoQuals extends AutoCommand {
 			driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
 			turnRight();
 		}
-        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
         moveElevatorToExchangeHeight();
+        driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	}
-
 
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
@@ -77,8 +76,8 @@ public class AutoQuals extends AutoCommand {
 		} else {
 			turnRight();
 		}
-		driveForward(LATERAL_DISTANCE_TO_SCALE);
 		moveElevatorToScaleHeight();
+		driveForward(LATERAL_DISTANCE_TO_SCALE);
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 

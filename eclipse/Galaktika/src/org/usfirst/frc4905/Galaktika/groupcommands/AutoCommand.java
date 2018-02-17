@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.AutoJawsOpen;
 import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveExchange;
@@ -146,16 +147,20 @@ public abstract class AutoCommand extends CommandGroup {
     }
     
 
-    protected void CloseArmsInAuto() {
+    protected void closeArmsInAuto() {
     		addSequential(new AutoTimedArmsClose(0.5));
     }
+    
+    protected void openArmsInAuto() {
+		addSequential(new AutoJawsOpen(0.5));
+}
 
 
-    protected void ExtendIntakeAuto() {
+    protected void extendIntakeAuto() {
 		addSequential(new ExtendIntakeInAuto());
     }
 
-    protected void ResetEncoderInElevator() {
+    protected void resetEncoderInElevator() {
 		addSequential(new ResetElevatorEncoder());
     }
 
