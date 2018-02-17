@@ -366,11 +366,17 @@ public class DriveTrain extends Subsystem {
 	public void gyroCorrectMove(double forwardBackwardStickValue, double rotateStickValue, double mod, boolean useDelay, boolean squaredInput) {
 		double robotAngle = RobotMap.navX.getRobotAngle();
 		double correctionEquation = (SavedAngle - robotAngle)*kProportion;
-		int correctionMode = -1;
+
 		double newForwardBackwardStickValue = 0;
 		double newRotateStickValue = 0;
-		if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
-			correctionMode = 0;
+
+		if (!useDelay) {
+			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
+			newRotateStickValue = correctionEquation;
+
+
+		} else if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
+
 			SavedAngle = robotAngle;
 			newForwardBackwardStickValue = 0;
 			newRotateStickValue = 0;
@@ -386,13 +392,12 @@ public class DriveTrain extends Subsystem {
 			//disable correction for half a second after releasing the turn stick, to allow the driver
 			//to let the machine drift naturally, and not correct back to the gyro reading from
 			//the instant the driver released the turn stick.
-			//PROBLEM, corrects every 25 cycles because I'm dumb...
 
 			//reassign the correctionEquation to the latest direction that we've been "free driving" in
 			correctionEquation = (SavedAngle - robotAngle)*kProportion;
-			correctionMode = 2;
 			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
 			newRotateStickValue = correctionEquation;
+
 		}
 		else {
 			//should all cases fail, just drive normally
@@ -402,13 +407,9 @@ public class DriveTrain extends Subsystem {
 
 
 		if(courseCorrectionDelay == 24){
-			//take the most recent course and make that our angle
+			//take the most recent course after half a second and make that our angle
 			SavedAngle = robotAngle;
 		}
-
-
-
-
 
 		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
@@ -417,9 +418,9 @@ public class DriveTrain extends Subsystem {
 				new TracePair("kProportion", kProportion),
 				new TracePair("correctionEquation", correctionEquation));
 
-
+		Robot.driveTrain.move(forwardBackwardStickValue*mod, correctionEquation*mod, squaredInput);
 		courseCorrectionDelay++;
-		Robot.driveTrain.move(newForwardBackwardStickValue, newRotateStickValue, squaredInput);
+
 	}
 
 
