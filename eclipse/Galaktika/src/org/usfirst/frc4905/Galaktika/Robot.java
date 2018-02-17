@@ -164,12 +164,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+    	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
     		debug("top of autonomousInit");
+        RobotMap.navX.setInitialAngleReading();
 	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
 	    	if (gameData.length() > SCALE) {
 		    scalePlatePosition =	gameData.charAt(SCALE);
@@ -217,6 +219,7 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
+    	RobotMap.navX.setInitialAngleReading();
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
 

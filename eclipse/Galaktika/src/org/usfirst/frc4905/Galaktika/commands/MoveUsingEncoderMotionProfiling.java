@@ -91,7 +91,7 @@ public class MoveUsingEncoderMotionProfiling extends Command {
 			entry.addElement((currentTrajectoryPoint.m_position-(Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition))*100);
 			entry.add(0.0);
 			entry.add(Robot.driveTrain.getDTerm()*10);
-			Trace.getInstance().addTrace("MoveWithEncoderData", 
+			Trace.getInstance().addTrace(false, "MoveWithEncoderData", 
 					new TracePair("ActualVelocity", Robot.driveTrain.getVelocity()),
 					new TracePair("ProjectedVelocity", currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", (Robot.driveTrain.getEncoderPosition() - m_initialEncoderPosition)),
