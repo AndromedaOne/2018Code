@@ -21,8 +21,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 
 	private static final byte kAddress = 0x29;
+	private static final byte DefaultTuningSettings = 0;
+	private static final byte VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY = 0x04;
+	private static final byte VL53L0X_INTERRUPTPOLARITY_LOW = 0x00;
 	private I2C m_i2c;
 	private int m_distance;
+	private byte m_referenceSpadCount;
+	private byte m_referenceSpadType;
+	private byte pTuningSettingsPointer;
 
 	private double getSensorReading() throws IOException {
 		return m_distance;
@@ -95,7 +101,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 		/*if (readByteFromSensor(kFreshOutReset) == 1) {
 			writeByteToSensor(kFreshOutReset, (byte) 0);
 			writeByteToSensor(kSYSRangeStart, (byte) 3);
-			
+
 		}*/
 	}
 
@@ -103,7 +109,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 	/*	if (readByteFromSensor(kFreshOutReset) == 0) {
 			writeByteToSensor(kSYSRangeStart, (byte) 3);
 			writeByteToSensor(kFreshOutReset, (byte) 1);
-			
+
 		}*/
 	}
 
@@ -114,7 +120,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 		performRefCalibration();
 		performRefSpadManagement();
 		setDeviceMode();
-		disableSensor();		
+		disableSensor();
 		enableSensor();
 
 	}
@@ -149,21 +155,179 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 			return 0;
 		}
 	}
-	
-	 public void staticInit(){
-		
+
+	private class VL53L0X_DeviceParameters_t {
+
 	}
-	 
-	 public void performRefCalibration() {
-		 
+
+	 private void staticInit(){
+			VL53L0X_DeviceParameters_t CurrentParameters = new VL53L0X_DeviceParameters_t();
+			byte pTuningSettingBuffer;
+			short tempword = 0;
+			byte tempbyte = 0;
+			byte UseInternalTuningSettings = 0;
+			int count = 0;
+			byte isApertureSpads = 0;
+			int refSpadCount = 0;
+			byte ApertureSpads = 0;
+			byte vcselPulsePeriodPCLK;
+			int seqTimeoutMicroSecs;
+
+			VL53L0X_get_info_from_device(1);
+
+			/* set the ref spad from NVM */
+			count= m_referenceSpadCount;
+			ApertureSpads = m_referenceSpadType;
+			/* NVM value invalid */
+			if ((ApertureSpads > 1) ||
+				((ApertureSpads == 1) && (count > 32)) ||
+				((ApertureSpads == 0) && (count > 12)))
+				VL53L0X_perform_ref_spad_management();
+			else
+				VL53L0X_set_reference_spads();
+
+
+			/* Initialize tuning settings buffer to prevent compiler warning. */
+			pTuningSettingBuffer = DefaultTuningSettings;
+
+				UseInternalTuningSettings = PALDevDataGet(
+					UseInternalTuningSettings);
+
+				if (UseInternalTuningSettings == 0)
+					pTuningSettingBuffer = PALDevDataGet(
+						pTuningSettingsPointer);
+				else
+					pTuningSettingBuffer = DefaultTuningSettings;
+
+				VL53L0X_load_tuning_settings();
+
+
+			/* Set interrupt config to new sample ready */
+				VL53L0X_SetGpioConfig( 0, 0,
+				VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY,
+				VL53L0X_INTERRUPTPOLARITY_LOW);
+
+				VL53L0X_WrByte( 0xFF, 0x01);
+				VL53L0X_RdWord( 0x84, &tempword);
+				VL53L0X_WrByte( 0xFF, 0x00);
+
+				VL53L0X_SETDEVICESPECIFICPARAMETER( OscFrequencyMHz,
+					VL53L0X_FIXPOINT412TOFIXPOINT1616(tempword));
+
+			/* After static init, some device parameters may be changed,
+			 * so update them */
+				VL53L0X_GetDeviceParameters( &CurrentParameters);
+
+
+				VL53L0X_GetFractionEnable( &tempbyte);
+
+				PALDevDataSet( RangeFractionalEnable, tempbyte);
+
+				PALDevDataSet( CurrentParameters, CurrentParameters);
+
+			/* read the sequence config and save it */
+				VL53L0X_RdByte(
+				VL53L0X_REG_SYSTEM_SEQUENCE_CONFIG, &tempbyte);
+
+				PALDevDataSet( SequenceConfig, tempbyte);
+
+			/* Disable MSRC and TCC by default */
+				VL53L0X_SetSequenceStepEnable(
+					VL53L0X_SEQUENCESTEP_TCC, 0);
+
+
+				VL53L0X_SetSequenceStepEnable(
+				VL53L0X_SEQUENCESTEP_MSRC, 0);
+
+
+			/* Set PAL State to standby */
+				PALDevDataSet( PalState, VL53L0X_STATE_IDLE);
+
+
+
+			/* Store pre-range vcsel period */
+				VL53L0X_GetVcselPulsePeriod(
+					VL53L0X_VCSEL_PERIOD_PRE_RANGE,
+					&vcselPulsePeriodPCLK);
+
+					VL53L0X_SETDEVICESPECIFICPARAMETER(
+						PreRangeVcselPulsePeriod,
+						vcselPulsePeriodPCLK);
+
+			/* Store final-range vcsel period */
+				VL53L0X_GetVcselPulsePeriod(
+					VL53L0X_VCSEL_PERIOD_FINAL_RANGE,
+					&vcselPulsePeriodPCLK);
+
+					VL53L0X_SETDEVICESPECIFICPARAMETER(
+						FinalRangeVcselPulsePeriod,
+						vcselPulsePeriodPCLK);
+
+			/* Store pre-range timeout */
+				get_sequence_step_timeout(
+					VL53L0X_SEQUENCESTEP_PRE_RANGE,
+					&seqTimeoutMicroSecs);
+
+				VL53L0X_SETDEVICESPECIFICPARAMETER(
+					PreRangeTimeoutMicroSecs,
+					seqTimeoutMicroSecs);
+
+			/* Store final-range timeout */
+				get_sequence_step_timeout(
+					VL53L0X_SEQUENCESTEP_FINAL_RANGE,
+					&seqTimeoutMicroSecs);
+
+				VL53L0X_SETDEVICESPECIFICPARAMETER(
+					FinalRangeTimeoutMicroSecs,
+					seqTimeoutMicroSecs);
+			}
+
+			LOG_FUNCTION_END(Status);
+			return Status;
+
+	}
+
+	 private void VL53L0X_SetGpioConfig(int i, int j, byte vl53l0xRegSystemInterruptGpioNewSampleReady,
+			byte vl53l0xInterruptpolarityLow) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void VL53L0X_load_tuning_settings() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private byte PALDevDataGet(byte useInternalTuningSettings) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private void VL53L0X_set_reference_spads() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void VL53L0X_perform_ref_spad_management() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void VL53L0X_get_info_from_device(int i) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void performRefCalibration() {
+
 	 }
-	 
+
 	 public void performRefSpadManagement() {
-		 
+
 	 }
-	 
+
 	 public void setDeviceMode() {
-		 
+
 	 }
 
 }
