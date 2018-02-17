@@ -7,6 +7,7 @@ import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -116,7 +117,12 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall(double estimatedDistance) {
-        addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
+        if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES < estimatedDistance) {
+        		addSequential(new MoveUsingEncoderPID(estimatedDistance - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
+        }
+        if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES > 0) {
+    			addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
+        }
     }
 
     protected void loadPowerCubeOntoSwitch() {
