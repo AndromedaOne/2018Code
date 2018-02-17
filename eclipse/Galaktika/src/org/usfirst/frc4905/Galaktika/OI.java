@@ -24,6 +24,10 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
+import org.usfirst.frc4905.Galaktika.commands.TestDriveToWall;
+import org.usfirst.frc4905.Galaktika.groupcommands.TestCompassDirections;
+
+import Utilities.ControllerButtons.ButtonsEnumerated;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 
 import Utilities.LEDColor;
@@ -122,8 +126,9 @@ public class OI {
         SmartDashboard.putData("LEDGreenBrightness", new LEDBrightness(LEDColor.GREEN));
         SmartDashboard.putData("GyroPIDTurnDeltaAngle", new GyroPIDTurnDeltaAngle());
         SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
-
-        SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100));
+        SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(20));
+        SmartDashboard.putData("TestDriveToWall", new TestDriveToWall());
+        SmartDashboard.putData("TestCompassDirections", new TestCompassDirections());
         SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
         SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
         SmartDashboard.putData("DriveSquare", new DriveSquare());
