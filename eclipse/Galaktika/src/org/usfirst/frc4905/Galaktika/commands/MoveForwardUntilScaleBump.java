@@ -48,7 +48,7 @@ public class MoveForwardUntilScaleBump extends Command {
 		
 		spikeDetector.update(pitch);
 		
-		Trace.getInstance().addTrace("ErisTrace",
+		Trace.getInstance().addTrace(true, "ErisTrace",
 				
 				new TracePair("Pitch", (double) RobotMap.navX.getAHRS().getPitch()),
 				new TracePair("Roll", (double) RobotMap.navX.getAHRS().getRoll()),
