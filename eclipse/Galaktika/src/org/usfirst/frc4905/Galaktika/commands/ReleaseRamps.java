@@ -27,7 +27,7 @@ public class ReleaseRamps extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		driveController = Robot.oi.getDriveController();
-		Robot.ramps.configServoBounds();
+		
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -38,6 +38,7 @@ public class ReleaseRamps extends Command {
 		safetiesEnabled = Robot.ramps.returnSafetyStatus();
 		timeRemaining = Robot.ramps.getTimeRemainingInMatchPeriod();
 
+		System.out.println("hitting button to deploy ramps" + isLeftPOVPressed);
 		
 
 		if(safetiesEnabled){
@@ -46,17 +47,18 @@ public class ReleaseRamps extends Command {
 				Robot.ramps.setLeftRampDeployed();
 			}
 			if (isRightPOVPressed && timeRemaining < 31) {
-				Robot.ramps.moveRightServo(0);
+				Robot.ramps.moveRightServo(1);
 				Robot.ramps.setRightRampDeployed();
 			}
 		}
 		else{
 			if (isLeftPOVPressed) {
+				System.out.println("trying to move left servo");
 				Robot.ramps.moveLeftServo(0);
 				Robot.ramps.setLeftRampDeployed();
 			}
 			if (isRightPOVPressed) {
-				Robot.ramps.moveRightServo(0);
+				Robot.ramps.moveRightServo(1);
 				Robot.ramps.setRightRampDeployed();
 			}
 		}

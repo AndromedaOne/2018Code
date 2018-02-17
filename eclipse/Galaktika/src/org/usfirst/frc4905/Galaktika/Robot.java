@@ -158,11 +158,15 @@ public class Robot extends TimedRobot {
         debug("bottom of robotInit" );
         
         
-        rampSafeties.addDefault("ON", 'y');
-        rampSafeties.addObject("OFF", 'n');
+        rampSafeties.addDefault("RAMP SAFETIES ON", 'y');
+        rampSafeties.addObject("RAMP SAFETEIS OFF", 'n');
         
         
         SmartDashboard.putData("RAMP SAFETIES", rampSafeties);
+        
+        
+        Robot.ramps.moveLeftServo(0.5);
+        Robot.ramps.moveRightServo(0.5);
     }
     
     

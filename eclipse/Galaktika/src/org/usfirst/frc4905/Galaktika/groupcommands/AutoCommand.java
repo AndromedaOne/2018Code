@@ -83,12 +83,12 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void debug(String information) {
     		 char location = Robot.safelyGetInitialRobotLocation();
-    		 System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
-    		 System.out.flush();
-    		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
-     				location + "! " +
-     				information);
-    		 System.out.flush();
+    		 //System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
+    		 //System.out.flush();
+    		// System.out.println("In AutoCommand.java Field Setup: Robot = " +
+     		//		location + "! " +
+     		//		information);
+    		// System.out.flush();
 	}
 
     public void start() {

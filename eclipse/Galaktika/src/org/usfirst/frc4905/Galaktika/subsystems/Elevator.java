@@ -171,4 +171,8 @@ public class Elevator extends Subsystem {
 				m_encoderZeroPostion;
 	}
 	
+	public boolean getPidEnabledStatus(){
+		return m_encoderPID.isEnabled();
+	}
+	
 }

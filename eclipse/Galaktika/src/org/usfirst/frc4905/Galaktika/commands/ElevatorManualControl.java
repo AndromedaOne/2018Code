@@ -41,7 +41,11 @@ public class ElevatorManualControl extends Command {
     		Robot.elevator.enableEncoderPID(Robot.elevator.getElevatorPosition());
     	}
     	else{
-    		Robot.elevator.disableEncoderPID();
+    		
+    		if(Robot.elevator.getPidEnabledStatus()){
+    			Robot.elevator.disableEncoderPID();
+    		}
+    		
     		Robot.elevator.moveElevator(forwardBackwardStickValue);
 
     	}
