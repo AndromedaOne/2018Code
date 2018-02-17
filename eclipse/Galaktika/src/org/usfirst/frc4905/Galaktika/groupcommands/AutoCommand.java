@@ -46,13 +46,15 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected static final double FORWARD_DISTANCE_TO_SWITCH = 148.04;
     protected static final double LATERAL_DISTANCE_TO_SWITCH = 28.72;
+    //TODO: Get the following number from CAD
+    protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 148.04;
     protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
     protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
     protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
     protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
     protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
     protected static final double LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE = 116;
-    protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
+    protected static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 120.3;
     protected static final double LATERAL_DISTANCE_TO_FIRST_CUBE = 50.75;
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
@@ -112,7 +114,7 @@ public abstract class AutoCommand extends CommandGroup {
         addSequential(new GyroPIDTurnDeltaAngle(180));
     }
 
-    protected void driveForwardToWall() {
+    protected void driveForwardToWall(double estimatedDistance) {
         addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
     }
 

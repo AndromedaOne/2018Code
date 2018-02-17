@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoMiddleLoadSwitch extends AutoCommand {
 
-    private static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
+    private static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 120.3;
 
     public AutoMiddleLoadSwitch(boolean useDelay) {
         if (useDelay) {
@@ -20,19 +20,15 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
         if (platePos == 'R') {
             driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnRight();
-            driveForward(LATERAL_DISTANCE_TO_RIGHT);
+            driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
             turnLeft();
-            driveForward(FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-            turnLeft();
-            driveForwardToWall();
+            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
         } else {
             driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnLeft();
-            driveForward(LATERAL_DISTANCE_TO_LEFT);
+            driveForward(LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE);
             turnRight();
-            driveForward(FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-            turnRight();
-            driveForwardToWall();
+            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
         }
     }
 

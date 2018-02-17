@@ -22,7 +22,7 @@ public class AutoCrossTheLine extends AutoCommand {
             turnRight();
             driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
             turnLeft();
-            driveForwardToWall();
+            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
         } else {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
         }
