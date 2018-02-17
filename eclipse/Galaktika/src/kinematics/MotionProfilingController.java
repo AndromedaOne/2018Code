@@ -3,6 +3,7 @@
 import java.util.TimerTask;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
@@ -107,15 +108,21 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			double output = nextVelocity*m_velocityF + velocityPIDOut;
 			
 			m_pidOutput.pidWrite(output);
+			double rate = RobotMap.navX.getRate();
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
 					new TracePair("ActualVelocity", velocity),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
-					new TracePair("velocityPIDOut", (velocityPIDOut)),
-					new TracePair("ActualPosition", getDeltaPosition(m_mpSource.getPosition())),
+					new TracePair("ActualPosition", deltaPosition),
 					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
-					new TracePair("PositionError", (deltaPosition - m_currentTrajectoryPoint.m_position)));
+					new TracePair("PositionError", m_currentTrajectoryPoint.m_position - deltaPosition));
+				
+					/*new TracePair("velocityPIDOut", (velocityPIDOut)),
+					new TracePair("nextVelocity", (nextVelocity)))
+					
+					new TracePair("Rate", rate),
+					new TracePair("Ratio", velocity/rate));*/
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
 		}

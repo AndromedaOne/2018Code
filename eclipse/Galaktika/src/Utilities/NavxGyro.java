@@ -87,9 +87,10 @@ public class NavxGyro {
 		}
 
 	}
-
 	 
-
+	public double getRate() {
+		return m_navX.getRate();
+	}
 	 
 	 
 	public boolean isCalibrating() {
