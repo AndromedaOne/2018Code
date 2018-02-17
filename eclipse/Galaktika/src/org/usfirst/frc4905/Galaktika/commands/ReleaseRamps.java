@@ -27,6 +27,7 @@ public class ReleaseRamps extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		driveController = Robot.oi.getDriveController();
+		Robot.ramps.configServoBounds();
 	}
 
 	// Called repeatedly when this Command is scheduled to run

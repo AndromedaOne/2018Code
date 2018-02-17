@@ -124,5 +124,11 @@ public class Ramps extends Subsystem {
     public boolean returnSafetyStatus(){
     	 return safetiesEnabled;
     }
+    
+    public void configServoBounds(){
+    	leftDeployServo.setBounds(1, 1, 0.5, 0, 0);
+    	rightDeployServo.setBounds(1, 1, 0.5, 0, 0);
+    	
+    }
 
 }
