@@ -51,7 +51,7 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
     protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
     protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
-    protected static final double LATERAL_DISTANCE_TO_RIGHT = 116;
+    protected static final double LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE = 116;
     protected static final double LATERAL_DISTANCE_TO_LEFT = 120.3;
     protected static final double LATERAL_DISTANCE_TO_FIRST_CUBE = 50.75;
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;

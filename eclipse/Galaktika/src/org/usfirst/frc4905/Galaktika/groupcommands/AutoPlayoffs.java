@@ -119,7 +119,7 @@ public class AutoPlayoffs extends AutoCommand {
 	        if (switchPlatePos == 'R') {
 	            driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	            turnRight();
-	            driveForward(LATERAL_DISTANCE_TO_RIGHT);
+	            driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
 	            turnLeft();
 	            driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 	            turnLeft();
