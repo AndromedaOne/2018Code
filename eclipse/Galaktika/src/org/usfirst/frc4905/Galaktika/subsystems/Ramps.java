@@ -47,13 +47,26 @@ public class Ramps extends Subsystem {
     private boolean leftRampDeployed = false, rightRampDeployed = false;
     private static boolean safetiesEnabled = false;
     
+    
+    private final DoubleSolenoid leftRampSolenoid = RobotMap.leftRampSolenoid;
+    private final DoubleSolenoid rightRampSolenoid = RobotMap.rightRampSolenoid;
+    
+    
+    
+    
     public void liftLeftRamp() {
+    	/*
     	solenoid1.set(Value.kForward);
     	solenoid2.set(Value.kForward);
+    	*/
+    	leftRampSolenoid.set(Value.kForward);
     }
     public void liftRightRamp() {
+    	/*
     	solenoid3.set(Value.kForward);
     	solenoid4.set(Value.kForward);
+    	*/
+    	rightRampSolenoid.set(Value.kForward);
     }
     
 
