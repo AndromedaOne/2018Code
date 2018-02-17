@@ -1,4 +1,4 @@
-package Utilities;
+package Utilities.Tracing;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,7 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
 
 // utility to store trace information to a file on the roborio. this class uses the 
 // singleton pattern. on the first call to Trace.getInstance(), the utility will
@@ -64,6 +63,8 @@ public class Trace
 	private MultipleOutputStream m_out;
 	private MultipleOutputStream m_err;
 	private static String m_matchStartFname = "matchStarted";
+	
+	private static int m_dirNumb = 0;
 	
 	private class TraceEntry {
 		private BufferedWriter m_file;
@@ -122,7 +123,6 @@ public class Trace
 			}
 			// open the trace dir number file to retrieve the number to concatenate
 			// to the trace dir
-			int dirNumb = 0;
 			String traceNumFileName = m_basePathOfTraceDirs + "/" + m_traceDirNumberFile;
 			File traceNumbFile = new File(traceNumFileName);
 			if(!traceNumbFile.exists()) {
@@ -142,7 +142,7 @@ public class Trace
 					return;
 				}
 				m_pathOfTraceDir = m_basePathOfTraceDirs + "/trace" + line;
-				dirNumb = Integer.parseInt(line);
+				m_dirNumb = Integer.parseInt(line);
 			}
 			File traceDir = new File(m_pathOfTraceDir);
 			if(!traceDir.exists()) {
@@ -158,8 +158,8 @@ public class Trace
 			FileWriter fstream = new FileWriter(traceNumFileName, false);
 			BufferedWriter dirNumbFile = new BufferedWriter(fstream);
 			System.out.println("Created trace file " + m_basePathOfTraceDirs + m_traceDirNumberFile);
-			++dirNumb;
-			dirNumbFile.write(Integer.toString(dirNumb));
+			++m_dirNumb;
+			dirNumbFile.write(Integer.toString(m_dirNumb));
 			dirNumbFile.close();
 		}
 		catch(SecurityException e) {
@@ -179,7 +179,10 @@ public class Trace
 		}
 	}
 
-	public void addTrace(String fileName, TracePair... header) {
+	public void addTrace(boolean enable, String fileName, TracePair... header) {
+		if(!enable) {
+			return;
+		}
 		if(m_pathOfTraceDir == null)
 		{
 			return;
@@ -187,7 +190,7 @@ public class Trace
 		try {
 			if(!m_traces.containsKey(fileName)) {
 				BufferedWriter outputFile = null;
-				String fullFileName = new String(m_pathOfTraceDir  + "/" + fileName + ".csv");
+				String fullFileName = new String(m_pathOfTraceDir  + "/" + fileName + (m_dirNumb-1) + ".csv");
 				FileWriter fstream = new FileWriter(fullFileName, false);
 				outputFile = new BufferedWriter(fstream);
 				m_traces.put(fileName, new TraceEntry(outputFile, header.length));

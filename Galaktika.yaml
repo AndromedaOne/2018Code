@@ -15,9 +15,9 @@ Children:
               default: '2'
               name: CAN ID
               validators: &id002 [CANID]
-              value: '0'
+              value: '1'
           Base: Talon SRX
-          Name: LeftFrontTalon
+          Name: LeftTopTalon
         - Children: []
           Properties:
             CAN ID: !!robotbuilder.data.properties.ChoicesProperty
@@ -27,7 +27,7 @@ Children:
               validators: *id002
               value: '2'
           Base: Talon SRX
-          Name: LeftRearTalon
+          Name: LeftBottomTalon
         Properties:
           SpeedController4: !!robotbuilder.data.properties.ChildSelectionProperty {
             default: null, name: SpeedController4, type: PIDOutput, validators: null,
@@ -40,13 +40,13 @@ Children:
             name: SpeedController2
             type: PIDOutput
             validators: &id003 [SpeedControllerGroup, ChildDropdownSelected]
-            value: DriveTrain LeftRearTalon
+            value: DriveTrain LeftBottomTalon
           SpeedController1: !!robotbuilder.data.properties.ChildSelectionProperty
             default: 0
             name: SpeedController1
             type: PIDOutput
             validators: &id004 [SpeedControllerGroup, ChildDropdownSelected]
-            value: DriveTrain LeftFrontTalon
+            value: DriveTrain LeftTopTalon
         Base: Speed Controller Group
         Name: LeftSpeedController
       - Children:
@@ -59,7 +59,7 @@ Children:
               validators: *id002
               value: '3'
           Base: Talon SRX
-          Name: RightFrontTalon
+          Name: RightTopTalon
         - Children: []
           Properties:
             CAN ID: !!robotbuilder.data.properties.ChoicesProperty
@@ -69,26 +69,26 @@ Children:
               validators: *id002
               value: '4'
           Base: Talon SRX
-          Name: RightRearTalon
+          Name: RightBottomTalon
         Properties:
           SpeedController4: !!robotbuilder.data.properties.ChildSelectionProperty {
             default: null, name: SpeedController4, type: PIDOutput, validators: null,
             value: null}
           SpeedController3: !!robotbuilder.data.properties.ChildSelectionProperty {
             default: null, name: SpeedController3, type: PIDOutput, validators: null,
-            value: DriveTrain RightRearTalon}
+            value: DriveTrain RightBottomTalon}
           SpeedController2: !!robotbuilder.data.properties.ChildSelectionProperty
             default: 1
             name: SpeedController2
             type: PIDOutput
             validators: *id003
-            value: DriveTrain RightRearTalon
+            value: DriveTrain RightBottomTalon
           SpeedController1: !!robotbuilder.data.properties.ChildSelectionProperty
             default: 0
             name: SpeedController1
             type: PIDOutput
             validators: *id004
-            value: DriveTrain RightFrontTalon
+            value: DriveTrain RightTopTalon
         Base: Speed Controller Group
         Name: RightSpeedController
       Properties:
@@ -123,6 +123,26 @@ Children:
           value: '0'
       Base: Compressor
       Name: Compressor
+    - Children: []
+      Properties:
+        Ping Channel (Digital): !!robotbuilder.data.properties.ChoicesProperty
+          choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
+            '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23',
+            '24', '25']
+          default: '0'
+          name: Ping Channel (Digital)
+          validators: [DigitalChannel]
+          value: '0'
+        Echo Channel (Digital): !!robotbuilder.data.properties.ChoicesProperty
+          choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
+            '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23',
+            '24', '25']
+          default: '0'
+          name: Echo Channel (Digital)
+          validators: [DigitalChannel]
+          value: '1'
+      Base: Ultrasonic
+      Name: FrontUltrasonic
     Properties:
       Send to SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: false,
         name: Send to SmartDashboard, validators: null, value: false}
@@ -167,7 +187,7 @@ Children:
           default: Spark
           name: Type
           validators: null
-          value: VictorSP
+          value: Spark
         Output Channel (PWM): !!robotbuilder.data.properties.ChoicesProperty
           choices: &id006 ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
             '11', '12', '13', '14', '15', '16', '17', '18', '19']
@@ -186,7 +206,7 @@ Children:
           default: Spark
           name: Type
           validators: null
-          value: VictorSP
+          value: Spark
         Output Channel (PWM): !!robotbuilder.data.properties.ChoicesProperty
           choices: *id006
           default: '0'
@@ -305,7 +325,7 @@ Children:
           default: '2'
           name: CAN ID
           validators: *id002
-          value: '1'
+          value: '5'
       Base: Talon SRX
       Name: ElevatorContoller
     Properties:
@@ -472,7 +492,7 @@ Children:
   Base: Commands
   Name: Commands
 Properties:
-  Eclipse Workspace: !!robotbuilder.data.properties.FileProperty {default: 'C:\Users\kiloo\workspace',
+  Eclipse Workspace: !!robotbuilder.data.properties.FileProperty {default: 'C:\Users\erisc\workspace',
     extension: null, folder: true, name: Eclipse Workspace, validators: null, value: eclipse}
   Export Commands: !!robotbuilder.data.properties.BooleanProperty {default: true,
     name: Export Commands, validators: null, value: true}
@@ -491,8 +511,8 @@ Properties:
     name: Export Subsystems, validators: null, value: true}
   Simulation World File: !!robotbuilder.data.properties.StringProperty {default: /usr/share/frcsim/worlds/GearsBotDemo.world,
     name: Simulation World File, validators: null, value: /usr/share/frcsim/worlds/GearsBotDemo.world}
-  Wiring file location: !!robotbuilder.data.properties.FileProperty {default: 'C:\Users\kiloo\',
-    extension: null, folder: true, name: Wiring file location, validators: null, value: 'C:\Users\kiloo\'}
+  Wiring file location: !!robotbuilder.data.properties.FileProperty {default: 'C:\Users\erisc\',
+    extension: null, folder: true, name: Wiring file location, validators: null, value: WiringDiagram}
   Autonomous Command: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
     name: Autonomous Command, type: Command, validators: null, value: Autonomous Command}
 Base: Robot

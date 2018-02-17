@@ -2,6 +2,8 @@ package Utilities;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import Utilities.Tracing.Trace;
+import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -13,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class NavxGyro {
 
 	// gyroEncoder PID controller
-	private PIDController m_gyroEncoderPID;
+	
 	// gyroEncoder PID controller variables
 	private static final double gyroEncoderKp = 0.012;
 	private static final double gyroEncoderKi = 0.000;
@@ -45,9 +47,7 @@ public class NavxGyro {
 		m_initialAngleReading = m_navX.getAngle();
 	}
 
-	public PIDController getPIDcontroller() {
-		return m_gyroEncoderPID;
-	}
+	 
 
 	private int m_getRobotAngleCount = 0;
 
@@ -57,7 +57,7 @@ public class NavxGyro {
 			SmartDashboard.putNumber("Raw Anlge", m_navX.getAngle());
 			SmartDashboard.putNumber("Get Robot Angle", correctedAngle);
 		}
-		Trace.getInstance().addTrace(m_traceFileName,
+		Trace.getInstance().addTrace(false, m_traceFileName, 
 				new TracePair("Raw Angle", m_navX.getAngle()),
 				new TracePair("Corrected Angle", correctedAngle),
 				new TracePair("X Accel", (double) m_navX.getWorldLinearAccelX()),
@@ -86,36 +86,10 @@ public class NavxGyro {
 
 	}
 
-	public void initializeGyroPID(PIDOutput gyroPIDout) {
-		System.out.println("InitGyroPID");
-		GyroPIDin gyroPIDin = new GyroPIDin();
-		m_gyroEncoderPID = new PIDController(gyroEncoderKp, gyroEncoderKi,
-				gyroEncoderKd, gyroEncoderKf, gyroPIDin, gyroPIDout);
-		m_gyroEncoderPID.setOutputRange(-gyroEncoderOutputMax, gyroEncoderOutputMax);
-		m_gyroEncoderPID.setAbsoluteTolerance(gyroEncoderTolerance);
-// Deprecated from 2017		LiveWindow.addActuator("DriveTrain", "GyroPID", m_gyroEncoderPID);
-		m_gyroEncoderPID.setName("DriveTrain", "GyroPID");
-	}
+	 
 
-	public void turnWithGyroPID(double deltaAngle) {
-		double finalAngle = getRobotAngle() + deltaAngle;
-		m_gyroEncoderPID.setSetpoint(finalAngle);
-		m_gyroEncoderPID.enable();
-	}
-
-	public boolean isDoneGyroPID() {
-		Trace.getInstance().addTrace("Gyro PID",
-				new TracePair("Target", m_gyroEncoderPID.getSetpoint()),
-				new TracePair("Robot Angle", getRobotAngle()),
-				new TracePair("Raw Angle", m_navX.getAngle()),
-				new TracePair("Avg Error", m_gyroEncoderPID.getError()),
-				new TracePair("Output", m_gyroEncoderPID.get()));
-		return m_gyroEncoderPID.onTarget();
-	}
-	public void stopGyroPID() {
-		m_gyroEncoderPID.disable();
-
-	}
+	 
+	 
 	public boolean isCalibrating() {
 
 		return m_navX.isCalibrating();
