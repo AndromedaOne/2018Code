@@ -49,8 +49,8 @@ public class AutoPlayoffs extends AutoCommand {
 	            if (switchPlatePos == 'L') {
 	                driveForward(FORWARD_DISTANCE_TO_SWITCH);
 	                turnRight();
-	                driveForwardToWall();
 	                moveElevatorToSwitchHeight();
+	                driveForwardToWall();
 	                driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 	                turnLeft();
 	                driveForward(FORWARD_DISTANCE_TO_MIDDLE - FORWARD_DISTANCE_TO_SWITCH);
@@ -62,8 +62,8 @@ public class AutoPlayoffs extends AutoCommand {
 	                turnRight();
 	                driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
 	                turnRight();
-	                driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	                moveElevatorToExchangeHeight();
+	                driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	                driveBackward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	                turnRight();
 	                driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
@@ -78,8 +78,8 @@ public class AutoPlayoffs extends AutoCommand {
 	        if (scalePlatePos == 'R') {
 	            driveForward(FORWARD_DISTANCE_TO_SCALE);
 	            turnLeft();
-	            driveForward(LATERAL_DISTANCE_TO_SCALE);
 	            moveElevatorToScaleHeight();
+	            driveForward(LATERAL_DISTANCE_TO_SCALE);
 	            driveBackward(LATERAL_DISTANCE_TO_SCALE);
 	            turnLeft();
 	            driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_TO_MIDDLE);
@@ -90,8 +90,8 @@ public class AutoPlayoffs extends AutoCommand {
 	            if (switchPlatePos == 'R') {
 	                driveForward(FORWARD_DISTANCE_TO_SWITCH);
 	                turnLeft();
-	                driveForwardToWall();
 	                moveElevatorToSwitchHeight();
+	                driveForwardToWall();
 	                driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 	                turnRight();
 	                driveForward(FORWARD_DISTANCE_TO_MIDDLE - FORWARD_DISTANCE_TO_SWITCH);
@@ -103,8 +103,8 @@ public class AutoPlayoffs extends AutoCommand {
 	                turnLeft();
 	                driveForward(LATERAL_DISTANCE_TO_EXCHANGE_R);
 	                turnLeft();
-	                driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	                moveElevatorToExchangeHeight();
+	                driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	                driveBackward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	                turnLeft();
 	                driveForward(LATERAL_DISTANCE_TO_EXCHANGE_R);

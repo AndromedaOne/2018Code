@@ -1,6 +1,8 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.AutoJawsClose;
+import org.usfirst.frc4905.Galaktika.commands.AutoJawsOpen;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -17,7 +19,10 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
     protected void prepareToStart() {
         char platePos = Robot.getSwitchPlatePosition();
-
+        closeArmsInAuto();
+        extendIntakeAuto();
+        resetElevatorInAuto();
+        moveElevatorToSwitchHeight();
         if (platePos == 'L') {
             driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnLeft();
@@ -25,6 +30,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
             turnRight();
         }
         driveForwardToWall();
+        openArmsInAuto();
        
     }
 
