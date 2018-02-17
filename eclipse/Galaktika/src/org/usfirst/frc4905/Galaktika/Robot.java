@@ -104,12 +104,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+    	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
         autonomousCommand = chooser.getSelected();
+        RobotMap.navX.setInitialAngleReading();
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
     }
@@ -129,6 +131,7 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
+    	RobotMap.navX.setInitialAngleReading();
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
 
