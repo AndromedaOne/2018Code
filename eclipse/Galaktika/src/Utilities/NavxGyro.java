@@ -52,6 +52,7 @@ public class NavxGyro {
 		}else {
 			m_initialAngleReading = m_navX.getAngle();
 			System.out.println("Setting initial angle to " + m_initialAngleReading);
+			angleReadingSet = true;
 			if (m_initialAngleReading == 0.0) {
 				System.out.println("Warning: angle probably not correct");
 			}
