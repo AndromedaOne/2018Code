@@ -69,10 +69,10 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void driveForward(double forwardDistanceInches) {
         double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
-        debug("top of driveForward, Forward Distance = " +
-	        forwardDistanceInches +
-	        "Scale Factor = " + distanceScaleFactor +
-	        "Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
+//        debug("top of driveForward, Forward Distance = " +
+//	        forwardDistanceInches +
+//	        "Scale Factor = " + distanceScaleFactor +
+//	        "Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
 		addSequential(new MoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor));
     }
 
@@ -81,29 +81,29 @@ public abstract class AutoCommand extends CommandGroup {
 
     }
 
-    protected void debug(String information) {
-    		 char location = Robot.safelyGetInitialRobotLocation();
-    		 System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
-    		 System.out.flush();
-    		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
-     				location + "! " +
-     				information);
-    		 System.out.flush();
-	}
+//    protected void debug(String information) {
+//    		 char location = Robot.safelyGetInitialRobotLocation();
+//    		 System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
+//    		 System.out.flush();
+//    		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
+//     				location + "! " +
+//     				information);
+//    		 System.out.flush();
+//	}
 
     public void start() {
-    		debug("top of start");
+//    		debug("top of start");
         if ( ! m_preparedToStart) {
             prepareToStart();
             m_preparedToStart = true;
         }
         super.start();
-		debug("bottom of start");
+//		debug("bottom of start");
      }
 
     protected void prepareToStart() {
-		debug("top of AutoCommand prepareToStart");
-		debug("bottom of AutoCommand prepareToStart");
+//		debug("top of AutoCommand prepareToStart");
+//		debug("bottom of AutoCommand prepareToStart");
     }
 
     protected void turnRight() {
@@ -145,12 +145,12 @@ public abstract class AutoCommand extends CommandGroup {
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
-    
+
 
     protected void closeArmsInAuto() {
     		addSequential(new AutoTimedArmsClose(0.5));
     }
-    
+
     protected void openArmsInAuto() {
 		addSequential(new AutoJawsOpen(0.5));
 }
