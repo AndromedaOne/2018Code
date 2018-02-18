@@ -253,6 +253,19 @@ public class DriveTrain extends Subsystem {
 		}
 
     }
+	static private double calculateOutput(double output, double previousOutput, 
+			double maxAllowableDelta) {
+		double deltaOutput = output - previousOutput;
+		if (deltaOutput > 0 && deltaOutput > maxAllowableDelta) {
+			deltaOutput = maxAllowableDelta;
+			output = previousOutput + deltaOutput;
+		}
+		if (deltaOutput < 0 && deltaOutput < -maxAllowableDelta) {
+			deltaOutput = -maxAllowableDelta;
+			output = previousOutput + deltaOutput;
+		}
+		return output; 
+	}
     private class EncoderPIDOut implements PIDOutput {
     	private double m_previousOutput = 0;
 		private double m_maxAllowableDelta;
@@ -261,15 +274,7 @@ public class DriveTrain extends Subsystem {
 			m_maxAllowableDelta = maxAllowableDelta;
 		}
 			public void pidWrite(double output) {
-	    		double deltaOutput = output - m_previousOutput;
-	    		if (deltaOutput > 0 && deltaOutput > m_maxAllowableDelta) {
-	    			deltaOutput = m_maxAllowableDelta;
-	    			output = m_previousOutput + deltaOutput;
-	    		}
-	    		if (deltaOutput < 0 && deltaOutput < -m_maxAllowableDelta) {
-	    			deltaOutput = -m_maxAllowableDelta;
-	    			output = m_previousOutput + deltaOutput;
-	    		}
+	    		output = calculateOutput(output, m_previousOutput, m_maxAllowableDelta);
 	    		// Negation causes forward movement for positive values
 	    		gyroCorrectMove(output, 0, 1, false);
 	    		m_previousOutput = output;
@@ -344,25 +349,21 @@ public class DriveTrain extends Subsystem {
 		
 		@Override
 		public void pidWrite(double output) {
-			output = calculateOutput();
+			output = calculateOutput(output, m_previousOutput, m_maxAllowableDelta);
 			move(0,output);
-		}
-
-		private double calculateOutput() {
-			
-			return 0;
 		}
 
 	}
 	public void initGyroPIDDeltaAngle() {
-		GyroPIDIn gyroPIDIn = new GyroPIDIn();
-		GyroPIDOut gyroPIDOut = new GyroPIDOut();
 		double gyroPIDP = 0.03;
 		double gyroPIDI = 0.0;
 		double gyroPIDD = 0.0;
 		double gyroPIDF = 0.0;
 		double gyroPIDOutputRange = 0.75;
 		double gyroPIDAbsTolerance = 1;
+		double maxAllowableDelta = 0.1;
+		GyroPIDIn gyroPIDIn = new GyroPIDIn();
+		GyroPIDOut gyroPIDOut = new GyroPIDOut(maxAllowableDelta);
 		m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
 		m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
