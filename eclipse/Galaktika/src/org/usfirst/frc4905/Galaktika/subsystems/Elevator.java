@@ -55,7 +55,7 @@ public class Elevator extends Subsystem {
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
 	private double m_encoderPIDOutputMax = 0.5;
-	private double m_encoderPIDTolerance = 1000;
+	private double m_encoderPIDTolerance = 100;
 
 	private double m_encoderZeroPostion =  0.0;
 	// TODO We need to find the top level postion in encoder ticks
@@ -63,7 +63,7 @@ public class Elevator extends Subsystem {
 
 	public Elevator() {
 		initializeEncoderPID();
-		
+
 	}
 
 	@Override
@@ -118,7 +118,8 @@ public class Elevator extends Subsystem {
 	private class EncoderPIDOut implements PIDOutput{
 		@Override
 		public void pidWrite(double output) {
-			moveElevatorSafely(output);
+			moveElevator(-output);
+			System.out.println("In Elevator pidWrite output = " + output);
 		}
 	}
 
@@ -138,6 +139,7 @@ public class Elevator extends Subsystem {
 	public void enableEncoderPID(double setpoint) {
 		double currentEncoderPosition = elevatorController.getSelectedSensorPosition(0);
 		m_encoderPID.setSetpoint(setpoint + currentEncoderPosition);
+		System.out.println("In Elevator enableEncoderPID setpoint = " + setpoint + currentEncoderPosition);
 		m_encoderPID.enable();
 	}
 
@@ -157,7 +159,6 @@ public class Elevator extends Subsystem {
 	}
 	public void moveElevator(double velocity) {
 		elevatorController.set(velocity);
-		System.out.println("Elevator velocity: "+ velocity + " Encoder Position: " + getElevatorEncoderPosition());
 	}
 	// Disabled for now until sensors are hooked up
 
@@ -178,14 +179,13 @@ public class Elevator extends Subsystem {
 		else {
 		moveElevator(velocity);
 		}
-		
-		System.out.println("Elevator velocity: "+ velocity + " Encoder Position: " + getElevatorEncoderPosition());
-		
+
+
 	}
 	public void stopElevator() {
 		moveElevator(0);
 	}
-	
+
 	public double getElevatorEncoderPosition(){
 		return elevatorController.getSelectedSensorPosition(0);
 	}
