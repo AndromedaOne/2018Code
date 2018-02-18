@@ -61,10 +61,20 @@ public class ElevatorManualControl extends Command {
     		Robot.elevator.moveElevator(0.0);
     	}
     	*/
-    	
-    	Robot.elevator.moveElevator(forwardBackwardStickValue);
-    	
-    	
+    	if(forwardBackwardStickValue < 0.02 && forwardBackwardStickValue > -0.02 && Robot.elevator.getPidEnabledStatus() == false){
+    		//if there is no driver input and a pid loop isnt running, start one to maintain position
+    		double positionToMaintain = Robot.elevator.getElevatorPosition();
+    		Robot.elevator.enableEncoderPID(positionToMaintain);
+    		
+    	}
+    	else{
+    		if(!(forwardBackwardStickValue < 0.02 && forwardBackwardStickValue > -0.02) && Robot.elevator.getPidEnabledStatus() == true){
+    			//if we have driver input and the pid loop is still running, end it.
+    			Robot.elevator.disableEncoderPID();
+    		}
+    		Robot.elevator.moveElevatorSafely(forwardBackwardStickValue);
+    	}
+     	
     }
 
     // Make this return true when this Command no longer needs to run execute()

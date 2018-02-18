@@ -50,16 +50,16 @@ public class Elevator extends Subsystem {
 	private DigitalInput elevatorBottomLimitSwitch = RobotMap.elevatorBottomLimitSwitch;
 	//private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
-	private double m_encoderPIDP = 0.0001;
+	private double m_encoderPIDP = 0.03;
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
-	private double m_encoderPIDOutputMax = 0.5;
-	private double m_encoderPIDTolerance = 100;
+	private double m_encoderPIDOutputMax = 1;
+	private double m_encoderPIDTolerance = 10;
 
 	private double m_encoderZeroPostion =  0.0;
 	// TODO We need to find the top level postion in encoder ticks
-	private static double m_encoderTopPosition = 15;
+	private static double m_encoderTopPosition = 150000000;//way too big
 
 	public Elevator() {
 		initializeEncoderPID();
@@ -118,14 +118,16 @@ public class Elevator extends Subsystem {
 	private class EncoderPIDOut implements PIDOutput{
 		@Override
 		public void pidWrite(double output) {
-			// Negated because encoder and motor count in opposite directions
+
 			if (output > 0 && output <= 0.3) {
 				// Min speed to overcome intake weight
 				output = 0.3;
 			}
-			moveElevator(-output);
+			// Negated because encoder and motor count in opposite directions
+			output *= -1;
+			moveElevator(output);
 			System.out.println("In Elevator pidWrite output = " + output +
-					"Current error = " + m_encoderPID.getError());
+					" Current error = " + m_encoderPID.getError());
 		}
 	}
 
@@ -144,8 +146,8 @@ public class Elevator extends Subsystem {
 
 	public void enableEncoderPID(double setpoint) {
 		double currentEncoderPosition = elevatorController.getSelectedSensorPosition(0);
-		m_encoderPID.setSetpoint(setpoint + currentEncoderPosition);
-		System.out.println("In Elevator enableEncoderPID setpoint = " + setpoint + currentEncoderPosition);
+		m_encoderPID.setSetpoint(setpoint);
+		System.out.println("In Elevator enableEncoderPID setpoint = " + setpoint);
 		m_encoderPID.enable();
 	}
 
@@ -168,24 +170,37 @@ public class Elevator extends Subsystem {
 	}
 	// Disabled for now until sensors are hooked up
 
-	   public void moveElevatorSafely(double velocity) {
-		if((getElevatorPosition() > m_encoderTopPosition) == true && (velocity > 0)) {
-		moveElevator(0);
+	public void moveElevatorSafely(double velocity) {
+		if((getElevatorPosition() > m_encoderTopPosition) == true && (velocity < 0)) {
+			if(getPidEnabledStatus() == true){
+				disableEncoderPID();
+			}
+			moveElevator(0);
 
-		//if the pid loop drives somewhere unsafe, we should probably end the PID loop if its running
-		disableEncoderPID();
+			//if the pid loop drives somewhere unsafe, we should probably end the PID loop if its running
+
+
 		}
-		else if ((Robot.elevator.getBottomLimitSwitch() == true) && (velocity < 0)) {
-		moveElevator(0);
-		resetEncoder();
-		//if the pid loop is driving us somewhere unsafe, probably wanna disable it man...
-		disableEncoderPID();
+		else if ((getBottomLimitSwitch() == true) && (velocity > 0)) {
+			if(getPidEnabledStatus() == true){
+				disableEncoderPID();
+			}
+			moveElevator(0);
+			
+			//if the pid loop is driving us somewhere unsafe, probably wanna disable it man...
+
 
 		}
 		else {
-		moveElevator(velocity);
+			moveElevator(velocity);
 		}
 
+		if(getBottomLimitSwitch() == true){
+			resetEncoder();
+		}
+		
+		
+		
 
 	}
 	public void stopElevator() {
@@ -209,6 +224,10 @@ public class Elevator extends Subsystem {
 
 	public boolean getPidEnabledStatus(){
 		return m_encoderPID.isEnabled();
+	}
+
+	public void setPidLoopTolerance(double tolerance){
+		m_encoderPID.setAbsoluteTolerance(tolerance);
 	}
 
 }

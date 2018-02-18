@@ -176,7 +176,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit(){
-    	Robot.ramps.holdRampsIn();
+    	
     	Trace.getInstance().flushTraceFiles();
     	Robot.ramps.lockRampsIn();
     	
@@ -184,7 +184,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-    	Robot.ramps.holdRampsIn();
+    	
     	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
         
@@ -252,7 +252,7 @@ public class Robot extends TimedRobot {
         	Robot.ramps.setSafetyBooleanStatus(false);
         }
         
-        Robot.ramps.holdRampsIn();
+
         Robot.ramps.lockRampsIn();
     }
 
