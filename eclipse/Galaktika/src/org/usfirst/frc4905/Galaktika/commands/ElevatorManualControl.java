@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.ControllerButtons.EnumeratedRawAxis;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,15 +29,37 @@ public class ElevatorManualControl extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
 	protected void execute() {
-    	double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(subsystemController);
+    	double forwardBackwardStickValue = EnumeratedRawAxis.getRightStickVertical(subsystemController);
     	//Robot.elevator.moveElevator(forwardBackwardStickValue);
     	//Changed from move safely to move for testing
-    	Robot.elevator.moveElevator(forwardBackwardStickValue);
-
+    	/*
+    	if(forwardBackwardStickValue < 0){
+    		//slow down the elevator on the way down cuz it is sketchy.
+    		forwardBackwardStickValue *= 0.2;
+    	}
     	
+    	if(forwardBackwardStickValue == 0){
+    		Robot.elevator.enableEncoderPID(Robot.elevator.getElevatorPosition());
+    	}
+    	else{
+    		
+    		if(Robot.elevator.getPidEnabledStatus()){
+    			Robot.elevator.disableEncoderPID();
+    		}
+    		
+    		Robot.elevator.moveElevator(forwardBackwardStickValue);
 
-
-
+    	}
+		*/
+    	if(forwardBackwardStickValue > 0.3) {
+    		forwardBackwardStickValue = 0.5;
+    	}
+    	if(RobotMap.elevatorBottomLimitSwitch.get() || forwardBackwardStickValue < 0.0) {
+    	Robot.elevator.moveElevator(forwardBackwardStickValue * 0.75);
+    	}else {
+    		Robot.elevator.moveElevator(0.0);
+    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()

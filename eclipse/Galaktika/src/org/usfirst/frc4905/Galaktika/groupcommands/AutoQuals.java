@@ -47,13 +47,13 @@ public class AutoQuals extends AutoCommand {
 			driveForward(LATERAL_DISTANCE_TO_EXCHANGE_L);
 			turnRight();
 		}
+        moveElevatorToExchangeHeight();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-        loadPowerCubeIntoExchange();
 	}
-
 
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
+		
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -61,20 +61,21 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-		loadPowerCubeOntoSwitch();
+		moveElevatorToSwitchHeight();
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	private void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
+		
 		driveForward(FORWARD_DISTANCE_TO_SCALE);
 		if (robotPos == 'R') {
 			turnLeft();
 		} else {
 			turnRight();
 		}
+		moveElevatorToScaleHeight();
 		driveForward(LATERAL_DISTANCE_TO_SCALE);
-		loadPowerCubeOntoScale();
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -83,7 +84,10 @@ public class AutoQuals extends AutoCommand {
         char robotPos = Robot.getInitialRobotLocation();
         char switchPlatePos = Robot.getSwitchPlatePosition();
         char scalePlatePos = Robot.getScalePlatePosition();
+        
+        
         if (switchPlatePos == robotPos) {
+        	
             loadNearSwitchPlate(robotPos);
         } else if (scalePlatePos == robotPos){
             loadNearScalePlate(robotPos);
@@ -95,6 +99,7 @@ public class AutoQuals extends AutoCommand {
     }
 
     private void returnToLoadExchange() {
+    	
         turnLeft();
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
@@ -102,6 +107,6 @@ public class AutoQuals extends AutoCommand {
         driveForward(LATERAL_DISTANCE_TO_EXCHANGE_M);
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-        loadPowerCubeIntoExchange();
+        moveElevatorToExchangeHeight();
     }
 }

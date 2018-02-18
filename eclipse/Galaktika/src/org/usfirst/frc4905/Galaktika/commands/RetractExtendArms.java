@@ -30,15 +30,17 @@ public class RetractExtendArms extends Command {
     	boolean downPovPressed = Utilities.ControllerButtons.POVDirectionNames.getPOVSouth(subystemController);
     	boolean upPovPressed = Utilities.ControllerButtons.POVDirectionNames.getPOVNorth(subystemController);
     	
-    	if(downPovPressed){
-    		Robot.retractor.retractIntake();
+    	if(upPovPressed){
+    		Robot.retractor.setShouldIntakeBeUpBoolean(true);
     	}
-    	else if(upPovPressed){
-    		Robot.retractor.extendIntake();
+    	else if(downPovPressed){
+    		Robot.retractor.setShouldIntakeBeUpBoolean(false);
     	}
     	else{
-    		Robot.retractor.stopIntakeExtension();
+    		//do nothing
     	}
+    	
+    	Robot.retractor.setIntakeToCorrectState();
     	
     }
 

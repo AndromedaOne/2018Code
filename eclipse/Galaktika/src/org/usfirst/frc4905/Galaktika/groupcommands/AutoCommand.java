@@ -1,11 +1,18 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.AutoJawsOpen;
+import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveExchange;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
+import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
+import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoder;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
@@ -79,12 +86,12 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void debug(String information) {
     		 char location = Robot.safelyGetInitialRobotLocation();
-    		 System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
-    		 System.out.flush();
-    		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
-     				location + "! " +
-     				information);
-    		 System.out.flush();
+    		 //System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
+    		 //System.out.flush();
+    		// System.out.println("In AutoCommand.java Field Setup: Robot = " +
+     		//		location + "! " +
+     		//		information);
+    		// System.out.flush();
 	}
 
     public void start() {
@@ -125,23 +132,43 @@ public abstract class AutoCommand extends CommandGroup {
         }
     }
 
-    protected void loadPowerCubeOntoSwitch() {
-        // TODO Auto-generated method stub
-
+    protected void moveElevatorToSwitchHeight() {
+        addParallel(new ElevatorMoveSwitch());
     }
 
-    protected void loadPowerCubeOntoScale() {
-        // TODO Auto-generated method stub
-
+    protected void moveElevatorToScaleHeight() {
+        addParallel(new ElevatorMoveHighScale());
     }
 
-    protected void loadPowerCubeIntoExchange() {
-        // TODO Auto-generated method stub
-
+    protected void moveElevatorToExchangeHeight() {
+        addParallel(new ElevatorMoveExchange());
     }
+
+    protected void resetElevatorInAuto() {
+        addSequential(new ResetElevatorEncoder());
+    }
+
 
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
+    }
+    
+
+    protected void closeArmsInAuto(double timeout) {
+    		addParallel(new AutoTimedArmsClose(timeout));
+    }
+    
+    protected void openArmsInAuto() {
+		addSequential(new AutoJawsOpen(0.5));
+}
+
+
+    protected void extendIntakeAuto() {
+		addParallel(new ExtendIntakeInAuto());
+    }
+
+    protected void resetEncoderInElevator() {
+		addSequential(new ResetElevatorEncoder());
     }
 
     protected void turnToCompassHeading(double compassHeading) {
