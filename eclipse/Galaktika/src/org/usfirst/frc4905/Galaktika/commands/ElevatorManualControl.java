@@ -51,6 +51,7 @@ public class ElevatorManualControl extends Command {
 
     	}
 		*/
+    	/*
     	if(forwardBackwardStickValue > 0.3) {
     		forwardBackwardStickValue = 0.5;
     	}
@@ -59,6 +60,10 @@ public class ElevatorManualControl extends Command {
     	}else {
     		Robot.elevator.moveElevator(0.0);
     	}
+    	*/
+    	
+    	Robot.elevator.moveElevator(forwardBackwardStickValue);
+    	
     	
     }
 

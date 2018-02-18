@@ -63,7 +63,7 @@ public class Elevator extends Subsystem {
 
 	public Elevator() {
 		initializeEncoderPID();
-		elevatorController.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		
 	}
 
 	@Override
@@ -157,6 +157,7 @@ public class Elevator extends Subsystem {
 	}
 	public void moveElevator(double velocity) {
 		elevatorController.set(velocity);
+		System.out.println("Elevator velocity: "+ velocity + " Encoder Position: " + getElevatorEncoderPosition());
 	}
 	// Disabled for now until sensors are hooked up
 
@@ -177,9 +178,16 @@ public class Elevator extends Subsystem {
 		else {
 		moveElevator(velocity);
 		}
+		
+		System.out.println("Elevator velocity: "+ velocity + " Encoder Position: " + getElevatorEncoderPosition());
+		
 	}
 	public void stopElevator() {
 		moveElevator(0);
+	}
+	
+	public double getElevatorEncoderPosition(){
+		return elevatorController.getSelectedSensorPosition(0);
 	}
 
 	public void resetEncoder() {
