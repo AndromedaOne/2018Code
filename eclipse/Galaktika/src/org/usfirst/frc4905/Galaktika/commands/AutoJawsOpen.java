@@ -2,43 +2,35 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
  */
-public class ElevatorMoveGroundLevel extends Command {
+public class AutoJawsOpen extends TimedCommand {
 
-    public ElevatorMoveGroundLevel() {
+    public AutoJawsOpen(double timeout) {
+        super(timeout);
+        requires(Robot.jaws);
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.elevator);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	//Robot.elevator.initializeEncoderPID();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.elevator.enableEncoderPID(0);
+    		Robot.jaws.extend();
     }
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	return true;
-        //return Robot.elevator.isDoneEncoderPID();
-    }
-
-    // Called once after isFinished returns true
+    // Called once after timeout
     protected void end() {
-    	//Robot.elevator.disableEncoderPID();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	//Robot.elevator.disableEncoderPID();
     }
 }

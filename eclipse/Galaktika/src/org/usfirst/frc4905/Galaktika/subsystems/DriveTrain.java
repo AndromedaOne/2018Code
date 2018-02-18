@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -36,6 +38,8 @@ import org.usfirst.frc4905.Galaktika.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+
 import java.math.*;
 import kinematics.MPSource;
 import kinematics.MotionProfilingController;
@@ -171,6 +175,7 @@ public class DriveTrain extends Subsystem {
 
 	private double SavedAngle = 0;
 
+	
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
 		leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -185,7 +190,7 @@ public class DriveTrain extends Subsystem {
 		frontUltrasonic.SetUltrasonicPingDelay(m_pingDelay);
 		frontUltrasonic.SetUltrasonicAveragedAmount(m_timesDistanceAveraged);
 		LiveWindow.add(m_ultrasonicPID);
-		m_ultrasonicPID.setName("Ultrasonic", "Ultrasonic PID");
+		m_ultrasonicPID.setName("Ultrasonic DriveTrain PID","Ultrasonic PID");
 
 		initializeEncoderPID();
 		initGyroPIDDeltaAngle();
@@ -283,8 +288,8 @@ public class DriveTrain extends Subsystem {
 	// here. Call these from Commands.
 
 	private PIDController m_encoderPID;
-
-	private class EncoderPIDIn implements PIDSource {
+	private class EncoderPIDIn extends SensorBase implements PIDSource, Sendable {
+		
 
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
@@ -303,6 +308,13 @@ public class DriveTrain extends Subsystem {
 			// TODO Auto-generated method stub
 			return getEncoderTicks();
 		}
+		@Override
+		public void initSendable(SendableBuilder builder) {
+			// TODO Auto-generated method stub
+			builder.setSmartDashboardType("Counter");
+			builder.addDoubleProperty("Value", this::pidGet, null);
+		}
+
 	}
 
 	private class EncoderPIDOut implements PIDOutput {
@@ -321,6 +333,8 @@ public class DriveTrain extends Subsystem {
 				encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
+		LiveWindow.add(encoderPIDIn);
+		encoderPIDIn.setName("DriveTrain", "Encoder");
 		LiveWindow.add(m_encoderPID);
 		m_encoderPID.setName("DriveTrain","Encoder PID");
 
@@ -472,7 +486,7 @@ public class DriveTrain extends Subsystem {
 			newRotateStickValue = rotateStickValue * mod;
 		}
 
-		if (courseCorrectionDelay == 24) {
+		if(courseCorrectionDelay == 24 && useDelay){
 			// take the most recent course after half a second and make that our angle
 			SavedAngle = robotAngle;
 		}
@@ -480,7 +494,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", SavedAngle), new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion), new TracePair("correctionEquation", correctionEquation),
-				new TracePair("correctionEquation", correctionEquation));
+				new TracePair("correctionEquation", correctionEquation)); 
 
 		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
 		courseCorrectionDelay++;

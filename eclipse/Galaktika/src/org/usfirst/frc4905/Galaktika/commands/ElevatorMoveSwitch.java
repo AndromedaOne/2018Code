@@ -18,31 +18,32 @@ public class ElevatorMoveSwitch extends Command {
     // Called just before this Command runs the first time
     @Override
 	protected void initialize() {
-    	Robot.elevator.initializeEncoderPID();
+    	//Robot.elevator.initializeEncoderPID();
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
 	protected void execute() {
-    	Robot.elevator.enableEncoderPID(4567);
+    	//Robot.elevator.enableEncoderPID(4567);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     @Override
 	protected boolean isFinished() {
-        return Robot.elevator.isDoneEncoderPID();
+        return true;
+    	//return Robot.elevator.isDoneEncoderPID();
     }
 
     // Called once after isFinished returns true
     @Override
 	protected void end() {
-    	Robot.elevator.disableEncoderPID();
+    	//Robot.elevator.disableEncoderPID();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     @Override
 	protected void interrupted() {
-    	Robot.elevator.disableEncoderPID();
+    	//Robot.elevator.disableEncoderPID();
     }
 }
