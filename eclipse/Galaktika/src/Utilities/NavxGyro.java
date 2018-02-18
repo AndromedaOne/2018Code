@@ -1,12 +1,12 @@
 package Utilities;
 
+import java.util.TimerTask;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class NavxGyro {
 
 	// gyroEncoder PID controller
-	
+
 	// gyroEncoder PID controller variables
 	private static final double gyroEncoderKp = 0.012;
 	private static final double gyroEncoderKi = 0.000;
@@ -28,6 +28,11 @@ public class NavxGyro {
 	private static String m_traceFileName = "GyroValues";
 
 	private AHRS m_navX;
+	// Timer for control loop to initialize navX gyro
+	private java.util.Timer m_controlLoop;
+	private long kDefaultPeriod = 50;
+	private long kDelay = 3000; // 3 second delay
+
 	public NavxGyro() {
 		try {
 			/* Communicate w/navX MXP via the MXP SPI Bus.                                     */
@@ -35,21 +40,44 @@ public class NavxGyro {
 			/* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
 			m_navX = new AHRS(SPI.Port.kMXP);
 			System.out.println("Created NavX instance");
+			// New thread to initialize the initial angle
+			m_controlLoop = new java.util.Timer();
+			SetInitialAngleReading task = new SetInitialAngleReading(this);
+			m_controlLoop.schedule(task, kDelay, kDefaultPeriod);
 		} catch (RuntimeException ex ) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(),
 					true);
 		}
 	}
+
+	private class SetInitialAngleReading extends TimerTask {
+
+		private NavxGyro m_navxGyro;
+		public SetInitialAngleReading(NavxGyro navxGyro) {
+			m_navxGyro = navxGyro;
+		}
+
+		@Override
+		public void run() {
+			System.out.println("In run");
+			if (!isCalibrating()) {
+				m_navxGyro.setInitialAngleReading();
+				cancel();
+			}
+		}
+	}
+
 	public AHRS getAHRS() {
 		return m_navX;
 	}
 	public void setInitialAngleReading() {
 		if(Double.isNaN(m_initialAngleReading)) {
 			m_initialAngleReading = m_navX.getAngle();
+			System.out.println("Initial angle set to: " + m_initialAngleReading);
 		}
 	}
 
-	 
+
 
 	private int m_getRobotAngleCount = 0;
 
@@ -59,7 +87,7 @@ public class NavxGyro {
 			SmartDashboard.putNumber("Raw Anlge", m_navX.getAngle());
 			SmartDashboard.putNumber("Get Robot Angle", correctedAngle);
 		}
-		Trace.getInstance().addTrace(false, m_traceFileName, 
+		Trace.getInstance().addTrace(true, m_traceFileName,
 				new TracePair("Raw Angle", m_navX.getAngle()),
 				new TracePair("Corrected Angle", correctedAngle),
 				new TracePair("X Accel", (double) m_navX.getWorldLinearAccelX()),
@@ -88,10 +116,10 @@ public class NavxGyro {
 
 	}
 
-	 
 
-	 
-	 
+
+
+
 	public boolean isCalibrating() {
 
 		return m_navX.isCalibrating();
