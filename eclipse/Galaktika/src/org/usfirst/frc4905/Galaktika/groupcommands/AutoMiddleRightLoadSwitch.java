@@ -22,17 +22,18 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
         char platePos = Robot.getSwitchPlatePosition();
         closeArmsInAuto(5);
         extendIntakeAuto();
-        resetElevatorInAuto();
-        moveElevatorToSwitchHeight();
-        if (platePos == 'L') {
+        //resetElevatorInAuto();
+        //moveElevatorToSwitchHeight();
+        //if (platePos == 'L') {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnLeft();
             driveForward(LATERAL_DISTANCE_BETWEEN_PLATES);
             turnRight();
-            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-        } else {
-            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
-        }
+            //driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
+            
+        //} else {
+            //driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+        //}
         openArmsInAuto();
        
     }
