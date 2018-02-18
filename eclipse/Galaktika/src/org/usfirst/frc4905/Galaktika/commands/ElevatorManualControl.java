@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.ControllerButtons.EnumeratedRawAxis;
 import edu.wpi.first.wpilibj.Joystick;
@@ -50,7 +51,15 @@ public class ElevatorManualControl extends Command {
 
     	}
 		*/
-    	Robot.elevator.moveElevator(forwardBackwardStickValue);
+    	if(forwardBackwardStickValue > 0.3) {
+    		forwardBackwardStickValue = 0.5;
+    	}
+    	if(RobotMap.elevatorBottomLimitSwitch.get() || forwardBackwardStickValue < 0.0) {
+    	Robot.elevator.moveElevator(forwardBackwardStickValue * 0.75);
+    	}else {
+    		Robot.elevator.moveElevator(0.0);
+    	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()

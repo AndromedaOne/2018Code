@@ -126,7 +126,7 @@ public class Ramps extends Subsystem {
     }
     
     public void lockRampsIn(){
-    	Robot.ramps.moveLeftServo(0.5);
+    	Robot.ramps.moveLeftServo(0.3);
         Robot.ramps.moveRightServo(0.5);
     }
 

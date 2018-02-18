@@ -32,16 +32,15 @@ public class JawsOpenClose extends Command {
 		
 		if(isRightBumperPressed && ! isLeftBumperPressed) {
 			//contract
-			Robot.intake.runIntake(RunIntakeIn.kIntakeSpeed);
+			//Robot.intake.runIntake(RunIntakeIn.kIntakeSpeed);
 			Robot.jaws.setShouldJawsBeOpenBoolean(false);
+			System.out.println("Trying to close");
 
 		}else if(isLeftBumperPressed && ! isRightBumperPressed) {
 			//extend
 			Robot.jaws.setShouldJawsBeOpenBoolean(true);
+			System.out.println("Trying to open");
 
-		}else {
-			
-			Robot.intake.runIntake(0);
 		}
 		
 		Robot.jaws.setJawsToCorrectState();
