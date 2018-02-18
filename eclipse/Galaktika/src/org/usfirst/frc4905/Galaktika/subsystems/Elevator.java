@@ -118,8 +118,14 @@ public class Elevator extends Subsystem {
 	private class EncoderPIDOut implements PIDOutput{
 		@Override
 		public void pidWrite(double output) {
+			// Negated because encoder and motor count in opposite directions
+			if (output > 0 && output <= 0.3) {
+				// Min speed to overcome intake weight
+				output = 0.3;
+			}
 			moveElevator(-output);
-			System.out.println("In Elevator pidWrite output = " + output);
+			System.out.println("In Elevator pidWrite output = " + output +
+					"Current error = " + m_encoderPID.getError());
 		}
 	}
 
