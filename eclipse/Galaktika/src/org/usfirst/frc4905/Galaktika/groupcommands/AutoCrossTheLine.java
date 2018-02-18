@@ -18,13 +18,11 @@ public class AutoCrossTheLine extends AutoCommand {
 	}
 
     protected void prepareToStart() {
-        char robotPos = Robot.getInitialRobotLocation();
-        //closeArmsInAuto(10);
+        char robotPos = Robot.getInitialRobotLocation();  
         addParallel(new JawsOpenClose());
-        //extendIntakeAuto();
         addParallel(new RetractExtendArms());
         Robot.retractor.setShouldIntakeBeUpBoolean(false);
-        //moveElevatorToSwitchHeight();
+        
         if (robotPos == 'M') {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnRight();
