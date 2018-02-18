@@ -82,7 +82,7 @@ public class RobotMap {
 
 	public static DigitalInput elevatorBottomLimitSwitch;
 
-	
+
 
 	private static class LiveWindow {
 
@@ -135,13 +135,13 @@ public class RobotMap {
 		intakeRightController = new VictorSP(1);
 		LiveWindow.addActuator("Intake", "RightController", (VictorSP) intakeRightController);
 		intakeRightController.setInverted(false);
-		
+
 		leftRampSolenoid = new DoubleSolenoid(0, 0, 1);
 		LiveWindow.addActuator("Ramps", "leftRampSolenoid", leftRampSolenoid);
-		
+
 		rightRampSolenoid = new DoubleSolenoid(0, 2, 3);
 		LiveWindow.addActuator("Ramps", "rightRampSolenoid", rightRampSolenoid);
-		
+
 		/*
 		 * THANKS PETE!!!!!!
 		rampsSolenoid1 = new DoubleSolenoid(0, 0, 1);
@@ -156,7 +156,7 @@ public class RobotMap {
 		rampsSolenoid4 = new DoubleSolenoid(0, 6, 7);
 		LiveWindow.addActuator("Ramps", "Solenoid4", rampsSolenoid4);
 		 */
-		
+
 		elevatorElevatorController = new WPI_TalonSRX(5);
 		LiveWindow.addActuator("Elevator", "Motor", elevatorElevatorController);
 
@@ -183,7 +183,8 @@ public class RobotMap {
 		rightDeployServo = new Servo(6);
 		LiveWindow.addActuator("Ramps", "rightDeployServo", rightDeployServo);
 		SmartDashboard.putNumber("right servo get", rightDeployServo.get());
+		SmartDashboard.putNumber("elevator encoder get", elevatorElevatorController.getSelectedSensorPosition(0));
 
 
-	}  
+	}
 }
