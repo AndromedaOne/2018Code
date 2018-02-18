@@ -320,9 +320,22 @@ public class DriveTrain extends Subsystem {
 	}
 	private class GyroPIDOut implements PIDOutput {
 
+		private double m_previousOutput = 0;
+		private double m_maxAllowableDelta;
+		
+		public GyroPIDOut(double maxAllowableDelta) {
+			m_maxAllowableDelta = maxAllowableDelta;
+		}
+		
 		@Override
 		public void pidWrite(double output) {
+			output = calculateOutput();
 			move(0,output);
+		}
+
+		private double calculateOutput() {
+			
+			return 0;
 		}
 
 	}
