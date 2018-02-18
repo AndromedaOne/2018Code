@@ -23,7 +23,8 @@ public class NavxGyro {
 	private static final double gyroEncoderKf = 0.000;
 	private static final double gyroEncoderTolerance = 1.0;
 	private static final double gyroEncoderOutputMax = 0.6 ;
-	private double m_initialAngleReading = Double.NaN;
+	private boolean angleReadingSet;
+	private double m_initialAngleReading = 0;
 
 	private static String m_traceFileName = "GyroValues";
 
@@ -39,6 +40,7 @@ public class NavxGyro {
 			/* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
 			/* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
 			m_navX = new AHRS(SPI.Port.kMXP);
+			angleReadingSet = false;
 			System.out.println("Created NavX instance");
 			// New thread to initialize the initial angle
 			m_controlLoop = new java.util.Timer();
@@ -71,9 +73,16 @@ public class NavxGyro {
 		return m_navX;
 	}
 	public void setInitialAngleReading() {
-		if(Double.isNaN(m_initialAngleReading)) {
+		if (angleReadingSet) {
+			System.out.println("Angle already set, not resetting");
+			return;
+		}else {
 			m_initialAngleReading = m_navX.getAngle();
 			System.out.println("Initial angle set to: " + m_initialAngleReading);
+			angleReadingSet = true;
+			if (m_initialAngleReading == 0.0) {
+				System.out.println("Warning: angle probably not correct");
+			}
 		}
 	}
 
