@@ -139,7 +139,6 @@ public class OI {
 		SmartDashboard.putData("Lift Right Ramp", new LiftRightRamp());
 		SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
 		SmartDashboard.putData("DriveSquare", new DriveSquare());
-		SmartDashboard.putData("Test Elevator", new ElevatorAuto());
 
 	}
 
