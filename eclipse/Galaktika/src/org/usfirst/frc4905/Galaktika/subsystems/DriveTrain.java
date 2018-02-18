@@ -314,7 +314,7 @@ public class DriveTrain extends Subsystem {
 		}
 		@Override
 		public void initSendable(SendableBuilder builder) {
-			builder.setSmartDashboardType("Angle");
+			builder.setSmartDashboardType("Counter");
 			builder.addDoubleProperty("Value", this::pidGet, null);
 		}
 	}
