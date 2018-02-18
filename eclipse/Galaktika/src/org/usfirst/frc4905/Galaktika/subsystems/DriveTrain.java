@@ -109,7 +109,7 @@ public class DriveTrain extends Subsystem {
 
 	private double courseCorrectionDelay = 0;
 
-	private double SavedAngle = 0;
+	private double m_savedAngle = 0;
 
 
 
@@ -274,7 +274,7 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setName("DriveTrain","Encoder PID");
 
 		//grab a saved angle to correct to when using the encoder pid
-		SavedAngle = RobotMap.navX.getRobotAngle();
+		m_savedAngle = RobotMap.navX.getRobotAngle();
 	}
 
 	public void enableEncoderPID(double setpoint) {
@@ -298,7 +298,7 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.disable();
 	}
 	private PIDController m_gyroPIDSource;
-	private class GyroPIDIn implements PIDSource {
+	private class GyroPIDIn extends SensorBase implements PIDSource, Sendable {
 		@Override
 		public void setPIDSourceType(PIDSourceType PIDSource) {
 
@@ -312,6 +312,11 @@ public class DriveTrain extends Subsystem {
 		public double pidGet() {
 			return RobotMap.navX.getRobotAngle();
 		}
+		@Override
+		public void initSendable(SendableBuilder builder) {
+			builder.setSmartDashboardType("Angle");
+			builder.addDoubleProperty("Value", this::pidGet, null);
+		}
 	}
 	private class GyroPIDOut implements PIDOutput {
 
@@ -324,7 +329,7 @@ public class DriveTrain extends Subsystem {
 	public void initGyroPIDDeltaAngle() {
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
 		GyroPIDOut gyroPIDOut = new GyroPIDOut();
-		double gyroPIDP = 0.1;
+		double gyroPIDP = 0.03;
 		double gyroPIDI = 0.0;
 		double gyroPIDD = 0.0;
 		double gyroPIDF = 0.0;
@@ -335,7 +340,8 @@ public class DriveTrain extends Subsystem {
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
 		LiveWindow.add(m_gyroPIDSource);
 		m_gyroPIDSource.setName("Gyro","Gyro PID");
-
+		LiveWindow.add(gyroPIDIn);
+		gyroPIDIn.setName("Gyro", "GyroAngle");
 	}
 	public void enableGyroPID(double setPoint) {
 		double endAngle = RobotMap.navX.getRobotAngle() + setPoint;
@@ -344,7 +350,7 @@ public class DriveTrain extends Subsystem {
 
 	}
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace(false, "GyroPID",
+		Trace.getInstance().addTrace(true, "GyroPID",
 				new TracePair("Target", m_gyroPIDSource.getSetpoint()),
 				new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
 				new TracePair("Avg Error", m_gyroPIDSource.getError()),
@@ -354,6 +360,8 @@ public class DriveTrain extends Subsystem {
 
 	public void stopGyroPid() {
 		m_gyroPIDSource.disable();
+		m_savedAngle = RobotMap.navX.getRobotAngle();
+		System.out.println("Done Turning");
 	}
 
 
@@ -380,7 +388,7 @@ public class DriveTrain extends Subsystem {
 
 	public void gyroCorrectMove(double forwardBackwardStickValue, double rotateStickValue, double mod, boolean useDelay, boolean squaredInput) {
 		double robotAngle = RobotMap.navX.getRobotAngle();
-		double correctionEquation = (SavedAngle - robotAngle)*kProportion;
+		double correctionEquation = (m_savedAngle - robotAngle)*kProportion;
 
 		double newForwardBackwardStickValue = 0;
 		double newRotateStickValue = 0;
@@ -392,14 +400,14 @@ public class DriveTrain extends Subsystem {
 
 		} else if (forwardBackwardStickValue == 0 && rotateStickValue == 0) {
 
-			SavedAngle = robotAngle;
+			m_savedAngle = robotAngle;
 			newForwardBackwardStickValue = 0;
 			newRotateStickValue = 0;
 		}
 		else if (rotateStickValue != 0) {
 			courseCorrectionDelay = 0;
 
-			SavedAngle = robotAngle;
+			m_savedAngle = robotAngle;
 			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
 			newRotateStickValue = rotateStickValue*mod;
 		}
@@ -409,7 +417,7 @@ public class DriveTrain extends Subsystem {
 			//the instant the driver released the turn stick.
 
 			//reassign the correctionEquation to the latest direction that we've been "free driving" in
-			correctionEquation = (SavedAngle - robotAngle)*kProportion;
+			correctionEquation = (m_savedAngle - robotAngle)*kProportion;
 			newForwardBackwardStickValue = forwardBackwardStickValue*mod;
 			newRotateStickValue = correctionEquation;
 
@@ -423,12 +431,12 @@ public class DriveTrain extends Subsystem {
 
 		if(courseCorrectionDelay == 24 && useDelay){
 			//take the most recent course after half a second and make that our angle
-			SavedAngle = robotAngle;
+			m_savedAngle = robotAngle;
 		}
 
 		Trace.getInstance().addTrace(false, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
-				new TracePair("SavedAngle", SavedAngle),
+				new TracePair("SavedAngle", m_savedAngle),
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("kProportion", kProportion),
 				new TracePair("correctionEquation", correctionEquation));

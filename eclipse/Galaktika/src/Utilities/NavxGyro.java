@@ -21,7 +21,7 @@ public class NavxGyro {
 	private static final double gyroEncoderKi = 0.000;
 	private static final double gyroEncoderKd = 0.000;
 	private static final double gyroEncoderKf = 0.000;
-	private static final double gyroEncoderTolerance = 1.0;
+	private static final double gyroEncoderTolerance = 2.0;
 	private static final double gyroEncoderOutputMax = 0.6 ;
 	private boolean angleReadingSet;
 	private double m_initialAngleReading = 0;
@@ -72,7 +72,7 @@ public class NavxGyro {
 	public AHRS getAHRS() {
 		return m_navX;
 	}
-	public void setInitialAngleReading() {
+	private void setInitialAngleReading() {
 		if (angleReadingSet) {
 			System.out.println("Angle already set, not resetting");
 			return;
@@ -80,9 +80,6 @@ public class NavxGyro {
 			m_initialAngleReading = m_navX.getAngle();
 			System.out.println("Initial angle set to: " + m_initialAngleReading);
 			angleReadingSet = true;
-			if (m_initialAngleReading == 0.0) {
-				System.out.println("Warning: angle probably not correct");
-			}
 		}
 	}
 
