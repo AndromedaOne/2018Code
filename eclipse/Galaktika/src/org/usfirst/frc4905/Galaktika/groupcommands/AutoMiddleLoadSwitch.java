@@ -19,8 +19,8 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
         char platePos = Robot.getSwitchPlatePosition();
         closeArmsInAuto(5);
         extendIntakeAuto();
-        resetElevatorInAuto();
-        moveElevatorToSwitchHeight();
+        
+        //moveElevatorToSwitchHeight(); no control....
         driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
         if (platePos == 'R') {
             turnRight();
