@@ -97,9 +97,9 @@ public class DriveTrain extends Subsystem {
 		return m_encoderMotionProfilingController;
 	}
 
-	private static final double kGyroMaxVelocity = 275.0; // degrees per second
-	private static final double kGyroMaxAcceleration = 100.0 * 10.0; // degrees per second^2
-	private static final double kGyroMaxJerk = 1000.0 * 10.0; // degrees per second^3
+	private static final double kGyroMaxVelocity = 300.0; // degrees per second
+	private static final double kGyroMaxAcceleration = 100000.0; // degrees per second^2
+	private static final double kGyroMaxJerk = 1000.0; // degrees per second^3
 
 	public static double getGyroMaxVelocity() {
 		return kGyroMaxVelocity;
@@ -113,14 +113,14 @@ public class DriveTrain extends Subsystem {
 		return kGyroMaxJerk;
 	}
 
-	private double m_gyroMPPositionkp = 1.0;
-	private double m_gyroMPPositionki = 0.1;
-	private double m_gyroMPPositionkd = 10.0;
+	private double m_gyroMPPositionkp = 0.0;
+	private double m_gyroMPPositionki = 0.0;
+	private double m_gyroMPPositionkd = 0.0;
 	private double m_gyroMPiInitialPosition = 0.0;
 
-	private double m_gyroMPVelocitykp = 0.001;
-	private double m_gyroMPVelocityki = 0.0001;
-	private double m_gyroMPVelocitykd = 0.003;
+	private double m_gyroMPVelocitykp = 0.0;
+	private double m_gyroMPVelocityki = 0.0;
+	private double m_gyroMPVelocitykd = 0.0;
 	private double m_gyroMPVelocitykf = 1.0 / kGyroMaxVelocity;
 
 	private double kGyroMPTolerance = 3;
@@ -560,8 +560,8 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public double getVelocity() {
-			spikeDetector.update(getGyroVelocity());
-			return spikeDetector.mean;
+			
+			return RobotMap.navX.getRotationalVelocity();
 		}
 	}
 
@@ -589,33 +589,6 @@ public class DriveTrain extends Subsystem {
 		m_gyroMotionProfilingController.disable();
 	}
 	
-	public double getGyroVelocity() {
-		double currentTime = Timer.getFPGATimestamp();
-		double currentAngle = getGyroPosition();
-		if (Double.isNaN(m_gyroPreviousPosition) || Math.abs(currentTime - m_gyroPreviousTime) > 0.5) {
-			m_gyroPreviousPosition = currentAngle;
-			m_gyroPreviousTime = currentTime;
-			return 0.0;
-		}
-		double changeInPosition = currentAngle - m_gyroPreviousPosition;
-		double changeInTime = Math.abs(currentTime - m_gyroPreviousTime);
-		if(changeInTime == 0.0) {
-			return  0.0;
-		}
-		double velocity = changeInPosition / changeInTime;
-		
-		System.out.println("");
-		System.out.println("change in pos: " + changeInPosition);
-		System.out.println("currentAngle: " + currentAngle);
-		System.out.println("m_gyroPreviousPosition: " + m_gyroPreviousPosition);
-		System.out.println("changeInTime: " + changeInTime);
-		System.out.println("");
-		
-		m_gyroPreviousPosition = currentAngle;
-		m_gyroPreviousTime = currentTime;
-		
-		return velocity;
-	}
 
 	public double getGyroPosition() {
 

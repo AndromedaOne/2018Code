@@ -96,6 +96,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	public void run() {
 		if (m_enableStatus) {
+			System.out.println("IN Run!!!");
 			double currentTimestamp = Timer.getFPGATimestamp();
 			m_deltaTime = currentTimestamp - m_initialTimeStamp;
 			TrajectoryPoint nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_deltaTime);

@@ -3,6 +3,7 @@ package org.usfirst.frc4905.Galaktika.commands;
 import java.util.Vector;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.RobotMap;
 
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
@@ -62,7 +63,7 @@ public class RunMotorAndLog extends Command {
 		if (encoderMode) {
 			currentVelocity = Robot.driveTrain.getTalonVelocity();
 		} else {
-			currentVelocity = Robot.driveTrain.getGyroVelocity();
+			currentVelocity = RobotMap.navX.getRotationalVelocity();
 		}
 
 		double currentAcceleration = (currentVelocity - m_previousVelocity) / deltaTime;

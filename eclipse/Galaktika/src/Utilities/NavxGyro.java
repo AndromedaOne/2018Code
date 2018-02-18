@@ -97,7 +97,10 @@ public class NavxGyro {
 
 		return m_navX.isCalibrating();
 	}
-
+	
+	public double getRotationalVelocity() {
+		return m_navX.getRawGyroZ();
+	}
 
 }
 
