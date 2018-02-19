@@ -101,9 +101,9 @@ public class DriveTrain extends Subsystem {
 		return m_encoderMotionProfilingController;
 	}
 
-	private static final double kGyroMaxVelocity = 300.0; // degrees per second
-	private static final double kGyroMaxAcceleration = 100000.0; // degrees per second^2
-	private static final double kGyroMaxJerk = 1000.0; // degrees per second^3
+	private static final double kGyroMaxVelocity = 221.0; // degrees per second
+	private static final double kGyroMaxAcceleration = 1000.0; // degrees per second^2
+	private static final double kGyroMaxJerk = 900.0; // degrees per second^3
 
 	public static double getGyroMaxVelocity() {
 		return kGyroMaxVelocity;
@@ -117,17 +117,17 @@ public class DriveTrain extends Subsystem {
 		return kGyroMaxJerk;
 	}
 
-	private double m_gyroMPPositionkp = 0.0;
-	private double m_gyroMPPositionki = 0.0;
+	private double m_gyroMPPositionkp = 4.0;
+	private double m_gyroMPPositionki = 1.0e-6;
 	private double m_gyroMPPositionkd = 0.0;
 	private double m_gyroMPiInitialPosition = 0.0;
 
-	private double m_gyroMPVelocitykp = 0.0;
+	private double m_gyroMPVelocitykp = 0.005;
 	private double m_gyroMPVelocityki = 0.0;
 	private double m_gyroMPVelocitykd = 0.0;
 	private double m_gyroMPVelocitykf = 1.0 / kGyroMaxVelocity;
 
-	private double kGyroMPTolerance = 3;
+	private double kGyroMPTolerance = 3.0;
 	private MotionProfilingController m_gyroMotionProfilingController;
 
 	public MotionProfilingController getGyroMPController() {

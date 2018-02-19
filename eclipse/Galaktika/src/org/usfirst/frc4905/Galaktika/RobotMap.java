@@ -118,7 +118,6 @@ public class RobotMap {
 
 		driveTrainRightTopTalon = new WPI_TalonSRX(3);
 
-
 		driveTrainRightBottomTalon = new WPI_TalonSRX(4);
 
 
@@ -176,6 +175,8 @@ public class RobotMap {
 		elevatorBottomLimitSwitch = new DigitalInput(6);
 		jawsSolenoid = new DoubleSolenoid(0, 4, 5);
 		retractIntake = new DoubleSolenoid(0, 6, 7);
+		leftDeployServo = new Servo(5);
+		rightDeployServo = new Servo(6);
 		LiveWindow.addSensor("ElevatorLimitSwitch", "Bottom", elevatorBottomLimitSwitch);
 		LiveWindow.addActuator("Ramps", "leftDeployServo", leftDeployServo);
 		SmartDashboard.putNumber("left servo get", leftDeployServo.get());
@@ -191,8 +192,7 @@ public class RobotMap {
 		blueVal.enablePWM(0);
 		greenVal = new DigitalOutput(4);
 		greenVal.enablePWM(0);
-		leftDeployServo = new Servo(5);
-		rightDeployServo = new Servo(6);
+		
 
 
 	}  

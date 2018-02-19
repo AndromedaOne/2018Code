@@ -109,7 +109,7 @@ public class NavxGyro {
 	}
 	
 	public double getRotationalVelocity() {
-		return m_navX.getRawGyroZ();
+		return m_navX.getRate()*m_navX.getActualUpdateRate();
 	}
 
 }

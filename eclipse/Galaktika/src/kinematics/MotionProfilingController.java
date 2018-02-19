@@ -48,7 +48,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	private java.util.Timer m_controlLoop;
 	// this tells the thread how long to wait in between cycles. This is 50
 	// miliseconds
-	private long kdefaultPeriod = 50;
+	private long kdefaultPeriod = 20;
 
 	public MotionProfilingController(double positionPValue, double positionIValue, double positionDValue,
 			double velocityPValue, double velocityIValue, double velocityDValue, double velocityFValue,
@@ -96,7 +96,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	public void run() {
 		if (m_enableStatus) {
-			System.out.println("IN Run!!!");
+			
 			double currentTimestamp = Timer.getFPGATimestamp();
 			m_deltaTime = currentTimestamp - m_initialTimeStamp;
 			TrajectoryPoint nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_deltaTime);
@@ -109,7 +109,6 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			double output = nextVelocity*m_velocityF + velocityPIDOut;
 			
 			m_pidOutput.pidWrite(output);
-			double rate = RobotMap.navX.getRate();
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
@@ -117,7 +116,8 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", deltaPosition),
 					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
-					new TracePair("PositionError", m_currentTrajectoryPoint.m_position - deltaPosition));
+					new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
+					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition)*10));
 				
 					/*new TracePair("velocityPIDOut", (velocityPIDOut)),
 					new TracePair("nextVelocity", (nextVelocity)))
