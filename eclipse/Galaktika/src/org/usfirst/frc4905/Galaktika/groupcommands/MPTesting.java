@@ -1,20 +1,17 @@
-package org.usfirst.frc4905.Galaktika.commands;
+package org.usfirst.frc4905.Galaktika.groupcommands;
 
-
-import org.usfirst.frc4905.Galaktika.Robot;
-import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
+import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
+import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
+import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import kinematics.InvalidDimentionException;
-import kinematics.Path;
-import kinematics.Point;
 
 /**
  *
  */
-public class MotionProfilingTest extends CommandGroup {
+public class MPTesting extends CommandGroup {
 
-    public MotionProfilingTest() {
+    public MPTesting() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -32,7 +29,10 @@ public class MotionProfilingTest extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    		addSequential(new MoveUsingEncoderPID(80.0));
-		
+    		addSequential(new MoveUsingEncoderPID(40.0));
+    		addSequential(new GyroPIDTurnDeltaAngle(-90));
+    		addSequential(new MoveUsingEncoderPID(40.0));
+    		addSequential(new GyroPIDTurnDeltaAngle(90));
+    		addSequential(new MoveUsingEncoderPID(20.0));
     }
 }

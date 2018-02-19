@@ -105,6 +105,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			double nextVelocity = nextTrajectoryPoint.m_currentVelocity + positionPidOut;
 			
 			double velocity = m_mpSource.getVelocity();
+			
 			double velocityPIDOut = m_velocityPIDCalculator.getPIDOut(nextVelocity, velocity);
 			double output = nextVelocity*m_velocityF + velocityPIDOut;
 			
@@ -112,10 +113,10 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
-					new TracePair("ActualVelocity", velocity),
-					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
-					new TracePair("ActualPosition", deltaPosition),
-					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
+					new TracePair("ActualVelocity", velocity*-1.0),
+					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity*-1.0),
+					new TracePair("ActualPosition", deltaPosition*-1.0),
+					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position*-1.0),
 					new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
 					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition)*10));
 				

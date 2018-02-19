@@ -16,6 +16,7 @@ import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveGroundLevel;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveLowScale;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
+import org.usfirst.frc4905.Galaktika.groupcommands.MPTesting;
 
 import Utilities.*;
 
@@ -139,6 +140,7 @@ public class OI {
 		SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
 		SmartDashboard.putData("DriveSquare", new DriveSquare());
         SmartDashboard.putData("TurnDeltaAgnle", new GyroPIDTurnDeltaAngle(-180.0));
+        SmartDashboard.putData("MPGroupTest", new MPTesting());
         
         
 	}
