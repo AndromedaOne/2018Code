@@ -29,10 +29,10 @@ public class MPTesting extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    		addSequential(new MoveUsingEncoderPID(40.0));
-    		addSequential(new GyroPIDTurnDeltaAngle(-90));
-    		addSequential(new MoveUsingEncoderPID(40.0));
-    		addSequential(new GyroPIDTurnDeltaAngle(90));
     		addSequential(new MoveUsingEncoderPID(20.0));
+    		addSequential(new GyroPIDTurnDeltaAngle(-45));
+    		addSequential(new MoveUsingEncoderPID(50.0));
+    		addSequential(new GyroPIDTurnDeltaAngle(45.0));
+    		addSequential(new MoveUsingEncoderPID(5.0));
     }
 }

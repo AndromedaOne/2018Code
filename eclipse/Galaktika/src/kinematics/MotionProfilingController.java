@@ -113,10 +113,10 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
 			Trace.getInstance().addTrace(true, "MotionProfilingData",
-					new TracePair("ActualVelocity", velocity*-1.0),
-					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity*-1.0),
-					new TracePair("ActualPosition", deltaPosition*-1.0),
-					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position*-1.0),
+					new TracePair("ActualVelocity", velocity),
+					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
+					new TracePair("ActualPosition", deltaPosition),
+					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
 					new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
 					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition)*10));
 				

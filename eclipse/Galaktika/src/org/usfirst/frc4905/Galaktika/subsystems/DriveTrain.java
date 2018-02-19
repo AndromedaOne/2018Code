@@ -103,8 +103,8 @@ public class DriveTrain extends Subsystem {
 	}
 
 	private static final double kGyroMaxVelocity = 221.0; // degrees per second
-	private static final double kGyroMaxAcceleration = 1000.0; // degrees per second^2
-	private static final double kGyroMaxJerk = 900.0; // degrees per second^3
+	private static final double kGyroMaxAcceleration = 2500.0; // degrees per second^2
+	private static final double kGyroMaxJerk = 2000.0; // degrees per second^3
 
 	public static double getGyroMaxVelocity() {
 		return kGyroMaxVelocity;
@@ -118,25 +118,24 @@ public class DriveTrain extends Subsystem {
 		return kGyroMaxJerk;
 	}
 
-	private double m_gyroMPPositionkp = 4.0;
-	private double m_gyroMPPositionki = 1.0e-6;
-	private double m_gyroMPPositionkd = 0.0;
+	private double m_gyroMPPositionkp = 5.5;
+	private double m_gyroMPPositionki = 0.001;
+	private double m_gyroMPPositionkd = 0.1;
 	private double m_gyroMPiInitialPosition = 0.0;
 
-	private double m_gyroMPVelocitykp = 0.005;
+	private double m_gyroMPVelocitykp = 0.006;
 	private double m_gyroMPVelocityki = 0.0;
 	private double m_gyroMPVelocitykd = 0.0;
 	private double m_gyroMPVelocitykf = 1.0 / kGyroMaxVelocity;
 
-	private double kGyroMPTolerance = 3.0;
+	private double kGyroMPTolerance = 2.5;
 	private MotionProfilingController m_gyroMotionProfilingController;
 
 	public MotionProfilingController getGyroMPController() {
 		return m_gyroMotionProfilingController;
 	}
 	
-	private double m_gyroMPPreviousVelocity = 0.0;
-	private double m_gyroMPPreviousDeltaVelocity = 0.0;
+	private double KDEGREES_PER_ENCODER_TICK = 0.002452021205189;
 
 	private double m_gyroPreviousPosition = Double.NaN;
 	private double m_gyroPreviousTime = 0.0;
@@ -201,7 +200,6 @@ public class DriveTrain extends Subsystem {
 
 		initializeEncoderMP();
 		initializeGyroMP();
-		initializeUltrasonicMP();
 	}
 
 	// Ultrasonic Code - Begins
@@ -578,18 +576,9 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public double getVelocity() {
-			double rawVelocity = RobotMap.navX.getRotationalVelocity();
-			double velocity = rawVelocity;
-			double deltaVelocity = velocity - m_gyroMPPreviousVelocity;
-			if (Math.abs(deltaVelocity - m_gyroMPPreviousDeltaVelocity) > 10000000.0 || deltaVelocity == 0.0) {
-				velocity = m_gyroMPPreviousVelocity + m_gyroMPPreviousDeltaVelocity;
-				deltaVelocity = m_gyroMPPreviousDeltaVelocity;
-				outlierCount *= -1.0;
-			}
-			
-			m_gyroMPPreviousVelocity = velocity;
-			m_gyroMPPreviousDeltaVelocity = deltaVelocity;
-			return velocity;
+			double encoderVelocity = getTalonVelocity();
+			double rotationalVelocity = -1.0 * (encoderVelocity * KDEGREES_PER_ENCODER_TICK);
+			return rotationalVelocity;
 		}
 	}
 
@@ -605,8 +594,6 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void enableGyroMP(double setpoint) {
-		m_gyroMPPreviousDeltaVelocity = 0.0;
-		m_gyroMPPreviousVelocity = 0.0;
 		m_gyroMotionProfilingController.setSetpoint(setpoint);
 		m_gyroMotionProfilingController.enable();
 	}
@@ -623,58 +610,6 @@ public class DriveTrain extends Subsystem {
 	public double getGyroPosition() {
 
 		return RobotMap.navX.getRobotAngle();
-	}
-
-	private class UltrasonicMPOut implements PIDOutput {
-
-		@Override
-		public void pidWrite(double output) {
-			gyroCorrectMove(output, 0.0, 1.0, true, false);
-		}
-
-	}
-
-	private class UltrasonicMPIn implements MPSource {
-
-		@Override
-		public double getPosition() {
-			return (m_ultrasonicMPInitialPosition - getDistanceFromFront()) * DriveTrain.ENCODER_TICKS_PER_INCH;
-		}
-
-		@Override
-		public double getVelocity() {
-			return getTalonVelocity();
-		}
-
-	}
-
-	public void initializeUltrasonicMP() {
-		UltrasonicMPIn ultrasonicMPIn = new UltrasonicMPIn();
-		UltrasonicMPOut ultrasonicMPOut = new UltrasonicMPOut();
-		m_ultrasonicMotionProfilingController = new MotionProfilingController(m_ultrasonicMPPositionkp,
-				m_ultrasonicMPPositionki, m_ultrasonicMPPositionkd, m_encoderMPVelocitykp, m_encoderMPVelocityki,
-				m_encoderMPVelocitykd, m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration,
-				kEncoderMaxJerk, ultrasonicMPIn, ultrasonicMPOut);
-		m_ultrasonicMotionProfilingController.setAbsoluteTolerance(kUltrasonicMPTolerance);
-		LiveWindow.add(m_ultrasonicMotionProfilingController);
-		m_gyroPIDSource.setName("UltrasonicMP", "UltrasonicMP");
-	}
-
-	public void enableUltrasonicMP(double setpoint) {
-		m_ultrasonicMPInitialPosition = getDistanceFromFront();
-		double distanceToTravel = m_ultrasonicMPInitialPosition - setpoint;
-		
-		m_ultrasonicMotionProfilingController.setSetpoint(distanceToTravel * DriveTrain.ENCODER_TICKS_PER_INCH);
-		m_ultrasonicMotionProfilingController.enable();
-	}
-
-	public boolean isDoneUltrasonicMP() {
-
-		return m_ultrasonicMotionProfilingController.onTarget();
-	}
-
-	public void disableUltrasonicMP() {
-		m_ultrasonicMotionProfilingController.disable();
 	}
 
 }
