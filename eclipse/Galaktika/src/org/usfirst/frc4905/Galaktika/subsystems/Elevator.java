@@ -65,7 +65,7 @@ public class Elevator extends Subsystem {
 
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
-		// setDefaultCommand(new ElevatorManualControl());
+		setDefaultCommand(new ElevatorManualControl());
 	}
 
 	@Override
