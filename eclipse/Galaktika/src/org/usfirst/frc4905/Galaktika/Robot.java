@@ -248,7 +248,7 @@ public class Robot extends TimedRobot {
         	Robot.ramps.setSafetyBooleanStatus(false);
         }
 
-        Robot.ramps.holdRampsIn();
+
         Robot.ramps.lockRampsIn();
     }
 
