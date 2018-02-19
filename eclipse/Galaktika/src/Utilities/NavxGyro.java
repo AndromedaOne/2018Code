@@ -90,7 +90,7 @@ public class NavxGyro {
 	public double getRobotAngle() {
 		double correctedAngle = m_navX.getAngle() - m_initialAngleReading;
 		if((m_getRobotAngleCount % 10) == 0) {
-			SmartDashboard.putNumber("Raw Anlge", m_navX.getAngle());
+			SmartDashboard.putNumber("Raw Angle", m_navX.getAngle());
 			SmartDashboard.putNumber("Get Robot Angle", correctedAngle);
 		}
 		Trace.getInstance().addTrace(true, m_traceFileName,

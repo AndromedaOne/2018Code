@@ -225,7 +225,7 @@ public class DriveTrain extends Subsystem {
 
 	private PIDController m_encoderPID;
 	private class EncoderPIDIn extends SensorBase implements PIDSource, Sendable {
-		
+
 
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
@@ -253,7 +253,7 @@ public class DriveTrain extends Subsystem {
 		}
 
     }
-	static private double calculateOutput(double output, double previousOutput, 
+	static private double calculateOutput(double output, double previousOutput,
 			double maxAllowableDelta) {
 		double deltaOutput = output - previousOutput;
 		if (deltaOutput > 0 && deltaOutput > maxAllowableDelta) {
@@ -264,21 +264,22 @@ public class DriveTrain extends Subsystem {
 			deltaOutput = -maxAllowableDelta;
 			output = previousOutput + deltaOutput;
 		}
-		return output; 
+		return output;
 	}
     private class EncoderPIDOut implements PIDOutput {
     	private double m_previousOutput = 0;
 		private double m_maxAllowableDelta;
-		
+
 		public EncoderPIDOut(double maxAllowableDelta) {
 			m_maxAllowableDelta = maxAllowableDelta;
 		}
+			@Override
 			public void pidWrite(double output) {
 	    		output = calculateOutput(output, m_previousOutput, m_maxAllowableDelta);
 	    		// Negation causes forward movement for positive values
 	    		gyroCorrectMove(output, 0, 1, false);
 	    		m_previousOutput = output;
-	    		
+
 	    	}
     }
 
@@ -342,22 +343,23 @@ public class DriveTrain extends Subsystem {
 
 		private double m_previousOutput = 0;
 		private double m_maxAllowableDelta;
-		
+
 		public GyroPIDOut(double maxAllowableDelta) {
 			m_maxAllowableDelta = maxAllowableDelta;
 		}
-		
+
 		@Override
 		public void pidWrite(double output) {
 			output = calculateOutput(output, m_previousOutput, m_maxAllowableDelta);
 			move(0,output);
+			m_previousOutput = output;
 		}
 
 	}
 	public void initGyroPIDDeltaAngle() {
-		double gyroPIDP = 0.03;
+		double gyroPIDP = 0.04;
 		double gyroPIDI = 0.0;
-		double gyroPIDD = 0.0;
+		double gyroPIDD = 0.1;
 		double gyroPIDF = 0.0;
 		double gyroPIDOutputRange = 0.75;
 		double gyroPIDAbsTolerance = 1;
