@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -243,6 +244,7 @@ public class DriveTrain extends Subsystem {
 		@Override
 		public double pidGet() {
 			// TODO Auto-generated method stub
+			SmartDashboard.putNumber("Encoder Ticks: ", getEncoderTicks());
 			return getEncoderTicks();
 		}
 
