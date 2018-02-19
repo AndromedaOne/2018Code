@@ -256,7 +256,7 @@ public class Trace
 			m_traces.forEach((k,v) -> {
 				try {
 					v.getFile().flush();
-					System.out.println("Flushing file " + k);
+					//System.out.println("Flushing file " + k);
 				} catch (IOException e) {
 					System.err.println("ERROR: failed to flush trace file" + k);
 					e.printStackTrace();

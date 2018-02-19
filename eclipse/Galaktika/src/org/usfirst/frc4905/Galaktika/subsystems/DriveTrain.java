@@ -118,13 +118,13 @@ public class DriveTrain extends Subsystem {
 		return kGyroMaxJerk;
 	}
 
-	private double m_gyroMPPositionkp = 1.0;//4.0;
-	private double m_gyroMPPositionki = 0.0;//1.0e-6;
+	private double m_gyroMPPositionkp = 4.0;
+	private double m_gyroMPPositionki = 1.0e-6;
 	private double m_gyroMPPositionkd = 0.0;
 	private double m_gyroMPiInitialPosition = 0.0;
 
-	private double m_gyroMPVelocitykp = 0.0065;//0.005;
-	private double m_gyroMPVelocityki = 1.0e-4;
+	private double m_gyroMPVelocitykp = 0.005;
+	private double m_gyroMPVelocityki = 0.0;
 	private double m_gyroMPVelocitykd = 0.0;
 	private double m_gyroMPVelocitykf = 1.0 / kGyroMaxVelocity;
 
@@ -570,6 +570,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	private class GyroMPIn implements MPSource {
+		double outlierCount = 25.0;
 		@Override
 		public double getPosition() {
 			return getGyroPosition();
@@ -577,12 +578,15 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public double getVelocity() {
-			double velocity = RobotMap.navX.getRotationalVelocity();
+			double rawVelocity = RobotMap.navX.getRotationalVelocity();
+			double velocity = rawVelocity;
 			double deltaVelocity = velocity - m_gyroMPPreviousVelocity;
-			if(Math.abs(deltaVelocity - m_gyroMPPreviousDeltaVelocity) > 25.0) {
+			if (Math.abs(deltaVelocity - m_gyroMPPreviousDeltaVelocity) > 10000000.0 || deltaVelocity == 0.0) {
 				velocity = m_gyroMPPreviousVelocity + m_gyroMPPreviousDeltaVelocity;
 				deltaVelocity = m_gyroMPPreviousDeltaVelocity;
+				outlierCount *= -1.0;
 			}
+			
 			m_gyroMPPreviousVelocity = velocity;
 			m_gyroMPPreviousDeltaVelocity = deltaVelocity;
 			return velocity;

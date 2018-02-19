@@ -11,7 +11,9 @@ public class GyroPIDTurnDeltaAngle extends Command {
 
 	protected double m_deltaAngleToTurn = 0.0;
 	private final boolean useMotionProfilng = true;
-
+	private double m_initialEncoderValue;
+	
+	
 	public GyroPIDTurnDeltaAngle() {
 		this(90);
 	}
@@ -29,6 +31,7 @@ public class GyroPIDTurnDeltaAngle extends Command {
 			Robot.driveTrain.initGyroPIDDeltaAngle();
 			Robot.driveTrain.enableGyroPID(m_deltaAngleToTurn);
 		} else {
+			m_initialEncoderValue = Robot.driveTrain.getEncoderPosition();
 			Robot.driveTrain.initializeGyroMP();
 			Robot.driveTrain.enableGyroMP(m_deltaAngleToTurn);
 		}
@@ -49,6 +52,8 @@ public class GyroPIDTurnDeltaAngle extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
+		double finalEncderPosition = Robot.driveTrain.getEncoderPosition();
+		debug("Delta Pos:" + (finalEncderPosition - m_initialEncoderValue));
 		debug("Done");
 		Robot.driveTrain.stop();
 		if (!useMotionProfilng) {
