@@ -1,16 +1,20 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
-import org.usfirst.frc4905.Galaktika.commands.AutoJawsOpen;
 import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveExchange;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveGroundLevel;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
 import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
 import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
+import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
+import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
+import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
+import org.usfirst.frc4905.Galaktika.commands.SetShouldJawsBeOpenStateCommand;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoder;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
@@ -143,6 +147,10 @@ public abstract class AutoCommand extends CommandGroup {
     protected void moveElevatorToExchangeHeight() {
         addParallel(new ElevatorMoveExchange());
     }
+    
+    protected void moveElevatorToGroundHeight(){
+    	addParallel(new ElevatorMoveGroundLevel());
+    }
 
     protected void resetElevatorInAuto() {
         addSequential(new ResetElevatorEncoder());
@@ -158,9 +166,6 @@ public abstract class AutoCommand extends CommandGroup {
     		addParallel(new AutoTimedArmsClose(timeout));
     }
     
-    protected void openArmsInAuto() {
-		addSequential(new AutoJawsOpen(0.5));
-}
 
 
     protected void extendIntakeAuto() {
@@ -173,6 +178,31 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void turnToCompassHeading(double compassHeading) {
         addSequential(new TurnToCompassHeading(compassHeading));
+    }
+    
+    protected void setJawsShouldBeOpenState(boolean state){
+    	addSequential(new SetShouldJawsBeOpenStateCommand(state));
+    }
+    
+    protected void parallelJawsOpenClose(){
+    	 addParallel(new JawsOpenClose());
+    }
+    
+    protected void parallelRetractExtendArms(){
+    	addParallel(new RetractExtendArms());
+    }
+    
+    protected void setRetractorShouldBeUp(boolean state){
+    	addSequential(new SetIntakeShouldBeUpCommand(state));
+    }
+    
+    protected void turnDeltaAngle(double angle){
+    	addSequential(new GyroPIDTurnDeltaAngle(angle));
+    	
+    }
+    
+    protected void sameSideDoubleCube(){
+    	addSequential(new AutoDoubleScale());
     }
 
 }

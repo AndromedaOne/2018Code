@@ -53,6 +53,12 @@ public class AutoQuals extends AutoCommand {
 
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
+		parallelJawsOpenClose();
+		parallelRetractExtendArms();
+		setJawsShouldBeOpenState(false);
+		setRetractorShouldBeUp(false);
+
+		moveElevatorToSwitchHeight();
 		
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
@@ -61,21 +67,33 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-		moveElevatorToSwitchHeight();
+		setJawsShouldBeOpenState(true);
+		
+		
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	private void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
 		
-		driveForward(FORWARD_DISTANCE_TO_SCALE);
-		if (robotPos == 'R') {
-			turnLeft();
-		} else {
-			turnRight();
-		}
+		parallelJawsOpenClose();
+		parallelRetractExtendArms();
+		setJawsShouldBeOpenState(false);
+		setRetractorShouldBeUp(false);
+
 		moveElevatorToScaleHeight();
-		driveForward(LATERAL_DISTANCE_TO_SCALE);
+		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+		
+		if (robotPos == 'R') {
+			turnDeltaAngle(-4.8);
+		} else {
+			turnDeltaAngle(4.8);
+		}
+		
+		driveForward(177.6);
+		
+		setJawsShouldBeOpenState(true);
+		
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -93,7 +111,7 @@ public class AutoQuals extends AutoCommand {
             loadNearScalePlate(robotPos);
         } else {
             crossAutoLine(robotPos);
-            returnToLoadExchange(robotPos);
+            
         }
 		debug("bottom of prepareToStart");
     }
