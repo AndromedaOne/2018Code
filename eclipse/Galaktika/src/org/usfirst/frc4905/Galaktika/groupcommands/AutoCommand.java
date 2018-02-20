@@ -64,6 +64,8 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
     protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
     protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
+    protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 200;
+    protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 228.16;
     protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
     protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
     protected static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 41.15;
@@ -147,7 +149,7 @@ public abstract class AutoCommand extends CommandGroup {
     protected void moveElevatorToExchangeHeight() {
         addParallel(new ElevatorMoveExchange());
     }
-    
+
     protected void moveElevatorToGroundHeight(){
     	addParallel(new ElevatorMoveGroundLevel());
     }
@@ -160,12 +162,12 @@ public abstract class AutoCommand extends CommandGroup {
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
-    
+
 
     protected void closeArmsInAuto(double timeout) {
     		addParallel(new AutoTimedArmsClose(timeout));
     }
-    
+
 
 
     protected void extendIntakeAuto() {
@@ -179,28 +181,28 @@ public abstract class AutoCommand extends CommandGroup {
     protected void turnToCompassHeading(double compassHeading) {
         addSequential(new TurnToCompassHeading(compassHeading));
     }
-    
+
     protected void setJawsShouldBeOpenState(boolean state){
     	addSequential(new SetShouldJawsBeOpenStateCommand(state));
     }
-    
+
     protected void parallelJawsOpenClose(){
     	 addParallel(new JawsOpenClose());
     }
-    
+
     protected void parallelRetractExtendArms(){
     	addParallel(new RetractExtendArms());
     }
-    
+
     protected void setRetractorShouldBeUp(boolean state){
     	addSequential(new SetIntakeShouldBeUpCommand(state));
     }
-    
+
     protected void turnDeltaAngle(double angle){
     	addSequential(new GyroPIDTurnDeltaAngle(angle));
-    	
+
     }
-    
+
     protected void sameSideDoubleCube(){
     	addSequential(new AutoDoubleScale());
     }
