@@ -30,36 +30,28 @@ public class ElevatorManualControl extends Command {
     @Override
 	protected void execute() {
     	double forwardBackwardStickValue = EnumeratedRawAxis.getRightStickVertical(subsystemController);
-    	//Robot.elevator.moveElevator(forwardBackwardStickValue);
-    	//Changed from move safely to move for testing
-    	/*
-    	if(forwardBackwardStickValue < 0){
-    		//slow down the elevator on the way down cuz it is sketchy.
-    		forwardBackwardStickValue *= 0.2;
-    	}
     	
-    	if(forwardBackwardStickValue == 0){
-    		Robot.elevator.enableEncoderPID(Robot.elevator.getElevatorPosition());
+    	if(forwardBackwardStickValue < 0.02 && forwardBackwardStickValue > -0.02 && Robot.elevator.getPidEnabledStatus() == false){
+    		//if there is no driver input and a pid loop isnt running, start one to maintain position
+    		double positionToMaintain = Robot.elevator.getElevatorPosition();
+    		Robot.elevator.setPIDControllerToMaintenanceMode();//maintain our position constants
+    		
+    		Robot.elevator.enableEncoderPID(positionToMaintain);
+    		
     	}
     	else{
-    		
-    		if(Robot.elevator.getPidEnabledStatus()){
+    		if(!(forwardBackwardStickValue < 0.02 && forwardBackwardStickValue > -0.02) && Robot.elevator.getPidEnabledStatus() == true){
+    			//if we have driver input and the pid loop is still running, end it.
     			Robot.elevator.disableEncoderPID();
     		}
     		
-    		Robot.elevator.moveElevator(forwardBackwardStickValue);
-
+    		if(forwardBackwardStickValue > 0.6){
+    			//temp safety on the way down cuz moveelevatorsafely doesn't work as intended and I don't feel like fixing it yet
+    			forwardBackwardStickValue = 0.6;
+    		}
+    		Robot.elevator.moveElevatorSafely(forwardBackwardStickValue);
     	}
-		*/
-    	if(forwardBackwardStickValue > 0.3) {
-    		forwardBackwardStickValue = 0.5;
-    	}
-    	if(RobotMap.elevatorBottomLimitSwitch.get() || forwardBackwardStickValue < 0.0) {
-    	Robot.elevator.moveElevator(forwardBackwardStickValue * 0.75);
-    	}else {
-    		Robot.elevator.moveElevator(0.0);
-    	}
-    	
+     	
     }
 
     // Make this return true when this Command no longer needs to run execute()
