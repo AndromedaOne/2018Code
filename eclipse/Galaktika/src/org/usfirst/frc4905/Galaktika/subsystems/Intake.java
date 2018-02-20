@@ -11,6 +11,7 @@
 
 package org.usfirst.frc4905.Galaktika.subsystems;
 
+import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 
@@ -62,13 +63,15 @@ public class Intake extends Subsystem {
     
     public void runIntake(double speed) {
     	
-    	int kIRDistanceCubeIn = 1000;
-    	if(RobotMap.intakeIRDistanceSensor.getValue() >= kIRDistanceCubeIn) {
+    	int kUltrasonicDistanceCubeIn = 5;
+    	if((RobotMap.driveTrainFrontUltrasonic.getRangeInches() <= kUltrasonicDistanceCubeIn) &&
+    			!Utilities.ControllerButtons.ButtonsEnumerated.getStartButton(Robot.oi.getSubsystemController())) {
     		stopIntake();
     	} else {
     		leftController.set(speed);
     		rightController.set(-speed);
     	}
+    	
     	
     }
     

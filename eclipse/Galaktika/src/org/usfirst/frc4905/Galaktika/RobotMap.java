@@ -84,7 +84,6 @@ public class RobotMap {
 	public static DigitalOutput redVal;
 	public static DigitalOutput greenVal;
 	public static DigitalOutput blueVal;
-	public static AnalogInput intakeIRDistanceSensor;
 
 	public static DigitalInput elevatorBottomLimitSwitch;
 
@@ -187,8 +186,7 @@ public class RobotMap {
 		redVal = new DigitalOutput(2);
 		redVal.enablePWM(0);
 		blueVal = new DigitalOutput(3);
-		blueVal.enablePWM(0);
-        intakeIRDistanceSensor = new AnalogInput(0); 
+		blueVal.enablePWM(0);  
 		greenVal = new DigitalOutput(4);
 		greenVal.enablePWM(0);
 		
