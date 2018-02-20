@@ -50,7 +50,8 @@ public class Elevator extends Subsystem {
 	private DigitalInput elevatorBottomLimitSwitch = RobotMap.elevatorBottomLimitSwitch;
 	//private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
-	private double m_encoderPIDP = 0.03;
+	private double m_encoderPIDP_maintanence = 0.03;//p constant for maintaining position, way too big for distance traveling
+	private double m_encoderPIDP_travel = 0.00144;//p constant for traveling up or down on the elevator
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
@@ -118,23 +119,27 @@ public class Elevator extends Subsystem {
 	private class EncoderPIDOut implements PIDOutput{
 		@Override
 		public void pidWrite(double output) {
-
-			if (output > 0 && output <= 0.3) {
-				// Min speed to overcome intake weight
-				output = 0.3;
-			}
+			
 			// Negated because encoder and motor count in opposite directions
 			output *= -1;
-			moveElevator(output);
+			
+			if (output < 0 && output >= -0.3) {
+				// Min speed to overcome intake weight when moving upwards
+				output = -0.3;
+			}
+			
+			
+			
+			moveElevatorSafely(output);
 			System.out.println("In Elevator pidWrite output = " + output +
-					" Current error = " + m_encoderPID.getError());
+					" Current error = " + m_encoderPID.getError() + "Current Position: " + getElevatorEncoderPosition());
 		}
 	}
 
 	public void initializeEncoderPID(){
 		EncoderPIDIn encoderPIDIn = new EncoderPIDIn();
 		EncoderPIDOut encoderPIDOut = new EncoderPIDOut();
-		m_encoderPID = new PIDController(m_encoderPIDP, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn, encoderPIDOut);
+		m_encoderPID = new PIDController(m_encoderPIDP_maintanence, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn, encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
 		LiveWindow.add(encoderPIDIn);
@@ -159,50 +164,42 @@ public class Elevator extends Subsystem {
 		m_encoderPID.disable();
 	}
 
-	/*public boolean getTopLimitSwitch() {
-		return elevatorTopLimitSwitch.get();
-	}*/
+	
 	public boolean getBottomLimitSwitch() {
 		return elevatorBottomLimitSwitch.get();
 	}
 	public void moveElevator(double velocity) {
 		elevatorController.set(velocity);
 	}
-	// Disabled for now until sensors are hooked up
+	
 
-	public void moveElevatorSafely(double velocity) {
-		if((getElevatorPosition() > m_encoderTopPosition) == true && (velocity < 0)) {
+	public void moveElevatorSafely(double speed) {
+		//negative velocities  drive the elevator up, positive velocities drive it down...
+
+		if((getElevatorPosition() > m_encoderTopPosition) == true && (speed < 0)) {
+			//trying to go upwards
 			if(getPidEnabledStatus() == true){
 				disableEncoderPID();
 			}
-			moveElevator(0);
-
 			//if the pid loop drives somewhere unsafe, we should probably end the PID loop if its running
-
-
 		}
-		else if ((getBottomLimitSwitch() == true) && (velocity > 0)) {
+		else if ((getBottomLimitSwitch() == false) && (speed > 0)) {
+			//if the limit switch is pressed, then it returns a false
 			if(getPidEnabledStatus() == true){
 				disableEncoderPID();
 			}
-			moveElevator(0);
-			
-			//if the pid loop is driving us somewhere unsafe, probably wanna disable it man...
-
+			resetEncoder();
 
 		}
 		else {
-			moveElevator(velocity);
+			if(speed > 0.6){
+				speed = 0.6;
+			}
+			moveElevator(speed);
 		}
-
-		if(getBottomLimitSwitch() == true){
-			resetEncoder();
-		}
-		
-		
-		
 
 	}
+	
 	public void stopElevator() {
 		moveElevator(0);
 	}
@@ -228,6 +225,29 @@ public class Elevator extends Subsystem {
 
 	public void setPidLoopTolerance(double tolerance){
 		m_encoderPID.setAbsoluteTolerance(tolerance);
+	}
+
+	public void setPIDControllerToTravelMode(){
+		m_encoderPID.setPID(m_encoderPIDP_travel, m_encoderPIDI, m_encoderPIDD);
+		setToleranceForTravelMode();
+		System.out.println("Switching to Travel mode");
+		//have a lower tolerance, just want to get close, then we'll switch to maintanence mode and more aggressive correction constants
+	}
+
+	public void setPIDControllerToMaintenanceMode(){
+		m_encoderPID.setPID(m_encoderPIDP_maintanence, m_encoderPIDI, m_encoderPIDD);
+		setToleranceForMaintenanceMode();
+		System.out.println("Switching to Maintenance mode");
+
+	}
+
+	public void setToleranceForTravelMode(){
+		m_encoderPID.setAbsoluteTolerance(300);
+
+	}
+
+	public void setToleranceForMaintenanceMode(){
+		m_encoderPID.setAbsoluteTolerance(10);
 	}
 
 }
