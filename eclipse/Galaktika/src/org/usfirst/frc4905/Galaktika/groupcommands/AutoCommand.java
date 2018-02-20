@@ -142,6 +142,10 @@ public abstract class AutoCommand extends CommandGroup {
         addParallel(new ElevatorMoveSwitch());
     }
 
+    protected void moveElevatorToSwitchHeightSequential() {
+        addSequential(new ElevatorMoveSwitch());
+    }
+
     protected void moveElevatorToScaleHeight() {
         addParallel(new ElevatorMoveHighScale());
     }
@@ -167,8 +171,6 @@ public abstract class AutoCommand extends CommandGroup {
     protected void closeArmsInAuto(double timeout) {
     		addParallel(new AutoTimedArmsClose(timeout));
     }
-
-
 
     protected void extendIntakeAuto() {
 		addParallel(new ExtendIntakeInAuto());
@@ -203,8 +205,12 @@ public abstract class AutoCommand extends CommandGroup {
 
     }
 
-    protected void sameSideDoubleCube(){
+    protected void doubleScaleCube(){
     	addSequential(new AutoDoubleScale());
+    }
+
+    protected void sameSideDoubleSwitchCube(){
+    	addSequential(new AutoDoubleSwitch());
     }
 
 }

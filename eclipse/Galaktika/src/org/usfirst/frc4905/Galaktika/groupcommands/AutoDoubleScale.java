@@ -26,8 +26,8 @@ public class AutoDoubleScale extends AutoCommand {
         setJawsShouldBeOpenState(false);
         setRetractorShouldBeUp(false);
 
+        //Only for when robotPos is 'L' or 'R'
         if (robotPos == 'L' && scalePlatePos == 'L') {
-        	//robot position should only be L or R
         	moveElevatorToScaleHeight();
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
             turnDeltaAngle(-4.8);
@@ -48,15 +48,10 @@ public class AutoDoubleScale extends AutoCommand {
             driveForward(53);
             setJawsShouldBeOpenState(true);
             System.out.println("Done :D");
-
-
-
         } else if (robotPos == 'R' && scalePlatePos == 'R') {
-        	//robot position should only be L or R
         	moveElevatorToScaleHeight();
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
             turnDeltaAngle(4.8);
-
             driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
             setJawsShouldBeOpenState(true);
             turnDeltaAngle(-17);
@@ -64,7 +59,6 @@ public class AutoDoubleScale extends AutoCommand {
             moveElevatorToGroundHeight();
             turnAround();
             driveForward(53);
-
             setJawsShouldBeOpenState(false);
             delay(0.5);//make sure jaws close, could be changed
             moveElevatorToScaleHeight();
@@ -93,8 +87,9 @@ public class AutoDoubleScale extends AutoCommand {
         		moveElevatorToScaleHeight();
         		driveForward(52);
         		setJawsShouldBeOpenState(true);
+        		System.out.println("Done :D");
         } else {
-	        	// RobotPos = R and Scale Pos = L
+	        	// RobotPos = R and ScalePos = L
 	        	driveForward(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
 	    		turnLeft();
 	    		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES);
@@ -114,6 +109,7 @@ public class AutoDoubleScale extends AutoCommand {
 	    		moveElevatorToScaleHeight();
 	    		driveForward(52);
 	    		setJawsShouldBeOpenState(true);
+	    		System.out.println("Done :D");
         }
     }
 }

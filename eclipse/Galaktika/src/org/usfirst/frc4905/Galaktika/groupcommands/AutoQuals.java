@@ -29,7 +29,7 @@ public class AutoQuals extends AutoCommand {
 	    debug("bottom of AutoQuals constructor");
 	}
 
-	private void crossAutoLine(char robotPos) {
+	public void crossAutoLine(char robotPos) {
 		debug("top of crossAutoLine");
 	    driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 		debug("bottom of crossAutoLine");
@@ -59,7 +59,7 @@ public class AutoQuals extends AutoCommand {
 		setRetractorShouldBeUp(false);
 
 		moveElevatorToSwitchHeight();
-		
+
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -68,14 +68,14 @@ public class AutoQuals extends AutoCommand {
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		setJawsShouldBeOpenState(true);
-		
-		
+
+
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	private void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
-		
+
 		parallelJawsOpenClose();
 		parallelRetractExtendArms();
 		setJawsShouldBeOpenState(false);
@@ -83,17 +83,17 @@ public class AutoQuals extends AutoCommand {
 
 		moveElevatorToScaleHeight();
 		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-		
+
 		if (robotPos == 'R') {
 			turnDeltaAngle(-4.8);
 		} else {
 			turnDeltaAngle(4.8);
 		}
-		
+
 		driveForward(177.6);
-		
+
 		setJawsShouldBeOpenState(true);
-		
+
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -102,22 +102,22 @@ public class AutoQuals extends AutoCommand {
         char robotPos = Robot.getInitialRobotLocation();
         char switchPlatePos = Robot.getSwitchPlatePosition();
         char scalePlatePos = Robot.getScalePlatePosition();
-        
-        
+
+
         if (switchPlatePos == robotPos) {
-        	
+
             loadNearSwitchPlate(robotPos);
         } else if (scalePlatePos == robotPos){
             loadNearScalePlate(robotPos);
         } else {
             crossAutoLine(robotPos);
-            
+
         }
 		debug("bottom of prepareToStart");
     }
 
     private void returnToLoadExchange() {
-    	
+
         turnLeft();
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
