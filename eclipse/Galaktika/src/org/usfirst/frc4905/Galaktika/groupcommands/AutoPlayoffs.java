@@ -50,7 +50,6 @@ public class AutoPlayoffs extends AutoCommand {
 	                driveForward(FORWARD_DISTANCE_TO_SWITCH);
 	                turnRight();
 	                moveElevatorToSwitchHeight();
-	                driveForwardToWall();
 	                driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 	                turnLeft();
 	                driveForward(FORWARD_DISTANCE_TO_MIDDLE - FORWARD_DISTANCE_TO_SWITCH);
@@ -91,7 +90,6 @@ public class AutoPlayoffs extends AutoCommand {
 	                driveForward(FORWARD_DISTANCE_TO_SWITCH);
 	                turnLeft();
 	                moveElevatorToSwitchHeight();
-	                driveForwardToWall();
 	                driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 	                turnRight();
 	                driveForward(FORWARD_DISTANCE_TO_MIDDLE - FORWARD_DISTANCE_TO_SWITCH);
@@ -117,21 +115,17 @@ public class AutoPlayoffs extends AutoCommand {
 	        }
 	    } else {
 	        if (switchPlatePos == 'R') {
-	            driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+	            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	            turnRight();
-	            driveForward(LATERAL_DISTANCE_TO_RIGHT);
+	            driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
 	            turnLeft();
-	            driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-	            turnLeft();
-	            driveForwardToWall();
+	            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 	        } else {
-	            driveForward(AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+	            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
 	            turnLeft();
-	            driveForward(LATERAL_DISTANCE_TO_LEFT);
+	            driveForward(LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE);
 	            turnRight();
-	            driveForward(AutoCommand.FORWARD_DISTANCE_TO_SWITCH - (AutoCrossTheLine.FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-	            turnRight();
-	            driveForwardToWall();
+	            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 	        }
 	    }
 	}
