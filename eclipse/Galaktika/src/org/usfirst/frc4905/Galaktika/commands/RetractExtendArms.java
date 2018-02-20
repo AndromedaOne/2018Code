@@ -34,6 +34,9 @@ public class RetractExtendArms extends Command {
     	if(upPovPressed && !Robot.jaws.getShouldJawsBeOpen()){
     		Robot.retractor.setShouldIntakeBeUpBoolean(true);
     	}
+    	else if(upPovPressed && Robot.jaws.getShouldJawsBeOpen()) {
+    		Robot.retractor.setShouldIntakeBeUpBoolean(false);
+    	}
     	else if(downPovPressed){
     		Robot.retractor.setShouldIntakeBeUpBoolean(false);
     	}
