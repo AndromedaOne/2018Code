@@ -5,6 +5,7 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoQuals extends AutoCommand {
+	boolean m_useDelay;
 	public AutoQuals(boolean useDelay) {
 		// Add Commands here:
         // e.g. addSequential(new Command1());
@@ -24,7 +25,7 @@ public class AutoQuals extends AutoCommand {
         // arm.
 		debug("top of AutoQuals constructor");
 	    if (useDelay) {
-            delay(Robot.getAutonomousDelay());
+	        m_useDelay = useDelay;
         }
 	    debug("bottom of AutoQuals constructor");
 	}
@@ -102,7 +103,9 @@ public class AutoQuals extends AutoCommand {
         char robotPos = Robot.getInitialRobotLocation();
         char switchPlatePos = Robot.getSwitchPlatePosition();
         char scalePlatePos = Robot.getScalePlatePosition();
-
+        if (m_useDelay) {
+    			delay(Robot.getAutonomousDelay());
+        }
 
         if (switchPlatePos == robotPos) {
 

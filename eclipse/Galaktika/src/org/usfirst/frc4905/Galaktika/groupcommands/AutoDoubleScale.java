@@ -7,9 +7,11 @@ import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
 
 public class AutoDoubleScale extends AutoCommand {
 
+	boolean m_useDelay;
+
 	public AutoDoubleScale(boolean useDelay) {
 	    if (useDelay) {
-            delay(Robot.getAutonomousDelay());
+	        m_useDelay = useDelay;
         }
 	}
 
@@ -21,6 +23,9 @@ public class AutoDoubleScale extends AutoCommand {
     protected void prepareToStart() {
         char robotPos = Robot.getInitialRobotLocation();
         char scalePlatePos = Robot.getScalePlatePosition();
+        if (m_useDelay) {
+    			delay(Robot.getAutonomousDelay());
+        }
         parallelJawsOpenClose();
         parallelRetractExtendArms();
         setJawsShouldBeOpenState(false);

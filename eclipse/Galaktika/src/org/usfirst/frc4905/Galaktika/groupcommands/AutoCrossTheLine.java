@@ -6,10 +6,11 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
 
 public class AutoCrossTheLine extends AutoCommand {
+	boolean m_useDelay;
 
 	public AutoCrossTheLine(boolean useDelay) {
 	    if (useDelay) {
-            delay(Robot.getAutonomousDelay());
+	        m_useDelay = useDelay;
         }
 	}
 
@@ -19,12 +20,15 @@ public class AutoCrossTheLine extends AutoCommand {
 	}
 
     protected void prepareToStart() {
-        char robotPos = Robot.getInitialRobotLocation();  
+        char robotPos = Robot.getInitialRobotLocation();
+        if (m_useDelay) {
+    			delay(Robot.getAutonomousDelay());
+        }
         parallelJawsOpenClose();
         parallelRetractExtendArms();
         setJawsShouldBeOpenState(false);
         setRetractorShouldBeUp(false);
-        
+
         if (robotPos == 'M') {
         	moveElevatorToSwitchHeight();
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);

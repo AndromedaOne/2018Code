@@ -8,15 +8,19 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 
 	private static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 120.3;
 	private static final double LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE = 120.3;
+	boolean m_useDelay;
 
 	public AutoMiddleLoadSwitch(boolean useDelay) {
 		if (useDelay) {
-			delay(Robot.getAutonomousDelay());
+	        m_useDelay = useDelay;
 		}
 	}
 
 	protected void prepareToStart() {
 		char platePos = Robot.getSwitchPlatePosition();
+        if (m_useDelay) {
+    			delay(Robot.getAutonomousDelay());
+        }
 		parallelJawsOpenClose();
 		parallelRetractExtendArms();
 		setJawsShouldBeOpenState(false);

@@ -7,6 +7,8 @@ import org.usfirst.frc4905.Galaktika.commands.SetShouldJawsBeOpenStateCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoPlayoffs extends AutoCommand {
+	boolean m_useDelay;
+
 	public AutoPlayoffs(boolean useDelay) {
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
@@ -25,8 +27,7 @@ public class AutoPlayoffs extends AutoCommand {
 		// a CommandGroup containing them would require both the chassis and the
 		// arm.
 		if (useDelay) {
-			delay(Robot.getAutonomousDelay());
-
+	        m_useDelay = useDelay;
 		}
 	}
 
@@ -34,7 +35,9 @@ public class AutoPlayoffs extends AutoCommand {
 		char robotPos = Robot.getInitialRobotLocation();
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
-
+        if (m_useDelay) {
+    			delay(Robot.getAutonomousDelay());
+        }
 		parallelJawsOpenClose();
 		parallelRetractExtendArms();
 		setJawsShouldBeOpenState(false);
@@ -45,15 +48,15 @@ public class AutoPlayoffs extends AutoCommand {
 
 		if (robotPos == 'L') {
 			if (scalePlatePos == 'L') {
-				
-				
+
+
 				moveElevatorToScaleHeight();
 	            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 	            turnDeltaAngle(-4.8);
-	            
+
 	            driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
 	            setJawsShouldBeOpenState(true);
-				
+
 			} else {
 				if (switchPlatePos == 'L') {
 
@@ -72,7 +75,7 @@ public class AutoPlayoffs extends AutoCommand {
 				moveElevatorToScaleHeight();
 	            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 	            turnDeltaAngle(4.8);
-	            
+
 	            driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
 	            setJawsShouldBeOpenState(true);
 			} else {
