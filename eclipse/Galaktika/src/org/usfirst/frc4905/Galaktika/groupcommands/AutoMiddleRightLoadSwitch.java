@@ -3,6 +3,8 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.AutoJawsClose;
 import org.usfirst.frc4905.Galaktika.commands.AutoJawsOpen;
+import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
+import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -20,10 +22,14 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
     protected void prepareToStart() {
         char platePos = Robot.getSwitchPlatePosition();
-        closeArmsInAuto(5);
-        extendIntakeAuto();
-        resetElevatorInAuto();
-        moveElevatorToSwitchHeight();
+        //closeArmsInAuto(5);
+        //extendIntakeAuto();
+        //resetElevatorInAuto();
+        //moveElevatorToSwitchHeight();
+        addParallel(new JawsOpenClose());
+        addParallel(new RetractExtendArms());
+        Robot.retractor.setShouldIntakeBeUpBoolean(false);
+        
         if (platePos == 'L') {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnLeft();
@@ -33,7 +39,9 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
         } else {
             driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
         }
-        openArmsInAuto();
+        // This need to be changed to a queued command
+        // Robot.jaws.setShouldJawsBeOpenBoolean(false);
+        // openArmsInAuto();
        
     }
 
