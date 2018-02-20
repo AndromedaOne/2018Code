@@ -38,7 +38,7 @@ public class AutoPlayoffs extends AutoCommand {
 	            driveForward(FORWARD_DISTANCE_TO_SCALE);
 	            turnRight();
 	            driveForward(LATERAL_DISTANCE_TO_SCALE);
-	            moveElevatorToScaleHeight();
+	            moveElevatorToHighScaleHeight();
 	            driveBackward(LATERAL_DISTANCE_TO_SCALE);
 	            turnRight();
 	            driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_TO_MIDDLE);
@@ -77,7 +77,7 @@ public class AutoPlayoffs extends AutoCommand {
 	        if (scalePlatePos == 'R') {
 	            driveForward(FORWARD_DISTANCE_TO_SCALE);
 	            turnLeft();
-	            moveElevatorToScaleHeight();
+	            moveElevatorToHighScaleHeight();
 	            driveForward(LATERAL_DISTANCE_TO_SCALE);
 	            driveBackward(LATERAL_DISTANCE_TO_SCALE);
 	            turnLeft();
