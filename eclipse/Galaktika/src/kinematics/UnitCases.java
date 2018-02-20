@@ -2,10 +2,13 @@ package kinematics;
 
 import java.util.Random;
 
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
+
 import kinematics.KinematicsException.*;
 
 public class UnitCases {
 	static double m_deltaTimeFromOriginalPoint = 0.01;
+	
 	static Kinematics m_kinematics = new Kinematics();
 
 	private static void createUnitCase(Double... setpoints) throws InvalidDimentionException, KinematicsException {
@@ -70,8 +73,8 @@ public class UnitCases {
 
 	public static void realTests() throws InvalidDimentionException, 
 	KinematicsException {
-		Kinematics.setTrajectoryPointInterval(0.00001);
-		createUnitCase(12460.0, (4.97) * Math.pow(10, 7), 63460.0 * 1000000.0, true, false, 100000.0);
+		Kinematics.setTrajectoryPointInterval(0.000001);
+		createUnitCase(DriveTrain.getMaxVelocity(), DriveTrain.getMaxAcceleration(), DriveTrain.getMaxJerk(), false, false, 100000.0);
 		
 		Kinematics.setTrajectoryPointInterval(1.0);
 
@@ -79,15 +82,24 @@ public class UnitCases {
 
 	static void createSingleSetpointCases() throws InvalidDimentionException, 
 	KinematicsException {
-		createUnitCase(14.0);
+		createUnitCase(true, 14.0);
+		System.out.println("1");
 		createUnitCase(8.0);
+		System.out.println("2");
 		createUnitCase(-14.0);
+		System.out.println("3");
 		createUnitCase(-8.0);
+		System.out.println("4");
 		createUnitCase(2.0);
+		System.out.println("5");
 		createUnitCase(-2.0);
+		System.out.println("6");
 		createUnitCase(2.0, 8.0, 0.25, false, false, 14.0);
+		System.out.println("7");
 		createUnitCase(2.0, 8.0, 0.25, false, false, -14.0);
+		System.out.println("8");
 		realTests();
+		System.out.println("9");
 	}
 
 	static void createChangingDirectionCases() throws InvalidDimentionException, KinematicsException {
@@ -324,7 +336,7 @@ public class UnitCases {
 			Random random = new Random();
 			Path myPath = new Path();
 			KinematicsTester kinematicsTester = new KinematicsTester();
-			int numberOfSetpoints = random.nextInt(10) + 1;
+			int numberOfSetpoints = 1;//random.nextInt(10);
 			int maxVelocityInt = random.nextInt(6);
 
 			double maxVelocity = Math.abs(random.nextDouble() + maxVelocityInt);
@@ -448,8 +460,8 @@ public class UnitCases {
 			endDeltatTimeFromStartOfPath += Key.getSetpointVector().get(i).getEndDeltaTime();
 		}
 		double originalTrajectoryPointInterval = Kinematics.getTrajectoryPointInterval();
-		if(originalTrajectoryPointInterval < 1.0) {
-			Kinematics.setTrajectoryPointInterval(1.0);
+		if(originalTrajectoryPointInterval < 0.1) {
+			Kinematics.setTrajectoryPointInterval(0.1);
 		}
 
 		for (double i = 0.0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
