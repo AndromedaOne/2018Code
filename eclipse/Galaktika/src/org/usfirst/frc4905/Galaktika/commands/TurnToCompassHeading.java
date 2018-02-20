@@ -11,63 +11,76 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnToCompassHeading extends Command {
 
 	private double m_compassHeading = 0;
-	
-    public TurnToCompassHeading(double compassHeading) {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.driveTrain);
-    	m_compassHeading = compassHeading;
-    }
+	private final boolean useMotionProfilng = true;
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    	//calculates the delta angle
-    	double currentAngle = RobotMap.navX.getRobotAngle();
-    	double modAngle = currentAngle % 360;
-    	System.out.println("currentangle =" +currentAngle + "," + "mod angle =" + modAngle);
-    	//corrects negative Modulus
-    	if(modAngle < 0) {
-    		modAngle += 360;
-    	}
-    	
-    	double deltaAngle = m_compassHeading - modAngle;
-    	
-    	//fixes long turns if delta is over 180: when tested it didn't work the first time.
-    	// ******TEST BEFORE FINALIZING!******
-    	System.out.println("delta angle = " + deltaAngle);
+	public TurnToCompassHeading(double compassHeading) {
+		// Use requires() here to declare subsystem dependencies
+		// eg. requires(chassis);
+		requires(Robot.driveTrain);
+		m_compassHeading = compassHeading;
+	}
 
-    	if(deltaAngle > 180) {
-    		deltaAngle = -(360 - deltaAngle);
-    		System.out.println("Angle corrected for shortest method!");
-    	}
-    	else if(deltaAngle < -180) {
-    		deltaAngle = 360 + deltaAngle;
-    	}
-    	
-    	Robot.driveTrain.initGyroPIDDeltaAngle();
-    	System.out.println("Delta angle = " + deltaAngle);
+	// Called just before this Command runs the first time
+	protected void initialize() {
+		// calculates the delta angle
+		double currentAngle = RobotMap.navX.getRobotAngle();
+		double modAngle = currentAngle % 360;
+		System.out.println("currentangle =" + currentAngle + "," + "mod angle =" + modAngle);
+		// corrects negative Modulus
+		if (modAngle < 0) {
+			modAngle += 360;
+		}
 
-    	Robot.driveTrain.enableGyroPID(deltaAngle);
-    }
+		double deltaAngle = m_compassHeading - modAngle;
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    }
+		// fixes long turns if delta is over 180: when tested it didn't work the first
+		// time.
+		// ******TEST BEFORE FINALIZING!******
+		System.out.println("delta angle = " + deltaAngle);
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	return Robot.driveTrain.gyroPIDIsDone();
-    }
+		if (deltaAngle > 180) {
+			deltaAngle = -(360 - deltaAngle);
+			System.out.println("Angle corrected for shortest method!");
+		} else if (deltaAngle < -180) {
+			deltaAngle = 360 + deltaAngle;
+		}
+		if (!useMotionProfilng) {
+			Robot.driveTrain.initGyroPIDDeltaAngle();
+			System.out.println("Delta angle = " + deltaAngle);
 
-    // Called once after isFinished returns true
-    protected void end() {
-    	Robot.driveTrain.stop();
-    	Robot.driveTrain.stopGyroPid();
-    }
+			Robot.driveTrain.enableGyroPID(deltaAngle);
+		} else {
+			Robot.driveTrain.initializeGyroMP();
+			Robot.driveTrain.enableGyroMP(deltaAngle);
+		}
+	}
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    	end();
-    }
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+	}
+
+	// Make this return true when this Command no longer needs to run execute()
+	protected boolean isFinished() {
+		if (!useMotionProfilng) {
+			return Robot.driveTrain.gyroPIDIsDone();
+		} else {
+			return Robot.driveTrain.isDoneGyroMP();
+		}
+	}
+
+	// Called once after isFinished returns true
+	protected void end() {
+		Robot.driveTrain.stop();
+		if (!useMotionProfilng) {
+			Robot.driveTrain.stopGyroPid();
+		} else {
+			Robot.driveTrain.disableGyroMP();
+		}
+	}
+
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	protected void interrupted() {
+		end();
+	}
 }

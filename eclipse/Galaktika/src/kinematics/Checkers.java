@@ -5,6 +5,10 @@ import java.util.Vector;
 import kinematics.KinematicsException.*;
 
 public class Checkers {
+	
+	private static double m_velocityTolerance = 0.1;
+	
+	
 	static void checkTrajectoryPath(Path Key, KinematicsTester kinematicsTester)
 			throws KinematicsException {
 
@@ -90,14 +94,14 @@ public class Checkers {
 			double calculatedVelocity = velocityCalculatedFromPositionVector.get(i);
 			double originalTrajectoryPointPathVelocity = originalTrajectoryPointsPath.get(i).m_currentVelocity;
 
-			if (Math.abs(calculatedVelocity) > Key.getMaxVelocity() + 0.1) {
+			if (Math.abs(calculatedVelocity) > Key.getMaxVelocity() + m_velocityTolerance) {
 				errMessage = "The point at time: " + originalTrajectoryPointsPath.get(i).m_timestamp
 						+ " has a calculated velocity that exceeds the maxVelocity!";
 				kinematicsException = new KinematicsException(errMessage);
 				System.out.println("calculatedVelocity: " + calculatedVelocity);
 				throw kinematicsException;
 			}
-			if (Math.abs(calculatedVelocity - originalTrajectoryPointPathVelocity) > 0.1) {
+			if (Math.abs(calculatedVelocity - originalTrajectoryPointPathVelocity) > m_velocityTolerance) {
 				errMessage = "The point at time: " + originalTrajectoryPointsPath.get(i).m_timestamp
 						+ " has a difference between calculated velocity and original velocity which exceed 0.1!";
 				kinematicsException = new KinematicsException(errMessage);
