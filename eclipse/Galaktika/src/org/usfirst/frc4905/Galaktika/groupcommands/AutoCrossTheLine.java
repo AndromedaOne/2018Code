@@ -26,9 +26,9 @@ public class AutoCrossTheLine extends AutoCommand {
         if (robotPos == 'M') {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnRight();
-            driveForward(LATERAL_DISTANCE_TO_RIGHT);
+            driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
             turnLeft();
-            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
         } else {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
         }
