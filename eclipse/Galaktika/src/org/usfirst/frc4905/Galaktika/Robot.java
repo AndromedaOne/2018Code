@@ -156,19 +156,19 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Scale Plate Position (Testing Only)", scalePlateChooser);
         SmartDashboard.putData("Switch Plate Position (Testing Only)", switchPlateChooser);
         debug("bottom of robotInit" );
-        
-        
+
+
         rampSafeties.addDefault("RAMP SAFETIES ON", 'y');
         rampSafeties.addObject("RAMP SAFETEIS OFF", 'n');
-        
-        
+
+
         SmartDashboard.putData("RAMP SAFETIES", rampSafeties);
-        
-        
+
+
         Robot.ramps.lockRampsIn();
     }
-    
-    
+
+
 
     /**
      * This function is called when the disabled button is hit.
@@ -179,21 +179,19 @@ public class Robot extends TimedRobot {
     	
     	Trace.getInstance().flushTraceFiles();
     	Robot.ramps.lockRampsIn();
-    	
+
     }
 
     @Override
     public void disabledPeriodic() {
     	
-    	Trace.getInstance().flushTraceFiles();
         Scheduler.getInstance().run();
-        
+
     }
 
     @Override
     public void autonomousInit() {
     		debug("top of autonomousInit");
-    		RobotMap.navX.setInitialAngleReading();
 	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
 	    	if (gameData.length() > SCALE) {
 		    scalePlatePosition =	gameData.charAt(SCALE);
@@ -237,21 +235,19 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-    	 RobotMap.navX.setInitialAngleReading();
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-    	RobotMap.navX.setInitialAngleReading();
         if (autonomousCommand != null) autonomousCommand.cancel();
-        
+
         if(rampSafeties.getSelected() == 'y'){
         	Robot.ramps.setSafetyBooleanStatus(true);
         }
         else{
         	Robot.ramps.setSafetyBooleanStatus(false);
         }
-        
+
 
         Robot.ramps.lockRampsIn();
     }

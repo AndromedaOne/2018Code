@@ -24,13 +24,13 @@ public class DriveSquare extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	    addSequential(new MoveUsingEncoderPID(100000));
+    	    addSequential(new MoveUsingEncoderPID(60));
     	    addSequential(new GyroPIDTurnDeltaAngle(90));
-    	    addSequential(new MoveUsingEncoderPID(100000));
+    	    addSequential(new MoveUsingEncoderPID(60));
     	    addSequential(new GyroPIDTurnDeltaAngle(90));
-    	    addSequential(new MoveUsingEncoderPID(100000));
+    	    addSequential(new MoveUsingEncoderPID(60));
     	    addSequential(new GyroPIDTurnDeltaAngle(90));
-    	    addSequential(new MoveUsingEncoderPID(100000));
+    	    addSequential(new MoveUsingEncoderPID(60));
     	    addSequential(new GyroPIDTurnDeltaAngle(90));
     }
 }
