@@ -26,9 +26,9 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 	private static final byte VL53L0X_INTERRUPTPOLARITY_LOW = 0x00;
 	private I2C m_i2c;
 	private int m_distance;
-	private byte m_referenceSpadCount;
-	private byte m_referenceSpadType;
-	private byte pTuningSettingsPointer;
+	private byte m_sequenceConfig;
+	private byte m_vhvSettings;
+	private byte m_phaseCal;
 
 	private double getSensorReading() throws IOException {
 		return m_distance;
@@ -117,7 +117,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
 		m_i2c = new I2C(port, kAddress);
 		staticInit();
-		performRefCalibration();
+		performRefCalibration(1);
 		performRefSpadManagement();
 		setDeviceMode();
 		disableSensor();
@@ -318,11 +318,34 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 
 	}
 
-	public void performRefCalibration() {
+	 private void performRefCalibration(int get_data_enable) throws IOException {
+			byte SequenceConfig;
 
+			/* store the value of the sequence config, this will be reset before the end of the function*/
+
+			SequenceConfig = m_sequenceConfig;
+
+			/* In the following function we don't save the config to optimize writes on device. Config is saved and restored only once. */
+			VL53L0X_perform_vhv_calibration(get_data_enable, 0);
+
+			VL53L0X_perform_phase_calibration( get_data_enable, 0);
+
+			/* restore the previous Sequence Config */
+			writeByteToSensor(VL53L0X_REG_SYSTEM_SEQUENCE_CONFIG, SequenceConfig);
+			m_sequenceConfig = SequenceConfig;
 	 }
+	 
+	private void VL53L0X_perform_phase_calibration(int get_data_enable, int i) {
+		// TODO Auto-generated method stub
+		
+	}
 
-	 public void performRefSpadManagement() {
+	private void VL53L0X_perform_vhv_calibration(int get_data_enable, int i) {
+		// TODO Auto-generated method stub
+		 
+	}
+
+	public void performRefSpadManagement() {
 
 	 }
 
