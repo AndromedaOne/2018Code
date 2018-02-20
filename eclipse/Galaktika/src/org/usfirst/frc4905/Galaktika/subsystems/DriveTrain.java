@@ -319,7 +319,7 @@ public class DriveTrain extends Subsystem {
 		}
 
 	}
-	static private double calculateOutput(double output, double previousOutput,
+	static public double calculateOutput(double output, double previousOutput,
 			double maxAllowableDelta) {
 		double deltaOutput = output - previousOutput;
 		if (deltaOutput > 0 && deltaOutput > maxAllowableDelta) {
