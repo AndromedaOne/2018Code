@@ -22,7 +22,7 @@ public class AutoJawsOpen extends TimedCommand {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.jaws.extend();
+    		Robot.jaws.openJaws();
     }
 
     // Called once after timeout
