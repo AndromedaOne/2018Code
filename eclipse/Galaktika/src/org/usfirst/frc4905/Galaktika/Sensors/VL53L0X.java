@@ -29,6 +29,9 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 	private byte m_sequenceConfig;
 	private byte m_vhvSettings;
 	private byte m_phaseCal;
+	private int m_referenceSpadCount;
+	private byte m_referenceSpadType;
+	private Object OscFrequencyMHz;
 
 	private double getSensorReading() throws IOException {
 		return m_distance;
@@ -190,7 +193,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 			/* Initialize tuning settings buffer to prevent compiler warning. */
 			pTuningSettingBuffer = DefaultTuningSettings;
 
-				UseInternalTuningSettings = PALDevDataGet(
+/*				UseInternalTuningSettings = PALDevDataGet(
 					UseInternalTuningSettings);
 
 				if (UseInternalTuningSettings == 0)
@@ -198,7 +201,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 						pTuningSettingsPointer);
 				else
 					pTuningSettingBuffer = DefaultTuningSettings;
-
+*/
 				VL53L0X_load_tuning_settings();
 
 
@@ -207,12 +210,12 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 				VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY,
 				VL53L0X_INTERRUPTPOLARITY_LOW);
 
-				VL53L0X_WrByte( 0xFF, 0x01);
-				VL53L0X_RdWord( 0x84, &tempword);
-				VL53L0X_WrByte( 0xFF, 0x00);
+				writeByteToSensor((byte)0xFF, (byte)0x01);
+				tempword = readWordFromSensor((byte)0x84);
+				writeByteToSensor((byte)0xFF, (byte)0x00);
 
-				VL53L0X_SETDEVICESPECIFICPARAMETER( OscFrequencyMHz,
-					VL53L0X_FIXPOINT412TOFIXPOINT1616(tempword));
+				OscFrequencyMHz =
+					VL53L0X_FIXPOINT412TOFIXPOINT1616(tempword);
 
 			/* After static init, some device parameters may be changed,
 			 * so update them */
@@ -282,6 +285,11 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 					seqTimeoutMicroSecs);
 			}
 
+			private Object VL53L0X_FIXPOINT412TOFIXPOINT1616(short tempword) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 			LOG_FUNCTION_END(Status);
 			return Status;
 
@@ -334,15 +342,15 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 			writeByteToSensor(VL53L0X_REG_SYSTEM_SEQUENCE_CONFIG, SequenceConfig);
 			m_sequenceConfig = SequenceConfig;
 	 }
-	 
+
 	private void VL53L0X_perform_phase_calibration(int get_data_enable, int i) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void VL53L0X_perform_vhv_calibration(int get_data_enable, int i) {
 		// TODO Auto-generated method stub
-		 
+
 	}
 
 	public void performRefSpadManagement() {
