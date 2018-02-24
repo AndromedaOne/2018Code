@@ -197,6 +197,7 @@ public class Robot extends TimedRobot {
 		    scalePlatePosition =	gameData.charAt(SCALE);
 		    switchPlatePosition = gameData.charAt(SWITCH);
 	    	} else {
+	    		//here for testing purposes. Could break things.
 	    		scalePlatePosition = scalePlateChooser.getSelected();
 	    		switchPlatePosition = switchPlateChooser.getSelected();
 	    	}

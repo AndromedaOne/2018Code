@@ -27,6 +27,7 @@ public class TeleOpDrive extends Command {
 	public static final double kDeadzone = 0.00;
 
 	private int m_slowmodedelaycounter = 0;
+	private double m_previousForwardBackwardStickValue = 0.0;
 
 	private boolean slowMoEnabled = false;
 	private double mod = 1;
@@ -93,6 +94,8 @@ public class TeleOpDrive extends Command {
 		m_slowmodedelaycounter++;
 		
 		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod, true, false);
+		
+		m_previousForwardBackwardStickValue = forwardBackwardStickValue;
 	}
 
 
