@@ -13,11 +13,13 @@ public class Signal {
 	//the new values of these statistics after the point is added
 	public double mean;
 	public double sdev;
+	public double skewness;
+	public double kurtosis;
 	public double min;
-	public double max; 
+	public double max;
 	
 	public Signal(boolean isOutlier, double sdevs, double pointAdded, int signChanged, double mean, double sdev,
-			double min, double max) {
+			double skewness, double kurtosis, double min, double max) {
 		super();
 		this.isOutlier = isOutlier;
 		this.sdevs = sdevs;
@@ -25,6 +27,8 @@ public class Signal {
 		this.signChanged = signChanged;
 		this.mean = mean;
 		this.sdev = sdev;
+		this.skewness = skewness;
+		this.kurtosis = kurtosis;
 		this.min = min;
 		this.max = max;
 	}
@@ -32,7 +36,10 @@ public class Signal {
 	@Override
 	public String toString() {
 		return "Signal [isOutlier=" + isOutlier + ", sdevs=" + sdevs + ", pointAdded=" + pointAdded + ", signChanged="
-				+ signChanged + ", mean=" + mean + ", sdev=" + sdev + ", min=" + min + ", max=" + max + "]";
-	}
+				+ signChanged + ", mean=" + mean + ", sdev=" + sdev + ", skewness=" + skewness + ", kurtosis="
+				+ kurtosis + ", min=" + min + ", max=" + max + "]";
+	} 
+	
+	
 
 }

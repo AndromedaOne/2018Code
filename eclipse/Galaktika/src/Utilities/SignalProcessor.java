@@ -10,6 +10,8 @@ public class SignalProcessor {
 	protected double supressionWeight;
 	protected double mean;
 	protected double sdev;
+	protected double skewness;
+	protected double kurtosis;
 	protected double min;
 	protected double max;
 	public SignalProcessor(int windowSize, double sdevThreshold, double supressionWeight) {
@@ -38,15 +40,15 @@ public class SignalProcessor {
 		
 		if (window.size() < windowSize) {
 			add(point);
-			return new Signal(false, sdevs, point, signChanged, mean, sdev, min, max);
+			return new Signal(false, sdevs, point, signChanged, mean, sdev, skewness, kurtosis, min, max);
 		}else {
 			if (Math.abs(sdevs) > sdevThreshold) {
 				double weightedPoint = window.getLast() * (1-supressionWeight) + point * supressionWeight;
 				add(weightedPoint);
-				return new Signal(true, sdevs, weightedPoint, signChanged, mean, sdev, min, max);
+				return new Signal(true, sdevs, weightedPoint, signChanged, mean, sdev, skewness, kurtosis, min, max);
 			}else {
 				add(point);
-				return new Signal(false, sdevs, point, signChanged, mean, sdev, min, max);
+				return new Signal(false, sdevs, point, signChanged, mean, sdev, skewness, kurtosis, min, max);
 			}
 		}
 	}
@@ -57,22 +59,44 @@ public class SignalProcessor {
 		if (window.size() > windowSize) {
 			window.removeFirst();
 		}
-		double m = 0;
-		double S = 0;
 		double n = 0;
+		double M1 = 0;
+		double M2 = 0;
+		double M3 = 0;
+		double M4 = 0;
 		min = Double.POSITIVE_INFINITY;
 		max = Double.NEGATIVE_INFINITY;
 		for (Double x: window) {
-			double oldm = m;
+			double n1 = n;
 			n++;
-			m += (x - m) / n;
-			S += (x - m) * (x - oldm);
+			double delta = x - M1;
+		    double delta_n = delta / n;
+		    double delta_n2 = delta_n * delta_n;
+		    double term1 = delta * delta_n * n1;
+		    M1 += delta_n;
+		    M4 += term1 * delta_n2 * (n*n - 3*n + 3) + 6 * delta_n2 * M2 - 4 * delta_n * M3;
+		    M3 += term1 * delta_n * (n - 2) - 3 * delta_n * M2;
+		    M2 += term1;
 			if (x < min) min = x;
 			if (x > max) max = x;
 
 		}
-		mean = m;
-		sdev = (n<=1)?Double.NaN:Math.sqrt(S / (n-1));
+		mean = M1;
+		sdev = (n<=1)?Double.NaN:Math.sqrt(M2 / (n-1));
+		skewness = Math.sqrt(n) * M3/ Math.pow(M2, 1.5);
+		kurtosis = n*M4 / (M2*M2) - 3.0; 
 	}
-	
+	/*
+	public static void main(String[] args) throws Exception {
+		double[] a1 = {1,2,3,4,5,3.14};
+		SignalProcessor s = new SignalProcessor(3, 100, 0);
+		Signal signal = null;
+		for (double x: a1) {
+			signal = s.update(x);
+			System.out.println(signal);
+		}
+		if (!(Math.abs(signal.mean - 4.046666666666667) < 1e-6)) throw new Exception();
+		if (!(Math.abs(signal.sdev - 0.9308777220093589) < 1e-6)) throw new Exception();
+	}
+	*/
 }
