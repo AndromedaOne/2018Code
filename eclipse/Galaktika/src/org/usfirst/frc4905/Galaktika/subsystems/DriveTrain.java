@@ -22,7 +22,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import Utilities.Signal;
-import Utilities.SpikeDetector;
+import Utilities.SignalProcessor;
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.Compressor;
@@ -319,7 +319,7 @@ public class DriveTrain extends Subsystem {
 		}
 
 	}
-	static private double calculateOutput(double output, double previousOutput,
+	static public double calculateOutput(double output, double previousOutput,
 			double maxAllowableDelta) {
 		double deltaOutput = output - previousOutput;
 		if (deltaOutput > 0 && deltaOutput > maxAllowableDelta) {
@@ -358,7 +358,7 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
 		LiveWindow.add(encoderPIDIn);
 		encoderPIDIn.setName("DriveTrain", "Encoder");
-
+		
 		// grab a saved angle to correct to when using the encoder pid
 		m_savedAngle = RobotMap.navX.getRobotAngle();
 		LiveWindow.add(m_encoderPID);

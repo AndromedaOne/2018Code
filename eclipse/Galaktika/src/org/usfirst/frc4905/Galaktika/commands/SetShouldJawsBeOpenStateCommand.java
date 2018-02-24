@@ -2,18 +2,19 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import edu.wpi.first.wpilibj.command.TimedCommand;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class AutoJawsOpen extends TimedCommand {
-
-    public AutoJawsOpen(double timeout) {
-        super(timeout);
-        requires(Robot.jaws);
+public class SetShouldJawsBeOpenStateCommand extends Command {
+	
+	private boolean m_state;
+	
+    public SetShouldJawsBeOpenStateCommand(boolean state) {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(Robot.jaws);
+        m_state = state;
     }
 
     // Called just before this Command runs the first time
@@ -22,10 +23,15 @@ public class AutoJawsOpen extends TimedCommand {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.jaws.extend();
+    	Robot.jaws.setShouldJawsBeOpenBoolean(m_state);
     }
 
-    // Called once after timeout
+    // Make this return true when this Command no longer needs to run execute()
+    protected boolean isFinished() {
+        return true;
+    }
+
+    // Called once after isFinished returns true
     protected void end() {
     }
 

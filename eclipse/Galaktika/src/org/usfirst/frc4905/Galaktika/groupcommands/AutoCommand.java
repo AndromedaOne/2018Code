@@ -1,14 +1,20 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
-import org.usfirst.frc4905.Galaktika.commands.AutoJawsOpen;
 import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveExchange;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveGroundLevel;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
+import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
 import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
-import org.usfirst.frc4905.Galaktika.commands.MoveElevator;
+import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
+import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
+import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
+import org.usfirst.frc4905.Galaktika.commands.SetShouldJawsBeOpenStateCommand;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoder;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
@@ -58,6 +64,8 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
     protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
     protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
+    protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 200;
+    protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 228.16;
     protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
     protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
     protected static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 41.15;
@@ -67,6 +75,7 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
     protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
 	private static final double BUMPER_WIDTH = 1.5;
+	protected static final double CLEARANCE_TO_TURN = 25;
 
     protected void driveForward(double forwardDistanceInches) {
         double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
@@ -122,8 +131,9 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall(double estimatedDistance) {
+    		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
         if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES < estimatedDistance) {
-        		addSequential(new MoveUsingEncoderPID(estimatedDistance - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
+        		addSequential(new MoveUsingEncoderPID(estimatedDistance*distanceScaleFactor - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
         }
         if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES > 0) {
     			addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
@@ -134,8 +144,12 @@ public abstract class AutoCommand extends CommandGroup {
         addParallel(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
     }
 
-    protected void moveElevatorToHighScaleHeight() {
-        addParallel(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
+    protected void moveElevatorToSwitchHeightSequential() {
+        addSequential(new ElevatorMoveSwitch());
+    }
+
+    protected void moveElevatorToScaleHeight() {
+        addParallel(new ElevatorMoveHighScale());
     }
     
     protected void moveElevatorToLowScaleHeight() {
@@ -146,6 +160,10 @@ public abstract class AutoCommand extends CommandGroup {
         addParallel(new MoveElevator(MoveElevator.EXCHANGE_HEIGHT));
     }
 
+    protected void moveElevatorToGroundHeight(){
+    	addParallel(new ElevatorMoveGroundLevel());
+    }
+
     protected void resetElevatorInAuto() {
         addSequential(new ResetElevatorEncoder());
     }
@@ -154,16 +172,11 @@ public abstract class AutoCommand extends CommandGroup {
     protected void driveBackward(double backwardDistanceInches) {
         driveForward(- backwardDistanceInches);
     }
-    
+
 
     protected void closeArmsInAuto(double timeout) {
     		addParallel(new AutoTimedArmsClose(timeout));
     }
-    
-    protected void openArmsInAuto() {
-		addSequential(new AutoJawsOpen(0.5));
-}
-
 
     protected void extendIntakeAuto() {
 		addParallel(new ExtendIntakeInAuto());
@@ -175,6 +188,53 @@ public abstract class AutoCommand extends CommandGroup {
 
     protected void turnToCompassHeading(double compassHeading) {
         addSequential(new TurnToCompassHeading(compassHeading));
+    }
+
+    protected void setJawsShouldBeOpenState(boolean state){
+    	addSequential(new SetShouldJawsBeOpenStateCommand(state));
+    }
+
+    protected void parallelJawsOpenClose(){
+    	 addParallel(new JawsOpenClose());
+    }
+
+    protected void parallelRetractExtendArms(){
+    	addParallel(new RetractExtendArms());
+    }
+
+    protected void setRetractorShouldBeUp(boolean state){
+    	addSequential(new SetIntakeShouldBeUpCommand(state));
+    }
+
+    protected void turnDeltaAngle(double angle){
+    	addSequential(new GyroPIDTurnDeltaAngle(angle));
+
+    }
+
+    protected void doubleScaleCube(){
+    	addSequential(new AutoDoubleScale());
+    }
+
+    protected void sameSideDoubleSwitchCube(){
+    	addSequential(new AutoDoubleSwitch());
+    }
+
+    protected void autoQuals(boolean m_useDelay){
+    	AutoQuals autoQuals = new AutoQuals(m_useDelay);
+
+    	autoQuals.prepareToStart();
+    }
+
+    protected void autoDoubleScale(boolean m_useDelay){
+    	AutoDoubleScale autoDoubleScale = new AutoDoubleScale(m_useDelay);
+    	autoDoubleScale.prepareToStart();
+    }
+
+
+    protected void autoDoubleSwitch(boolean m_useDelay){
+    	AutoDoubleSwitch autoDoubleSwitch = new AutoDoubleSwitch(m_useDelay);
+
+    	autoDoubleSwitch.prepareToStart();
     }
 
 }
