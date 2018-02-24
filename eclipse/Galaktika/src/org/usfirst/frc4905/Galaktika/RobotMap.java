@@ -178,7 +178,7 @@ public class RobotMap {
 		retractIntake = new DoubleSolenoid(0, 6, 7);
 		leftDeployServo = new Servo(5);
 		rightDeployServo = new Servo(6);
-		LiveWindow.addSensor("ElevatorLimitSwitch", "Bottom", elevatorBottomLimitSwitch);
+		LiveWindow.addSensor("Elevator", "Limit Switch", elevatorBottomLimitSwitch);
 		LiveWindow.addActuator("Ramps", "leftDeployServo", leftDeployServo);
 		SmartDashboard.putNumber("left servo get", leftDeployServo.get());
 		LiveWindow.addActuator("Ramps", "rightDeployServo", rightDeployServo);
