@@ -22,7 +22,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import Utilities.Signal;
-import Utilities.SpikeDetector;
+import Utilities.SignalProcessor;
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.Compressor;
