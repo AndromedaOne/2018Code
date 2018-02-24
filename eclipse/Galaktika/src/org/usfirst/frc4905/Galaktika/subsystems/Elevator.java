@@ -207,8 +207,8 @@ public class Elevator extends Subsystem {
 
 		}
 		else {
-			
-			moveElevator(speed * 0.5);
+			System.out.println("Encoder position: " + getElevatorEncoderPosition());
+			moveElevator(speed * 0.6);
 		}
 
 	}
