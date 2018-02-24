@@ -17,6 +17,8 @@ public class RetractExtendArms extends Command {
         // eg. requires(chassis);
     	requires(Robot.retractor);
     }
+    
+    private double leftJoystickAddedInput = 0;
 
     // Called just before this Command runs the first time
     @Override
@@ -30,7 +32,10 @@ public class RetractExtendArms extends Command {
 
     	boolean downPovPressed = Utilities.ControllerButtons.POVDirectionNames.getPOVSouth(subystemController);
     	boolean upPovPressed = Utilities.ControllerButtons.POVDirectionNames.getPOVNorth(subystemController);
-
+    	double leftJoystick = Utilities.ControllerButtons.EnumeratedRawAxis.getLeftStickVertical(subystemController);
+ 
+    	leftJoystickAddedInput += leftJoystick;
+    	
     	if(upPovPressed && !Robot.jaws.getShouldJawsBeOpen()){
     		Robot.retractor.setShouldIntakeBeUpBoolean(true);
     	}
@@ -40,8 +45,16 @@ public class RetractExtendArms extends Command {
     	else if(downPovPressed){
     		Robot.retractor.setShouldIntakeBeUpBoolean(false);
     	}
-    	else{
-    		//do nothing
+    	else if(leftJoystickAddedInput > 1){
+    		Robot.retractor.retractIntake();
+    		Robot.retractor.stopIntakeExtension();
+    		leftJoystickAddedInput = 0;
+    	}else if(leftJoystickAddedInput < -1) {
+    		Robot.retractor.extendIntake();
+    		Robot.retractor.stopIntakeExtension();
+    		leftJoystickAddedInput = 0;
+    	} else {
+    		Robot.retractor.stopIntakeExtension();
     	}
 
     	Robot.retractor.setIntakeToCorrectState();
