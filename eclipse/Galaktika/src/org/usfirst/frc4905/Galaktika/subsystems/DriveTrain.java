@@ -358,7 +358,7 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
 		LiveWindow.add(encoderPIDIn);
 		encoderPIDIn.setName("DriveTrain", "Encoder");
-
+		
 		// grab a saved angle to correct to when using the encoder pid
 		m_savedAngle = RobotMap.navX.getRobotAngle();
 		LiveWindow.add(m_encoderPID);

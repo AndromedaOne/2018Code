@@ -1,6 +1,8 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
+import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -26,7 +28,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
         parallelRetractExtendArms();
         setJawsShouldBeOpenState(false);
         setRetractorShouldBeUp(false);
-        moveElevatorToSwitchHeight();
+        
 
         if (platePos == 'L') {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);

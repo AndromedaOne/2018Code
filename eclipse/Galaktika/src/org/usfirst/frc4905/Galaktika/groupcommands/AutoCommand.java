@@ -131,8 +131,9 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall(double estimatedDistance) {
+    		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
         if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES < estimatedDistance) {
-        		addSequential(new MoveUsingEncoderPID(estimatedDistance - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
+        		addSequential(new MoveUsingEncoderPID(estimatedDistance*distanceScaleFactor - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
         }
         if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES > 0) {
     			addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
