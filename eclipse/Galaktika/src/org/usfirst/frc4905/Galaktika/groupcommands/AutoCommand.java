@@ -215,4 +215,22 @@ public abstract class AutoCommand extends CommandGroup {
     	addSequential(new AutoDoubleSwitch());
     }
 
+    protected void autoQuals(boolean m_useDelay){
+    	AutoQuals autoQuals = new AutoQuals(m_useDelay);
+
+    	autoQuals.prepareToStart();
+    }
+
+    protected void autoDoubleScale(boolean m_useDelay){
+    	AutoDoubleScale autoDoubleScale = new AutoDoubleScale(m_useDelay);
+    	autoDoubleScale.prepareToStart();
+    }
+
+
+    protected void autoDoubleSwitch(boolean m_useDelay){
+    	AutoDoubleSwitch autoDoubleSwitch = new AutoDoubleSwitch(m_useDelay);
+
+    	autoDoubleSwitch.prepareToStart();
+    }
+
 }
