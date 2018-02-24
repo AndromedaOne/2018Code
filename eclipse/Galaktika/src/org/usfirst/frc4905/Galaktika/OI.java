@@ -20,6 +20,7 @@ import org.usfirst.frc4905.Galaktika.commands.LEDCommand;
 import org.usfirst.frc4905.Galaktika.commands.LiftLeftRamp;
 import org.usfirst.frc4905.Galaktika.commands.LiftRightRamp;
 import org.usfirst.frc4905.Galaktika.commands.MotionProfilingTest;
+import org.usfirst.frc4905.Galaktika.commands.MoveElevator;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoderTesting;
