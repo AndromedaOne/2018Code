@@ -74,7 +74,7 @@ public class AutoQuals extends AutoCommand {
 		} else {
 			turnRight();
 		}
-		moveElevatorToScaleHeight();
+		moveElevatorToHighScaleHeight();
 		driveForward(LATERAL_DISTANCE_TO_SCALE);
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}

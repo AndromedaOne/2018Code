@@ -10,15 +10,12 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ElevatorManualControl extends Command {
+// Extends MoveElevator to get isIndeadzone function and some other crap
+public class ElevatorManualControl extends MoveElevator {
 
 
 	Joystick subsystemController;
-	public ElevatorManualControl() {
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
-		requires(Robot.elevator);
-	}
+
 
 	// Called just before this Command runs the first time
 	@Override
@@ -68,7 +65,5 @@ public class ElevatorManualControl extends Command {
 	protected void interrupted() {
 		Robot.elevator.stopElevator();
 	}
-	private boolean isInDeadzone(double forwardBackwardStickValue) {
-		return (forwardBackwardStickValue > -0.02 && forwardBackwardStickValue < 0.02);
-	}
+
 }
