@@ -24,7 +24,7 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 	private static final byte DefaultTuningSettings = 0;
 	private static final byte VL53L0X_REG_SYSTEM_INTERRUPT_GPIO_NEW_SAMPLE_READY = 0x04;
 	private static final byte VL53L0X_INTERRUPTPOLARITY_LOW = 0x00;
-	private I2C m_i2c;
+	private I2CSensor m_i2cSensor;
 	private int m_distance;
 	private byte m_sequenceConfig;
 	private byte m_vhvSettings;
@@ -34,104 +34,20 @@ public class VL53L0X extends SensorBase implements PIDSource, Sendable {
 		return m_distance;
 	}
 
-	private void writeByteToSensor(byte index, byte value) throws IOException {
-		ByteBuffer writeBuff = ByteBuffer.allocate(3);
-		writeBuff.put(index);
-		writeBuff.put(value);
-		if (m_i2c.writeBulk(writeBuff, 2)) {
-			// Transaction was aborted
-			throw new IOException("writeByteToSensor: VL6180 i2c writeBulk aborted");
-		}
-	}
-
-	private byte readByteFromSensor(byte index) throws IOException {
-		ByteBuffer indexBuff = ByteBuffer.allocate(1);
-		ByteBuffer resultBuff = ByteBuffer.allocate(1);
-		indexBuff.putShort(index);
-		if (m_i2c.transaction(indexBuff, 1, resultBuff, 1)) {
-			// Transaction was aborted
-			throw new IOException("readByteFromSensor: VL6180 i2c transaction aborted");
-		}
-		return resultBuff.get();
-	}
-
-	private void writeWordToSensor(byte index, byte value) throws IOException {
-		ByteBuffer writeBuff = ByteBuffer.allocate(2);
-		writeBuff.put(index);
-		writeBuff.put(value);
-		if (m_i2c.writeBulk(writeBuff, 2)) {
-			// Transaction was aborted
-			throw new IOException("writeWordToSensor: VL6180 i2c writeBulk aborted");
-		}
-	}
-
-	private short readWordFromSensor(byte index) throws IOException {
-		ByteBuffer indexBuff = ByteBuffer.allocate(1);
-		ByteBuffer resultBuff = ByteBuffer.allocate(1);
-		indexBuff.put(index);
-		if (m_i2c.transaction(indexBuff, 1, resultBuff, 1)) {
-			// Transaction was aborted
-			throw new IOException("readWordFromSensor: VL6180 i2c transaction aborted");
-		}
-		return resultBuff.get();
-	}
-
-	private void writeIntToSensor(byte index, int value) throws IOException {
-		ByteBuffer writeBuff = ByteBuffer.allocate(4);
-		writeBuff.put(index);
-		writeBuff.putInt(value);
-		if (m_i2c.writeBulk(writeBuff, 4)) {
-			// Transaction was aborted
-			throw new IOException("writeIntToSensor: VL6180 i2c writeBulk aborted");
-		}
-	}
-
-	private int readIntFromSensor(byte index) throws IOException {
-		ByteBuffer indexBuff = ByteBuffer.allocate(1);
-		ByteBuffer resultBuff = ByteBuffer.allocate(3);
-		indexBuff.put(index);
-		if (m_i2c.transaction(indexBuff, 1, resultBuff, 3)) {
-			// Transaction was aborted
-			throw new IOException("readIntFromSensor: VL6180 i2c transaction aborted");
-		}
-		return resultBuff.getInt();
-	}
-
-	private void enableSensor() throws IOException {
-		/*if (readByteFromSensor(kFreshOutReset) == 1) {
-			writeByteToSensor(kFreshOutReset, (byte) 0);
-			writeByteToSensor(kSYSRangeStart, (byte) 3);
-
-		}*/
-	}
-
-	private void disableSensor() throws IOException {
-	/*	if (readByteFromSensor(kFreshOutReset) == 0) {
-			writeByteToSensor(kSYSRangeStart, (byte) 3);
-			writeByteToSensor(kFreshOutReset, (byte) 1);
-
-		}*/
-	}
-
 	public VL53L0X(I2C.Port port) throws IOException {
-		HAL.report(tResourceType.kResourceType_Ultrasonic, 1);
-		m_i2c = new I2C(port, kAddress);
+		HAL.report(tResourceType.kResourceType_Counter, 1);
+		m_i2cSensor = new I2CSensor(port, kAddress);
+		
 		staticInit();
 		performRefCalibration(1);
 		performRefSpadManagement();
 		setDeviceMode();
-		disableSensor();
-		enableSensor();
-
 	}
-
-
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.setSmartDashboardType("Ultrasonic");
+		builder.setSmartDashboardType("Counter");
 		builder.addDoubleProperty("Value", this::pidGet, null);
-
 	}
 
 	@Override
