@@ -72,7 +72,7 @@ public class RunIntakeIn extends Command {
 		}
 		
 		else {
-			Robot.intake.ejectIntake(kIntakeSpeed + 0.1);
+			Robot.intake.ejectIntake(1);
 			//System.out.println("Running intake out");
 		}
 		
