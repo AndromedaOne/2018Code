@@ -52,7 +52,10 @@ public class SignalProcessor {
 			}
 		}
 	}
-
+/**
+ * algorithm taken from https://www.johndcook.com/blog/skewness_kurtosis/
+ * @param point
+ */
 
 	private void add(double point) {
 		window.addLast(point);
