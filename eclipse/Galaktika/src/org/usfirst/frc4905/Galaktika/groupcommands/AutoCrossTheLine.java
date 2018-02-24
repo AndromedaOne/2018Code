@@ -24,11 +24,8 @@ public class AutoCrossTheLine extends AutoCommand {
         if (m_useDelay) {
     			delay(Robot.getAutonomousDelay());
         }
-        parallelJawsOpenClose();
-        parallelRetractExtendArms();
-        setJawsShouldBeOpenState(false);
-        setRetractorShouldBeUp(false);
-
+        closeJaws(false);
+        lowerIntake();
         if (robotPos == 'M') {
         	moveElevatorToSwitchHeight();
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);

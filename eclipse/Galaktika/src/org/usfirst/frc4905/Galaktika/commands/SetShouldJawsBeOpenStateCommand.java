@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class SetShouldJawsBeOpenStateCommand extends Command {
-	
+
 	private boolean m_state;
-	
+
     public SetShouldJawsBeOpenStateCommand(boolean state) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.jaws);
@@ -23,7 +23,7 @@ public class SetShouldJawsBeOpenStateCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.jaws.setShouldJawsBeOpenBoolean(m_state);
+    		Robot.jaws.setShouldJawsBeOpenBoolean(m_state);
     }
 
     // Make this return true when this Command no longer needs to run execute()

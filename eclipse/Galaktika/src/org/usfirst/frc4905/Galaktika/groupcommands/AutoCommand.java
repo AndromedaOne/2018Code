@@ -38,7 +38,12 @@ public abstract class AutoCommand extends CommandGroup {
            }
     }
 
-    public AutoCommand() {
+    public enum MatchType {
+	    	QUALIFIERS,
+	    	PLAYOFFS
+    }
+
+	public AutoCommand() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -185,20 +190,25 @@ public abstract class AutoCommand extends CommandGroup {
         addSequential(new TurnToCompassHeading(compassHeading));
     }
 
-    protected void setJawsShouldBeOpenState(boolean state){
-    	addSequential(new SetShouldJawsBeOpenStateCommand(state));
+    protected void openJaws(){
+    		addSequential(new SetShouldJawsBeOpenStateCommand(true));
+    		// ENABLE IF BACK-UP IS TOO SOON AFTER OPEN
+    		// delay(0.5);
     }
 
-    protected void parallelJawsOpenClose(){
-    	 addParallel(new JawsOpenClose());
+    protected void closeJaws(boolean waitForClose){
+    		addSequential(new SetShouldJawsBeOpenStateCommand(false));
+    		if (waitForClose) {
+    			delay(0.5);
+    		}
     }
 
-    protected void parallelRetractExtendArms(){
-    	addParallel(new RetractExtendArms());
+    protected void raiseIntake(){
+    		addSequential(new SetIntakeShouldBeUpCommand(true));
     }
 
-    protected void setRetractorShouldBeUp(boolean state){
-    	addSequential(new SetIntakeShouldBeUpCommand(state));
+    protected void lowerIntake(){
+    		addSequential(new SetIntakeShouldBeUpCommand(false));
     }
 
     protected void turnDeltaAngle(double angle){
@@ -206,30 +216,10 @@ public abstract class AutoCommand extends CommandGroup {
 
     }
 
-    protected void doubleScaleCube(){
-    	addSequential(new AutoDoubleScale());
-    }
-
-    protected void sameSideDoubleSwitchCube(){
-    	addSequential(new AutoDoubleSwitch());
-    }
-
-    protected void autoQuals(boolean m_useDelay){
-    	AutoQuals autoQuals = new AutoQuals(m_useDelay);
-
-    	autoQuals.prepareToStart();
-    }
-
-    protected void autoDoubleScale(boolean m_useDelay){
-    	AutoDoubleScale autoDoubleScale = new AutoDoubleScale(m_useDelay);
-    	autoDoubleScale.prepareToStart();
-    }
-
-
-    protected void autoDoubleSwitch(boolean m_useDelay){
-    	AutoDoubleSwitch autoDoubleSwitch = new AutoDoubleSwitch(m_useDelay);
-
-    	autoDoubleSwitch.prepareToStart();
-    }
+	public void crossAutoLine(char robotPos) {
+		debug("top of crossAutoLine");
+	    driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+		debug("bottom of crossAutoLine");
+	}
 
 }
