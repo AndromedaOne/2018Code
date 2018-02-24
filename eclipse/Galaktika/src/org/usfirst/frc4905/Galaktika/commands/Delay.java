@@ -1,53 +1,33 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
-import java.sql.Timestamp;
-import java.util.concurrent.TimeUnit;
-
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
  */
-public class Delay extends Command {
-    double m_delaySeconds;
-    long m_timeoutMillis;
+public class Delay extends TimedCommand {
 
-    public Delay() {
-        this(5);
+    public Delay(double timeout) {
+        super(timeout);
+        // Use requires() here to declare subsystem dependencies
+        // eg. requires(chassis);
     }
 
-    public Delay(double delaySeconds) {
-            m_delaySeconds = delaySeconds;
+    public Delay() {
+    		super(5);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-            long now = System.currentTimeMillis();
-            m_timeoutMillis = now + (long) (m_delaySeconds*1000);
+    		//do nothing
+    	System.out.println("Delay started");
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-            long now = System.currentTimeMillis() ;
-        try {
-            TimeUnit.MILLISECONDS.sleep(m_timeoutMillis - now);
-        } catch (InterruptedException e) {
-            // continue to check isFinished
-        }
     }
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-            long now = System.currentTimeMillis();
-            if (m_timeoutMillis > now) {
-                return false;
-            }
-            else {
-                return true;
-            }
-    }
-
-    // Called once after isFinished returns true
+    // Called once after timeout
     protected void end() {
     }
 
