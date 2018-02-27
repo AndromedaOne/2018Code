@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class GyroPIDTurnDeltaAngle extends Command {
 
 	protected double m_deltaAngleToTurn = 0.0;
-	private final boolean useMotionProfilng = false;
+	private final boolean useMotionProfilng = true;
 	private double m_initialEncoderValue;
 
 
