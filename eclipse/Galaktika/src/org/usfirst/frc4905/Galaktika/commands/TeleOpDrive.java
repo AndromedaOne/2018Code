@@ -12,6 +12,7 @@
 package org.usfirst.frc4905.Galaktika.commands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
+import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import Utilities.PDPLogging;
 import Utilities.ControllerButtons.EnumeratedRawAxis;
@@ -28,6 +29,7 @@ public class TeleOpDrive extends Command {
 
 	private int m_slowmodedelaycounter = 0;
 	private double m_previousForwardBackwardStickValue = 0.0;
+	private double m_maxAllowableDelta = 0.1;
 
 	private boolean slowMoEnabled = false;
 	private double mod = 1;
@@ -92,9 +94,8 @@ public class TeleOpDrive extends Command {
 			}
 		}
 		m_slowmodedelaycounter++;
-		
+		forwardBackwardStickValue = DriveTrain.calculateOutput (forwardBackwardStickValue, m_previousForwardBackwardStickValue, m_maxAllowableDelta);
 		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod, true, false);
-		
 		m_previousForwardBackwardStickValue = forwardBackwardStickValue;
 	}
 
