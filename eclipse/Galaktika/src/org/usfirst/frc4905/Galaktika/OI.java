@@ -13,10 +13,6 @@ package org.usfirst.frc4905.Galaktika;
 
 import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.DriveSquare;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveGroundLevel;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveLowScale;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.LEDBrightness;
@@ -24,6 +20,7 @@ import org.usfirst.frc4905.Galaktika.commands.LEDCommand;
 import org.usfirst.frc4905.Galaktika.commands.LiftLeftRamp;
 import org.usfirst.frc4905.Galaktika.commands.LiftRightRamp;
 import org.usfirst.frc4905.Galaktika.commands.MotionProfilingTest;
+import org.usfirst.frc4905.Galaktika.commands.MoveElevator;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoderTesting;
@@ -93,6 +90,7 @@ public class OI {
 
 	public JoystickButton liftLeftRampButton;
 	public JoystickButton liftRightRampButton;
+	
 
 	public OI() {
 		//Button Presets for compass headings
@@ -115,10 +113,10 @@ public class OI {
 		elevatorMoveLowScaleButton = new JoystickButton(subsystemController, ButtonsEnumerated.XBUTTON.getValue());
 		elevatorMoveSwitchButton = new JoystickButton(subsystemController, ButtonsEnumerated.BBUTTON.getValue());
 		elevatorMoveGroundLevelButton = new JoystickButton(subsystemController, ButtonsEnumerated.ABUTTON.getValue());
-		elevatorMoveHighScaleButton.whenPressed(new ElevatorMoveHighScale());
-		elevatorMoveLowScaleButton.whenPressed(new ElevatorMoveLowScale());
-		elevatorMoveSwitchButton.whenPressed(new ElevatorMoveSwitch());
-		elevatorMoveGroundLevelButton.whenPressed(new ElevatorMoveGroundLevel());
+		elevatorMoveHighScaleButton.whenPressed(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
+		elevatorMoveLowScaleButton.whenPressed(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
+		elevatorMoveSwitchButton.whenPressed(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
+		elevatorMoveGroundLevelButton.whenPressed(new MoveElevator(MoveElevator.GROUND_LEVEL));
 
 		liftLeftRampButton = new JoystickButton(driveController, ButtonsEnumerated.BACKBUTTON.getValue());
 		liftLeftRampButton.whenPressed(new LiftLeftRamp());
