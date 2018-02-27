@@ -40,7 +40,7 @@ public class ElevatorManualControl extends MoveElevator {
 				double positionToMaintain = Robot.elevator.getElevatorPosition();
 				Robot.elevator.setPIDControllerToMaintenanceMode();//maintain our position constants
 
-				Robot.elevator.enableEncoderPID(positionToMaintain);
+				//Robot.elevator.enableEncoderPID(positionToMaintain);
 			} else {
 				Robot.elevator.moveElevatorSafely(forwardBackwardStickValue);
 			}
