@@ -26,7 +26,7 @@ public class AutoDoubleScale extends AutoCombinedLeftRight {
 	    //Only for when robotPos is 'L' or 'R'
 	    if (robotPos == 'L' && scalePlatePos == 'L') {
 	    	//Dummy numbers
-	    		int deltaAngle = 17;
+	    		double deltaAngle = 17;
 	        pickupFirstCubeFromScale(deltaAngle);
 	        moveElevatorToScaleHeight();
 	        turnToCompassHeading(0);
@@ -34,7 +34,7 @@ public class AutoDoubleScale extends AutoCombinedLeftRight {
 	        openJaws();
 	        System.out.println("Done left near side Scale :D");
 	    } else if (robotPos == 'R' && scalePlatePos == 'R') {
-	    		int deltaAngle = -17;
+	    		double deltaAngle = -17;
 	    		pickupFirstCubeFromScale(deltaAngle);
 	        moveElevatorToScaleHeight();
 	        turnToCompassHeading(0);

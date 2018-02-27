@@ -19,28 +19,22 @@ public class AutoTripleFromSwitch extends AutoDoubleSwitch {
         //Only for when robotPos is 'L' or 'R'
 
         if (robotPos == 'L' && switchPlatePos == 'L') {
-        		openJaws();
 	    		driveBackward(CLEARANCE_TO_TURN);
 	    		turnLeft();
 	    		driveForward(15.4);
 	    		turnRight();
 	    		driveForward(13);
 	    		closeJaws(true);
-	    		moveElevatorToSwitchHeightSequential();
-	    		driveForwardToWall(13);
-	    		openJaws();
+	    		dropCubeOntoSwitch();
             System.out.println("Done :D");
         } else if (robotPos == 'R' && switchPlatePos == 'R') {
-        		openJaws();
 	    		driveBackward(CLEARANCE_TO_TURN);
 	    		turnRight();
 	    		driveForward(15.4);
 	    		turnLeft();
 	    		driveForward(13);
 	    		closeJaws(true);
-	    		moveElevatorToSwitchHeightSequential();
-	    		driveForwardToWall(13);
-	    		openJaws();
+	    		dropCubeOntoSwitch();
     			System.out.println("Done :D");
         }
     }

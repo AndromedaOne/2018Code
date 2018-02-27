@@ -18,7 +18,6 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
     }
 
     protected void prepareToStart() {
-        char platePos = Robot.getSwitchPlatePosition();
         if (m_useDelay) {
     			delay(Robot.getAutonomousDelay());
     		}
@@ -26,6 +25,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
         lowerIntake();
         moveElevatorToSwitchHeight();
 
+        char platePos = Robot.getSwitchPlatePosition();
         if (platePos == 'L') {
             driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
             turnLeft();
@@ -38,29 +38,6 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
         }
 
         openJaws();
-
-
-        /*
-		if (platePos == 'R') {
-
-			driveBackward(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-			moveElevatorToGroundHeight();
-			turnLeft();
-			driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
-			turnRight();
-
-		} else {
-			driveBackward(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-			moveElevatorToGroundHeight();
-			turnRight();
-			driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
-			turnLeft();
-
-		}
-
-*/
-
-
 
     }
 

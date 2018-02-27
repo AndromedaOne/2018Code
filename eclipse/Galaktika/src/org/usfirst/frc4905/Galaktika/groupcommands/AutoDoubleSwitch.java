@@ -23,30 +23,46 @@ public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 	    char scalePlatePos = Robot.getScalePlatePosition();
 	    addAutoCombinedCommands(matchType);
 	    //Only for when robotPos is 'L' or 'R'
-	    if (robotPos == 'L' && switchPlatePos == 'L' &&
-	    		(matchType == MatchType.QUALIFIERS || scalePlatePos == 'R')) {
-	    		if ((matchType == MatchType.QUALIFIERS && switchPlatePos == 'L') ||
-	    				(matchType == MatchType.PLAYOFFS && scalePlatePos == 'R')) {
-	    			pickupFirstCubeFromLeftSwitchPlate();
-		    	} else {
-		    		pickupFirstCubeFromScale(17);
-		    	}
-	    		moveElevatorToSwitchHeightSequential();
-	    		driveForwardToWall(13);
-	    		openJaws();
-	        System.out.println("Done left side :D");
-	    } else if (robotPos == 'R' && switchPlatePos == 'R' &&
-	    		(matchType == MatchType.QUALIFIERS || scalePlatePos == 'L')) {
-	    		if ((matchType == MatchType.QUALIFIERS && switchPlatePos == 'R') ||
-	    			(matchType == MatchType.PLAYOFFS && scalePlatePos == 'L')) {
-		    		pickupFirstCubeFromRightSwitchPlate();
-	    		} else {
-	    			pickupFirstCubeFromScale(-17);
+	    if (robotPos == 'L') {
+	    		if (switchPlatePos == 'L' &&
+	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'R')) {
+
+		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'L') {
+			    		pickupFirstCubeFromScale(17);
+			    	} else {
+		    			pickupFirstCubeFromLeftSwitchPlate();
+			    	}
+
+		    		dropCubeOntoSwitch();
+	    		} else if (switchPlatePos == 'R') {
+	    			if (scalePlatePos == 'L') {
+	    				pickupFirstCubeFromScale(17);
+	    			}
 	    		}
-	    		moveElevatorToSwitchHeightSequential();
-	    		driveForwardToWall(13);
-	    		openJaws();
+
+	    		System.out.println("Done left side :D");
+	    } else if (robotPos == 'R') {
+	    		if (	switchPlatePos == 'R' &&
+	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'L')) {
+
+		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'R') {
+		    			pickupFirstCubeFromScale(-17);
+		    		} else {
+			    		pickupFirstCubeFromRightSwitchPlate();
+		    		}
+		    		dropCubeOntoSwitch();
+	    		} else if (switchPlatePos == 'L') {
+	    			if (scalePlatePos == 'R') {
+	    				pickupFirstCubeFromScale(-17);
+	    			}
+	    		}
 			System.out.println("Done right side :D");
 	    }
+	}
+
+	protected void dropCubeOntoSwitch() {
+		moveElevatorToSwitchHeightSequential();
+		driveForwardToWall(13);
+		openJaws();
 	}
 }

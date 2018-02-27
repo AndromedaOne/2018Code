@@ -147,7 +147,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	    }
 	}
 
-	protected void pickupFirstCubeFromScale(int deltaAngle) {
+	protected void pickupFirstCubeFromScale(double deltaAngle) {
 		turnDeltaAngle(deltaAngle);
 		moveElevatorToGroundHeight();
 		driveForward(53);
