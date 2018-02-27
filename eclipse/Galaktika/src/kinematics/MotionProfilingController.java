@@ -120,13 +120,6 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 					new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
 					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition) * 10));
 
-			/*
-			 * new TracePair("velocityPIDOut", (velocityPIDOut)), new
-			 * TracePair("nextVelocity", (nextVelocity)))
-			 * 
-			 * new TracePair("Rate", rate), new TracePair("Ratio", velocity/rate));
-			 */
-
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
 		}
 	}
