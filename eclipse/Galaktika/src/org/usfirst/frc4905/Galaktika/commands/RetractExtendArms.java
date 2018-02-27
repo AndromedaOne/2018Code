@@ -50,7 +50,7 @@ public class RetractExtendArms extends Command {
 		boolean upPovPressed = Utilities.ControllerButtons.POVDirectionNames.getPOVNorth(subystemController);
 		double leftJoystick = Utilities.ControllerButtons.EnumeratedRawAxis.getLeftStickVertical(subystemController);
 
-
+		/*
 		if(upPovPressed && !Robot.jaws.getShouldJawsBeOpen()){
 			Robot.retractor.retractIntake();
 			Robot.retractor.setShouldIntakeBeUpBoolean(true);
@@ -110,7 +110,14 @@ public class RetractExtendArms extends Command {
 		} else {
 			m_currentState = RetractorStates.Stop;
 		}
-
+	*/
+		
+		if(upPovPressed){
+			Robot.retractor.retractIntake();
+		}
+		if(downPovPressed){
+			Robot.retractor.extendIntake();
+		}
 
 	}
 

@@ -47,7 +47,7 @@ public void initDefaultCommand() {
 	   }
 
 	   public void setJawsToCorrectState(){
-		   if(shouldJawsBeOpen && !Robot.retractor.getShouldIntakeBeUpBoolean()){
+		   if(shouldJawsBeOpen /*&& !Robot.retractor.getShouldIntakeBeUpBoolean()*/){
 			   openJaws();
 		   }
 		   else {
