@@ -26,21 +26,9 @@ public class AutoDoubleSwitch extends AutoCommand {
         if (m_useDelay) {
     			delay(Robot.getAutonomousDelay());
         }
-        parallelJawsOpenClose();
-        parallelRetractExtendArms();
-        setJawsShouldBeOpenState(false);
-        setRetractorShouldBeUp(false);
+        autoQuals(false);
         //Only for when robotPos is 'L' or 'R'
         if (robotPos == 'L' && switchPlatePos == 'L') {
-	        	setJawsShouldBeOpenState(false);
-	    		setRetractorShouldBeUp(false);
-
-	    		moveElevatorToSwitchHeight();
-
-	    		driveForward(FORWARD_DISTANCE_TO_SWITCH);
-	    			turnRight();
-	    		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-	    		setJawsShouldBeOpenState(true);
 	    		driveBackward(CLEARANCE_TO_TURN);
 	    		turnLeft();
 	    		driveForward(80);
@@ -55,13 +43,6 @@ public class AutoDoubleSwitch extends AutoCommand {
 	    		setJawsShouldBeOpenState(true);
             System.out.println("Done :D");
         } else if (robotPos == 'R' && switchPlatePos == 'R') {
-	        	setJawsShouldBeOpenState(false);
-	    		setRetractorShouldBeUp(false);
-	    		moveElevatorToSwitchHeight();
-	    		driveForward(FORWARD_DISTANCE_TO_SWITCH);
-	    		turnLeft();
-	    		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-	    		setJawsShouldBeOpenState(true);
 	    		driveBackward(CLEARANCE_TO_TURN);
 	    		turnRight();
 	    		driveForward(80);
