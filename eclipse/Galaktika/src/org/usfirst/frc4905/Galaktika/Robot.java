@@ -143,6 +143,7 @@ public class Robot extends TimedRobot {
         chooser.addObject("Delay and Playoff Match Starting from Left", new Pair<>(new AutoPlayoffs(true), 'L'));
         chooser.addObject("Delay and Playoff Match Starting from Middle", new Pair<>(new AutoPlayoffs(true), 'M'));
         chooser.addObject("Delay and Playoff Match Starting from Right", new Pair<>(new AutoPlayoffs(true), 'R'));
+        
 
         SmartDashboard.putData("Auto mode", chooser);
         SmartDashboard.putNumber("Autonomous Delay", delaySeconds);
