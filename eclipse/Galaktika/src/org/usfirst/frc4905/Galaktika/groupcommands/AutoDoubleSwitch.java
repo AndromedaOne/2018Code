@@ -28,7 +28,7 @@ public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'R')) {
 
 		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'L') {
-			    		pickupFirstCubeFromScale(17);
+			    		pickupFirstCubeFromScale(16.99);
 			    	} else {
 		    			pickupFirstCubeFromLeftSwitchPlate();
 			    	}
@@ -36,7 +36,7 @@ public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 		    		dropCubeOntoSwitch();
 	    		} else if (switchPlatePos == 'R') {
 	    			if (scalePlatePos == 'L') {
-	    				pickupFirstCubeFromScale(17);
+	    				pickupFirstCubeFromScale(16.99);
 	    			}
 	    		}
 
@@ -46,14 +46,14 @@ public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'L')) {
 
 		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'R') {
-		    			pickupFirstCubeFromScale(-17);
+		    			pickupFirstCubeFromScale(-16.99);
 		    		} else {
 			    		pickupFirstCubeFromRightSwitchPlate();
 		    		}
 		    		dropCubeOntoSwitch();
 	    		} else if (switchPlatePos == 'L') {
 	    			if (scalePlatePos == 'R') {
-	    				pickupFirstCubeFromScale(-17);
+	    				pickupFirstCubeFromScale(-16.99);
 	    			}
 	    		}
 			System.out.println("Done right side :D");
