@@ -131,8 +131,6 @@ public class Elevator extends Subsystem {
 				output = -0.3;
 			}
 
-
-
 			moveElevatorSafely(output);
 			if(noisyDebug) {
 				System.out.println("In Elevator pidWrite output = " + output +
@@ -222,9 +220,9 @@ public class Elevator extends Subsystem {
 	}
 
 	public void resetEncoder() {
-		if (getBottomLimitSwitch()) {
+		
 			elevatorController.setSelectedSensorPosition(0, 0, 10);
-		}
+		
 	}
 	public double getElevatorPosition() {
 

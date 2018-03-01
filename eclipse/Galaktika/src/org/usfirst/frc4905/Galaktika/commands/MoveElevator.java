@@ -35,6 +35,7 @@ public class MoveElevator extends Command {
     	Robot.elevator.initializeEncoderPID();
     	Robot.elevator.setPIDControllerToTravelMode();
     	Robot.elevator.enableEncoderPID(m_setPoint);
+    	m_driverInterrupt = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -58,8 +59,9 @@ public class MoveElevator extends Command {
     		Robot.elevator.setPIDControllerToMaintenanceMode();
     	}
     	else{
-    		//System.out.println("Ended button pid loop due to driver input");
+    		Robot.elevator.disableEncoderPID();//there is driver input, let's just preempt the check in manual and disable the loop, for safety.
     	}
+    	
     }
 
     // Called when another command which requires one or more of the same
