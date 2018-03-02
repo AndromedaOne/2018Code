@@ -33,7 +33,7 @@ public class RetractExtendArms extends Command {
 		MovingDown,
 		InchingDelay
 	}
-	private RetractorStates m_currentState = RetractorStates.Stop;
+	private RetractorStates m_currentState = RetractorStates.MovingDown;
 
 
 	// Called just before this Command runs the first time
@@ -112,18 +112,20 @@ public class RetractExtendArms extends Command {
 		}
 	*/
 		
-		if(upPovPressed) {
-			Robot.retractor.setShouldIntakeBeUpBoolean(true);
+		if(upPovPressed){
 			Robot.retractor.retractIntake();
+			m_currentState = RetractorStates.BeginMovingUp;
 		}
-		else if(downPovPressed) {
-			Robot.retractor.setShouldIntakeBeUpBoolean(false);
+		if(downPovPressed){
 			Robot.retractor.extendIntake();
-		}else {
-			Robot.retractor.stopIntakeExtension();
+			m_currentState = RetractorStates.MovingDown;
 		}
-		//Robot.retractor.setIntakeToCorrectState();
-
+		/*
+		if(m_currentState == RetractorStates.MovingDown){
+			Robot.retractor.extendIntake();
+			//in here for auto..
+		}
+	*/
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

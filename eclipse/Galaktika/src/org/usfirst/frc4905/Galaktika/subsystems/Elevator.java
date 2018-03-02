@@ -131,8 +131,6 @@ public class Elevator extends Subsystem {
 				output = -0.3;
 			}
 
-
-
 			moveElevatorSafely(output);
 			if(noisyDebug) {
 				System.out.println("In Elevator pidWrite output = " + output +
@@ -207,7 +205,7 @@ public class Elevator extends Subsystem {
 
 		}
 		else {
-			System.out.println("Encoder position: " + getElevatorEncoderPosition());
+			
 			moveElevator(speed * 0.6);
 		}
 
@@ -264,7 +262,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void setToleranceForMaintenanceMode(){
-		m_encoderPID.setAbsoluteTolerance(10);
+		m_encoderPID.setAbsoluteTolerance(0);
 	}
 
 }

@@ -43,6 +43,7 @@ public class NavxGyro {
 			 * details.
 			 */
 			m_navX = new AHRS(SPI.Port.kMXP);
+			
 			angleReadingSet = false;
 			System.out.println("Created NavX instance");
 			// New thread to initialize the initial angle
@@ -59,6 +60,7 @@ public class NavxGyro {
 		private NavxGyro m_navxGyro;
 		public SetInitialAngleReading(NavxGyro navxGyro) {
 			m_navxGyro = navxGyro;
+			
 		}
 
 		@Override

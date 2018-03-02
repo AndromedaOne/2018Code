@@ -29,6 +29,7 @@ public class ElevatorManualControl extends MoveElevator {
 		double forwardBackwardStickValue = EnumeratedRawAxis.getRightStickVertical(subsystemController);
 
 		if(Robot.elevator.getPidEnabledStatus()) {
+			
 			// If pid is enabled and stick is not in deadzone then disable the encoder pid
 			if(!isInDeadzone(forwardBackwardStickValue)) {
 				Robot.elevator.disableEncoderPID();
@@ -38,7 +39,8 @@ public class ElevatorManualControl extends MoveElevator {
 			if(isInDeadzone(forwardBackwardStickValue)) {
 				double positionToMaintain = Robot.elevator.getElevatorPosition();
 				Robot.elevator.setPIDControllerToMaintenanceMode();//maintain our position constants
-
+				Robot.elevator.enableEncoderPID(positionToMaintain);
+				
 				Robot.elevator.enableEncoderPID(positionToMaintain);
 			} else {
 				Robot.elevator.moveElevatorSafely(forwardBackwardStickValue);

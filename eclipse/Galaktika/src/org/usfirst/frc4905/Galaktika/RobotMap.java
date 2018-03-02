@@ -177,10 +177,10 @@ public class RobotMap {
 		elevatorBottomLimitSwitch = new DigitalInput(6);
 		elevatorTopLimitSwitch = new DigitalInput(5);
 		jawsSolenoid = new DoubleSolenoid(0, 4, 5);
-		retractIntake = new DoubleSolenoid(0, 6, 7);
+		retractIntake = new DoubleSolenoid(0, 7, 6);
 		LiveWindow.addActuator("Retractor", "Solenoid", retractIntake);
-		leftDeployServo = new Servo(5);
-		rightDeployServo = new Servo(6);
+		leftDeployServo = new Servo(6);
+		rightDeployServo = new Servo(5);
 		LiveWindow.addSensor("Elevator", "Bottom Limit Switch", elevatorBottomLimitSwitch);
 		LiveWindow.addSensor("Elevator", "Top Limit Switch", elevatorTopLimitSwitch);
 		LiveWindow.addActuator("Ramps", "leftDeployServo", leftDeployServo);
