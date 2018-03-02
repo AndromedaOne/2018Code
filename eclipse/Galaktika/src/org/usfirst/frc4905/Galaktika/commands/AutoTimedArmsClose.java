@@ -21,7 +21,7 @@ public class AutoTimedArmsClose extends TimedCommand {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.jaws.contract();
+    	Robot.jaws.closeJaws();
     }
 
     // Called once after timeout

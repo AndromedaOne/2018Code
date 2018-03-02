@@ -3,22 +3,27 @@ package org.usfirst.frc4905.Galaktika.commands;
 import org.usfirst.frc4905.Galaktika.Robot;
 
 import Utilities.ControllerButtons.EnumeratedRawAxis;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class ElevatorMoveGroundLevel extends Command {
-	double driverInput = 0;
-	Joystick subsystemcontroller;
+public class MoveElevator extends Command {
+	boolean m_driverInterrupt = false;
+	double m_setPoint = 0;
 	
-	boolean driverInterrupt = false;
+	// Encoder Revolution Constants
+	public static final double GROUND_LEVEL = 0;
+	public static final double EXCHANGE_HEIGHT = 200;
+	public static final double SWITCH_HEIGHT = 1200;
+	public static final double LOW_SCALE_HEIGHT = 2000;
+	public static final double HIGH_SCALE_HEIGHT = 2500;
 	
-	
-    public ElevatorMoveGroundLevel() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+    public MoveElevator(double setPoint) {
+    	this();
+    	m_setPoint = setPoint;
+    }
+    public MoveElevator() {
     	requires(Robot.elevator);
     }
 
@@ -29,34 +34,32 @@ public class ElevatorMoveGroundLevel extends Command {
     	}
     	Robot.elevator.initializeEncoderPID();
     	Robot.elevator.setPIDControllerToTravelMode();
-    	Robot.elevator.enableEncoderPID(0);
-    	subsystemcontroller = Robot.oi.getSubsystemController();
-    	driverInterrupt = false;
+    	Robot.elevator.enableEncoderPID(m_setPoint);
+    	m_driverInterrupt = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	driverInput = EnumeratedRawAxis.getRightStickVertical(subsystemcontroller);
-    	if(!(driverInput < 0.02 && driverInput > -0.02)){
+    	double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
+    	if(!isInDeadzone(driverInput)){
     		//if driver starts moving, disable pid loop
     		Robot.elevator.disableEncoderPID();
-    		driverInterrupt = true;
+    		m_driverInterrupt = true;
     	}
-    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Robot.elevator.isDoneEncoderPID() || driverInterrupt;
+    	return Robot.elevator.isDoneEncoderPID() || m_driverInterrupt;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	if(!driverInterrupt){
+    	if(!m_driverInterrupt){
     		Robot.elevator.setPIDControllerToMaintenanceMode();
-    		
-    	}else{
-    		//System.out.println("Ended button pid loop due to driver input");
+    	}
+    	else{
+    		Robot.elevator.disableEncoderPID();//there is driver input, let's just preempt the check in manual and disable the loop, for safety.
     	}
     	
     }
@@ -66,4 +69,7 @@ public class ElevatorMoveGroundLevel extends Command {
     protected void interrupted() {
     	Robot.elevator.disableEncoderPID();
     }
+	protected boolean isInDeadzone(double forwardBackwardStickValue) {
+		return (forwardBackwardStickValue > -0.02 && forwardBackwardStickValue < 0.02);
+	}
 }

@@ -3,13 +3,11 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveExchange;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveGroundLevel;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveHighScale;
-import org.usfirst.frc4905.Galaktika.commands.ElevatorMoveSwitch;
+
 import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.GyroPIDTurnDeltaAngle;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
+import org.usfirst.frc4905.Galaktika.commands.MoveElevator;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
@@ -65,7 +63,7 @@ public abstract class AutoCommand extends CommandGroup {
     protected static final double FORWARD_DISTANCE_TO_SWITCH = 148.04;
     protected static final double LATERAL_DISTANCE_TO_SWITCH = 28.72;
     //TODO: Get the following number from CAD
-    protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 140;
+    protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 115;
     protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
     protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
     protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
@@ -136,8 +134,9 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void driveForwardToWall(double estimatedDistance) {
+    		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
         if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES < estimatedDistance) {
-        		addSequential(new MoveUsingEncoderPID(estimatedDistance - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
+        		addSequential(new MoveUsingEncoderPID(estimatedDistance*distanceScaleFactor - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
         }
         if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES > 0) {
     			addSequential(new MoveUsingFrontUltrasonic(BUMPER_WIDTH));
@@ -145,23 +144,27 @@ public abstract class AutoCommand extends CommandGroup {
     }
 
     protected void moveElevatorToSwitchHeight() {
-        addParallel(new ElevatorMoveSwitch());
+        addParallel(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
     }
 
     protected void moveElevatorToSwitchHeightSequential() {
-        addSequential(new ElevatorMoveSwitch());
+        addSequential(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
     }
 
     protected void moveElevatorToScaleHeight() {
-        addParallel(new ElevatorMoveHighScale());
+        addParallel(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
+    }
+    
+    protected void moveElevatorToLowScaleHeight() {
+    	addParallel(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
     }
 
     protected void moveElevatorToExchangeHeight() {
-        addParallel(new ElevatorMoveExchange());
+        addParallel(new MoveElevator(MoveElevator.EXCHANGE_HEIGHT));
     }
 
     protected void moveElevatorToGroundHeight(){
-    	addParallel(new ElevatorMoveGroundLevel());
+    	addParallel(new MoveElevator(MoveElevator.GROUND_LEVEL));
     }
 
     protected void resetElevatorInAuto() {
