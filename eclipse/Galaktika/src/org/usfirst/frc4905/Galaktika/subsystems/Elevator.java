@@ -173,11 +173,11 @@ public class Elevator extends Subsystem {
 	public boolean getBottomLimitSwitch() {
 		return elevatorBottomLimitSwitch.get();
 	}
-	
+
 	public boolean getTopLimitSwitch() {
 		return elevatorTopLimitSwitch.get();
 	}
-	
+
 	private void moveElevator(double velocity) {
 		elevatorController.set(velocity);
 	}
@@ -189,7 +189,8 @@ public class Elevator extends Subsystem {
 		if(getTopLimitSwitch() == false && (speed < 0)) {
 			//trying to go upwards when speed < 0, false on the limit switch means it is triggered
 			if(getPidEnabledStatus() == true){
-				disableEncoderPID();
+				//stop a little short of the top, has to be debugged.
+				m_encoderPID.setSetpoint(getElevatorEncoderPosition() - 50);
 			}
 			moveElevator(0);
 			//if the pid loop drives somewhere unsafe, we should probably end the PID loop if its running
@@ -198,14 +199,15 @@ public class Elevator extends Subsystem {
 			//if the limit switch is pressed, then it returns a false
 			//speeds > 0 are going down
 			if(getPidEnabledStatus() == true){
-				disableEncoderPID();
+				//hold ourselves a little off the bottom.
+				m_encoderPID.setSetpoint(50);
 			}
 			resetEncoder();
 			moveElevator(0);
 
 		}
 		else {
-			
+
 			moveElevator(speed * 0.6);
 		}
 
@@ -220,9 +222,9 @@ public class Elevator extends Subsystem {
 	}
 
 	public void resetEncoder() {
-		
-			elevatorController.setSelectedSensorPosition(0, 0, 10);
-		
+
+		elevatorController.setSelectedSensorPosition(0, 0, 10);
+
 	}
 	public double getElevatorPosition() {
 

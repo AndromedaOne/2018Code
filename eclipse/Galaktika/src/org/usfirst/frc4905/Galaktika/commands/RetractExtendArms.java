@@ -113,19 +113,16 @@ public class RetractExtendArms extends Command {
 	*/
 		
 		if(upPovPressed){
-			Robot.retractor.retractIntake();
+			Robot.retractor.setShouldIntakeBeUpBoolean(true);
 			m_currentState = RetractorStates.BeginMovingUp;
 		}
 		if(downPovPressed){
-			Robot.retractor.extendIntake();
+			Robot.retractor.setShouldIntakeBeUpBoolean(false);
 			m_currentState = RetractorStates.MovingDown;
 		}
-		/*
-		if(m_currentState == RetractorStates.MovingDown){
-			Robot.retractor.extendIntake();
-			//in here for auto..
-		}
-	*/
+		
+		Robot.retractor.setIntakeToCorrectState();
+		
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
