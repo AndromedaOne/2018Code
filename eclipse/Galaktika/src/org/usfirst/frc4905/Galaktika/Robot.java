@@ -179,6 +179,7 @@ public class Robot extends TimedRobot {
     	
     	Trace.getInstance().flushTraceFiles();
     	Robot.ramps.lockRampsIn();
+    	
 
     }
 
@@ -259,6 +260,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+    }
+    
+    
+    @Override
+    public void testInit() {
+    	driveTrain.resetRobotState();
     }
 
     public static char getScalePlatePosition() {

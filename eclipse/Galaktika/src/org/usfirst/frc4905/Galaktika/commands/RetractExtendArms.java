@@ -120,11 +120,12 @@ public class RetractExtendArms extends Command {
 			Robot.retractor.extendIntake();
 			m_currentState = RetractorStates.MovingDown;
 		}
+		/*
 		if(m_currentState == RetractorStates.MovingDown){
 			Robot.retractor.extendIntake();
 			//in here for auto..
 		}
-
+	*/
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

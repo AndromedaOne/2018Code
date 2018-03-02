@@ -142,7 +142,7 @@ public class OI {
 		SmartDashboard.putData("LEDGreenBrightness", new LEDBrightness(LEDColor.GREEN));
 		SmartDashboard.putData("GyroPIDTurnDeltaAngle", new GyroPIDTurnDeltaAngle());
 		SmartDashboard.putData("TurnToCompassHeading", new TurnToCompassHeading(90));
-        SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(20));
+        SmartDashboard.putData("MoveUsingEncoderPID", new MoveUsingEncoderPID(100));
 		SmartDashboard.putData("RunMotorAndLog", new RunMotorAndLog());
 		SmartDashboard.putData("Lift Left Ramp", new LiftLeftRamp());
 		SmartDashboard.putData("Lift Right Ramp", new LiftRightRamp());
