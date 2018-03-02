@@ -24,7 +24,6 @@ public class AutoCrossTheLine extends AutoCommand {
         if (m_useDelay) {
     			delay(Robot.getAutonomousDelay());
         }
-        setRetractorShouldBeUp(true);
         lowerIntake();
        
         if (robotPos == 'M') {
