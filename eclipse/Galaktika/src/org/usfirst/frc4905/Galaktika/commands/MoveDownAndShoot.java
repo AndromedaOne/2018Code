@@ -16,7 +16,7 @@ public class MoveDownAndShoot extends Command {
 	
     public MoveDownAndShoot() {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(Robot.retractor);
     }
 
     // Called just before this Command runs the first time
@@ -24,12 +24,13 @@ public class MoveDownAndShoot extends Command {
     	long currentTime = System.currentTimeMillis();
     	m_timeToShoot = currentTime + kWaitToShootDelay;
     	m_timeToRunIntake = m_timeToShoot + kRunMotorTime;
+    	Robot.retractor.setShouldIntakeBeUpBoolean(false);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	long currentTime = System.currentTimeMillis();
-    	Robot.retractor.extendIntake();
+    	Robot.retractor.setIntakeToCorrectState();
     	if((currentTime > m_timeToShoot) && (currentTime < m_timeToRunIntake)) {
     		Robot.intake.ejectIntake(0.75);
     	} else if(currentTime > m_timeToRunIntake) {
