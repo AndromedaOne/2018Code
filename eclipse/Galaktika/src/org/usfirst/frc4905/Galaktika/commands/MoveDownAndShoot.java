@@ -6,12 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 
 
-/**
- * IMPORTANT
- *  Talked to Alana wants this to be set to the
- *  select button
- *
- */
+
 public class MoveDownAndShoot extends Command {
 
 	private final long kWaitToShootDelay = 300;
@@ -39,9 +34,7 @@ public class MoveDownAndShoot extends Command {
     		Robot.intake.ejectIntake(0.75);
     	} else if(currentTime > m_timeToRunIntake) {
     		Robot.intake.stopIntake();
-    	} else {
-    		Robot.retractor.retractIntake();
-    	}
+    	} 
     	
     }
 

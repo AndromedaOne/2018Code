@@ -20,6 +20,7 @@ import org.usfirst.frc4905.Galaktika.commands.LEDCommand;
 import org.usfirst.frc4905.Galaktika.commands.LiftLeftRamp;
 import org.usfirst.frc4905.Galaktika.commands.LiftRightRamp;
 import org.usfirst.frc4905.Galaktika.commands.MotionProfilingTest;
+import org.usfirst.frc4905.Galaktika.commands.MoveDownAndShoot;
 import org.usfirst.frc4905.Galaktika.commands.MoveElevator;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
@@ -91,6 +92,8 @@ public class OI {
 	public JoystickButton liftLeftRampButton;
 	public JoystickButton liftRightRampButton;
 	
+	public JoystickButton throwCubeButton;
+	
 
 	public OI() {
 		//Button Presets for compass headings
@@ -122,6 +125,10 @@ public class OI {
 		liftLeftRampButton.whenPressed(new LiftLeftRamp());
 		liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
 		liftRightRampButton.whenPressed(new LiftRightRamp());
+		
+		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
+		throwCubeButton.whenPressed(new MoveDownAndShoot());
+		
 
 		// SmartDashboard Buttons
 		SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
