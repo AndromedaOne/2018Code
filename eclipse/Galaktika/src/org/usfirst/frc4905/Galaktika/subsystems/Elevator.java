@@ -63,7 +63,7 @@ public class Elevator extends Subsystem {
 
 	private double m_encoderZeroPostion =  0.0;
 	// TODO We need to find the top level postion in encoder ticks
-	private static double m_encoderTopPosition = 150000000;//way too big
+	private double m_encoderTopPosition = 150000000;//way too big
 
 	public Elevator() {
 		initializeEncoderPID();
@@ -190,7 +190,7 @@ public class Elevator extends Subsystem {
 			//trying to go upwards when speed < 0, false on the limit switch means it is triggered
 			if(getPidEnabledStatus() == true){
 				//stop a little short of the top, has to be debugged.
-				m_encoderPID.setSetpoint(getElevatorEncoderPosition() - 50);
+				disableEncoderPID();
 			}
 			moveElevator(0);
 			//if the pid loop drives somewhere unsafe, we should probably end the PID loop if its running
@@ -200,15 +200,19 @@ public class Elevator extends Subsystem {
 			//speeds > 0 are going down
 			if(getPidEnabledStatus() == true){
 				//hold ourselves a little off the bottom.
-				m_encoderPID.setSetpoint(50);
+				disableEncoderPID();
 			}
 			resetEncoder();
 			moveElevator(0);
 
 		}
 		else {
-
-			moveElevator(speed * 0.6);
+			if(speed > 0) {
+				speed = speed * 0.2;
+			}else {
+				speed = speed * 0.6;
+			}
+			moveElevator(speed);
 		}
 
 	}
@@ -267,4 +271,8 @@ public class Elevator extends Subsystem {
 		m_encoderPID.setAbsoluteTolerance(0);
 	}
 
+	public double getTopEncoderPosition() {
+		return m_encoderTopPosition;
+	}
+	
 }

@@ -13,8 +13,13 @@ import edu.wpi.first.wpilibj.command.Command;
 // Extends MoveElevator to get isIndeadzone function and some other crap
 public class ElevatorManualControl extends MoveElevator {
 
+	//reverse oi, no mod on turning, fix intake wheels, auto put things down
 
 	Joystick subsystemController;
+	
+	double m_topElevatorPosition = 3550;
+	double m_topElevatorLimit = m_topElevatorPosition - 100;
+	
 
 
 	// Called just before this Command runs the first time
@@ -38,11 +43,23 @@ public class ElevatorManualControl extends MoveElevator {
 			// If pid is disabled and stick is in deadzone then maintain position
 			if(isInDeadzone(forwardBackwardStickValue)) {
 				double positionToMaintain = Robot.elevator.getElevatorPosition();
+				if(positionToMaintain < 50) {
+					Robot.elevator.disableEncoderPID();
+				}
+				if(positionToMaintain > Robot.elevator.getTopEncoderPosition() - 50) {
+					positionToMaintain = Robot.elevator.getTopEncoderPosition() - 50;
+				}
 				Robot.elevator.setPIDControllerToMaintenanceMode();//maintain our position constants
 				Robot.elevator.enableEncoderPID(positionToMaintain);
 				
-				Robot.elevator.enableEncoderPID(positionToMaintain);
 			} else {
+				double elevatorPosition = Robot.elevator.getElevatorPosition();
+				
+				if(elevatorPosition > m_topElevatorLimit && (forwardBackwardStickValue < 0 || isInDeadzone(forwardBackwardStickValue))) {
+					Robot.elevator.setPIDControllerToMaintenanceMode();//maintain our position constants
+					Robot.elevator.enableEncoderPID(m_topElevatorPosition);
+				}
+				
 				Robot.elevator.moveElevatorSafely(forwardBackwardStickValue);
 			}
 		}

@@ -158,8 +158,8 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
 	private double m_encoderPIDOutputMax = 1;
-	private double m_encoderPIDTolerance = 1000;
-	private double m_encoderPIDMaxAllowableDelta = 0.1;
+	private double m_encoderPIDTolerance = 3000;
+	private double m_encoderPIDMaxAllowableDelta = 0.2;
 
 	private PIDController m_ultrasonicPID;
 	private double m_P = .2;
@@ -424,7 +424,7 @@ public class DriveTrain extends Subsystem {
 			if(output != 0.0) {
 				output = calculateOutput(output, m_previousOutput, m_maxAllowableDelta);
 			}
-			move(0,output);
+			move(0,output,false);
 			m_previousOutput = output;
 		}
 	}
@@ -434,9 +434,9 @@ public class DriveTrain extends Subsystem {
 		double gyroPIDI = 0.0;
 		double gyroPIDD = 0.1;
 		double gyroPIDF = 0.0;
-		double gyroPIDOutputRange = 0.75;
-		double gyroPIDAbsTolerance = 1;
-		double maxAllowableDelta = 0.1;
+		double gyroPIDOutputRange = 1.0;
+		double gyroPIDAbsTolerance = 5;
+		double maxAllowableDelta = 0.2;
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
 		GyroPIDOut gyroPIDOut = new GyroPIDOut(maxAllowableDelta);
 		m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
@@ -458,7 +458,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace(false, "GyroPID", new TracePair("Avg Error", m_gyroPIDSource.getError()),
+		Trace.getInstance().addTrace(true, "GyroPID", new TracePair("Avg Error", m_gyroPIDSource.getError()),
 				new TracePair("Target", m_gyroPIDSource.getSetpoint()),
 				new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
 				new TracePair("Avg Error", m_gyroPIDSource.getError()),
@@ -537,7 +537,7 @@ public class DriveTrain extends Subsystem {
 		} else {
 			// should all cases fail, just drive normally
 			newForwardBackwardStickValue = forwardBackwardStickValue * mod;
-			newRotateStickValue = rotateStickValue * mod;
+			newRotateStickValue = rotateStickValue;
 		}
 
 		if(courseCorrectionDelay == 24 && useDelay){
@@ -551,7 +551,7 @@ public class DriveTrain extends Subsystem {
 				new TracePair("robotAngle", robotAngle),
 				new TracePair("correctionEquation", correctionEquation));
 
-		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*mod, squaredInput);
+		Robot.driveTrain.move(forwardBackwardStickValue*mod, newRotateStickValue*0.7, squaredInput);
 		courseCorrectionDelay++;
 		
 	}

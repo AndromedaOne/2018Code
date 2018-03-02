@@ -8,43 +8,58 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
-    private static final double LATERAL_DISTANCE_TO_LEFT_PLATE = 100;
-    private static final double LATERAL_DISTANCE_TO_RIGHT_PLATE = 100;
-    private static final double LATERAL_DISTANCE_BETWEEN_PLATES = 78;
+	private static final double LATERAL_DISTANCE_TO_LEFT_PLATE = 100;
+	private static final double LATERAL_DISTANCE_TO_RIGHT_PLATE = 100;
+	private static final double LATERAL_DISTANCE_BETWEEN_PLATES = 78;
 	boolean m_useDelay;
 
-    public AutoMiddleRightLoadSwitch(boolean useDelay) {
-        if (useDelay) {
-	        m_useDelay = useDelay;
-        }
-    }
+	public AutoMiddleRightLoadSwitch(boolean useDelay) {
+		if (useDelay) {
+			m_useDelay = useDelay;
+		}
+	}
 
-    protected void prepareToStart() {
-        char platePos = Robot.getSwitchPlatePosition();
-        if (m_useDelay) {
-    			delay(Robot.getAutonomousDelay());
-    		}
-        parallelJawsOpenClose();
-        parallelRetractExtendArms();
-        setJawsShouldBeOpenState(false);
-        setRetractorShouldBeUp(false);
-        
-
-        if (platePos == 'L') {
-            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-            turnLeft();
-            driveForward(LATERAL_DISTANCE_BETWEEN_PLATES);
-            turnRight();
-            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-
-        } else {
-            driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
-        }
-
-        setJawsShouldBeOpenState(true);
+	protected void prepareToStart() {
+		char platePos = Robot.getSwitchPlatePosition();
+		if (m_useDelay) {
+			delay(Robot.getAutonomousDelay());
+		}
+		setRetractorShouldBeUp(true);
+		setJawsShouldBeOpenState(false);
+		parallelJawsOpenClose();
+		parallelRetractExtendArms();
+		
 
 
-        /*
+
+		if (platePos == 'L') {
+			System.out.println("We're ont he left!");
+			/*
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+			turnLeft();
+			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES);
+			turnRight();
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
+			*/
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+			//EMERGENCY CODE FIX FOR A POTENTIAL EASY SWITCH AUTO. WE WILL TRY AND GET IT IF THE PLATE IS ON THE RIGHT,
+			// OTHERWISE WE WILL JUST DRIVEFORWARD
+
+		} else {
+			moveElevatorToSwitchHeight();
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+			setRetractorShouldBeUp(false);
+			parallelRetractExtendArms();
+			delay(1);
+			
+			setJawsShouldBeOpenState(true);
+			parallelJawsOpenClose();
+			
+		}
+
+
+
+		/*
 		if (platePos == 'R') {
 
 			driveBackward(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
@@ -62,10 +77,10 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
 		}
 
-*/
+		 */
 
 
 
-    }
+	}
 
 }

@@ -148,10 +148,10 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Autonomous Delay", delaySeconds);
         SmartDashboard.putNumber("Autonomous Scale Factor", distanceScaleFactor);
         scalePlateChooser.setName("Title for Scale Plate Chooser");
-        scalePlateChooser.addDefault("Left", 'L');
-        scalePlateChooser.addObject("Right", 'R');
-        switchPlateChooser.addDefault("Left", 'L');
-        switchPlateChooser.addObject("Right", 'R');
+        scalePlateChooser.addDefault("Scale Left", 'L');
+        scalePlateChooser.addObject("Scale Right", 'R');
+        switchPlateChooser.addDefault("Switch Left", 'L');
+        switchPlateChooser.addObject("Switch Right", 'R');
 
         SmartDashboard.putData("Scale Plate Position (Testing Only)", scalePlateChooser);
         SmartDashboard.putData("Switch Plate Position (Testing Only)", switchPlateChooser);
@@ -194,14 +194,15 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
     		debug("top of autonomousInit");
 	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
-	    	if (gameData.length() > SCALE) {
+	    	System.out.println("GAMEDATA!!!!!!!!" + gameData.charAt(SWITCH));
+	    	//if (gameData.length() > SCALE) {
 		    scalePlatePosition =	gameData.charAt(SCALE);
 		    switchPlatePosition = gameData.charAt(SWITCH);
-	    	} else {
+	    	/*} else {
 	    		//here for testing purposes. Could break things.
 	    		scalePlatePosition = scalePlateChooser.getSelected();
 	    		switchPlatePosition = switchPlateChooser.getSelected();
-	    	}
+	    	}*/
     		delaySeconds = SmartDashboard.getNumber("Autonomous Delay", 5.0);
     		distanceScaleFactor = SmartDashboard.getNumber("Autonomous Scale Factor", 1.0);
         Pair<Command, Character> pair = chooser.getSelected();

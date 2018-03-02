@@ -23,6 +23,7 @@ public class SetIntakeShouldBeUpCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	System.out.println("m_state: " + m_state);
     	Robot.retractor.setShouldIntakeBeUpBoolean(m_state);
     }
 

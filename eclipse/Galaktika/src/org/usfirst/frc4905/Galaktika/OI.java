@@ -127,7 +127,7 @@ public class OI {
 		liftRightRampButton.whenPressed(new LiftRightRamp());
 		
 		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
-		throwCubeButton.whenPressed(new MoveDownAndShoot());
+		//throwCubeButton.whenPressed(new MoveDownAndShoot()); //has to be tested
 		
 
 		// SmartDashboard Buttons
