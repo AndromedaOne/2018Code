@@ -24,6 +24,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 import Utilities.NavxGyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
@@ -82,6 +83,7 @@ public class RobotMap {
 	public static DigitalOutput redVal;
 	public static DigitalOutput greenVal;
 	public static DigitalOutput blueVal;
+    public static AnalogInput thermester;
 
 
 	public static DigitalInput elevatorBottomLimitSwitch;
@@ -188,6 +190,8 @@ public class RobotMap {
 		blueVal.enablePWM(0);
 		greenVal = new DigitalOutput(4);
 		greenVal.enablePWM(0);
+		thermester = new AnalogInput(0);
+		SmartDashboard.putNumber("Thermester", thermester.getValue());
 		
 		SmartDashboard.putNumber("elevator encoder get", elevatorElevatorController.getSelectedSensorPosition(0));
 

@@ -25,6 +25,7 @@ import org.usfirst.frc4905.Galaktika.subsystems.Ramps;
 import org.usfirst.frc4905.Galaktika.subsystems.Retractor;
 
 import Utilities.Tracing.Trace;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -87,6 +88,7 @@ public class Robot extends TimedRobot {
     public static PowerDistributionPanel pdp;// = new PowerDistributionPanel();
     public static Retractor retractor;
     public static Jaws jaws;
+
 
     public static Kinematics kinematics;
     /**
