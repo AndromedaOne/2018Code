@@ -38,7 +38,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			delay(1);
 			turnLeft();
 			delay(1);
-			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES);
+			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES + 40);
 			delay(1);
 			turnRight();
 			delay(1);

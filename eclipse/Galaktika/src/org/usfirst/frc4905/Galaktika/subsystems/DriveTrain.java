@@ -430,7 +430,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void initGyroPIDDeltaAngle() {
-		double gyroPIDP = 0.022;
+		double gyroPIDP = 0.028;
 		double gyroPIDI = 0.00;
 		double gyroPIDD = 0.1;
 		double gyroPIDF = 0.0;
