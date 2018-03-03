@@ -35,9 +35,13 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 		if (platePos == 'L') {
 			System.out.println("We're ont he left!");
 			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+			delay(1);
 			turnLeft();
+			delay(1);
 			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES);
+			delay(1);
 			turnRight();
+			delay(1);
 			moveElevatorToSwitchHeight();
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 			
