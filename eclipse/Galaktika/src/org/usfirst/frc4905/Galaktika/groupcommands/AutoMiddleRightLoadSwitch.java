@@ -33,8 +33,8 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
 
 		if (platePos == 'L') {
-			System.out.println("We're ont he left!");
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
+			/*System.out.println("We're ont he left!");
+			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 3);
 			delay(1);
 			turnLeft();
 			delay(1);
@@ -43,21 +43,21 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			turnRight();
 			delay(1);
 			moveElevatorToSwitchHeight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3 * 2.0));
 			
 			setRetractorShouldBeUp(false);
 			parallelRetractExtendArms();
 			delay(1);
 			
 			setJawsShouldBeOpenState(true);
-			parallelJawsOpenClose();
-			// driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+			parallelJawsOpenClose();*/
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES-16);
 			//EMERGENCY CODE FIX FOR A POTENTIAL EASY SWITCH AUTO. WE WILL TRY AND GET IT IF THE PLATE IS ON THE RIGHT,
 			// OTHERWISE WE WILL JUST DRIVEFORWARD
 
 		} else {
 			moveElevatorToSwitchHeight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES-16);
 			setRetractorShouldBeUp(false);
 			parallelRetractExtendArms();
 			delay(1);

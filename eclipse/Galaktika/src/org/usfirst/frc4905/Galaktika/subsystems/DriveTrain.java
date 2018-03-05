@@ -345,6 +345,13 @@ public class DriveTrain extends Subsystem {
 			if(output != 0.0) {
 				output = calculateOutput(output, m_previousOutput, m_maxAllowableDelta);
 			}
+			if(output < 0.3 && output > 0) {
+				output = 0.3;
+				
+			}
+			if(output > -0.3 && output < 0) {
+				output = -0.3;
+			}
 			// Negation causes forward movement for positive values
 			gyroCorrectMove(output, 0.0, 1.0, true,false);
 			m_previousOutput = output;
