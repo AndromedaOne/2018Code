@@ -20,15 +20,12 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 	}
 
 	protected void prepareToStart() {
-		char platePos = Robot.getSwitchPlatePosition();
 		if (m_useDelay) {
 			delay(Robot.getAutonomousDelay());
 		}
-		setRetractorShouldBeUp(true);
-		setJawsShouldBeOpenState(false);
-		parallelJawsOpenClose();
-		parallelRetractExtendArms();
-		
+		raiseIntake();
+		closeJaws(false);
+
 
 
 
@@ -49,13 +46,11 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 		} else {
 			moveElevatorToSwitchHeight();
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
-			setRetractorShouldBeUp(false);
-			parallelRetractExtendArms();
+			lowerIntake();
 			delay(1);
-			
-        openJaws();
-			parallelJawsOpenClose();
-			
+
+			openJaws();
+
 		}
 
 
