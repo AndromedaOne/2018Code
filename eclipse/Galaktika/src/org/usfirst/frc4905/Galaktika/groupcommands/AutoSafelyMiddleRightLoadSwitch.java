@@ -6,14 +6,14 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class AutoMiddleRightLoadSwitch extends AutoCommand {
+public class AutoSafelyMiddleRightLoadSwitch extends AutoCommand {
 
 	private static final double LATERAL_DISTANCE_TO_LEFT_PLATE = 100;
 	private static final double LATERAL_DISTANCE_TO_RIGHT_PLATE = 100;
 	private static final double LATERAL_DISTANCE_BETWEEN_PLATES = 78;
 	boolean m_useDelay;
 
-	public AutoMiddleRightLoadSwitch(boolean useDelay) {
+	public AutoSafelyMiddleRightLoadSwitch(boolean useDelay) {
 		if (useDelay) {
 			m_useDelay = useDelay;
 		}
@@ -28,17 +28,11 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
 
 
-
+		// TO BE USED ONLY IF GYRO IS NOT FUNCTIONAL IN ANY WAY/SHAPE/FORM
         char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == 'L') {
 			System.out.println("We're ont he left!");
-
-			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
-			turnLeft();
-			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES);
-			turnRight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
 		} else {
 			moveElevatorToSwitchHeight();
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);

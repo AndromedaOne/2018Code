@@ -16,6 +16,7 @@ import org.usfirst.frc4905.Galaktika.groupcommands.AutoCombinedLeftRight;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCrossTheLine;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoMiddleLoadSwitch;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoMiddleRightLoadSwitch;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoSafelyMiddleRightLoadSwitch;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 import org.usfirst.frc4905.Galaktika.subsystems.Elevator;
 import org.usfirst.frc4905.Galaktika.subsystems.Intake;
@@ -128,6 +129,7 @@ public class Robot extends TimedRobot {
         chooser.addObject("Qualifier Match Starting from Right", new Pair<>(command, 'R'));
         chooser.addObject("Load Switch from Middle", new Pair<>(new AutoMiddleLoadSwitch(false), 'M'));
         chooser.addObject("Load Switch from Middle Right", new Pair<>(new AutoMiddleRightLoadSwitch(false), 'M'));
+        chooser.addObject("Safely Load Switch from Middle Right", new Pair<>(new AutoSafelyMiddleRightLoadSwitch(false), 'M'));
         chooser.addObject("Cross The Line from Left", new Pair<>(new AutoCrossTheLine(false), 'L'));
         chooser.addObject("Cross The Line from Middle", new Pair<>(new AutoCrossTheLine(false), 'M'));
         chooser.addObject("Cross The Line from Right", new Pair<>(new AutoCrossTheLine(false), 'R'));
@@ -142,6 +144,7 @@ public class Robot extends TimedRobot {
         chooser.addObject("Delay and Qualifier Match Starting from Right", new Pair<>(command, 'R'));
         chooser.addObject("Delay and Load Switch from Middle", new Pair<>(new AutoMiddleLoadSwitch(true), 'M'));
         chooser.addObject("Delay and Load Switch from Middle Right", new Pair<>(new AutoMiddleRightLoadSwitch(true), 'M'));
+        chooser.addObject("Delay and Safely Load Switch from Middle Right", new Pair<>(new AutoSafelyMiddleRightLoadSwitch(true), 'M'));
         chooser.addObject("Delay and Cross The Line from Left", new Pair<>(new AutoCrossTheLine(true), 'L'));
         chooser.addObject("Delay and Cross The Line from Middle", new Pair<>(new AutoCrossTheLine(true), 'M'));
         chooser.addObject("Delay and Cross The Line from Right", new Pair<>(new AutoCrossTheLine(true), 'R'));
@@ -185,7 +188,7 @@ public class Robot extends TimedRobot {
 
     	Trace.getInstance().flushTraceFiles();
     	Robot.ramps.lockRampsIn();
-    	
+
 
     }
 
@@ -268,8 +271,8 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
     }
-    
-    
+
+
     @Override
     public void testInit() {
     	driveTrain.resetRobotState();
