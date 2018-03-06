@@ -4,7 +4,6 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import Utilities.Tracing.Trace;
-import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -13,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class MoveUsingEncoderPID extends Command {
 
 	private double m_setpoint = 0;
-	private final boolean useMotionProfilng = true;
+	private final boolean useMotionProfilng = false;
 
 	public MoveUsingEncoderPID(double setpointInches) {
 		// Use requires() here to declare subsystem dependencies
@@ -21,10 +20,11 @@ public class MoveUsingEncoderPID extends Command {
     		debug("top of constructor, inches = " + setpointInches);
 		requires(Robot.driveTrain);
 	    	// -1 multiplier so that positive input send us in a positive direction
-	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH * -1;
+	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
 	}
 
 	// Called just before this Command runs the first time
+	@Override
 	protected void initialize() {
 		//debug("Initializing");
 		System.out.println("In the Init command");
@@ -38,11 +38,13 @@ public class MoveUsingEncoderPID extends Command {
 	}
 
 	// Called repeatedly when this Command is scheduled to run
+	@Override
 	protected void execute() {
-		
+
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
+	@Override
 	protected boolean isFinished() {
 		if (!useMotionProfilng) {
 			return Robot.driveTrain.isDoneEncoderPID();
@@ -52,6 +54,7 @@ public class MoveUsingEncoderPID extends Command {
 	}
 
 	// Called once after isFinished returns true
+	@Override
 	protected void end() {
 		debug("Done");
 		Robot.driveTrain.move(0, 0);
@@ -65,6 +68,7 @@ public class MoveUsingEncoderPID extends Command {
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
+	@Override
 	protected void interrupted() {
 		System.out.println("CALLING INTERUPTED!!!!!!!");
 		end();

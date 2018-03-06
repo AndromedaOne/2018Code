@@ -27,6 +27,7 @@ public class TeleOpDrive extends Command {
 	public static final double kDeadzone = 0.00;
 
 	private int m_slowmodedelaycounter = 0;
+	private double m_previousForwardBackwardStickValue = 0.0;
 
 	private boolean slowMoEnabled = false;
 	private double mod = 1;
@@ -85,14 +86,16 @@ public class TeleOpDrive extends Command {
 				System.out.println("Slow Mode IS enabled!");
 			}
 			else {
-				mod = 1;
+				mod = 0.8;
 				slowMoEnabled = false;
 				System.out.println("SLOW MODE HAS ENDED!");
 			}
 		}
 		m_slowmodedelaycounter++;
 		
-		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod, true, false);
+		Robot.driveTrain.gyroCorrectMove(forwardBackwardStickValue, rotateStickValue, mod, true, true);
+		
+		m_previousForwardBackwardStickValue = forwardBackwardStickValue;
 	}
 
 
