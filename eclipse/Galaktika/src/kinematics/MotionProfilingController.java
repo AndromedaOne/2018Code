@@ -1,4 +1,4 @@
-	package kinematics;
+package kinematics;
 
 import java.util.TimerTask;
 
@@ -19,7 +19,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	private PIDCalculator m_velocityPIDCalculator;
 	private PIDCalculator m_positionPIDCalculator;
-	
+
 	private double m_velocityF = 0.0;
 
 	private double m_maxVelocity = 0.0;
@@ -53,19 +53,19 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	public MotionProfilingController(double positionPValue, double positionIValue, double positionDValue,
 			double velocityPValue, double velocityIValue, double velocityDValue, double velocityFValue,
 			double maxVelocity, double maxAcceleration, double maxJerk, MPSource mpSource, PIDOutput pidOutput) {
-		
+
 		m_positionPIDCalculator = new PIDCalculator();
 		m_velocityPIDCalculator = new PIDCalculator();
-		
+
 		m_positionPIDCalculator.m_p = positionPValue;
 		m_positionPIDCalculator.m_i = positionIValue;
 		m_positionPIDCalculator.m_d = positionDValue;
-		
+
 		m_velocityPIDCalculator.m_p = velocityPValue;
 		m_velocityPIDCalculator.m_i = velocityIValue;
 		m_velocityPIDCalculator.m_d = velocityDValue;
 		m_velocityF = velocityFValue;
-		
+
 		m_maxVelocity = maxVelocity;
 		m_maxAcceleration = maxAcceleration;
 		m_maxJerk = maxJerk;
@@ -86,7 +86,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	public void enable() {
 		m_velocityPIDCalculator.reset();
 		m_positionPIDCalculator.reset();
-		
+
 		m_initialTimeStamp = Timer.getFPGATimestamp();
 		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk);
 		m_endDeltaTime = m_path.getSetpointVector().get(0).endDeltaTime;
@@ -96,35 +96,36 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	public void run() {
 		if (m_enableStatus) {
-			
+
 			double currentTimestamp = Timer.getFPGATimestamp();
 			m_deltaTime = currentTimestamp - m_initialTimeStamp;
 			TrajectoryPoint nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_deltaTime);
 			double deltaPosition = getDeltaPosition(m_mpSource.getPosition());
-			double positionPidOut = m_positionPIDCalculator.getPIDOut(m_currentTrajectoryPoint.m_position, deltaPosition);
+			double positionPidOut = m_positionPIDCalculator.getPIDOut(m_currentTrajectoryPoint.m_position,
+					deltaPosition);
 			double nextVelocity = nextTrajectoryPoint.m_currentVelocity + positionPidOut;
-			
+
 			double velocity = m_mpSource.getVelocity();
-			
+
 			double velocityPIDOut = m_velocityPIDCalculator.getPIDOut(nextVelocity, velocity);
-			double output = nextVelocity*m_velocityF + velocityPIDOut;
-			
+			double output = nextVelocity * m_velocityF + velocityPIDOut;
+
 			m_pidOutput.pidWrite(output);
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
-			Trace.getInstance().addTrace(true, "MotionProfilingData",
-					new TracePair("ActualVelocity", velocity),
+			Trace.getInstance().addTrace(true, "MotionProfilingData", new TracePair("ActualVelocity", velocity),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", deltaPosition),
 					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
 					new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
-					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition)*10));
-				
-					/*new TracePair("velocityPIDOut", (velocityPIDOut)),
-					new TracePair("nextVelocity", (nextVelocity)))
-					
-					new TracePair("Rate", rate),
-					new TracePair("Ratio", velocity/rate));*/
+					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition) * 10));
+
+			/*
+			 * new TracePair("velocityPIDOut", (velocityPIDOut)), new
+			 * TracePair("nextVelocity", (nextVelocity)))
+			 * 
+			 * new TracePair("Rate", rate), new TracePair("Ratio", velocity/rate));
+			 */
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
 		}
@@ -159,7 +160,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 		}
 
 	}
-	
+
 	private double getDeltaPosition(double currentPosition) {
 		return currentPosition - m_initialPosition;
 	}
@@ -187,7 +188,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	private void setPositionD(double value) {
 		m_positionPIDCalculator.m_d = value;
 	}
-	
+
 	private double getVelocityP() {
 		return m_velocityPIDCalculator.m_p;
 	}
@@ -211,7 +212,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	private void setVelocityD(double value) {
 		m_velocityPIDCalculator.m_d = value;
 	}
-	
+
 	private double getVelocityF() {
 		return m_velocityF;
 	}
@@ -266,7 +267,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 		builder.addDoubleProperty("PositionP", this::getPositionP, this::setPositionP);
 		builder.addDoubleProperty("PositionI", this::getPositionI, this::setPositionI);
 		builder.addDoubleProperty("PositionD", this::getPositionD, this::setPositionD);
-		
+
 		builder.addDoubleProperty("VelocityP", this::getVelocityP, this::setVelocityP);
 		builder.addDoubleProperty("VelocityI", this::getVelocityI, this::setVelocityI);
 		builder.addDoubleProperty("VelocityD", this::getVelocityD, this::setVelocityD);

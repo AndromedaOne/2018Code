@@ -49,7 +49,7 @@ public class Retractor extends Subsystem {
     	if(shouldIntakeBeUp){
     		retractIntake();
     	}
-    	else{
+    	else if(!shouldIntakeBeUp){
     		extendIntake();
     	}
     }

@@ -66,13 +66,13 @@ public class RunIntakeIn extends Command {
 		if (leftTriggerValue == 0 && rightTriggerValue == 0) {
 			Robot.intake.stopIntake();
 		}
-		else if (leftTriggerValue < rightTriggerValue) {
+		else if (leftTriggerValue > rightTriggerValue) {
 			Robot.intake.runIntake(kIntakeSpeed);
 			//System.out.println("running intake in");
 		}
 		
 		else {
-			Robot.intake.reverseIntake(kIntakeSpeed);
+			Robot.intake.ejectIntake(1);
 			//System.out.println("Running intake out");
 		}
 		

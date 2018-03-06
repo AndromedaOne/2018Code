@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnToCompassHeading extends Command {
 
 	private double m_compassHeading = 0;
-	private final boolean useMotionProfilng = true;
+	private final boolean useMotionProfilng = false;
 
 	public TurnToCompassHeading(double compassHeading) {
 		// Use requires() here to declare subsystem dependencies

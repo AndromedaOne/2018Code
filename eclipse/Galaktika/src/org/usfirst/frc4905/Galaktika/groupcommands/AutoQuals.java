@@ -5,6 +5,7 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoQuals extends AutoCommand {
+	boolean m_useDelay;
 	public AutoQuals(boolean useDelay) {
 		// Add Commands here:
         // e.g. addSequential(new Command1());
@@ -24,12 +25,12 @@ public class AutoQuals extends AutoCommand {
         // arm.
 		debug("top of AutoQuals constructor");
 	    if (useDelay) {
-            delay(Robot.getAutonomousDelay());
+	        m_useDelay = useDelay;
         }
 	    debug("bottom of AutoQuals constructor");
 	}
 
-	private void crossAutoLine(char robotPos) {
+	public void crossAutoLine(char robotPos) {
 		debug("top of crossAutoLine");
 	    driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 		debug("bottom of crossAutoLine");
@@ -53,7 +54,13 @@ public class AutoQuals extends AutoCommand {
 
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
-		
+		parallelJawsOpenClose();
+		parallelRetractExtendArms();
+		setJawsShouldBeOpenState(false);
+		setRetractorShouldBeUp(false);
+
+		moveElevatorToSwitchHeight();
+
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -61,21 +68,33 @@ public class AutoQuals extends AutoCommand {
 			turnRight();
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-		moveElevatorToSwitchHeight();
+		setJawsShouldBeOpenState(true);
+
+
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	private void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
-		
-		driveForward(FORWARD_DISTANCE_TO_SCALE);
-		if (robotPos == 'R') {
-			turnLeft();
-		} else {
-			turnRight();
-		}
+
+		parallelJawsOpenClose();
+		parallelRetractExtendArms();
+		setJawsShouldBeOpenState(false);
+		setRetractorShouldBeUp(false);
+
 		moveElevatorToScaleHeight();
-		driveForward(LATERAL_DISTANCE_TO_SCALE);
+		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+
+		if (robotPos == 'R') {
+			turnDeltaAngle(-4.8);
+		} else {
+			turnDeltaAngle(4.8);
+		}
+
+		driveForward(177.6);
+
+		setJawsShouldBeOpenState(true);
+
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -84,22 +103,24 @@ public class AutoQuals extends AutoCommand {
         char robotPos = Robot.getInitialRobotLocation();
         char switchPlatePos = Robot.getSwitchPlatePosition();
         char scalePlatePos = Robot.getScalePlatePosition();
-        
-        
+        if (m_useDelay) {
+    			delay(Robot.getAutonomousDelay());
+        }
+
         if (switchPlatePos == robotPos) {
-        	
+
             loadNearSwitchPlate(robotPos);
         } else if (scalePlatePos == robotPos){
             loadNearScalePlate(robotPos);
         } else {
             crossAutoLine(robotPos);
-            returnToLoadExchange(robotPos);
+
         }
 		debug("bottom of prepareToStart");
     }
 
     private void returnToLoadExchange() {
-    	
+
         turnLeft();
         turnLeft();
         driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 2.0);
