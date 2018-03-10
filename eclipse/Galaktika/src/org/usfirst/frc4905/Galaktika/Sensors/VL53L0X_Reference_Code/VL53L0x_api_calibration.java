@@ -373,10 +373,8 @@ public class VL53L0x_api_calibration {
 	}
 
 
-	VL53L0X_Error enable_spad_bit(byte spadArray[], int size,
-		int spadIndex)
+	public static void enable_spad_bit(byte spadArray[], int size, int spadIndex)
 	{
-		VL53L0X_Error status = VL53L0X_ERROR_NONE;
 		int cSpadsPerByte = 8;
 		int coarseIndex;
 		int fineIndex;
@@ -384,11 +382,9 @@ public class VL53L0x_api_calibration {
 		coarseIndex = spadIndex / cSpadsPerByte;
 		fineIndex = spadIndex % cSpadsPerByte;
 		if (coarseIndex >= size)
-			status = VL53L0X_ERROR_REF_SPAD_INIT;
+			throw new InvalidParameterException("VL53L0X_ERROR_REF_SPAD_INIT");
 		else
 			spadArray[coarseIndex] |= (1 << fineIndex);
-
-		return status;
 	}
 
 	VL53L0X_Error count_enabled_spads(byte spadArray[],
