@@ -53,7 +53,7 @@ public class VL53L0x_api_calibration {
 		FixPoint1616_t sum_signalRate = new FixPoint1616_t(0);
 		FixPoint1616_t total_count = new FixPoint1616_t(0);
 		byte xtalk_meas = 0;
-		VL53L0X_RangingMeasurementData_t RangingMeasurementData;
+		VL53L0X_RangingMeasurementData_t RangingMeasurementData = new VL53L0X_RangingMeasurementData_t();
 		FixPoint1616_t xTalkStoredMeanSignalRate = new FixPoint1616_t(0);
 		FixPoint1616_t xTalkStoredMeanRange = new FixPoint1616_t(0);
 		FixPoint1616_t xTalkStoredMeanRtnSpads = new FixPoint1616_t(0);
@@ -158,7 +158,7 @@ public class VL53L0x_api_calibration {
 	{
 		short sum_ranging = 0;
 		FixPoint1616_t total_count = new FixPoint1616_t(0);
-		VL53L0X_RangingMeasurementData_t RangingMeasurementData;
+		VL53L0X_RangingMeasurementData_t RangingMeasurementData = new VL53L0X_RangingMeasurementData_t();
 		FixPoint1616_t StoredMeanRange;
 		int StoredMeanRangeAsInt;
 		int CalDistanceAsInt_mm;
@@ -180,68 +180,48 @@ public class VL53L0x_api_calibration {
 
 
 		/* Disable the RIT */
-		if (Status == VL53L0X_ERROR_NONE)
-			Status = VL53L0X_SetLimitCheckEnable(Dev,
-					VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, 0);
+		VL53L0X_SetLimitCheckEnable(Dev, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, 0);
 
 		/* Perform 50 measurements and compute the averages */
-		if (Status == VL53L0X_ERROR_NONE) {
-			sum_ranging = 0;
-			total_count = 0;
-			for (meas = 0; meas < 50; meas++) {
-				Status = VL53L0X_PerformSingleRangingMeasurement(Dev,
-						&RangingMeasurementData);
+		sum_ranging = 0;
+		total_count.value = 0;
+		for (meas = 0; meas < 50; meas++) {
+			VL53L0X_PerformSingleRangingMeasurement(Dev, RangingMeasurementData);
 
-				if (Status != VL53L0X_ERROR_NONE)
-					break;
-
-				/* The range is valid when RangeStatus = 0 */
-				if (RangingMeasurementData.RangeStatus == 0) {
-					sum_ranging = sum_ranging +
-						RangingMeasurementData.RangeMilliMeter;
-					total_count = total_count + 1;
-				}
+			/* The range is valid when RangeStatus = 0 */
+			if (RangingMeasurementData.RangeStatus == 0) {
+				sum_ranging = (short) (sum_ranging + RangingMeasurementData.RangeMilliMeter);
+				total_count.value = total_count.value + 1;
 			}
-
-			/* no valid values found */
-			if (total_count == 0)
-				Status = VL53L0X_ERROR_RANGE_ERROR;
 		}
 
+		/* no valid values found */
+		if (total_count.value == 0)
+			throw new IllegalStateException("VL53L0X_ERROR_RANGE_ERROR");
 
-		if (Status == VL53L0X_ERROR_NONE) {
+
 			/* FixPoint1616_t / short = FixPoint1616_t */
-			StoredMeanRange = (FixPoint1616_t)((int)(sum_ranging << 16)
-				/ total_count);
+		StoredMeanRange.value = ((sum_ranging << 16) / total_count.value);
 
-			StoredMeanRangeAsInt = (StoredMeanRange + 0x8000) >> 16;
+		StoredMeanRangeAsInt = (StoredMeanRange.value + 0x8000) >> 16;
 
-			/* Round Cal Distance to Whole Number.
-			 * Note that the cal distance is in mm, therefore no resolution
-			 * is lost.*/
-			 CalDistanceAsInt_mm = (CalDistanceMilliMeter + 0x8000) >> 16;
+		/* Round Cal Distance to Whole Number.
+		 * Note that the cal distance is in mm, therefore no resolution
+		 * is lost.*/
+		CalDistanceAsInt_mm = (CalDistanceMilliMeter.value + 0x8000) >> 16;
 
-			 *pOffsetMicroMeter = (CalDistanceAsInt_mm -
-					 StoredMeanRangeAsInt) * 1000;
+		pOffsetMicroMeter.value = (CalDistanceAsInt_mm - StoredMeanRangeAsInt) * 1000;
 
-			/* Apply the calculated offset */
-			if (Status == VL53L0X_ERROR_NONE) {
-				VL53L0X_SETPARAMETERFIELD(Dev, RangeOffsetMicroMeters,
-						*pOffsetMicroMeter);
-				Status = VL53L0X_SetOffsetCalibrationDataMicroMeter(Dev,
-						*pOffsetMicroMeter);
-			}
+		/* Apply the calculated offset */
+		Dev.Data.CurrentParameters.RangeOffsetMicroMeters = pOffsetMicroMeter.value;
+		VL53L0X_SetOffsetCalibrationDataMicroMeter(Dev, pOffsetMicroMeter.value);
 
-		}
+
 
 		/* Restore the TCC */
-		if (Status == VL53L0X_ERROR_NONE) {
-			if (SequenceStepEnabled != 0)
-				Status = VL53L0X_SetSequenceStepEnable(Dev,
-						VL53L0X_SEQUENCESTEP_TCC, 1);
-		}
+		if (SequenceStepEnabled.value != 0)
+			VL53L0X_SetSequenceStepEnable(Dev, VL53L0X_SequenceStepId.VL53L0X_SEQUENCESTEP_TCC, (byte) 1);
 
-		return Status;
 	}
 
 
