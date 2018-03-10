@@ -70,7 +70,6 @@ public class AutoQuals extends AutoCommand {
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		setJawsShouldBeOpenState(true);
 
-
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
