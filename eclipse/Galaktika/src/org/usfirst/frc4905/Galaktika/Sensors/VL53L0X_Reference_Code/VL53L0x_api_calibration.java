@@ -8,6 +8,7 @@ import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_type
 import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.Vl53L0x_platform.*;
 import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_api.*;
 import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_device.*;
+import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_api_core.*;
 import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.Vl53L0x_platform.*;
 
 public class VL53L0x_api_calibration {
@@ -279,44 +280,32 @@ public class VL53L0x_api_calibration {
 	}
 
 
-	VL53L0X_Error VL53L0X_apply_offset_adjustment(VL53L0X_DEV Dev)
+	public static void VL53L0X_apply_offset_adjustment(VL53L0X_DEV Dev)
 	{
-		VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-		int32_t CorrectedOffsetMicroMeters;
-		int32_t CurrentOffsetMicroMeters;
+		IntPointer CorrectedOffsetMicroMeters = new IntPointer(0);
+		IntPointer CurrentOffsetMicroMeters = new IntPointer(0);
 
 		/* if we run on this function we can read all the NVM info
 		 * used by the API */
-		Status = VL53L0X_get_info_from_device(Dev, 7);
+		VL53L0X_get_info_from_device(Dev, 7);
 
 		/* Read back current device offset */
-		if (Status == VL53L0X_ERROR_NONE) {
-			Status = VL53L0X_GetOffsetCalibrationDataMicroMeter(Dev,
-						&CurrentOffsetMicroMeters);
-		}
+		VL53L0X_GetOffsetCalibrationDataMicroMeter(Dev, CurrentOffsetMicroMeters);
+
 
 		/* Apply Offset Adjustment derived from 400mm measurements */
-		if (Status == VL53L0X_ERROR_NONE) {
+		/* Store initial device offset */
+		//PALDevDataSet(Dev, Part2PartOffsetNVMMicroMeter,	CurrentOffsetMicroMeters);
+		Dev.Data.Part2PartOffsetNVMMicroMeter = CurrentOffsetMicroMeters.value;
+		
+		CorrectedOffsetMicroMeters.value =
+				CurrentOffsetMicroMeters.value + Dev.Data.Part2PartOffsetAdjustmentNVMMicroMeter;
 
-			/* Store initial device offset */
-			PALDevDataSet(Dev, Part2PartOffsetNVMMicroMeter,
-				CurrentOffsetMicroMeters);
+		VL53L0X_SetOffsetCalibrationDataMicroMeter(Dev, CorrectedOffsetMicroMeters.value);
 
-			CorrectedOffsetMicroMeters = CurrentOffsetMicroMeters +
-				(int32_t)PALDevDataGet(Dev,
-					Part2PartOffsetAdjustmentNVMMicroMeter);
-
-			Status = VL53L0X_SetOffsetCalibrationDataMicroMeter(Dev,
-						CorrectedOffsetMicroMeters);
-
-			/* store current, adjusted offset */
-			if (Status == VL53L0X_ERROR_NONE) {
-				VL53L0X_SETPARAMETERFIELD(Dev, RangeOffsetMicroMeters,
-						CorrectedOffsetMicroMeters);
-			}
-		}
-
-		return Status;
+		/* store current, adjusted offset */
+		//VL53L0X_SETPARAMETERFIELD(Dev, RangeOffsetMicroMeters, CorrectedOffsetMicroMeters);
+		Dev.Data.CurrentParameters.RangeOffsetMicroMeters = CorrectedOffsetMicroMeters.value;
 	}
 
 	void get_next_good_spad(byte goodSpadArray[], int size,

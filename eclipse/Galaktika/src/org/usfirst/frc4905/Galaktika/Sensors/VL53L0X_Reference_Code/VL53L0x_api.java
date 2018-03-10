@@ -26,4 +26,7 @@ public class VL53L0x_api {
 	public static void VL53L0X_SetSequenceStepEnable(VL53L0X_DEV Dev,
 			VL53L0X_SequenceStepId SequenceStepId, byte SequenceStepEnabled) {
 	}
+	public static void VL53L0X_GetOffsetCalibrationDataMicroMeter(VL53L0X_DEV Dev,
+			IntPointer pOffsetCalibrationDataMicroMeter) {
+	}
 }
