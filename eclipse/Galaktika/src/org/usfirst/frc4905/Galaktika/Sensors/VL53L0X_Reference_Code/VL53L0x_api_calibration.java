@@ -255,35 +255,27 @@ public class VL53L0x_api_calibration {
 
 	}
 
-	VL53L0X_Error VL53L0X_get_offset_calibration_data_micro_meter(VL53L0X_DEV Dev,
-			int32_t *pOffsetCalibrationDataMicroMeter)
+	public static void VL53L0X_get_offset_calibration_data_micro_meter(VL53L0X_DEV Dev,
+			IntPointer pOffsetCalibrationDataMicroMeter)
 	{
-		VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-		short RangeOffsetRegister;
-		int16_t cMaxOffset = 2047;
-		int16_t cOffsetRange = 4096;
+		ShortPointer RangeOffsetRegister = new ShortPointer(0);
+		short cMaxOffset = 2047;
+		short cOffsetRange = 4096;
 
 		/* Note that offset has 10.2 format */
 
-		Status = VL53L0X_RdWord(Dev,
-					VL53L0X_REG_ALGO_PART_TO_PART_RANGE_OFFSET_MM,
-					&RangeOffsetRegister);
+		VL53L0X_RdWord(Dev, 	VL53L0X_REG_ALGO_PART_TO_PART_RANGE_OFFSET_MM, RangeOffsetRegister);
 
-		if (Status == VL53L0X_ERROR_NONE) {
-			RangeOffsetRegister = (RangeOffsetRegister & 0x0fff);
+		RangeOffsetRegister.value = (short) (RangeOffsetRegister.value & 0x0fff);
 
-			/* Apply 12 bit 2's compliment conversion */
-			if (RangeOffsetRegister > cMaxOffset)
-				*pOffsetCalibrationDataMicroMeter =
-					(int16_t)(RangeOffsetRegister - cOffsetRange)
-						* 250;
-			else
-				*pOffsetCalibrationDataMicroMeter =
-					(int16_t)RangeOffsetRegister * 250;
+		/* Apply 12 bit 2's compliment conversion */
+		if (RangeOffsetRegister.value > cMaxOffset)
+			pOffsetCalibrationDataMicroMeter.value =
+			(short)((RangeOffsetRegister.value - cOffsetRange) * 250);
+		else
+			pOffsetCalibrationDataMicroMeter.value =
+			(short)(RangeOffsetRegister.value * 250);
 
-		}
-
-		return Status;
 	}
 
 

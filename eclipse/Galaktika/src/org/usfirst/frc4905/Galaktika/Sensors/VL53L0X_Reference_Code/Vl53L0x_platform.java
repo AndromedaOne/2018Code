@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code;
 
 import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.VL53L0X_DevData_t;
+import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_types.*;
 
 public class Vl53L0x_platform {
 	/*******************************************************************************
@@ -174,7 +175,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data);
+	public static void VL53L0X_RdWord(VL53L0X_DEV Dev, byte index, ShortPointer data) {
+		System.out.println("write VL53L0X_RdWord()");
+	}
 
 	/**
 	 * Read dword (4byte) register

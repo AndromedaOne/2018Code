@@ -25,6 +25,19 @@ public class VL53L0x_types {
 		public int value;
 	}
 
+	/** use to return a pointers to a short
+	 * 
+	 * @author wpd
+	 *
+	 * We'll see how useful this proves to be...
+	 */
+	public class ShortPointer {
+		ShortPointer(int initialValue) {
+			value = (short)initialValue;
+		}
+		public short value;
+	}
+
 	/** use to return a pointers to a byte
 	 * 
 	 * @author wpd
