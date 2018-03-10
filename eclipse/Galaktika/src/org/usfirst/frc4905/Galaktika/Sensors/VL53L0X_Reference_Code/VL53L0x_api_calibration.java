@@ -332,7 +332,7 @@ public class VL53L0x_api_calibration {
 		startIndex = curr / cSpadsPerByte;
 		fineOffset = curr % cSpadsPerByte;
 
-		for (coarseIndex = startIndex; ((coarseIndex < size) && (success != 0));
+		for (coarseIndex = startIndex; ((coarseIndex < size) && (success == 0));
 					coarseIndex++) {
 			fineIndex = 0;
 			dataByte = goodSpadArray[coarseIndex];
@@ -387,11 +387,10 @@ public class VL53L0x_api_calibration {
 			spadArray[coarseIndex] |= (1 << fineIndex);
 	}
 
-	VL53L0X_Error count_enabled_spads(byte spadArray[],
+	public static void count_enabled_spads(byte spadArray[],
 			int byteCount, int maxSpads,
-			int *pTotalSpadsEnabled, byte *pIsAperture)
+			IntPointer pTotalSpadsEnabled, BytePointer pIsAperture)
 	{
-		VL53L0X_Error status = VL53L0X_ERROR_NONE;
 		int cSpadsPerByte = 8;
 		int lastByte;
 		int lastBit;
@@ -409,9 +408,9 @@ public class VL53L0x_api_calibration {
 
 		/* Check that the max spads value does not exceed the array bounds. */
 		if (lastByte >= byteCount)
-			status = VL53L0X_ERROR_REF_SPAD_INIT;
+			throw new InvalidParameterException("VL53L0X_ERROR_REF_SPAD_INIT");
 
-		*pTotalSpadsEnabled = 0;
+		pTotalSpadsEnabled.value = 0;
 
 		/* Count the bits enabled in the whole bytes */
 		for (byteIndex = 0; byteIndex <= (lastByte - 1); byteIndex++) {
@@ -419,12 +418,12 @@ public class VL53L0x_api_calibration {
 
 			for (bitIndex = 0; bitIndex <= cSpadsPerByte; bitIndex++) {
 				if ((tempByte & 0x01) == 1) {
-					(*pTotalSpadsEnabled)++;
+					pTotalSpadsEnabled.value++;
 
-					if (!spadTypeIdentified) {
-						*pIsAperture = 1;
+					if (spadTypeIdentified == 0) {
+						pIsAperture.value = 1;
 						if ((byteIndex < 2) && (bitIndex < 4))
-								*pIsAperture = 0;
+								pIsAperture.value = 0;
 						spadTypeIdentified = 1;
 					}
 				}
@@ -439,10 +438,8 @@ public class VL53L0x_api_calibration {
 
 		for (bitIndex = 0; bitIndex <= lastBit; bitIndex++) {
 			if ((tempByte & 0x01) == 1)
-				(*pTotalSpadsEnabled)++;
+				pTotalSpadsEnabled.value++;
 		}
-
-		return status;
 	}
 
 	VL53L0X_Error set_ref_spad_map(VL53L0X_DEV Dev, byte *refSpadArray)
