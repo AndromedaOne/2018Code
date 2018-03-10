@@ -1,12 +1,17 @@
 package org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code;
 
-import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.VL53L0X_RangingMeasurementData_t;
-import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_types.FixPoint1616_t;
+import java.security.InvalidParameterException;
+
+import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.*;
+import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.*;
+import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_types.*;
 import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.Vl53L0x_platform.VL53L0X_DEV;
+import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_api.*;
+import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_device.*;
 
 public class VL53L0x_api_calibration {
 	/*******************************************************************************
-	 Copyright © 2016, STMicroelectronics International N.V.
+	 Copyright ï¿½ 2016, STMicroelectronics International N.V.
 	 All rights reserved.
 
 	 Redistribution and use in source and binary forms, with or without
@@ -45,169 +50,133 @@ public class VL53L0x_api_calibration {
 	{
 		short sum_ranging = 0;
 		short sum_spads = 0;
-		FixPoint1616_t sum_signalRate = 0;
-		FixPoint1616_t total_count = 0;
+		FixPoint1616_t sum_signalRate = new FixPoint1616_t(0);
+		FixPoint1616_t total_count = new FixPoint1616_t(0);
 		byte xtalk_meas = 0;
 		VL53L0X_RangingMeasurementData_t RangingMeasurementData;
-		FixPoint1616_t xTalkStoredMeanSignalRate;
-		FixPoint1616_t xTalkStoredMeanRange;
-		FixPoint1616_t xTalkStoredMeanRtnSpads;
+		FixPoint1616_t xTalkStoredMeanSignalRate = new FixPoint1616_t(0);
+		FixPoint1616_t xTalkStoredMeanRange = new FixPoint1616_t(0);
+		FixPoint1616_t xTalkStoredMeanRtnSpads = new FixPoint1616_t(0);
 		int signalXTalkTotalPerSpad;
 		int xTalkStoredMeanRtnSpadsAsInt;
 		int xTalkCalDistanceAsInt;
 		FixPoint1616_t XTalkCompensationRateMegaCps;
 
-		if (XTalkCalDistance <= 0)
-			Status = VL53L0X_ERROR_INVALID_PARAMS;
+		if (XTalkCalDistance.value <= 0) {
+			throw new InvalidParameterException("VL53L0X_ERROR_INVALID_PARAMS");
+		}
 
 		/* Disable the XTalk compensation */
-		if (Status == VL53L0X_ERROR_NONE)
-			Status = VL53L0X_SetXTalkCompensationEnable(Dev, 0);
+		VL53L0X_SetXTalkCompensationEnable(Dev, 0);
 
 		/* Disable the RIT */
-		if (Status == VL53L0X_ERROR_NONE) {
-			Status = VL53L0X_SetLimitCheckEnable(Dev,
-					VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, 0);
-		}
+		VL53L0X_SetLimitCheckEnable(Dev,	VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, 0);
 
 		/* Perform 50 measurements and compute the averages */
-		if (Status == VL53L0X_ERROR_NONE) {
-			sum_ranging = 0;
-			sum_spads = 0;
-			sum_signalRate = 0;
-			total_count = 0;
-			for (xtalk_meas = 0; xtalk_meas < 50; xtalk_meas++) {
-				Status = VL53L0X_PerformSingleRangingMeasurement(Dev,
-					&RangingMeasurementData);
+		sum_ranging = 0;
+		sum_spads = 0;
+		sum_signalRate.value = 0;
+		total_count.value = 0;
+		for (xtalk_meas = 0; xtalk_meas < 50; xtalk_meas++) {
+			VL53L0X_PerformSingleRangingMeasurement(Dev, RangingMeasurementData);
 
-				if (Status != VL53L0X_ERROR_NONE)
-					break;
-
-				/* The range is valid when RangeStatus = 0 */
-				if (RangingMeasurementData.RangeStatus == 0) {
-					sum_ranging = sum_ranging +
-						RangingMeasurementData.RangeMilliMeter;
-					sum_signalRate = sum_signalRate +
-					RangingMeasurementData.SignalRateRtnMegaCps;
-					sum_spads = sum_spads +
-					RangingMeasurementData.EffectiveSpadRtnCount
-						/ 256;
-					total_count = total_count + 1;
-				}
+			/* The range is valid when RangeStatus = 0 */
+			if (RangingMeasurementData.RangeStatus == 0) {
+				sum_ranging = (short) (sum_ranging + RangingMeasurementData.RangeMilliMeter);
+				sum_signalRate.value = sum_signalRate.value + RangingMeasurementData.SignalRateRtnMegaCps.value;
+				sum_spads = (short) (sum_spads + RangingMeasurementData.EffectiveSpadRtnCount	/ 256);
+				total_count.value = total_count.value + 1;
 			}
-
-			/* no valid values found */
-			if (total_count == 0)
-				Status = VL53L0X_ERROR_RANGE_ERROR;
-
 		}
 
+		/* no valid values found */
+		if (total_count.value == 0)
+			throw new IllegalStateException("VL53L0X_ERROR_RANGE_ERROR");
 
-		if (Status == VL53L0X_ERROR_NONE) {
-			/* FixPoint1616_t / short = FixPoint1616_t */
-			xTalkStoredMeanSignalRate = sum_signalRate / total_count;
-			xTalkStoredMeanRange = (FixPoint1616_t)((int)(
-				sum_ranging << 16) / total_count);
-			xTalkStoredMeanRtnSpads = (FixPoint1616_t)((int)(
-				sum_spads << 16) / total_count);
+		/* FixPoint1616_t / short = FixPoint1616_t */
+		xTalkStoredMeanSignalRate.value = sum_signalRate.value / total_count.value;
+		xTalkStoredMeanRange.value = (sum_ranging << 16) / total_count.value;
+		xTalkStoredMeanRtnSpads.value = (sum_spads << 16) / total_count.value;
 
-			/* Round Mean Spads to Whole Number.
-			 * Typically the calculated mean SPAD count is a whole number
-			 * or very close to a whole
-			 * number, therefore any truncation will not result in a
-			 * significant loss in accuracy.
-			 * Also, for a grey target at a typical distance of around
-			 * 400mm, around 220 SPADs will
-			 * be enabled, therefore, any truncation will result in a loss
-			 * of accuracy of less than
-			 * 0.5%.
-			 */
-			xTalkStoredMeanRtnSpadsAsInt = (xTalkStoredMeanRtnSpads +
-				0x8000) >> 16;
+		/* Round Mean Spads to Whole Number.
+		 * Typically the calculated mean SPAD count is a whole number
+		 * or very close to a whole
+		 * number, therefore any truncation will not result in a
+		 * significant loss in accuracy.
+		 * Also, for a grey target at a typical distance of around
+		 * 400mm, around 220 SPADs will
+		 * be enabled, therefore, any truncation will result in a loss
+		 * of accuracy of less than
+		 * 0.5%.
+		 */
+		xTalkStoredMeanRtnSpadsAsInt = (xTalkStoredMeanRtnSpads.value + 0x8000) >> 16;
 
+		/* Round Cal Distance to Whole Number.
+		 * Note that the cal distance is in mm, therefore no resolution
+		 * is lost.*/
+		xTalkCalDistanceAsInt = (XTalkCalDistance.value + 0x8000) >> 16;
+
+		if (xTalkStoredMeanRtnSpadsAsInt == 0 ||
+				xTalkCalDistanceAsInt == 0 ||
+				xTalkStoredMeanRange.value >= XTalkCalDistance.value) {
+			XTalkCompensationRateMegaCps.value = 0;
+		} else {
 			/* Round Cal Distance to Whole Number.
-			 * Note that the cal distance is in mm, therefore no resolution
-			 * is lost.*/
-			 xTalkCalDistanceAsInt = (XTalkCalDistance + 0x8000) >> 16;
+			 * Note that the cal distance is in mm, therefore no
+			 * resolution is lost.*/
+			xTalkCalDistanceAsInt = ((XTalkCalDistance.value + 0x8000) >> 16);
 
-			if (xTalkStoredMeanRtnSpadsAsInt == 0 ||
-			   xTalkCalDistanceAsInt == 0 ||
-			   xTalkStoredMeanRange >= XTalkCalDistance) {
-				XTalkCompensationRateMegaCps = 0;
-			} else {
-				/* Round Cal Distance to Whole Number.
-				   Note that the cal distance is in mm, therefore no
-				   resolution is lost.*/
-				xTalkCalDistanceAsInt = (XTalkCalDistance +
-					0x8000) >> 16;
+			/* Apply division by mean spad count early in the
+			 * calculation to keep the numbers small.
+			 * This ensures we can maintain a 32bit calculation.
+			 * Fixed1616 / int := Fixed1616 */
+			signalXTalkTotalPerSpad = xTalkStoredMeanSignalRate.value / xTalkStoredMeanRtnSpadsAsInt;
 
-				/* Apply division by mean spad count early in the
-				 * calculation to keep the numbers small.
-				 * This ensures we can maintain a 32bit calculation.
-				 * Fixed1616 / int := Fixed1616 */
-				signalXTalkTotalPerSpad = (xTalkStoredMeanSignalRate) /
-					xTalkStoredMeanRtnSpadsAsInt;
+			/* Complete the calculation for total Signal XTalk per
+			 * SPAD
+			 * Fixed1616 * (Fixed1616 - Fixed1616/int) :=
+			 * (2^16 * Fixed1616)
+			 */
+			signalXTalkTotalPerSpad *= ((1 << 16) - (xTalkStoredMeanRange.value / xTalkCalDistanceAsInt));
 
-				/* Complete the calculation for total Signal XTalk per
-				 * SPAD
-				 * Fixed1616 * (Fixed1616 - Fixed1616/int) :=
-				 * (2^16 * Fixed1616)
-				 */
-				signalXTalkTotalPerSpad *= ((1 << 16) -
-					(xTalkStoredMeanRange / xTalkCalDistanceAsInt));
-
-				/* Round from 2^16 * Fixed1616, to Fixed1616. */
-				XTalkCompensationRateMegaCps = (signalXTalkTotalPerSpad
-					+ 0x8000) >> 16;
-			}
-
-			*pXTalkCompensationRateMegaCps = XTalkCompensationRateMegaCps;
-
-			/* Enable the XTalk compensation */
-			if (Status == VL53L0X_ERROR_NONE)
-				Status = VL53L0X_SetXTalkCompensationEnable(Dev, 1);
-
-			/* Enable the XTalk compensation */
-			if (Status == VL53L0X_ERROR_NONE)
-				Status = VL53L0X_SetXTalkCompensationRateMegaCps(Dev,
-						XTalkCompensationRateMegaCps);
-
+			/* Round from 2^16 * Fixed1616, to Fixed1616. */
+			XTalkCompensationRateMegaCps.value = (signalXTalkTotalPerSpad + 0x8000) >> 16;
 		}
 
-		return Status;
-	}
+		pXTalkCompensationRateMegaCps.value = XTalkCompensationRateMegaCps.value;
 
-	VL53L0X_Error VL53L0X_perform_offset_calibration(VL53L0X_DEV Dev,
+		/* Enable the XTalk compensation */
+		VL53L0X_SetXTalkCompensationEnable(Dev, 1);
+
+		/* Enable the XTalk compensation */
+		VL53L0X_SetXTalkCompensationRateMegaCps(Dev, XTalkCompensationRateMegaCps);
+}
+
+	public static void VL53L0X_perform_offset_calibration(VL53L0X_DEV Dev,
 				FixPoint1616_t CalDistanceMilliMeter,
-				int32_t *pOffsetMicroMeter)
+				IntPointer pOffsetMicroMeter)
 	{
-		VL53L0X_Error Status = VL53L0X_ERROR_NONE;
 		short sum_ranging = 0;
-		FixPoint1616_t total_count = 0;
+		FixPoint1616_t total_count = new FixPoint1616_t(0);
 		VL53L0X_RangingMeasurementData_t RangingMeasurementData;
 		FixPoint1616_t StoredMeanRange;
 		int StoredMeanRangeAsInt;
 		int CalDistanceAsInt_mm;
-		byte SequenceStepEnabled;
+		BytePointer SequenceStepEnabled = new BytePointer(0);
 		int meas = 0;
 
-		if (CalDistanceMilliMeter <= 0)
-			Status = VL53L0X_ERROR_INVALID_PARAMS;
+		if (CalDistanceMilliMeter.value <= 0)
+			throw new InvalidParameterException("VL53L0X_ERROR_INVALID_PARAMS");
 
-		if (Status == VL53L0X_ERROR_NONE)
-			Status = VL53L0X_SetOffsetCalibrationDataMicroMeter(Dev, 0);
+		VL53L0X_SetOffsetCalibrationDataMicroMeter(Dev, 0);
 
 
 		/* Get the value of the TCC */
-		if (Status == VL53L0X_ERROR_NONE)
-			Status = VL53L0X_GetSequenceStepEnable(Dev,
-					VL53L0X_SEQUENCESTEP_TCC, &SequenceStepEnabled);
+		VL53L0X_GetSequenceStepEnable(Dev, VL53L0X_SequenceStepId.VL53L0X_SEQUENCESTEP_TCC, SequenceStepEnabled);
 
 
 		/* Disable the TCC */
-		if (Status == VL53L0X_ERROR_NONE)
-			Status = VL53L0X_SetSequenceStepEnable(Dev,
-					VL53L0X_SEQUENCESTEP_TCC, 0);
+		VL53L0X_SetSequenceStepEnable(Dev, VL53L0X_SequenceStepId.VL53L0X_SEQUENCESTEP_TCC, (byte)0);
 
 
 		/* Disable the RIT */
