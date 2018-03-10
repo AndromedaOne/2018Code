@@ -4,7 +4,7 @@ import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.
 
 public class Vl53L0x_platform {
 	/*******************************************************************************
-	Copyright © 2015, STMicroelectronics International N.V.
+	Copyright ï¿½ 2015, STMicroelectronics International N.V.
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
@@ -142,7 +142,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_WrWord(VL53L0X_DEV Dev, uint8_t index, uint16_t data);
+	public static void VL53L0X_WrWord(VL53L0X_DEV Dev, byte index, short data) {
+		System.out.println("write VL53L0X_WrWord()");
+	}
 
 	/**
 	 * Write double word (4 byte) register

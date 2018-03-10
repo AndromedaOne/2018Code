@@ -5,9 +5,10 @@ import java.security.InvalidParameterException;
 import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.*;
 import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_def.*;
 import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_types.*;
-import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.Vl53L0x_platform.VL53L0X_DEV;
+import org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.Vl53L0x_platform.*;
 import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_api.*;
 import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.VL53L0x_device.*;
+import static org.usfirst.frc4905.Galaktika.Sensors.VL53L0X_Reference_Code.Vl53L0x_platform.*;
 
 public class VL53L0x_api_calibration {
 	/*******************************************************************************
@@ -224,17 +225,13 @@ public class VL53L0x_api_calibration {
 
 	}
 
-
 	VL53L0X_Error VL53L0X_set_offset_calibration_data_micro_meter(VL53L0X_DEV Dev,
-			int32_t OffsetCalibrationDataMicroMeter)
+			int OffsetCalibrationDataMicroMeter)
 	{
-		VL53L0X_Error Status = VL53L0X_ERROR_NONE;
-		int32_t cMaxOffsetMicroMeter = 511000;
-		int32_t cMinOffsetMicroMeter = -512000;
-		int16_t cOffsetRange = 4096;
+		int cMaxOffsetMicroMeter = 511000;
+		int cMinOffsetMicroMeter = -512000;
+		short cOffsetRange = 4096;
 		int encodedOffsetVal;
-
-		LOG_FUNCTION_START("");
 
 		if (OffsetCalibrationDataMicroMeter > cMaxOffsetMicroMeter)
 			OffsetCalibrationDataMicroMeter = cMaxOffsetMicroMeter;
@@ -254,12 +251,8 @@ public class VL53L0x_api_calibration {
 				OffsetCalibrationDataMicroMeter/250;
 		}
 
-		Status = VL53L0X_WrWord(Dev,
-			VL53L0X_REG_ALGO_PART_TO_PART_RANGE_OFFSET_MM,
-			encodedOffsetVal);
+		VL53L0X_WrWord(Dev, VL53L0X_REG_ALGO_PART_TO_PART_RANGE_OFFSET_MM, (short)encodedOffsetVal);
 
-		LOG_FUNCTION_END(Status);
-		return Status;
 	}
 
 	VL53L0X_Error VL53L0X_get_offset_calibration_data_micro_meter(VL53L0X_DEV Dev,
