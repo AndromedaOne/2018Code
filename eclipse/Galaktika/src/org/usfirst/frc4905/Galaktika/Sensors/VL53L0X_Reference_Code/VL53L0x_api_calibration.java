@@ -297,7 +297,7 @@ public class VL53L0x_api_calibration {
 		/* Store initial device offset */
 		//PALDevDataSet(Dev, Part2PartOffsetNVMMicroMeter,	CurrentOffsetMicroMeters);
 		Dev.Data.Part2PartOffsetNVMMicroMeter = CurrentOffsetMicroMeters.value;
-		
+
 		CorrectedOffsetMicroMeters.value =
 				CurrentOffsetMicroMeters.value + Dev.Data.Part2PartOffsetAdjustmentNVMMicroMeter;
 
@@ -309,7 +309,7 @@ public class VL53L0x_api_calibration {
 	}
 
 	void get_next_good_spad(byte goodSpadArray[], int size,
-				int curr, int32_t *next)
+				int curr, IntPointer next)
 	{
 		int startIndex;
 		int fineOffset;
@@ -327,12 +327,12 @@ public class VL53L0x_api_calibration {
 		 * the index of the bit within each byte.
 		 */
 
-		*next = -1;
+		next.value = -1;
 
 		startIndex = curr / cSpadsPerByte;
 		fineOffset = curr % cSpadsPerByte;
 
-		for (coarseIndex = startIndex; ((coarseIndex < size) && !success);
+		for (coarseIndex = startIndex; ((coarseIndex < size) && (success != 0));
 					coarseIndex++) {
 			fineIndex = 0;
 			dataByte = goodSpadArray[coarseIndex];
@@ -347,7 +347,7 @@ public class VL53L0x_api_calibration {
 			while (fineIndex < cSpadsPerByte) {
 				if ((dataByte & 0x1) == 1) {
 					success = 1;
-					*next = coarseIndex * cSpadsPerByte + fineIndex;
+					next.value = coarseIndex * cSpadsPerByte + fineIndex;
 					break;
 				}
 				dataByte >>= 1;
