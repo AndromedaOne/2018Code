@@ -63,20 +63,23 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		debug("top of AutoQuals loadNearScalePlate");
 
         closeJaws(false);
+        parallelJawsOpenClose();
         lowerIntake();
+        parallelRetractExtendArms();
 
-		moveElevatorToScaleHeight();
-		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+		
+		driveForward(240);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
-			turnDeltaAngle(-4.8);
+			turnDeltaAngle(-18.4);
 		} else {
-			turnDeltaAngle(4.8);
+			turnDeltaAngle(18.4);
 		}
-
-		driveForward(177.6);
-
-		openJaws();
+		moveElevatorToScaleHeight();
+		delay(2);
+		driveForward(45);
+		
+		shootCube(2);
 
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
@@ -99,13 +102,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 			if (robotPos == 'L') {
 				if (scalePlatePos == 'L') {
-
-					moveElevatorToScaleHeight();
-		            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-		            turnDeltaAngle(-4.8);
-
-		            driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
-		            openJaws();
+					loadNearScalePlate('L');
 
 				} else {
 					if (switchPlatePos == 'L') {
@@ -122,12 +119,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				}
 			} else if (robotPos == 'R') {
 				if (scalePlatePos == 'R') {
-					moveElevatorToScaleHeight();
-		            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-		            turnDeltaAngle(4.8);
-
-		            driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
-		            openJaws();
+					loadNearScalePlate('R');
 				} else {
 					if (switchPlatePos == 'R') {
 

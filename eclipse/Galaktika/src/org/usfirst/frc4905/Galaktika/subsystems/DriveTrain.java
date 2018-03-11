@@ -379,9 +379,9 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setSetpoint(setpoint + currentEncoderPosition);
 		System.out.println("Current position: " + currentEncoderPosition);
 		if (setpoint + currentEncoderPosition > currentEncoderPosition) {
-			System.out.println("Moving backwards, distance = " + Math.abs(setpoint));
-		} else {
 			System.out.println("Moving forwards, distance = " + Math.abs(setpoint));
+		} else {
+			System.out.println("Moving backwards, distance = " + Math.abs(setpoint));
 		}
 		m_encoderPID.enable();
 	}
@@ -681,5 +681,7 @@ public class DriveTrain extends Subsystem {
 		courseCorrectionDelay = 0;
 		m_savedAngle = RobotMap.navX.getRobotAngle();
 	}
+	
+	
 
 }
