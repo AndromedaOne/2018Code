@@ -2,7 +2,7 @@ package kinematics;
 
 import java.util.Vector;
 
-public class Kinematics {
+public class Kinematics implements KinematicsGenerator {
 
 	private boolean alreadyPrinted = true;
 	private static double m_trajectoryPointInterval = 1.0;
@@ -62,12 +62,22 @@ public class Kinematics {
 		Key.setpointVector.add(point);
 	}
 
-	/**
-	 * This method takes the setpoint vector and turns it into a trajectory vector
-	 * by time parameterizing each setpoint
+	/* (non-Javadoc)
+	 * @see kinematics.KinematicsGenerator#createTrajectory(kinematics.Path, double, double, double)
 	 */
-	public void createTrajectory(Path Key, double maxVelocity, double maxAcceleration, double maxJerk) {
+	@Override
+	public Path createTrajectory(double maxVelocity, double maxAcceleration, double maxJerk, double... setpoints) {
+		Path Key = new Path();
 		createTrajectory(Key, maxVelocity, maxAcceleration, maxJerk, false);
+		for(double setpoint: setpoints) {
+			try {
+				addPointToPath(Key, new Point(setpoint));
+			} catch (InvalidDimentionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return Key;
 	}
 
 	public void createTrajectory(Path Key, double maxVelocity, double maxAcceleration, double maxJerk,
