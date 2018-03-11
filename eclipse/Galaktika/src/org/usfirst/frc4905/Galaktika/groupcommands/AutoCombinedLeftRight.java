@@ -66,20 +66,23 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
         closeJaws(false);
         parallelJawsOpenClose();
-        lowerIntake();
-        parallelRetractExtendArms();
+        
 
-		
-		driveForward(240);//empirical measurement subject to change
+		//240
+		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
-			turnDeltaAngle(-18.4);
+			turnDeltaAngle(-90);//18.4
 		} else {
-			turnDeltaAngle(18.4);
+			turnDeltaAngle(90);
 		}
+		driveBackward(20);
 		moveElevatorToScaleHeight();
-		delay(2);
-		driveForward(45);
+		
+		delay(3);
+		lowerIntake();
+        parallelRetractExtendArms();
+		delay(1);
 		
 		shootCube(2);
 
@@ -101,8 +104,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	    } else {
 		    closeJaws(false);
 		    parallelJawsOpenClose();
-		    lowerIntake();
-		    parallelRetractExtendArms();
+		    
 		    
 			if (robotPos == 'L') {
 				if (scalePlatePos == 'L') {

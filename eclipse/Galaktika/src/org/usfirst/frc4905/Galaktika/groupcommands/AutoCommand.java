@@ -156,7 +156,7 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	protected void moveElevatorToScaleHeight() {
-		addParallel(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
+		addParallel(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT + 300));
 	}
 
 	protected void moveElevatorToLowScaleHeight() {

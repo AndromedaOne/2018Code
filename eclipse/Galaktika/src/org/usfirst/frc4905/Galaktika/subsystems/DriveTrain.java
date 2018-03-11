@@ -167,7 +167,7 @@ public class DriveTrain extends Subsystem {
 	private double m_pingDelay = 0.02;
 	private int m_timesDistanceAveraged = 5;
 	// Gyro Correction for move
-	private static final double kProportion = .05;
+	private static final double kProportion = .1;
 
 	private double courseCorrectionDelay = 0;
 
@@ -446,7 +446,7 @@ public class DriveTrain extends Subsystem {
 		double gyroPIDD = 0.0;
 		double gyroPIDF = 0.0;
 		double gyroPIDOutputRange = 0.5;
-		double gyroPIDAbsTolerance = 5;
+		double gyroPIDAbsTolerance = 2.7;
 		double maxAllowableDelta = 0.2;
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
 		GyroPIDOut gyroPIDOut = new GyroPIDOut(maxAllowableDelta);
