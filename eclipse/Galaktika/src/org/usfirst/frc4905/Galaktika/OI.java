@@ -93,6 +93,7 @@ public class OI {
 	public JoystickButton liftRightRampButton;
 	
 	public JoystickButton throwCubeButton;
+	public JoystickButton angleIntakeButton;
 	
 
 	public OI() {
@@ -126,8 +127,10 @@ public class OI {
 		liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
 		liftRightRampButton.whenPressed(new LiftRightRamp());
 		
-		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
+		//throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
 		//throwCubeButton.whenPressed(new MoveDownAndShoot()); //has to be tested
+		
+		angleIntakeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());	
 		
 
 		// SmartDashboard Buttons

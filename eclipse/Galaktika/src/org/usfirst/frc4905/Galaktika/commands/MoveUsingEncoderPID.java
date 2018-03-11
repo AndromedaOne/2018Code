@@ -19,7 +19,7 @@ public class MoveUsingEncoderPID extends Command {
 		// eg. requires(chassis);
     		debug("top of constructor, inches = " + setpointInches);
 		requires(Robot.driveTrain);
-	    	// -1 multiplier so that positive input send us in a positive direction
+	    	
 	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
 	}
 
@@ -40,7 +40,7 @@ public class MoveUsingEncoderPID extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-
+		
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
