@@ -43,9 +43,11 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
         closeJaws(false);
+        parallelJawsOpenClose();
         lowerIntake();
-
-		moveElevatorToSwitchHeight();
+        parallelRetractExtendArms();
+		
+        moveElevatorToSwitchHeight();
 
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
@@ -55,7 +57,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		openJaws();
-
+		parallelJawsOpenClose();
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
@@ -98,20 +100,23 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		    	}
 	    } else {
 		    closeJaws(false);
+		    parallelJawsOpenClose();
 		    lowerIntake();
-
+		    parallelRetractExtendArms();
+		    
 			if (robotPos == 'L') {
 				if (scalePlatePos == 'L') {
 					loadNearScalePlate('L');
 
 				} else {
 					if (switchPlatePos == 'L') {
-
+						
 						moveElevatorToSwitchHeight();
 						driveForward(FORWARD_DISTANCE_TO_SWITCH);
 						turnRight();
 						driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 						openJaws();
+						parallelJawsOpenClose();
 
 					} else {
 						driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
@@ -122,12 +127,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 					loadNearScalePlate('R');
 				} else {
 					if (switchPlatePos == 'R') {
-
 						moveElevatorToSwitchHeight();
 						driveForward(FORWARD_DISTANCE_TO_SWITCH);
 						turnLeft();
 						driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 						openJaws();
+						parallelJawsOpenClose();
 
 					} else {
 						//lost the switch and scale, just go forwards
