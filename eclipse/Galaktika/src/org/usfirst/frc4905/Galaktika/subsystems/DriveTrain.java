@@ -198,8 +198,8 @@ public class DriveTrain extends Subsystem {
 		initializeEncoderPID();
 		initGyroPIDDeltaAngle();
 
-		//initializeEncoderMP();
-		//initializeGyroMP();
+		initializeEncoderMP();
+		initializeGyroMP();
 	}
 
 	// Ultrasonic Code - Begins
@@ -593,8 +593,11 @@ public class DriveTrain extends Subsystem {
 				m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration, kEncoderMaxJerk, encoderMPIn,
 				encoderPIDOut);
 		m_encoderMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
+		System.out.println("Adding MP controller!");
 		LiveWindow.add(m_encoderMotionProfilingController);
-		m_encoderMotionProfilingController.setName("EncoderMP", "EncoderMP");
+		System.out.println("Setting MP name");
+		m_encoderMotionProfilingController.setName("MPEncoder", "EncoderMP");
+		System.out.println("Done with INIT");
 	}
 
 	public void enableEncoderMP(double setpoint) {
@@ -651,7 +654,7 @@ public class DriveTrain extends Subsystem {
 				kGyroMaxVelocity, kGyroMaxAcceleration, kGyroMaxJerk, gyroMPIn, gyroMPOut);
 		m_gyroMotionProfilingController.setAbsoluteTolerance(kGyroMPTolerance);
 		LiveWindow.add(m_gyroMotionProfilingController);
-		m_gyroMotionProfilingController.setName("GyroMP", "GyroMP");
+		m_gyroMotionProfilingController.setName("MPGyro", "GyroMP");
 	}
 
 	public void enableGyroMP(double setpoint) {

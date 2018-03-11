@@ -43,6 +43,9 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	private double m_deltaTime = 0.0;
 	private double m_endDeltaTime = 0.0;
 	private double m_initialPosition = 0.0;
+	
+	// This variable determines what values you will be tuning...
+	private final TuningType tuningType = TuningType.maxKinematicsParameters;
 
 	// This creates the thread that will run the run method
 	private java.util.Timer m_controlLoop;
@@ -79,6 +82,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	public void disable() {
+		Trace.getInstance().flushTraceFiles();
 		m_enableStatus = false;
 		m_pidOutput.pidWrite(0.0);
 	}
@@ -263,23 +267,33 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.setSmartDashboardType("MotionProfilingController");
-		builder.addDoubleProperty("PositionP", this::getPositionP, this::setPositionP);
-		builder.addDoubleProperty("PositionI", this::getPositionI, this::setPositionI);
-		builder.addDoubleProperty("PositionD", this::getPositionD, this::setPositionD);
+		System.out.println("In init Sendable MP");
+		builder.setSmartDashboardType("PIDController");
+		
+		builder.setSafeState(this::disable);
+		
+		switch(tuningType) {
+		case maxKinematicsParameters:
+			builder.addDoubleProperty("p", this::getV, this::setV);
+			builder.addDoubleProperty("i", this::getA, this::setA);
+			builder.addDoubleProperty("d", this::getJ, this::setJ);
+			break;
+			
+		case positionPID:
+			builder.addDoubleProperty("p", this::getPositionP, this::setPositionP);
+			builder.addDoubleProperty("i", this::getPositionI, this::setPositionI);
+			builder.addDoubleProperty("d", this::getPositionD, this::setPositionD);
+			break;
 
-		builder.addDoubleProperty("VelocityP", this::getVelocityP, this::setVelocityP);
-		builder.addDoubleProperty("VelocityI", this::getVelocityI, this::setVelocityI);
-		builder.addDoubleProperty("VelocityD", this::getVelocityD, this::setVelocityD);
-		builder.addDoubleProperty("VelocityF", this::getVelocityF, this::setVelocityF);
+		case velocityPID:
+			builder.addDoubleProperty("p", this::getVelocityP, this::setVelocityP);
+			builder.addDoubleProperty("i", this::getVelocityI, this::setVelocityI);
+			builder.addDoubleProperty("d", this::getVelocityD, this::setVelocityD);
+			builder.addDoubleProperty("f", this::getVelocityF, this::setVelocityF);
 
-		builder.addDoubleProperty("MaxV", this::getV, this::setV);
-		builder.addDoubleProperty("MaxA", this::getA, this::setA);
-		builder.addDoubleProperty("MaxJ", this::getJ, this::setJ);
-
+		}
 		builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
 		builder.addBooleanProperty("enabled", this::getEnabled, this::setEnabled);
-
 	}
 
 	private class MotionProfilingTask extends TimerTask {
