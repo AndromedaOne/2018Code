@@ -30,7 +30,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 		parallelRetractExtendArms();
 		
 		if (platePos == 'L') {
-			System.out.println("We're on the left!");
+			System.out.println("Plate on the left!");
 			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 3);
 			delay(1);
 			turnLeft();
@@ -62,7 +62,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			
 		}
 		delay(2);
-		driveBackward(20);
+		driveBackward(30);
 
 		/*
 		if (platePos == 'R') {
