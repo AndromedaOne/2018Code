@@ -56,7 +56,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		openJaws();
 
-
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 

@@ -1,7 +1,10 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
+import java.sql.PreparedStatement;
+
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.AutoTimedArmsClose;
+import org.usfirst.frc4905.Galaktika.commands.AutonomousCommand;
 import org.usfirst.frc4905.Galaktika.commands.Delay;
 
 import org.usfirst.frc4905.Galaktika.commands.ExtendIntakeInAuto;
@@ -20,6 +23,7 @@ import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  *
@@ -106,10 +110,10 @@ public abstract class AutoCommand extends CommandGroup {
 
     public void start() {
     		debug("top of start");
-        if ( ! m_preparedToStart) {
-            prepareToStart();
-            m_preparedToStart = true;
-        }
+    	if(!m_preparedToStart) {
+    		 prepareToStart();
+             m_preparedToStart = true;
+    	}
         super.start();
 		debug("bottom of start");
      }
