@@ -112,7 +112,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_WriteMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata, uint32_t count);
+	public static void VL53L0X_WriteMulti(VL53L0X_DEV Dev, byte index, byte pdata[], int count)  {
+		System.out.println("write WriteMulti()");
+	}
 
 	/**
 	 * Reads the requested number of bytes from the device
@@ -123,7 +125,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_ReadMulti(VL53L0X_DEV Dev, uint8_t index, uint8_t *pdata, uint32_t count);
+	public static void VL53L0X_ReadMulti(VL53L0X_DEV Dev, byte index, byte pdata[], int count) {
+		System.out.println("write ReadMulti()");
+	}
 
 	/**
 	 * Write single byte register
@@ -133,7 +137,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_WrByte(VL53L0X_DEV Dev, uint8_t index, uint8_t data);
+	public static void VL53L0X_WrByte(VL53L0X_DEV Dev, byte index, byte data) {
+		System.out.println("write WrByte()");
+	}
 
 	/**
 	 * Write word register
@@ -165,7 +171,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_RdByte(VL53L0X_DEV Dev, uint8_t index, uint8_t *data);
+	public static void VL53L0X_RdByte(VL53L0X_DEV Dev, byte index, BytePointer data)  {
+		System.out.println("write RdByte()");
+	}
 
 	/**
 	 * Read word (2byte) register
@@ -201,7 +209,9 @@ public class Vl53L0x_platform {
 	 * @return  VL53L0X_ERROR_NONE        Success
 	 * @return  "Other error code"    See ::VL53L0X_Error
 	 */
-	//VL53L0X_Error VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, uint8_t AndData, uint8_t OrData);
+	public static void VL53L0X_UpdateByte(VL53L0X_DEV Dev, byte index, byte AndData, byte OrData)  {
+		System.out.println("write VL53L0X_UpdateByte()");
+	}
 
 	/** @} end of VL53L0X_registerAccess_group */
 

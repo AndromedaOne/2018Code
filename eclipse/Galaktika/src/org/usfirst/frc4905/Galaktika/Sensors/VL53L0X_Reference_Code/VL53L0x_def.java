@@ -82,7 +82,7 @@ public class VL53L0x_def {
 
 	/** @brief Defines the parameters of the Get Version Functions
 	 */
-	public class VL53L0X_Version_t {
+	public static class VL53L0X_Version_t {
 		int	 revision; /*!< revision number */
 		byte		 major;	   /*!< major number */
 		byte		 minor;	   /*!< minor number */
@@ -92,7 +92,7 @@ public class VL53L0x_def {
 
 	/** @brief Defines the parameters of the Get Device Info Functions
 	 */
-	public class VL53L0X_DeviceInfo_t {
+	public static class VL53L0X_DeviceInfo_t {
 		String Name;
 		/*!< Name of the Device e.g. Left_Distance */
 		String Type;
@@ -113,7 +113,7 @@ public class VL53L0x_def {
 	 *	@{
 	 */
 
-	public enum VL53L0X_Error {
+	public static enum VL53L0X_Error {
 		VL53L0X_ERROR_NONE		(0),
 		VL53L0X_ERROR_CALIBRATION_WARNING	(-1),
 		/*!< Warning invalid calibration data may be in used
@@ -167,7 +167,7 @@ public class VL53L0x_def {
 	 *	Defines all possible modes for the device
 	 *	@{
 	 */
-	public enum VL53L0X_DeviceModes {
+	public static enum VL53L0X_DeviceModes {
 
 		VL53L0X_DEVICEMODE_SINGLE_RANGING	(  0),
 		VL53L0X_DEVICEMODE_CONTINUOUS_RANGING	(  1),
@@ -192,7 +192,7 @@ public class VL53L0x_def {
 	 *	Defines all possible Histogram modes for the device
 	 *	@{
 	 */
-	public enum VL53L0X_HistogramModes {
+	public static enum VL53L0X_HistogramModes {
 
 		VL53L0X_HISTOGRAMMODE_DISABLED		(0),
 		/*!< Histogram Disabled */
@@ -218,7 +218,7 @@ public class VL53L0x_def {
 	 *	@{
 	 */
 
-	public enum VL53L0X_PowerModes {
+	public static enum VL53L0X_PowerModes {
 
 		VL53L0X_POWERMODE_STANDBY_LEVEL1 (0),
 		/*!< Standby level 1 */
@@ -240,7 +240,7 @@ public class VL53L0x_def {
 
 	/** @brief Defines all parameters for the device
 	 */
-	public class VL53L0X_DeviceParameters_t {
+	public static class VL53L0X_DeviceParameters_t {
 
 		VL53L0X_DeviceModes DeviceMode;
 		/*!< Defines type of measurement to be done for the next measure */
@@ -280,7 +280,7 @@ public class VL53L0x_def {
 	 *	@{
 	 */
 
-	public enum VL53L0X_State {
+	public static enum VL53L0X_State {
 
 		VL53L0X_STATE_POWERDOWN		 ( 0),
 		/*!< Device is in HW reset	*/
@@ -308,7 +308,7 @@ public class VL53L0x_def {
 
 	/** @brief Structure containing the Dmax computation parameters and data
 	 */
-	class  VL53L0X_DMaxData_t {
+	public static class VL53L0X_DMaxData_t {
 		int AmbTuningWindowFactor_K;
 		/*!<  internal algo tuning (*1000) */
 		int RetSignalAt0mm;
@@ -319,7 +319,7 @@ public class VL53L0x_def {
 	 * @struct VL53L0X_RangeData_t
 	 * @brief Range measurement data.
 	 */
-	class  VL53L0X_RangingMeasurementData_t {
+	public static class VL53L0X_RangingMeasurementData_t {
 		int TimeStamp;		/*!< 32-bit time stamp. */
 		int MeasurementTimeUsec;
 		/*!< Give the Measurement time needed by the device to do the
@@ -365,7 +365,7 @@ public class VL53L0x_def {
 	 * @struct VL53L0X_HistogramData_t
 	 * @brief Histogram measurement data.
 	 */
-	class  VL53L0X_HistogramMeasurementData_t {
+	public static class VL53L0X_HistogramMeasurementData_t {
 		/* Histogram Measurement data */
 		int[] HistogramData = new int[VL53L0X_HISTOGRAM_BUFFER_SIZE];
 		/*!< Histogram data */
@@ -387,14 +387,14 @@ public class VL53L0x_def {
 	 * @struct VL53L0X_SpadData_t
 	 * @brief Spad Configuration Data.
 	 */
-	class  VL53L0X_SpadData_t {
+	public static class VL53L0X_SpadData_t {
 		byte[] RefSpadEnables = new byte[VL53L0X_REF_SPAD_BUFFER_SIZE];
 		/*!< Reference Spad Enables */
 		byte[] RefGoodSpadMap = new byte[VL53L0X_REF_SPAD_BUFFER_SIZE];
 		/*!< Reference Spad Good Spad Map */
 	}
 
-	class  VL53L0X_DeviceSpecificParameters_t {
+	public static class VL53L0X_DeviceSpecificParameters_t {
 		FixPoint1616_t OscFrequencyMHz; /* Frequency used */
 
 		short LastEncodedTimeout;
@@ -446,7 +446,7 @@ public class VL53L0x_def {
 	 *
 	 * These must never access directly but only via macro
 	 */
-	class  VL53L0X_DevData_t {
+	public static class VL53L0X_DevData_t {
 		VL53L0X_DMaxData_t DMaxData;
 		/*!< Dmax Data */
 		int	 Part2PartOffsetNVMMicroMeter;
@@ -510,7 +510,7 @@ public class VL53L0x_def {
 	 *	Defines the Polarity of the Interrupt
 	 *	@{
 	 */
-	public enum VL53L0X_InterruptPolarity {
+	public static enum VL53L0X_InterruptPolarity {
 
 		VL53L0X_INTERRUPTPOLARITY_LOW	   (0),
 		/*!< Set active low polarity best setup for falling edge. */
@@ -530,7 +530,7 @@ public class VL53L0x_def {
 	 *	Defines the range measurement for which to access the vcsel period.
 	 *	@{
 	 */
-	public enum VL53L0X_VcselPeriod {
+	public static enum VL53L0X_VcselPeriod {
 
 		VL53L0X_VCSEL_PERIOD_PRE_RANGE	(0),
 		/*!<Identifies the pre-range vcsel period. */
@@ -551,7 +551,7 @@ public class VL53L0x_def {
 	 *	Defines the states of all the steps in the scheduler
 	 *	i.e. enabled/disabled.
 	 */
-	class  VL53L0X_SchedulerSequenceSteps_t {
+	public static class VL53L0X_SchedulerSequenceSteps_t {
 		byte		 TccOn;	   /*!<Reports if Target Centre Check On  */
 		byte		 MsrcOn;	   /*!<Reports if MSRC On  */
 		byte		 DssOn;		   /*!<Reports if DSS On  */
@@ -566,7 +566,7 @@ public class VL53L0x_def {
 	 *	Defines the the sequence steps performed during ranging..
 	 *	@{
 	 */
-	public enum VL53L0X_SequenceStepId {
+	public static enum VL53L0X_SequenceStepId {
 
 		VL53L0X_SEQUENCESTEP_TCC		 (0),
 		/*!<Target CentreCheck identifier. */

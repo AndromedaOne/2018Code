@@ -29,4 +29,6 @@ public class VL53L0x_api {
 	public static void VL53L0X_GetOffsetCalibrationDataMicroMeter(VL53L0X_DEV Dev,
 			IntPointer pOffsetCalibrationDataMicroMeter) {
 	}
+	public static void VL53L0X_ClearInterruptMask(VL53L0X_DEV Dev, int InterruptMask) {
+	}
 }
