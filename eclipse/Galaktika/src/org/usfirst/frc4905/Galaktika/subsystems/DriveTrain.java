@@ -422,7 +422,7 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			double kMinOutput = 0.15;
+			double kMinOutput = 0.125;
 			if((output != 0.0) && (Math.abs(output) < kMinOutput)) {
 				if(output < 0.0) {
 					output = -kMinOutput;
@@ -436,7 +436,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void initGyroPIDDeltaAngle() {
-		double gyroPIDP = 0.0082;
+		double gyroPIDP = 0.005;
 		double gyroPIDI = 0.00;
 		double gyroPIDD = 0.0;
 		double gyroPIDF = 0.0;
