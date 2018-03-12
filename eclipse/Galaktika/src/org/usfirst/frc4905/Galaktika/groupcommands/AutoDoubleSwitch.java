@@ -4,58 +4,65 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
 
-public class AutoDoubleSwitch extends AutoCommand {
+public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 
-	boolean m_useDelay;
-
-	public AutoDoubleSwitch(boolean useDelay) {
-	    if (useDelay) {
-	        m_useDelay = useDelay;
-        }
-	}
-
-	public AutoDoubleSwitch() {
-		this(false);
-
+	public AutoDoubleSwitch(boolean useDelay, MatchType matchType) {
+	    super(useDelay, matchType);
 	}
 
     protected void prepareToStart() {
-        char robotPos = Robot.getInitialRobotLocation();
-        char switchPlatePos = Robot.getSwitchPlatePosition();
-        if (m_useDelay) {
-    			delay(Robot.getAutonomousDelay());
-        }
-        autoQuals(false);
-        //Only for when robotPos is 'L' or 'R'
-        if (robotPos == 'L' && switchPlatePos == 'L') {
-	    		driveBackward(CLEARANCE_TO_TURN);
-	    		turnLeft();
-	    		driveForward(80);
-	    		turnRight();
-	    		driveForward(40);
-	    		turnRight();
-	    		moveElevatorToGroundHeight();
-	    		driveForward(33);
-	    		setJawsShouldBeOpenState(false);
-	    		moveElevatorToSwitchHeightSequential();
-	    		driveForwardToWall(13);
-	    		setJawsShouldBeOpenState(true);
-            System.out.println("Done :D");
-        } else if (robotPos == 'R' && switchPlatePos == 'R') {
-	    		driveBackward(CLEARANCE_TO_TURN);
-	    		turnRight();
-	    		driveForward(80);
-	    		turnLeft();
-	    		driveForward(40);
-	    		turnLeft();
-	    		moveElevatorToGroundHeight();
-	    		driveForward(33);
-	    		setJawsShouldBeOpenState(false);
-	    		moveElevatorToSwitchHeightSequential();
-	    		driveForwardToWall(13);
-	    		setJawsShouldBeOpenState(true);
-    			System.out.println("Done :D");
-        }
+        super.prepareToStart();
+        addAutoDoubleSwitchCommands(m_matchType);
     }
+
+    protected void addAutoDoubleSwitchCommands(MatchType matchType) {
+		char robotPos = Robot.getInitialRobotLocation();
+	    char switchPlatePos = Robot.getSwitchPlatePosition();
+	    char scalePlatePos = Robot.getScalePlatePosition();
+	    addAutoCombinedCommands(matchType);
+	    //Only for when robotPos is 'L' or 'R'
+	    if (robotPos == 'L') {
+	    		if (switchPlatePos == 'L' &&
+	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'R')) {
+
+		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'L') {
+			    		pickupFirstCubeFromScale(16.99);
+			    	} else {
+		    			pickupFirstCubeFromLeftSwitchPlate();
+			    	}
+
+		    		dropCubeOntoSwitch();
+	    		} else if (switchPlatePos == 'R') {
+	    			if (scalePlatePos == 'L') {
+	    				pickupFirstCubeFromScale(16.99);
+	    			}
+	    		}
+
+	    		System.out.println("Done left side :D");
+	    } else if (robotPos == 'R') {
+	    		if (	switchPlatePos == 'R' &&
+	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'L')) {
+
+		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'R') {
+		    			pickupFirstCubeFromScale(-16.99);
+		    		} else {
+			    		pickupFirstCubeFromRightSwitchPlate();
+		    		}
+		    		dropCubeOntoSwitch();
+	    		} else if (switchPlatePos == 'L') {
+	    			if (scalePlatePos == 'R') {
+	    				pickupFirstCubeFromScale(-16.99);
+	    			}
+	    		}
+			System.out.println("Done right side :D");
+	    }
+	}
+
+	protected void dropCubeOntoSwitch() {
+		moveElevatorToSwitchHeightSequential();
+		driveForwardToWall(13);
+		openJaws();
+	}
 }

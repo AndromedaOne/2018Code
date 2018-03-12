@@ -69,7 +69,7 @@ public class DriveTrain extends Subsystem {
 
 	public static double getMaxVelocity() {
 		return kEncoderMaxVelocity;
-		
+
 	}
 
 	public static double getMaxAcceleration() {
@@ -326,7 +326,7 @@ public class DriveTrain extends Subsystem {
 			output = previousOutput + deltaOutput;
 		}
 		return output;
-	
+
 	}
 	private class EncoderPIDOut implements PIDOutput {
 		private double m_previousOutput = 0;
@@ -337,7 +337,7 @@ public class DriveTrain extends Subsystem {
 		}
 		@Override
 		public void pidWrite(double output) {
-			
+
 			output = -output;
 			/*
 			if(output != 0.0) {
@@ -379,9 +379,9 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setSetpoint(setpoint + currentEncoderPosition);
 		System.out.println("Current position: " + currentEncoderPosition);
 		if (setpoint + currentEncoderPosition > currentEncoderPosition) {
-			System.out.println("Moving backwards, distance = " + Math.abs(setpoint));
-		} else {
 			System.out.println("Moving forwards, distance = " + Math.abs(setpoint));
+		} else {
+			System.out.println("Moving backwards, distance = " + Math.abs(setpoint));
 		}
 		m_encoderPID.enable();
 	}
@@ -427,14 +427,14 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			double kMinOutput = 0.125;
+/*			double kMinOutput = 0.125;
 			if((output != 0.0) && (Math.abs(output) < kMinOutput)) {
 				if(output < 0.0) {
 					output = -kMinOutput;
 				} else {
 					output = kMinOutput;
 				}
-			}
+			} */
 			move(0,output,false);
 			m_previousOutput = output;
 		}
@@ -445,7 +445,7 @@ public class DriveTrain extends Subsystem {
 		double gyroPIDI = 0.00;
 		double gyroPIDD = 0.0;
 		double gyroPIDF = 0.0;
-		double gyroPIDOutputRange = 0.5;
+		double gyroPIDOutputRange = 0.4;
 		double gyroPIDAbsTolerance = 5;
 		double maxAllowableDelta = 0.2;
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
@@ -681,5 +681,7 @@ public class DriveTrain extends Subsystem {
 		courseCorrectionDelay = 0;
 		m_savedAngle = RobotMap.navX.getRobotAngle();
 	}
+
+
 
 }
