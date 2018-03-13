@@ -116,11 +116,13 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		moveElevatorToScaleHeight();
 		delay(4.5);
+		
+		driveForward(12);//eyeballed
+		shootCubeParallel(2);
+		
 		lowerIntake();
 		parallelRetractExtendArms();
-		driveForward(12);//eyeballed
-		delay(0.5);
-		shootCube(2);
+		
 		driveBackward(12);
 		moveElevatorToGroundHeight();
 		raiseIntake();

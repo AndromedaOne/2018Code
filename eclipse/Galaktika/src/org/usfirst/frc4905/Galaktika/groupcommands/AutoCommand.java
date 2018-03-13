@@ -239,5 +239,9 @@ public abstract class AutoCommand extends CommandGroup {
 	public void shootCube(double timeout){
 		addSequential(new ShootCubeInAuto(timeout));
 	}
+	
+	public void shootCubeParallel(double timeout){
+		addParallel(new ShootCubeInAuto(timeout));
+	}
 
 }
