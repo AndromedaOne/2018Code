@@ -10,44 +10,43 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected final MatchType m_matchType;
 	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
 		// Add Commands here:
-        // e.g. addSequential(new Command1());
-        //      addSequential(new Command2());
-        // these will run in order.
+		// e.g. addSequential(new Command1());
+		//      addSequential(new Command2());
+		// these will run in order.
 
-        // To run multiple commands at the same time,
-        // use addParallel()
-        // e.g. addParallel(new Command1());
-        //      addSequential(new Command2());
-        // Command1 and Command2 will run in parallel.
+		// To run multiple commands at the same time,
+		// use addParallel()
+		// e.g. addParallel(new Command1());
+		//      addSequential(new Command2());
+		// Command1 and Command2 will run in parallel.
 
-        // A command group will require all of the subsystems that each member
-        // would require.
-        // e.g. if Command1 requires chassis, and Command2 requires arm,
-        // a CommandGroup containing them would require both the chassis and the
-        // arm.
+		// A command group will require all of the subsystems that each member
+		// would require.
+		// e.g. if Command1 requires chassis, and Command2 requires arm,
+		// a CommandGroup containing them would require both the chassis and the
+		// arm.
 		debug("top of AutoQuals constructor");
-	    m_useDelay = useDelay;
-	    m_matchType = matchType;
-	    debug("bottom of AutoQuals constructor");
+		m_useDelay = useDelay;
+		m_matchType = matchType;
+		debug("bottom of AutoQuals constructor");
 	}
 
 	protected void prepareToStart() {
-    		debug("top of prepareToStart");
-    		if (m_useDelay) {
-    			delay(Robot.getAutonomousDelay());
-    		}
-        addAutoCombinedCommands(m_matchType);
+		debug("top of prepareToStart");
+		if (m_useDelay) {
+			delay(Robot.getAutonomousDelay());
+		}
+		addAutoCombinedCommands(m_matchType);
 		debug("bottom of prepareToStart");
-    }
+	}
 
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
-        closeJaws(false);
-        parallelJawsOpenClose();
-        lowerIntake();
-        parallelRetractExtendArms();
-		
-        moveElevatorToSwitchHeight();
+		closeJaws(false);
+		parallelJawsOpenClose();
+
+
+		moveElevatorToSwitchHeight();
 
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
@@ -56,17 +55,23 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			turnRight();
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
+		lowerIntake();
+		parallelRetractExtendArms();
+		delay(1.5);
 		openJaws();
 		parallelJawsOpenClose();
+		delay(1);
+		driveBackward(20);
+
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
 	private void loadNearScalePlate(char robotPos) {
 		debug("top of AutoQuals loadNearScalePlate");
 
-        closeJaws(false);
-        parallelJawsOpenClose();
-        
+		closeJaws(false);
+		parallelJawsOpenClose();
+
 
 		//240
 		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
@@ -78,41 +83,76 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		driveBackward(20);
 		moveElevatorToScaleHeight();
-		
+
 		delay(3);
 		lowerIntake();
-        parallelRetractExtendArms();
+		parallelRetractExtendArms();
 		delay(1);
-		
+
 		shootCube(2);
 
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
+	private void loadFarScalePlate(char robotPos){
+
+		closeJaws(false);
+		parallelJawsOpenClose();
+
+		driveForward(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
+		if(robotPos == 'L'){
+			turnRight();
+		}
+		else{
+			turnLeft();
+		}
+		
+		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES);
+		if(robotPos == 'L'){
+			turnLeft();
+		}
+		else{
+			turnRight();
+		}
+		moveElevatorToScaleHeight();
+		delay(4.5);
+		lowerIntake();
+		parallelRetractExtendArms();
+		driveForward(12);//eyeballed
+		delay(0.5);
+		shootCube(2);
+		driveBackward(12);
+		moveElevatorToGroundHeight();
+		raiseIntake();
+		parallelRetractExtendArms();
+		turnAround();
+		
+	}
+
 	protected void addAutoCombinedCommands(MatchType matchType) {
 		char robotPos = Robot.getInitialRobotLocation();
-	    char switchPlatePos = Robot.getSwitchPlatePosition();
-	    char scalePlatePos = Robot.getScalePlatePosition();
-	    if (matchType == MatchType.QUALIFIERS) {
-		    	if (switchPlatePos == robotPos) {
-		    		loadNearSwitchPlate(robotPos);
-		    	} else if (scalePlatePos == robotPos){
-		    		loadNearScalePlate(robotPos);
-		    	} else {
-		    		crossAutoLine(robotPos);
-		    	}
-	    } else {
-		    closeJaws(false);
-		    parallelJawsOpenClose();
-		    
-		    
+		char switchPlatePos = Robot.getSwitchPlatePosition();
+		char scalePlatePos = Robot.getScalePlatePosition();
+		if (matchType == MatchType.QUALIFIERS) {
+			if (switchPlatePos == robotPos) {
+				loadNearSwitchPlate(robotPos);
+			} else if (scalePlatePos == robotPos){
+				loadNearScalePlate(robotPos);
+			} else {
+				loadFarScalePlate(robotPos);
+			}
+		} else {
+			closeJaws(false);
+			parallelJawsOpenClose();
+
+
 			if (robotPos == 'L') {
 				if (scalePlatePos == 'L') {
 					loadNearScalePlate('L');
 
 				} else {
 					if (switchPlatePos == 'L') {
-						
+
 						moveElevatorToSwitchHeight();
 						driveForward(FORWARD_DISTANCE_TO_SWITCH);
 						turnRight();
@@ -142,7 +182,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 					}
 				}
 			}
-	    }
+		}
 	}
 
 	protected void pickupFirstCubeFromScale(double deltaAngle) {

@@ -17,7 +17,7 @@ public class MoveElevator extends Command {
 	public static final double EXCHANGE_HEIGHT = 200;
 	public static final double SWITCH_HEIGHT = 1200;
 	public static final double LOW_SCALE_HEIGHT = 2000;
-	public static final double HIGH_SCALE_HEIGHT = 2500;
+	public static final double HIGH_SCALE_HEIGHT = 3400;
 	
     public MoveElevator(double setPoint) {
     	this();
@@ -35,6 +35,9 @@ public class MoveElevator extends Command {
     	Robot.elevator.initializeEncoderPID();
     	Robot.elevator.setPIDControllerToTravelMode();
     	Robot.elevator.enableEncoderPID(m_setPoint);
+    	System.out.println("Current Position: " + Robot.elevator.getElevatorEncoderPosition());
+    	System.out.println("Trying to move elevator to: " + m_setPoint);
+    	System.out.println("Error: " + Robot.elevator.getEncoderError());
     	m_driverInterrupt = false;
     }
 
