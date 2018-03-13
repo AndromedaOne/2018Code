@@ -20,7 +20,9 @@ public class MoveElevator extends Command {
 	public static final double HIGH_SCALE_HEIGHT = 3400;
 	
     public MoveElevator(double setPoint) {
+    	
     	this();
+    	System.out.println("MOVEELEVATOR CONSTRUCTOR CALLED, SETPOINT = " + setPoint);
     	m_setPoint = setPoint;
     }
     public MoveElevator() {
