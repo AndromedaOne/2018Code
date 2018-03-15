@@ -134,10 +134,8 @@ public class Robot extends TimedRobot {
         command = new AutoCombinedLeftRight(false, AutoCombinedLeftRight.MatchType.QUALIFIERS);
         chooser.addObject("Qualifier Match Starting from Right", new Pair<>(command, 'R'));
         chooser.addObject("Load Switch from Middle", new Pair<>(new AutoMiddleLoadSwitch(false), 'M'));
-        chooser.addObject("Load Switch from Middle Right", new Pair<>(new AutoMiddleRightLoadSwitch(false), 'M'));
-        chooser.addObject("Cross The Line from Left", new Pair<>(new AutoCrossTheLine(false), 'L'));
-        chooser.addObject("Cross The Line from Middle", new Pair<>(new AutoCrossTheLine(false), 'M'));
-        chooser.addObject("Cross The Line from Right", new Pair<>(new AutoCrossTheLine(false), 'R'));
+        chooser.addObject("2. Switch Auto - In-field Dual Option", new Pair<>(new AutoMiddleRightLoadSwitch(false), 'M'));
+        chooser.addObject("1. Drive Fwd Auto", new Pair<>(new AutoCrossTheLine(false), 'L'));
         command = new AutoCombinedLeftRight(false, AutoCombinedLeftRight.MatchType.PLAYOFFS);
         chooser.addObject("Playoff Match Starting from Left", new Pair<>(command, 'L'));
         command = new AutoCombinedLeftRight(false, AutoCombinedLeftRight.MatchType.PLAYOFFS);
