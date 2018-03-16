@@ -36,22 +36,26 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	private double m_outputRangeMin = 0.0;
 	private double m_outputRangeMax = 1.0;
 
-	private Kinematics m_kinematics = new Kinematics();
+	private Kinematics m_kinematics;
 	private Path m_path = new Path();
-	private TrajectoryPoint m_currentTrajectoryPoint = new TrajectoryPoint(0.0, 0.0, 0.0);
+	private TrajectoryPoint m_currentTrajectoryPoint;
 
 	private double m_deltaTime = 0.0;
 	private double m_endDeltaTime = 0.0;
 	private double m_initialPosition = 0.0;
 	
+	private double m_previousOutput = 0.0;
+	
 	// This variable determines what values you will be tuning...
-	private final TuningType tuningType = TuningType.maxKinematicsParameters;
+	private final TuningType tuningType = TuningType.velocityPID;
 
 	// This creates the thread that will run the run method
 	private java.util.Timer m_controlLoop;
 	// this tells the thread how long to wait in between cycles. This is 50
 	// miliseconds
 	private long kdefaultPeriod = 20;
+	
+	private int traceId = 0;
 
 	public MotionProfilingController(double positionPValue, double positionIValue, double positionDValue,
 			double velocityPValue, double velocityIValue, double velocityDValue, double velocityFValue,
@@ -85,11 +89,16 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 		Trace.getInstance().flushTraceFiles();
 		m_enableStatus = false;
 		m_pidOutput.pidWrite(0.0);
+		traceId++;
 	}
 
 	public void enable() {
+		System.out.println("In Enable");
+		m_kinematics = new Kinematics();
 		m_velocityPIDCalculator.reset();
 		m_positionPIDCalculator.reset();
+		m_previousOutput = 0.0;
+		m_currentTrajectoryPoint = new TrajectoryPoint(0.0, 0.0, 0.0);
 
 		m_initialTimeStamp = Timer.getFPGATimestamp();
 		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk);
@@ -112,12 +121,14 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			double velocity = m_mpSource.getVelocity();
 
 			double velocityPIDOut = m_velocityPIDCalculator.getPIDOut(nextVelocity, velocity);
-			double output = nextVelocity * m_velocityF + velocityPIDOut;
+			double output = m_previousOutput + velocityPIDOut;
+			output = output>1.0?1.0:output;
+			output = output<-1.0?-1.0:output;
 
 			m_pidOutput.pidWrite(output);
 
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
-			Trace.getInstance().addTrace(true, "MotionProfilingData", new TracePair("ActualVelocity", velocity),
+			Trace.getInstance().addTrace(true, "MotionProfilingData" + traceId, new TracePair("ActualVelocity", velocity),
 					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", deltaPosition),
 					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
@@ -135,6 +146,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			 */
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
+			m_previousOutput = output;
 		}
 	}
 
@@ -158,12 +170,16 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	public void setSetpoint(double setpoint) {
+		System.out.println("Setting Setpoint");
 		m_currentSetpoint = setpoint;
+		m_path = new Path();
+		System.out.println("Clearing Path");
 		try {
 			m_kinematics.addPointToPath(m_path, new Point(setpoint));
 		} catch (InvalidDimentionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Whoops the point was never set...");
 		}
 
 	}
@@ -233,6 +249,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	private void setV(double value) {
+		m_velocityF = 1.0 / value;
 		m_maxVelocity = value;
 	}
 

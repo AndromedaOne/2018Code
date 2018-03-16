@@ -92,7 +92,7 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderMPVelocitykp = 0.0;//0.000015;
 	private double m_encoderMPVelocityki = 0.0;//1.0e-6;
 	private double m_encoderMPVelocitykd = 0.0;
-	private double m_encoderMPVelocitykf = 1.0 / kEncoderMaxVelocity;
+	public double m_encoderMPVelocitykf = 1.0 / kEncoderMaxVelocity;
 
 	private double kEncoderMPTolerance = 50;
 	private MotionProfilingController m_encoderMotionProfilingController;
