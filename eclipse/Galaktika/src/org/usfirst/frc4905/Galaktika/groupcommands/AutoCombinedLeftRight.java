@@ -106,7 +106,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		else{
 			turnLeft();
 		}
-		
+
 		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES);
 		if(robotPos == 'L'){
 			turnLeft();
@@ -116,19 +116,19 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		moveElevatorToScaleHeight();
 		delay(4.5);
-		
+
 		driveForward(12);//eyeballed
 		shootCubeParallel(2);
-		
+
 		lowerIntake();
 		parallelRetractExtendArms();
-		
+
 		driveBackward(12);
 		moveElevatorToGroundHeight();
 		raiseIntake();
 		parallelRetractExtendArms();
 		turnAround();
-		
+
 	}
 
 	protected void addAutoCombinedCommands(MatchType matchType) {
@@ -188,11 +188,10 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void pickupFirstCubeFromScale(double deltaAngle) {
+	    driveBackward(LATERAL_DISTANCE_TO_SCALE);
 		turnDeltaAngle(deltaAngle);
 		moveElevatorToGroundHeight();
-		driveForward(53);
-		turnToCompassHeading(180);
-		driveForwardToWall(40);
+		driveForwardToWall(DIAGONAL_DISTANCE_TO_FIRST_CUBE_FROM_SCALE);
 		closeJaws(true);
 	}
 

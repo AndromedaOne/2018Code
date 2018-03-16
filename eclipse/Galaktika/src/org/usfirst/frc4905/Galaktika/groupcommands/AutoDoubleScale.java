@@ -30,7 +30,7 @@ public class AutoDoubleScale extends AutoCombinedLeftRight {
 	        pickupFirstCubeFromScale(deltaAngle);
 	        moveElevatorToScaleHeight();
 	        turnToCompassHeading(0);
-	        driveForward(50);
+	        driveForward(49.99);
 	        openJaws();
 	        System.out.println("Done left near side Scale :D");
 	    } else if (robotPos == 'R' && scalePlatePos == 'R') {
@@ -38,7 +38,7 @@ public class AutoDoubleScale extends AutoCombinedLeftRight {
 	    		pickupFirstCubeFromScale(deltaAngle);
 	        moveElevatorToScaleHeight();
 	        turnToCompassHeading(0);
-	        driveForward(50);
+	        driveForward(49.99);
 	        openJaws();
 	        System.out.println("Done right near side Scale :D");
 	    } else if (robotPos == 'L' && scalePlatePos == 'R') {

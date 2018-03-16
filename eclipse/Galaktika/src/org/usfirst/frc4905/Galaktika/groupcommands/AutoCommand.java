@@ -81,6 +81,7 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
+	protected static final double DIAGONAL_DISTANCE_TO_FIRST_CUBE_FROM_SCALE = 52.99;
 	private static final double BUMPER_WIDTH = 1.5;
 	protected static final double CLEARANCE_TO_TURN = 25;
 
@@ -235,11 +236,11 @@ public abstract class AutoCommand extends CommandGroup {
 		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 		debug("bottom of crossAutoLine");
 	}
-	
+
 	public void shootCube(double timeout){
 		addSequential(new ShootCubeInAuto(timeout));
 	}
-	
+
 	public void shootCubeParallel(double timeout){
 		addParallel(new ShootCubeInAuto(timeout));
 	}
