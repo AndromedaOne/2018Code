@@ -95,6 +95,8 @@ public class OI {
 	public JoystickButton throwCubeButton;
 	public JoystickButton angleIntakeButton;
 	
+	public JoystickButton disableElevatorPIDLoopButton;
+	
 
 	public OI() {
 		//Button Presets for compass headings
@@ -132,6 +134,8 @@ public class OI {
 		
 		angleIntakeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());	
 		
+		disableElevatorPIDLoopButton = new JoystickButton(subsystemController, ButtonsEnumerated.STARTBUTTON.getValue());
+		disableElevatorPIDLoopButton.whenPressed(new LiftRightRamp());
 
 		// SmartDashboard Buttons
 		SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
