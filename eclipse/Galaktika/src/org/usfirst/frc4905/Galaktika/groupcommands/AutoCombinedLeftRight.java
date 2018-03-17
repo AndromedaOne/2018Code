@@ -87,14 +87,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE-38);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
-			turnDeltaAngle(-90);//18.4
+			turnDeltaAngle(-45);//18.4
 		} else {
-			turnDeltaAngle(90);
+			turnDeltaAngle(45);
 		}
-		driveBackward(20);
+		driveBackward(6);
 		moveElevatorToScaleHeight();
 
 		delay(3);
@@ -103,6 +103,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		delay(1);
 
 		shootCube(2);
+		raiseIntake();
+		parallelRetractExtendArms();
 
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}

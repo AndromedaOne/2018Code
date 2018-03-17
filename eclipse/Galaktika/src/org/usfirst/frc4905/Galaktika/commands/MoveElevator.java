@@ -17,7 +17,7 @@ public class MoveElevator extends Command {
 	public static final double EXCHANGE_HEIGHT = 200;
 	public static final double SWITCH_HEIGHT = 1500;
 	public static final double LOW_SCALE_HEIGHT = 3000;
-	public static final double HIGH_SCALE_HEIGHT = 4300;
+	public static final double HIGH_SCALE_HEIGHT = 4450;
 	
     public MoveElevator(double setPoint) {
     	
@@ -31,6 +31,7 @@ public class MoveElevator extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("Initializing ELevator PID");
     	if(Robot.elevator.getPidEnabledStatus() == true){
     		Robot.elevator.disableEncoderPID();
     	}
@@ -66,7 +67,7 @@ public class MoveElevator extends Command {
     	else{
     		Robot.elevator.disableEncoderPID();//there is driver input, let's just preempt the check in manual and disable the loop, for safety.
     	}
-    	
+    	Robot.elevator.stopElevator();
     }
 
     // Called when another command which requires one or more of the same
