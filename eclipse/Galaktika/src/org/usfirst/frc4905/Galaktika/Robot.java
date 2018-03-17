@@ -160,6 +160,49 @@ public class Robot extends TimedRobot {
         						true),
         				'M')
         		);
+        chooser.addObject(
+        		"3.Scale Auto - Right(3) Dual Option",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        						false,
+        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						true),
+        				'R'
+        				)
+        		);
+        
+        chooser.addObject(
+        		"3.D Scale Auto - Right(3) Dual Option",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        						true,
+        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						true),
+        				'R'
+        				)
+        		);
+        
+        chooser.addObject(
+        		"4.Scale Auto - Left(1) Dual Option",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        						false,
+        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						true),
+        				'L'
+        				)
+        		);
+        
+        chooser.addObject(
+        		"4.D Scale Auto - Left(1) Dual Option",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        						true,
+        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						true),
+        				'L'
+        				)
+        		);
         
         chooser.addObject(
         		"5.SCALE/Switch/Drive Fwd - Right(3) Field",
