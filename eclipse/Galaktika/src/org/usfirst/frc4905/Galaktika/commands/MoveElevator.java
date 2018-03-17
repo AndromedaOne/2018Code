@@ -15,9 +15,9 @@ public class MoveElevator extends Command {
 	// Encoder Revolution Constants
 	public static final double GROUND_LEVEL = 0;
 	public static final double EXCHANGE_HEIGHT = 200;
-	public static final double SWITCH_HEIGHT = 1200;
-	public static final double LOW_SCALE_HEIGHT = 2000;
-	public static final double HIGH_SCALE_HEIGHT = 3000;
+	public static final double SWITCH_HEIGHT = 1500;
+	public static final double LOW_SCALE_HEIGHT = 3000;
+	public static final double HIGH_SCALE_HEIGHT = 4300;
 	
     public MoveElevator(double setPoint) {
     	
