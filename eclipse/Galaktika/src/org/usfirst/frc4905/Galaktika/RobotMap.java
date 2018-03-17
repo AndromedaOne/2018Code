@@ -135,7 +135,7 @@ public class RobotMap {
 		driveTrainCompressor = new Compressor(0);
 		LiveWindow.addActuator("DriveTrain", "Compressor", driveTrainCompressor);
 
-		driveTrainFrontUltrasonic = new Ultrasonic(0, 1);
+		driveTrainFrontUltrasonic = new Ultrasonic(1, 0);
 		LiveWindow.addSensor("Ultrasonic DriveTrain PID", "FrontUltrasonic", driveTrainFrontUltrasonic);
 
 		intakeLeftController = new VictorSP(0);

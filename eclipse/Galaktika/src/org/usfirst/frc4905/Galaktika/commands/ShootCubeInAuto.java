@@ -2,19 +2,17 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
  */
-public class SetShouldJawsBeOpenStateCommand extends Command {
+public class ShootCubeInAuto extends TimedCommand {
 
-	private boolean m_state;
-
-    public SetShouldJawsBeOpenStateCommand(boolean state) {
+    public ShootCubeInAuto(double timeout) {
+        super(timeout);
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.jaws);
-        m_state = state;
+       	requires(Robot.intake);
     }
 
     // Called just before this Command runs the first time
@@ -23,20 +21,17 @@ public class SetShouldJawsBeOpenStateCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    		Robot.jaws.setShouldJawsBeOpenBoolean(m_state);
+    	Robot.intake.ejectIntake(1);
     }
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return true;
-    }
-
-    // Called once after isFinished returns true
+    // Called once after timeout
     protected void end() {
+    	Robot.intake.stopIntake();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	end();
     }
 }

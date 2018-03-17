@@ -5,11 +5,14 @@ import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
 
-public class AutoScaleThenSwitch extends AutoCommand {
+public class AutoScaleThenSwitch extends AutoCombinedLeftRight {
 
 	boolean m_useDelay;
 
 	public AutoScaleThenSwitch(boolean useDelay) {
+
+	    // MATCH TYPE DOES NOT MATTER
+	    super(useDelay, MatchType.QUALIFIERS);
         m_useDelay = useDelay;
 	}
 
@@ -25,43 +28,23 @@ public class AutoScaleThenSwitch extends AutoCommand {
         if (m_useDelay) {
         		delay(Robot.getAutonomousDelay());
         }
-        parallelJawsOpenClose();
-        parallelRetractExtendArms();
-        setJawsShouldBeOpenState(false);
-        setRetractorShouldBeUp(false);
+        closeJaws(false);
+        lowerIntake();
 
         //Only for when robotPos is 'L' or 'R'
-        if (robotPos == 'L' && scalePlatePos == 'L' && switchPlatePos == 'L') {
-        	moveElevatorToScaleHeight();
-            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-            turnDeltaAngle(-4.8);
-            driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
-            setJawsShouldBeOpenState(true);
-            turnDeltaAngle(17);
-            driveBackward(53);
-            moveElevatorToGroundHeight();
-            turnAround();
-            driveForward(53);
-            setJawsShouldBeOpenState(false);
-            delay(0.5);//make sure jaws close, could be changed
+         if (robotPos == 'L' && scalePlatePos == 'L' && switchPlatePos == 'L') {
+            // pickup cube from scale position
+            pickupFirstCubeFromScale(16.99);
             moveElevatorToSwitchHeightSequential();
-            setJawsShouldBeOpenState(true);
+            driveForwardToWall(12);
+            openJaws();
             System.out.println("Done :D");
         } else if (robotPos == 'R' && scalePlatePos == 'R' && switchPlatePos == 'R') {
-        		moveElevatorToScaleHeight();
-            driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-            turnDeltaAngle(4.8);
-            driveForward(177.6);//assumed distance from pythagorean theorem to approach plate
-            setJawsShouldBeOpenState(true);
-            turnDeltaAngle(-17);
-            driveBackward(53);
-            moveElevatorToGroundHeight();
-            turnAround();
-            driveForward(53);
-            setJawsShouldBeOpenState(false);
-            delay(0.5);//make sure jaws close, could be changed
+            // pickup cube from scale position
+            pickupFirstCubeFromScale(-16.99);
             moveElevatorToSwitchHeightSequential();
-            setJawsShouldBeOpenState(true);
+            driveForwardToWall(12);
+            openJaws();
         }
     }
 }
