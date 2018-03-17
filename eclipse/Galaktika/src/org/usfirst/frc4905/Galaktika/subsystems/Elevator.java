@@ -210,7 +210,7 @@ public class Elevator extends Subsystem {
 			if(speed > 0) {
 				speed = speed * 0.2;
 			}else {
-				speed = speed * 0.6;
+				speed = speed * 0.8;
 			}
 			moveElevator(speed);
 		}
