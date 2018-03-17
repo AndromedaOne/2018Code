@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
         				new AutoCombinedLeftRight(
         						false,
         						AutoCombinedLeftRight.MatchType.QUALIFIERS,
-        						true),
+        						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'R'
         				)
         		);
@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
         				new AutoCombinedLeftRight(
         						true,
         						AutoCombinedLeftRight.MatchType.QUALIFIERS,
-        						true),
+        						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'R'
         				)
         		);
@@ -188,7 +188,7 @@ public class Robot extends TimedRobot {
         				new AutoCombinedLeftRight(
         						false,
         						AutoCombinedLeftRight.MatchType.QUALIFIERS,
-        						true),
+        						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'L'
         				)
         		);
@@ -199,7 +199,7 @@ public class Robot extends TimedRobot {
         				new AutoCombinedLeftRight(
         						true,
         						AutoCombinedLeftRight.MatchType.QUALIFIERS,
-        						true),
+        						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'L'
         				)
         		);
@@ -240,9 +240,53 @@ public class Robot extends TimedRobot {
         				'L')
         		);
         
+        chooser.addObject(
+        		"7.SWITCH/Scale/Drive Fwd - Right(3) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'R'
+        				)
+        		);
         
         chooser.addObject(
-        		"9.SWITCH/Scale/Drive Fwd - Right(3) Field",
+        		"7.D SWITCH/Scale/Drive Fwd - Right(3) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'R'
+        				)
+        		);
+        
+        chooser.addObject(
+        		"8.SWITCH/Scale/Drive Fwd - Left(1) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'L'
+        				)
+        		);
+        
+        chooser.addObject(
+        		"8.D SWITCH/Scale/Drive Fwd - Left(1) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'L'
+        				)
+        		);
+        
+        
+        chooser.addObject(
+        		"9.SWITCH/Scale/Far Scale - Right(3)",
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
@@ -261,7 +305,7 @@ public class Robot extends TimedRobot {
         		);
         
         chooser.addObject(
-        		"10.SWITCH/Scale/Drive Fwd - Left(1) Field",
+        		"10.SWITCH/Scale/Far Scale - Left(1)",
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
