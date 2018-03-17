@@ -8,8 +8,15 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCombinedLeftRight extends AutoCommand {
 	private final boolean m_useDelay;
 	protected final MatchType m_matchType;
-	private boolean m_ignoreSwitch;
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, boolean ignoreSwitch) {
+	private PathOption m_pathOption;
+	
+	public enum PathOption {
+		NORMAL,
+		IGNORE_SWITCH,
+		IGNORE_FAR_SCALE,
+	}
+	
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, PathOption pathOption) {
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
 		//      addSequential(new Command2());
@@ -29,12 +36,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		debug("top of AutoQuals constructor");
 		m_useDelay = useDelay;
 		m_matchType = matchType;
-		m_ignoreSwitch = ignoreSwitch;
+		m_pathOption = pathOption;
 		debug("bottom of AutoQuals constructor");
 	}
 	
 	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
-		this(useDelay, matchType, false);
+		this(useDelay, matchType, PathOption.NORMAL);
 	}
 
 	protected void prepareToStart() {
@@ -142,12 +149,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
 		if (matchType == MatchType.QUALIFIERS) {
-			if (switchPlatePos == robotPos && !m_ignoreSwitch) {
+			if (switchPlatePos == robotPos && m_pathOption != PathOption.IGNORE_SWITCH) {
 				loadNearSwitchPlate(robotPos);
 			} else if (scalePlatePos == robotPos){
 				loadNearScalePlate(robotPos);
-			} else {
+			} else if(m_pathOption != PathOption.IGNORE_FAR_SCALE) {
 				loadFarScalePlate(robotPos);
+			} else {
+				driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 			}
 		} else {
 			closeJaws(false);
