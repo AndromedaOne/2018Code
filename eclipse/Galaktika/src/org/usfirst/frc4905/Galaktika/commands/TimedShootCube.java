@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class TimedShootCube extends CommandGroup {
-
+	
+	private double m_delay = 1.0;
     public TimedShootCube() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -24,5 +25,8 @@ public class TimedShootCube extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
+    		addParallel(new SetIntakeShouldBeUpCommand(false));
+    		addSequential(new Delay(m_delay));
+    		addSequential(new ShootCubeInAuto(2));
     }
 }
