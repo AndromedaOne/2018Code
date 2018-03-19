@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -87,7 +88,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE-38);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE-48);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
 			turnDeltaAngle(-45);//18.4
@@ -98,11 +99,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToScaleHeight();
 
 		delay(3);
-		lowerIntake();
+		/*lowerIntake();
 		parallelRetractExtendArms();
 		delay(1);
 
-		shootCube(2);
+		shootCube(2);*/
+		addSequential(new TimedShootCube());
 		raiseIntake();
 		parallelRetractExtendArms();
 

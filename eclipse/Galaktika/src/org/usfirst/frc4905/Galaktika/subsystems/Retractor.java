@@ -34,7 +34,7 @@ public class Retractor extends Subsystem {
     }
 
     public void stopIntakeExtension(){
-    	retractor.set(DoubleSolenoid.Value.kOff);
+    	//retractor.set(DoubleSolenoid.Value.kOff);
     }
 
     public void setShouldIntakeBeUpBoolean(boolean state){
