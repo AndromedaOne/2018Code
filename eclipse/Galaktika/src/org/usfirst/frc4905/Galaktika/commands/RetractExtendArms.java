@@ -24,6 +24,8 @@ public class RetractExtendArms extends Command {
 	private final long kHoldTime = 200;
 	private long m_currentDelayTime = 0;
 	private long m_currentHoldTime = 0;
+	//If True Pov was pressed if False then it was a joystick
+	private boolean m_povPressed = true;
 
 	enum RetractorStates {
 		Stop,
@@ -33,7 +35,7 @@ public class RetractExtendArms extends Command {
 		MovingDown,
 		InchingDelay
 	}
-	private RetractorStates m_currentState = RetractorStates.MovingDown;
+	private RetractorStates m_currentState = RetractorStates.Stop;
 
 
 	// Called just before this Command runs the first time
@@ -50,24 +52,17 @@ public class RetractExtendArms extends Command {
 		boolean upPovPressed = Utilities.ControllerButtons.POVDirectionNames.getPOVNorth(subystemController);
 		double leftJoystick = Utilities.ControllerButtons.EnumeratedRawAxis.getLeftStickVertical(subystemController);
 
-		/*
-		if(upPovPressed && !Robot.jaws.getShouldJawsBeOpen()){
-			Robot.retractor.retractIntake();
+		
+		if(upPovPressed){
+			m_povPressed = true;
 			Robot.retractor.setShouldIntakeBeUpBoolean(true);
-			m_currentState = RetractorStates.Stop;
-		}
-		else if(upPovPressed && Robot.jaws.getShouldJawsBeOpen()) {
+			m_currentState = RetractorStates.BeginMovingUp;
+		} else if(downPovPressed){
+			m_povPressed = true;
 			Robot.retractor.setShouldIntakeBeUpBoolean(false);
-			Robot.retractor.extendIntake();
-			m_currentState = RetractorStates.Stop;
-		}
-		else if(downPovPressed){
-			Robot.retractor.setShouldIntakeBeUpBoolean(false);
-			Robot.retractor.extendIntake();
-			m_currentState = RetractorStates.Stop;
-		} 
-		else if(((kDeadZone < leftJoystick) || (-kDeadZone > leftJoystick))
-				&& !Robot.jaws.getShouldJawsBeOpen()){
+			m_currentState = RetractorStates.MovingDown;
+		} else if(((kDeadZone < leftJoystick) || (-kDeadZone > leftJoystick))) {
+			m_povPressed = false;
 			System.out.println("Current State = " + m_currentState);
 			long currentTime = System.currentTimeMillis();
 			switch (m_currentState) {
@@ -108,20 +103,13 @@ public class RetractExtendArms extends Command {
 			}
 
 		} else {
-			m_currentState = RetractorStates.Stop;
+			if(!m_povPressed) {
+				m_currentState = RetractorStates.Stop;
+			} else {
+				Robot.retractor.setIntakeToCorrectState();
+			}
 		}
-	*/
-		
-		if(upPovPressed){
-			Robot.retractor.setShouldIntakeBeUpBoolean(true);
-			m_currentState = RetractorStates.BeginMovingUp;
-		}
-		if(downPovPressed){
-			Robot.retractor.setShouldIntakeBeUpBoolean(false);
-			m_currentState = RetractorStates.MovingDown;
-		}
-		
-		Robot.retractor.setIntakeToCorrectState();
+
 		
 	}
 
