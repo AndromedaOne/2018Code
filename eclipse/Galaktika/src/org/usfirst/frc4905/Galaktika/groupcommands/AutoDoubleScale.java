@@ -6,6 +6,7 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
 
+
 public class AutoDoubleScale extends AutoCombinedLeftRight {
 
 	public AutoDoubleScale(boolean useDelay, MatchType matchType) {
