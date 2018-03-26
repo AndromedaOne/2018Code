@@ -6,6 +6,14 @@ import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoCombinedLeftRight extends AutoCommand {
+	enum Position {
+		NEAR_SCALE,
+		FAR_SCALE,
+		NEAR_SWITCH,
+		DROVE_FORWARD,
+
+	}
+	protected Position m_positionAfterFirstCube;
 	private final boolean m_useDelay;
 	protected final MatchType m_matchType;
 	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
@@ -62,7 +70,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		parallelJawsOpenClose();
 		delay(1);
 		driveBackward(20);
-
+		m_positionAfterFirstCube = Position.NEAR_SWITCH;
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
 
@@ -77,7 +85,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
-			turnDeltaAngle(-90);//18.4
+			turnDeltaAngle(-90);
 		} else {
 			turnDeltaAngle(90);
 		}
@@ -90,7 +98,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		delay(1);
 
 		shootCube(2);
-
+		m_positionAfterFirstCube = Position.NEAR_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -128,6 +136,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		raiseIntake();
 		parallelRetractExtendArms();
 		turnAround();
+		m_positionAfterFirstCube = Position.FAR_SCALE;
 
 	}
 
@@ -189,9 +198,13 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	protected void pickupFirstCubeFromScale(double deltaAngle) {
 	    driveBackward(LATERAL_DISTANCE_TO_SCALE);
-		turnDeltaAngle(deltaAngle);
+		turnToCompassHeading(180);
 		moveElevatorToGroundHeight();
-		driveForwardToWall(DIAGONAL_DISTANCE_TO_FIRST_CUBE_FROM_SCALE);
+		driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
+		turnToCompassHeading(deltaAngle);
+		driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+		turnToCompassHeading(180);
+		driveForwardToWall(24.99);
 		closeJaws(true);
 	}
 
@@ -230,5 +243,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(33);
 		closeJaws(true);
 	}
+
 
 }

@@ -19,45 +19,47 @@ public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 
     protected void addAutoDoubleSwitchCommands(MatchType matchType) {
 		char robotPos = Robot.getInitialRobotLocation();
-	    char switchPlatePos = Robot.getSwitchPlatePosition();
-	    char scalePlatePos = Robot.getScalePlatePosition();
+		double deltaAngle;
+
 	    addAutoCombinedCommands(matchType);
 	    //Only for when robotPos is 'L' or 'R'
-	    if (robotPos == 'L') {
-	    		if (switchPlatePos == 'L' &&
-	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'R')) {
-
-		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'L') {
-			    		pickupFirstCubeFromScale(16.99);
-			    	} else {
-		    			pickupFirstCubeFromLeftSwitchPlate();
-			    	}
-
-		    		dropCubeOntoSwitch();
-	    		} else if (switchPlatePos == 'R') {
-	    			if (scalePlatePos == 'L') {
-	    				pickupFirstCubeFromScale(16.99);
-	    			}
-	    		}
-
-	    		System.out.println("Done left side :D");
-	    } else if (robotPos == 'R') {
-	    		if (	switchPlatePos == 'R' &&
-	    				(matchType == MatchType.QUALIFIERS || scalePlatePos == 'L')) {
-
-		    		if (matchType == MatchType.PLAYOFFS && scalePlatePos == 'R') {
-		    			pickupFirstCubeFromScale(-16.99);
-		    		} else {
-			    		pickupFirstCubeFromRightSwitchPlate();
-		    		}
-		    		dropCubeOntoSwitch();
-	    		} else if (switchPlatePos == 'L') {
-	    			if (scalePlatePos == 'R') {
-	    				pickupFirstCubeFromScale(-16.99);
-	    			}
-	    		}
-			System.out.println("Done right side :D");
+	    switch (m_positionAfterFirstCube) {
+		    case NEAR_SCALE:
+		    	if (robotPos == 'L') {
+		    		//Dummy numbers
+		    		deltaAngle = -90;
+		    		System.out.println("Done left near side Scale :D");
+		    	} else {
+		    		deltaAngle = 90;
+		        System.out.println("Done right near side Scale :D");
+		    	}
+	    		pickupFirstCubeFromScale(deltaAngle);
+	        dropCubeOntoSwitch();
+	        break;
+		    case FAR_SCALE:
+		    	if (robotPos == 'L') {
+		    		//Dummy numbers
+		    		deltaAngle = 90;
+		    		System.out.println("Done left far side Scale :D");
+		    	} else {
+		    		deltaAngle = -90;
+		        System.out.println("Done right far side Scale :D");
+		    	}
+	    		pickupFirstCubeFromScale(deltaAngle);
+	        dropCubeOntoSwitch();
+	        break;
+		    case NEAR_SWITCH:
+		    	if (robotPos == 'L') {
+		    		pickupFirstCubeFromLeftSwitchPlate();
+		    	} else {
+		    		pickupFirstCubeFromRightSwitchPlate();
+		    	}
+	    		dropCubeOntoSwitch();
+	    		break;
+		    case DROVE_FORWARD:
+		    	System.out.println("Double cube not supported after driving forward.");
 	    }
+
 	}
 
 	protected void dropCubeOntoSwitch() {
