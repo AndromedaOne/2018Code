@@ -16,7 +16,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected Position m_positionAfterFirstCube;
 	private final boolean m_useDelay;
 	protected final MatchType m_matchType;
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
+	private AutoFollowOn m_followOn;
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, AutoFollowOn followOn) {
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
 		//      addSequential(new Command2());
@@ -36,8 +37,13 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		debug("top of AutoQuals constructor");
 		m_useDelay = useDelay;
 		m_matchType = matchType;
+		m_followOn = followOn;
 		debug("bottom of AutoQuals constructor");
 	}
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
+		this(useDelay, matchType, null);
+	}
+
 
 	protected void prepareToStart() {
 		debug("top of prepareToStart");
@@ -45,6 +51,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			delay(Robot.getAutonomousDelay());
 		}
 		addAutoCombinedCommands(m_matchType);
+		if (m_followOn != null) {
+			m_followOn.addCommands(this);
+		}
 		debug("bottom of prepareToStart");
 	}
 
