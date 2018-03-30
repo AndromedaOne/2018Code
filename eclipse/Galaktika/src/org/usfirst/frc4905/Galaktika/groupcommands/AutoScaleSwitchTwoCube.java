@@ -4,13 +4,13 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
-import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.AutoType;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoDoubleScale;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoDoubleSwitch;
 
 public class AutoScaleSwitchTwoCube extends AutoCombinedLeftRight {
 
-	public AutoScaleSwitchTwoCube(boolean useDelay, MatchType matchType) {
+	public AutoScaleSwitchTwoCube(boolean useDelay, AutoType matchType) {
 		super(useDelay, matchType);
 	}
 
@@ -19,7 +19,7 @@ public class AutoScaleSwitchTwoCube extends AutoCombinedLeftRight {
         addAutoScaleSwitchTwoCubeCommands(m_matchType);
     }
 
-    protected void addAutoScaleSwitchTwoCubeCommands(MatchType matchType) {
+    protected void addAutoScaleSwitchTwoCubeCommands(AutoType matchType) {
 	    addAutoCombinedCommands(matchType);
 		char robotPos = Robot.getInitialRobotLocation();
 	    char scalePlatePos = Robot.getScalePlatePosition();

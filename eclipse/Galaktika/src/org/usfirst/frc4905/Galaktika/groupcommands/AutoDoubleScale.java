@@ -4,12 +4,12 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
-import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.AutoType;
 
 
 public class AutoDoubleScale extends AutoCombinedLeftRight {
 
-	public AutoDoubleScale(boolean useDelay, MatchType matchType) {
+	public AutoDoubleScale(boolean useDelay, AutoType matchType) {
 		super(useDelay, matchType);
 	}
 
@@ -18,7 +18,7 @@ public class AutoDoubleScale extends AutoCombinedLeftRight {
         addAutoDoubleScaleCommands(m_matchType);
     }
 
-    protected void addAutoDoubleScaleCommands(MatchType matchType) {
+    protected void addAutoDoubleScaleCommands(AutoType matchType) {
 	    addAutoCombinedCommands(matchType);
 		char robotPos = Robot.getInitialRobotLocation();
     		double deltaAngle;

@@ -7,7 +7,7 @@ import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
 
 public class AutoTripleFromScale extends AutoDoubleScale {
 
-	public AutoTripleFromScale(boolean useDelay, MatchType matchType) {
+	public AutoTripleFromScale(boolean useDelay, AutoType matchType) {
 	    super(useDelay, matchType);
 	}
 

@@ -7,7 +7,7 @@ import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
 
 public class AutoTripleFromSwitch extends AutoDoubleSwitch {
 
-	public AutoTripleFromSwitch(boolean useDelay, MatchType matchType) {
+	public AutoTripleFromSwitch(boolean useDelay, AutoType matchType) {
 	    super(useDelay, matchType);
 	}
 

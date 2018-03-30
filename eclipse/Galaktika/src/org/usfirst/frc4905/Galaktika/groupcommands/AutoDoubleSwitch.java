@@ -4,11 +4,11 @@ import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.SetIntakeShouldBeUpCommand;
-import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.AutoType;
 
 public class AutoDoubleSwitch extends AutoCombinedLeftRight {
 
-	public AutoDoubleSwitch(boolean useDelay, MatchType matchType) {
+	public AutoDoubleSwitch(boolean useDelay, AutoType matchType) {
 	    super(useDelay, matchType);
 	}
 
@@ -17,7 +17,7 @@ public class AutoDoubleSwitch extends AutoCombinedLeftRight {
         addAutoDoubleSwitchCommands(m_matchType);
     }
 
-    protected void addAutoDoubleSwitchCommands(MatchType matchType) {
+    protected void addAutoDoubleSwitchCommands(AutoType matchType) {
 		char robotPos = Robot.getInitialRobotLocation();
 		double deltaAngle;
 

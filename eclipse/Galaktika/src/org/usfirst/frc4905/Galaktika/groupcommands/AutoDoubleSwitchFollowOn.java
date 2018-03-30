@@ -2,7 +2,12 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-public class AutoDoubleSwitchFollowOn extends AutoFollowOn {
+public class AutoDoubleSwitchFollowOn extends AutoCombinedLeftRight {
+
+	public AutoDoubleSwitchFollowOn(boolean useDelay, AutoType matchType) {
+		super(useDelay, matchType);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void addCommands(AutoCombinedLeftRight autoCommand) {

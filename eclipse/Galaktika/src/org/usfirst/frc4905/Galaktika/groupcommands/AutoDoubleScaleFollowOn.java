@@ -7,6 +7,7 @@ public class AutoDoubleScaleFollowOn extends AutoFollowOn {
 	@Override
 	public void addCommands(AutoCombinedLeftRight autoCommand) {
 		char robotPos = Robot.getInitialRobotLocation();
+		char scalePlatePos = Robot.getScalePlatePosition();
 		double deltaAngle;
 
 
@@ -43,17 +44,21 @@ public class AutoDoubleScaleFollowOn extends AutoFollowOn {
 		    	autoCommand.openJaws();
 	        break;
 		    case NEAR_SWITCH:
-		    	if (robotPos == 'L') {
-		    		autoCommand.pickupFirstCubeFromLeftSwitchPlate();
+		    	if (robotPos == scalePlatePos) {
+			    	if (robotPos == 'L') {
+			    		autoCommand.pickupFirstCubeFromLeftSwitchPlate();
+			    	} else {
+			    		autoCommand.pickupFirstCubeFromRightSwitchPlate();
+			    	}
+			    	autoCommand.driveBackward(52);
+			    	autoCommand.turnAround();
+		    		// Could be moved v
+			    	autoCommand.moveElevatorToScaleHeight();
+			    	autoCommand.driveForward(52);
+			    	autoCommand.openJaws();
 		    	} else {
-		    		autoCommand.pickupFirstCubeFromRightSwitchPlate();
+
 		    	}
-		    	autoCommand.driveBackward(52);
-		    	autoCommand.turnAround();
-	    		// Could be moved v
-		    	autoCommand.moveElevatorToScaleHeight();
-		    	autoCommand.driveForward(52);
-		    	autoCommand.openJaws();
 	    		break;
 		    case DROVE_FORWARD:
 		    	System.out.println("Double cube not supported after driving forward.");

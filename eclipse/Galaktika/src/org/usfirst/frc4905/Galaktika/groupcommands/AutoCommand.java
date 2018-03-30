@@ -40,9 +40,13 @@ public abstract class AutoCommand extends CommandGroup {
 		}
 	}
 
-	public enum MatchType {
+	public enum AutoType {
+		SAFE_QUALIFIERS,
 		QUALIFIERS,
-		PLAYOFFS
+		PLAYOFFS,
+		SAFE_PLAYOFFS,
+		SAFE_DOUBLE_CUBE,
+		DOUBLE_CUBE,
 	}
 
 	public AutoCommand() {
@@ -243,6 +247,10 @@ public abstract class AutoCommand extends CommandGroup {
 
 	public void shootCubeParallel(double timeout){
 		addParallel(new ShootCubeInAuto(timeout));
+	}
+
+	public void addAutoDoubleSwitchCommands() {
+		addSequential(new AutoDoubleSwitchFollowOn(m_preparedToStart, null));
 	}
 
 }
