@@ -189,9 +189,9 @@ public class Elevator extends Subsystem {
 		if(getTopLimitSwitch() == false && (speed < 0)) {
 			//trying to go upwards when speed < 0, false on the limit switch means it is triggered
 			if(getPidEnabledStatus() == true){
-				
-				
-				
+
+
+
 				//stop a little short of the top, has to be debugged.
 				disableEncoderPID();
 			}
@@ -213,9 +213,9 @@ public class Elevator extends Subsystem {
 		}
 		else {
 			if(speed > 0) {
-				speed = speed * 0.2;
+				speed = speed * 0.3;
 			}else {
-				speed = speed * 0.6;
+				speed = speed * 1.0;
 			}
 			moveElevator(speed);
 		}
@@ -279,9 +279,9 @@ public class Elevator extends Subsystem {
 	public double getTopEncoderPosition() {
 		return m_encoderTopPosition;
 	}
-	
+
 	public double getEncoderError(){
 		return m_encoderPID.getError();
 	}
-	
+
 }

@@ -250,19 +250,19 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	public void addAutoDoubleSwitchCommands() {
-		addSequential(new AutoDoubleSwitchFollowOn(m_preparedToStart, null));
+		addSequential(new AutoDoubleSwitchFollowOn(m_preparedToStart, AutoType.DOUBLE_CUBE));
 	}
 
 	public void addAutoDoubleScaleCommands() {
-		addSequential(new AutoDoubleScaleFollowOn(m_preparedToStart, null));
+		addSequential(new AutoDoubleScaleFollowOn(m_preparedToStart, AutoType.DOUBLE_CUBE));
 	}
 
 	public void addAutoTripleSwitchCommands() {
-		addSequential(new AutoTripleSwitchFollowOn(m_preparedToStart, null));
+		addSequential(new AutoTripleSwitchFollowOn(m_preparedToStart, AutoType.DOUBLE_CUBE));
 	}
 
 	public void addAutoTripleScaleCommands() {
-		addSequential(new AutoTripleScaleFollowOn(m_preparedToStart, null));
+		addSequential(new AutoTripleScaleFollowOn(m_preparedToStart, AutoType.DOUBLE_CUBE));
 	}
 
 }
