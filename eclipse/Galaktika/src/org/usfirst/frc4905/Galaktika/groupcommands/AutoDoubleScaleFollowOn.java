@@ -2,9 +2,13 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-public class AutoDoubleScaleFollowOn extends AutoFollowOn {
+public class AutoDoubleScaleFollowOn extends AutoCombinedLeftRight {
 
-	@Override
+	public AutoDoubleScaleFollowOn(boolean useDelay, AutoType matchType) {
+		super(useDelay, matchType);
+		// TODO Auto-generated constructor stub
+	}
+
 	public void addCommands(AutoCombinedLeftRight autoCommand) {
 		char robotPos = Robot.getInitialRobotLocation();
 		char scalePlatePos = Robot.getScalePlatePosition();

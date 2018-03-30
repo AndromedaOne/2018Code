@@ -178,12 +178,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos, false);
 			if (m_positionAfterFirstCube == Position.NEAR_SCALE) {
 				if (robotPos == switchPlatePos) {
-					//AutoDoubleSwitch
+					addAutoDoubleSwitchCommands();
 				} else {
-					//AutoDoubleScale
+					addAutoDoubleScaleCommands();
 				}
 			} else if (m_positionAfterFirstCube == Position.NEAR_SWITCH) {
-				//AutoDoubleSwitch
+				addAutoDoubleSwitchCommands();
 			} else if (m_positionAfterFirstCube == Position.DROVE_FORWARD) {
 				// do nothing
 			}
@@ -191,14 +191,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos, false);
 			if (m_positionAfterFirstCube == Position.NEAR_SCALE) {
 				if (robotPos == switchPlatePos) {
-					//AutoDoubleSwitch
+					addAutoDoubleSwitchCommands();
 				} else {
-					//AutoDoubleScale
+					addAutoDoubleScaleCommands();
 				}
 			} else if (m_positionAfterFirstCube == Position.NEAR_SWITCH) {
-				//AutoDoubleSwitch
+				addAutoDoubleSwitchCommands();
 			} else if (m_positionAfterFirstCube == Position.FAR_SCALE) {
-				//AutoDoubleScale
+				addAutoDoubleScaleCommands();
 			}
 		}
 	}

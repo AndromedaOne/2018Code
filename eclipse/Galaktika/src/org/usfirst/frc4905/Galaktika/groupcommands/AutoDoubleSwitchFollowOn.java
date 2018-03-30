@@ -9,7 +9,6 @@ public class AutoDoubleSwitchFollowOn extends AutoCombinedLeftRight {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
 	public void addCommands(AutoCombinedLeftRight autoCommand) {
 		char robotPos = Robot.getInitialRobotLocation();
 		double deltaAngle;

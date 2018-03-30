@@ -4,6 +4,11 @@ import org.usfirst.frc4905.Galaktika.Robot;
 
 public class AutoTripleSwitchFollowOn extends AutoDoubleSwitchFollowOn {
 
+	public AutoTripleSwitchFollowOn(boolean useDelay, AutoType matchType) {
+		super(useDelay, matchType);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void addCommands(AutoCombinedLeftRight autoCommand) {
 		super.addCommands(autoCommand);
