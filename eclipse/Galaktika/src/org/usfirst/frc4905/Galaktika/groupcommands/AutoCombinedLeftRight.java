@@ -186,12 +186,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				} else {
 					if (switchPlatePos == 'L') {
 
-						moveElevatorToSwitchHeight();
-						driveForward(FORWARD_DISTANCE_TO_SWITCH);
-						turnRight();
-						driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-						openJaws();
-						parallelJawsOpenClose();
+						loadNearSwitchPlate('L');
 
 					} else {
 						driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
@@ -202,12 +197,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 					loadNearScalePlate('R');
 				} else {
 					if (switchPlatePos == 'R') {
-						moveElevatorToSwitchHeight();
-						driveForward(FORWARD_DISTANCE_TO_SWITCH);
-						turnLeft();
-						driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
-						openJaws();
-						parallelJawsOpenClose();
+						loadNearSwitchPlate('R');
 
 					} else {
 						//lost the switch and scale, just go forwards
