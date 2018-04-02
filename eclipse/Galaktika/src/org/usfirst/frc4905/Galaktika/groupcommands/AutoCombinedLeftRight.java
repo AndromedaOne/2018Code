@@ -13,12 +13,18 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		DROVE_FORWARD,
 
 	}
+	public enum PathOption {
+		NORMAL,
+		IGNORE_SWITCH,
+		IGNORE_FAR_SCALE,
+	}
 	protected Position m_positionAfterFirstCube;
 	private final boolean m_useDelay;
 	protected final MatchType m_matchType;
 	private AutoFollowOn m_followOn;
-	private boolean m_ignoreSwitch;
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, boolean ignoreSwitch, AutoFollowOn followOn) {
+	private PathOption m_pathOption;
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, PathOption pathOption, AutoFollowOn followOn) {
+
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
 		//      addSequential(new Command2());
@@ -39,15 +45,15 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		m_useDelay = useDelay;
 		m_matchType = matchType;
 		m_followOn = followOn;
-		m_ignoreSwitch = ignoreSwitch;
+		m_pathOption = pathOption;
 		debug("bottom of AutoQuals constructor");
 	}
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, boolean ignoreSwitch) {
-		this(useDelay, matchType, ignoreSwitch, null);
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, PathOption pathOption) {
+		this(useDelay, matchType, pathOption, null);
 	}
 
 	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
-		this(useDelay, matchType, false, null);
+		this(useDelay, matchType, PathOption.NORMAL, null);
 	}
 
 	protected void prepareToStart() {
@@ -159,12 +165,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
 		if (matchType == MatchType.QUALIFIERS) {
-			if (switchPlatePos == robotPos && !m_ignoreSwitch) {
+			if (switchPlatePos == robotPos && m_pathOption != PathOption.IGNORE_SWITCH) {
 				loadNearSwitchPlate(robotPos);
 			} else if (scalePlatePos == robotPos){
 				loadNearScalePlate(robotPos);
-			} else {
+			} else if(m_pathOption != PathOption.IGNORE_FAR_SCALE) {
 				loadFarScalePlate(robotPos);
+			} else {
+				driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 			}
 		} else {
 			closeJaws(false);
