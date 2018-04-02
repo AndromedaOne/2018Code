@@ -127,8 +127,8 @@ public class OI {
 		liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
 		liftRightRampButton.whenPressed(new LiftRightRamp());
 		
-		//throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
-		//throwCubeButton.whenPressed(new MoveDownAndShoot()); //has to be tested
+		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.STARTBUTTON.getValue());
+		throwCubeButton.whenPressed(new MoveDownAndShoot()); //has to be tested
 		
 		angleIntakeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());	
 		
