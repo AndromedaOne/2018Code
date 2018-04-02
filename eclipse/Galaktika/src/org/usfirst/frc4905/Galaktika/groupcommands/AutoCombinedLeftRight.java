@@ -17,7 +17,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private final boolean m_useDelay;
 	protected final MatchType m_matchType;
 	private AutoFollowOn m_followOn;
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, AutoFollowOn followOn) {
+	private boolean m_ignoreSwitch;
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, boolean ignoreSwitch, AutoFollowOn followOn) {
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
 		//      addSequential(new Command2());
@@ -30,7 +31,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		// Command1 and Command2 will run in parallel.
 
 		// A command group will require all of the subsystems that each member
-		// would require.
+		// would require.S
 		// e.g. if Command1 requires chassis, and Command2 requires arm,
 		// a CommandGroup containing them would require both the chassis and the
 		// arm.
@@ -38,12 +39,16 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		m_useDelay = useDelay;
 		m_matchType = matchType;
 		m_followOn = followOn;
+		m_ignoreSwitch = ignoreSwitch;
 		debug("bottom of AutoQuals constructor");
 	}
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
-		this(useDelay, matchType, null);
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, boolean ignoreSwitch) {
+		this(useDelay, matchType, ignoreSwitch, null);
 	}
 
+	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
+		this(useDelay, matchType, false, null);
+	}
 
 	protected void prepareToStart() {
 		debug("top of prepareToStart");
@@ -154,7 +159,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
 		if (matchType == MatchType.QUALIFIERS) {
-			if (switchPlatePos == robotPos) {
+			if (switchPlatePos == robotPos && !m_ignoreSwitch) {
 				loadNearSwitchPlate(robotPos);
 			} else if (scalePlatePos == robotPos){
 				loadNearScalePlate(robotPos);
