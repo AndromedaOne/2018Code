@@ -173,8 +173,8 @@ public class DriveTrain extends Subsystem {
 
 	private double m_savedAngle = 0;
 
-	double m_gyroPIDP = 0.005;
-	double m_gyroPIDI = 0.00;
+	double m_gyroPIDP = 0.0038;//0.005;
+	double m_gyroPIDI = 0.0002;// 0.0;
 	double m_gyroPIDD = 0.0;
 	double m_gyroPIDF = 0.0;
 	
@@ -444,7 +444,7 @@ public class DriveTrain extends Subsystem {
 				}
 			}
 			
-			if (Math.abs(output) >= m_gyroPIDOutputRange) {
+			if (Math.abs(output) >= m_gyroPIDOutputRange*0.5) {
 				m_gyroPIDSource.setI(0.0);
 			}else {
 				m_gyroPIDSource.setI(m_gyroPIDI);
@@ -487,6 +487,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void stopGyroPid() {
+		m_gyroPIDSource.reset();
 		m_gyroPIDSource.disable();
 		m_savedAngle = RobotMap.navX.getRobotAngle();
 		System.out.println("Done Turning");

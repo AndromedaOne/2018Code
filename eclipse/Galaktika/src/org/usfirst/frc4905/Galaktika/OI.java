@@ -29,6 +29,7 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
+import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.groupcommands.MPTesting;
 
@@ -116,7 +117,7 @@ public class OI {
 		elevatorMoveHighScaleButton = new JoystickButton(subsystemController, ButtonsEnumerated.YBUTTON.getValue());
 		elevatorMoveLowScaleButton = new JoystickButton(subsystemController, ButtonsEnumerated.XBUTTON.getValue());
 		elevatorMoveSwitchButton = new JoystickButton(subsystemController, ButtonsEnumerated.BBUTTON.getValue());
-		elevatorMoveGroundLevelButton = new JoystickButton(subsystemController, ButtonsEnumerated.ABUTTON.getValue());
+		elevatorMoveGroundLevelButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
 		elevatorMoveHighScaleButton.whenPressed(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
 		elevatorMoveLowScaleButton.whenPressed(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
 		elevatorMoveSwitchButton.whenPressed(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
@@ -127,8 +128,8 @@ public class OI {
 		liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
 		liftRightRampButton.whenPressed(new LiftRightRamp());
 		
-		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.STARTBUTTON.getValue());
-		throwCubeButton.whenPressed(new MoveDownAndShoot()); //has to be tested
+		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.ABUTTON.getValue());
+		throwCubeButton.whenPressed(new TimedShootCube()); //has to be tested
 		
 		angleIntakeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());	
 		

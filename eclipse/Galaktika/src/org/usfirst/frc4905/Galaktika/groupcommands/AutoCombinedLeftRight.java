@@ -1,6 +1,7 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -113,12 +114,10 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToScaleHeight();
 
 		delay(3);
-		lowerIntake();
+		addSequential(new TimedShootCube());
+		raiseIntake();
 		parallelRetractExtendArms();
-		delay(1);
 
-		shootCube(2);
-		m_positionAfterFirstCube = Position.NEAR_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 

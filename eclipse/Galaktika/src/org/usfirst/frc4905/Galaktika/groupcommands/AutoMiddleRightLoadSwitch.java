@@ -3,6 +3,7 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
+import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -40,13 +41,15 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			turnRight();
 			delay(0.4);
 			moveElevatorToSwitchHeight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3));
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3) - 12.0);
 			
-			lowerIntake();
+			/*lowerIntake();
 			parallelRetractExtendArms();
 			delay(1);
 			
-			openJaws();
+			openJaws();*/
+			
+			addSequential(new TimedShootCube());
 			parallelJawsOpenClose();
 			
 

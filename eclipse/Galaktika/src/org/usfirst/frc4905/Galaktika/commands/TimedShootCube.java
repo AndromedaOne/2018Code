@@ -1,5 +1,7 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
+import org.usfirst.frc4905.Galaktika.Robot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -7,7 +9,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class TimedShootCube extends CommandGroup {
 	
-	private double m_delay = 1.0;
+	private double m_delay = 0.3;
     public TimedShootCube() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
@@ -26,9 +28,11 @@ public class TimedShootCube extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     	
-    		addParallel(new SetIntakeShouldBeUpCommand(false));
+    		addSequential(new SetIntakeShouldBeUpCommand(false));
+    		addParallel(new RetractExtendArms());
     		addSequential(new Delay(m_delay));
     		addSequential(new ShootCubeInAuto(2));
-    		addParallel(new RetractExtendArms());
+    		addSequential(new ReinitializeIntakeSystems());
+    		
     }
 }
