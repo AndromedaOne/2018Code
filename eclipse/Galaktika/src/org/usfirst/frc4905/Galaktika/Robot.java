@@ -356,8 +356,8 @@ public class Robot extends TimedRobot {
 
     	Trace.getInstance().flushTraceFiles();
     	Robot.ramps.lockRampsIn();
-
-
+    	Robot.elevator.disableEncoderPID();
+    	Robot.elevator.stopElevator();
     }
 
     @Override
