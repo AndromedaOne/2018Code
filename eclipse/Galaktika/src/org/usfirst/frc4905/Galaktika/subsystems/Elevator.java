@@ -53,8 +53,8 @@ public class Elevator extends Subsystem {
 
 	private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
-	private double m_encoderPIDP_maintanence = 0.00003;//p constant for maintaining position, way too big for distance traveling
-	private double m_encoderPIDP_travel = 0.000075;//p constant for traveling up or down on the elevator
+	private double m_encoderPIDP_maintanence = 0.0;//0.00003;//p constant for maintaining position, way too big for distance traveling
+	private double m_encoderPIDP_travel = 0.00325;//p constant for traveling up or down on the elevator
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
@@ -126,11 +126,10 @@ public class Elevator extends Subsystem {
 			// Negated because encoder and motor count in opposite directions
 			output *= -1;
 
-			if (output < 0 && output >= -0.3) {
+			if (output < 0.0 && output >= -0.3) {
 				// Min speed to overcome intake weight when moving upwards
 				output = -0.3;
 			}
-
 			moveElevatorSafely(output);
 			if(noisyDebug) {
 				System.out.println("In Elevator pidWrite output = " + output +
@@ -162,7 +161,12 @@ public class Elevator extends Subsystem {
 	}
 
 	public boolean isDoneEncoderPID() {
-		return m_encoderPID.onTarget();
+		boolean onTarget = m_encoderPID.onTarget();
+		if(onTarget) {
+			System.out.println("Elevator Encoder PID ON Target!!!");
+			
+		}
+		return onTarget;
 	}
 
 	public void disableEncoderPID() {
@@ -213,7 +217,7 @@ public class Elevator extends Subsystem {
 		}
 		else {
 			if(speed > 0) {
-				speed = speed * 0.2;
+				speed = speed * 0.6;
 			}
 			moveElevator(speed);
 		}
@@ -221,7 +225,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void stopElevator() {
-		moveElevator(0);
+		moveElevator(0.0);
 	}
 
 	public double getElevatorEncoderPosition(){

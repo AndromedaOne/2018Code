@@ -173,7 +173,15 @@ public class DriveTrain extends Subsystem {
 
 	private double m_savedAngle = 0;
 
-
+	double m_gyroPIDP = 0.005;
+	double m_gyroPIDI = 0.00;
+	double m_gyroPIDD = 0.0;
+	double m_gyroPIDF = 0.0;
+	
+	double gyroPIDAbsTolerance = 2.7;
+	double maxAllowableDelta = 0.2;
+	private double m_gyroPIDOutputRange = 0.5;
+	
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
 		leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -427,7 +435,7 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
-			double kMinOutput = 0.125;
+			double kMinOutput = 0.1;
 			if((output != 0.0) && (Math.abs(output) < kMinOutput)) {
 				if(output < 0.0) {
 					output = -kMinOutput;
@@ -435,23 +443,24 @@ public class DriveTrain extends Subsystem {
 					output = kMinOutput;
 				}
 			}
+			
+			if (Math.abs(output) >= m_gyroPIDOutputRange) {
+				m_gyroPIDSource.setI(0.0);
+			}else {
+				m_gyroPIDSource.setI(m_gyroPIDI);
+			}
 			move(0,output,false);
 			m_previousOutput = output;
 		}
 	}
 
 	public void initGyroPIDDeltaAngle() {
-		double gyroPIDP = 0.006;
-		double gyroPIDI = 0.00;
-		double gyroPIDD = 0.0;
-		double gyroPIDF = 0.0;
-		double gyroPIDOutputRange = 0.5;
-		double gyroPIDAbsTolerance = 2.7;
-		double maxAllowableDelta = 0.2;
+		
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
 		GyroPIDOut gyroPIDOut = new GyroPIDOut(maxAllowableDelta);
-		m_gyroPIDSource = new PIDController(gyroPIDP, gyroPIDI, gyroPIDD, gyroPIDF, gyroPIDIn, gyroPIDOut);
-		m_gyroPIDSource.setOutputRange(-gyroPIDOutputRange, gyroPIDOutputRange);
+		m_gyroPIDSource = new PIDController(m_gyroPIDP, 0.0, m_gyroPIDD, m_gyroPIDF, gyroPIDIn, gyroPIDOut); 
+		// I is set to 0.0 because I is only touched inside of pidWrite and if it is non 0 it messes with the integral windup
+		m_gyroPIDSource.setOutputRange(-m_gyroPIDOutputRange, m_gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
 
 		LiveWindow.add(gyroPIDIn);
