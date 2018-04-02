@@ -53,8 +53,8 @@ public class Elevator extends Subsystem {
 
 	private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
-	private double m_encoderPIDP_maintanence = 0.0125;//p constant for maintaining position, way too big for distance traveling
-	private double m_encoderPIDP_travel = 0.003;//p constant for traveling up or down on the elevator
+	private double m_encoderPIDP_maintanence = 0.00003;//p constant for maintaining position, way too big for distance traveling
+	private double m_encoderPIDP_travel = 0.000075;//p constant for traveling up or down on the elevator
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
@@ -199,7 +199,7 @@ public class Elevator extends Subsystem {
 			moveElevator(0);
 			//if the pid loop drives somewhere unsafe, we should probably end the PID loop if its running
 		}
-		else if ((getBottomLimitSwitch() == false) && (speed > 0)) {
+		else if ((getBottomLimitSwitch() == false) && (speed >= 0)) {
 			//if the limit switch is pressed, then it returns a false
 			//speeds > 0 are going down
 			if(getPidEnabledStatus() == true){
@@ -214,8 +214,6 @@ public class Elevator extends Subsystem {
 		else {
 			if(speed > 0) {
 				speed = speed * 0.2;
-			}else {
-				speed = speed * 0.8;
 			}
 			moveElevator(speed);
 		}
