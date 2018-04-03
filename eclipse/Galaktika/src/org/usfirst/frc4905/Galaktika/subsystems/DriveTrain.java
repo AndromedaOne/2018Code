@@ -148,11 +148,11 @@ public class DriveTrain extends Subsystem {
 	}
 
 	// Encoder PID
-	private double m_encoderPIDP = 0.0004;
+	private double m_encoderPIDP = 0.00015;
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
-	private double m_encoderPIDOutputMax = 0.4;
+	private double m_encoderPIDOutputMax = 0.6;
 	private double m_encoderPIDTolerance = 1000;
 	private double m_encoderPIDMaxAllowableDelta = 0.1;
 
@@ -173,14 +173,14 @@ public class DriveTrain extends Subsystem {
 
 	private double m_savedAngle = 0;
 
-	double m_gyroPIDP = 0.0038;//0.005;
-	double m_gyroPIDI = 0.0002;// 0.0;
+	double m_gyroPIDP = 0.004;
+	double m_gyroPIDI = 0.00015;
 	double m_gyroPIDD = 0.0;
 	double m_gyroPIDF = 0.0;
 	
-	double gyroPIDAbsTolerance = 2.7;
+	double gyroPIDAbsTolerance = 5;
 	double maxAllowableDelta = 0.2;
-	private double m_gyroPIDOutputRange = 0.5;
+	private double m_gyroPIDOutputRange = 1.0;
 	
 	public DriveTrain() {
 		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
@@ -435,6 +435,11 @@ public class DriveTrain extends Subsystem {
 
 		@Override
 		public void pidWrite(double output) {
+			Trace.getInstance().addTrace(true, "GyroPID",
+					new TracePair("Target", m_gyroPIDSource.getSetpoint()),
+					new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
+					new TracePair("Avg Error", m_gyroPIDSource.getError()),
+					new TracePair("Output", m_gyroPIDSource.get() * 100));
 			double kMinOutput = 0.1;
 			if((output != 0.0) && (Math.abs(output) < kMinOutput)) {
 				if(output < 0.0) {
@@ -444,7 +449,7 @@ public class DriveTrain extends Subsystem {
 				}
 			}
 			
-			if (Math.abs(output) >= m_gyroPIDOutputRange*0.5) {
+			if (Math.abs(output) >= m_gyroPIDOutputRange*0.25) {
 				m_gyroPIDSource.setI(0.0);
 			}else {
 				m_gyroPIDSource.setI(m_gyroPIDI);
@@ -478,11 +483,6 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public boolean gyroPIDIsDone() {
-		Trace.getInstance().addTrace(true, "GyroPID", new TracePair("Avg Error", m_gyroPIDSource.getError()),
-				new TracePair("Target", m_gyroPIDSource.getSetpoint()),
-				new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
-				new TracePair("Avg Error", m_gyroPIDSource.getError()),
-				new TracePair("Output", m_gyroPIDSource.get()));
 		return m_gyroPIDSource.onTarget();
 	}
 
@@ -690,6 +690,12 @@ public class DriveTrain extends Subsystem {
 	public void resetRobotState() {
 		courseCorrectionDelay = 0;
 		m_savedAngle = RobotMap.navX.getRobotAngle();
+	}
+	
+	public void reset() {
+		stop();
+		m_gyroPIDSource.reset();
+		m_encoderPID.reset();
 	}
 	
 	

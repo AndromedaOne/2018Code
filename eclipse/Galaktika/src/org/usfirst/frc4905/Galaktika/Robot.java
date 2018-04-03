@@ -363,7 +363,7 @@ public class Robot extends TimedRobot {
     	Robot.ramps.lockRampsIn();
     	Robot.elevator.disableEncoderPID();
     	Robot.elevator.stopElevator();
-    	Robot.driveTrain.stop();
+    	Robot.driveTrain.reset();
     	Robot.intake.stopIntake();
     	
     }
