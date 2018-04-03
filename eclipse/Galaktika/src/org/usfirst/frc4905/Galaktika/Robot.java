@@ -167,7 +167,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         						false,
-        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						AutoCombinedLeftRight.AutoType.QUALIFIERS,
         						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'R'
         				)
@@ -178,7 +178,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         						true,
-        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						AutoCombinedLeftRight.AutoType.QUALIFIERS,
         						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'R'
         				)
@@ -189,7 +189,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         						false,
-        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						AutoCombinedLeftRight.AutoType.QUALIFIERS,
         						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'L'
         				)
@@ -200,7 +200,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         						true,
-        						AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        						AutoCombinedLeftRight.AutoType.QUALIFIERS,
         						AutoCombinedLeftRight.PathOption.IGNORE_SWITCH),
         				'L'
         				)
@@ -211,7 +211,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.MatchType.PLAYOFFS),
+        				AutoCombinedLeftRight.AutoType.PLAYOFFS),
         				'R')
         		);
 
@@ -220,7 +220,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.MatchType.PLAYOFFS),
+        				AutoCombinedLeftRight.AutoType.PLAYOFFS),
         				'R')
         		);
 
@@ -229,7 +229,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.MatchType.PLAYOFFS),
+        				AutoCombinedLeftRight.AutoType.PLAYOFFS),
         				'L')
         		);
 
@@ -238,7 +238,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         						true,
-        						AutoCombinedLeftRight.MatchType.PLAYOFFS),
+        						AutoCombinedLeftRight.AutoType.PLAYOFFS),
         				'L')
         		);
 
@@ -247,7 +247,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'R'
         				)
@@ -258,7 +258,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'R'
         				)
@@ -269,7 +269,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'L'
         				)
@@ -280,7 +280,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS,
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'L'
         				)
@@ -292,7 +292,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS),
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS),
         				'R'
         				)
         		);
@@ -302,7 +302,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS),
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS),
         				'R')
         		);
 
@@ -311,7 +311,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS),
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS),
         				'L')
         		);
 
@@ -320,9 +320,46 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.MatchType.QUALIFIERS),
+        				AutoCombinedLeftRight.AutoType.QUALIFIERS),
         				'L')
         		);
+
+        chooser.addObject(
+        		"11. Scale/Switch 2 Cube - Right(3) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				'R')
+        		);
+
+        chooser.addObject(
+        		"11. D Scale/Switch 2 Cube - Right(3) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				'R')
+        		);
+
+        chooser.addObject(
+        		"12. Scale/Switch 2 Cube - Left(1) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				'L')
+        		);
+
+        chooser.addObject(
+        		"12. D Scale/Switch 2 Cube - Left(1) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				'L')
+        		);
+
 
         SmartDashboard.putData("Auto mode", chooser);
         SmartDashboard.putNumber("Autonomous Delay", delaySeconds);

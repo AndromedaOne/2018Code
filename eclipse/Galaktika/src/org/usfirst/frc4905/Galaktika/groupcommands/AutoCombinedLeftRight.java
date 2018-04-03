@@ -2,7 +2,7 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
-import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MatchType;
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.AutoType;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -21,10 +21,10 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	protected Position m_positionAfterFirstCube;
 	private final boolean m_useDelay;
-	protected final MatchType m_matchType;
+	protected final AutoType m_matchType;
 	private AutoFollowOn m_followOn;
 	private PathOption m_pathOption;
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, PathOption pathOption, AutoFollowOn followOn) {
+	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType, PathOption pathOption, AutoFollowOn followOn) {
 
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
@@ -49,11 +49,11 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		m_pathOption = pathOption;
 		debug("bottom of AutoQuals constructor");
 	}
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType, PathOption pathOption) {
+	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType, PathOption pathOption) {
 		this(useDelay, matchType, pathOption, null);
 	}
 
-	public AutoCombinedLeftRight(boolean useDelay, MatchType matchType) {
+	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType) {
 		this(useDelay, matchType, PathOption.NORMAL, null);
 	}
 
@@ -106,9 +106,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
-			turnDeltaAngle(-90);
+			turnLeft();
 		} else {
-			turnDeltaAngle(90);
+			turnRight();
 		}
 		driveBackward(20);
 		moveElevatorToScaleHeight();
@@ -159,49 +159,64 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	}
 
-	protected void addAutoCombinedCommands(MatchType matchType) {
+	protected void addAutoCombinedCommands(AutoType autoType) {
 		char robotPos = Robot.getInitialRobotLocation();
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
-		if (matchType == MatchType.QUALIFIERS) {
-			if (switchPlatePos == robotPos && m_pathOption != PathOption.IGNORE_SWITCH) {
-				loadNearSwitchPlate(robotPos);
-			} else if (scalePlatePos == robotPos){
-				loadNearScalePlate(robotPos);
-			} else if(m_pathOption != PathOption.IGNORE_FAR_SCALE) {
-				loadFarScalePlate(robotPos);
-			} else {
-				driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-			}
-		} else {
-			closeJaws(false);
-			parallelJawsOpenClose();
-
-
-			if (robotPos == 'L') {
-				if (scalePlatePos == 'L') {
-					loadNearScalePlate('L');
-
+		switch (autoType) {
+			case QUALIFIERS:
+				if (switchPlatePos == robotPos && m_pathOption != PathOption.IGNORE_SWITCH) {
+					loadNearSwitchPlate(robotPos);
+				} else if (scalePlatePos == robotPos){
+					loadNearScalePlate(robotPos);
+				} else if(m_pathOption != PathOption.IGNORE_FAR_SCALE) {
+					loadFarScalePlate(robotPos);
 				} else {
-					if (switchPlatePos == 'L') {
-
-						loadNearSwitchPlate('L');
-
-					} else {
-						driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-					}
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				}
-			} else if (robotPos == 'R') {
-				if (scalePlatePos == 'R') {
-					loadNearScalePlate('R');
-				} else {
-					if (switchPlatePos == 'R') {
-						loadNearSwitchPlate('R');
+			break;
+			case PLAYOFFS:
+				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
+			break;
+			case DOUBLE_CUBE_FIELD:
+				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
+				addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
+			break;
+			case DOUBLE_CUBE_CROSS:
+				//TODO: do nothing FOR NOW
+			break;
+		}
 
-					} else {
-						//lost the switch and scale, just go forwards
-						driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-					}
+
+	}
+	protected void addPlayoffPaths(char robotPos, char switchPlatePos, char scalePlatePos) {
+		closeJaws(false);
+		parallelJawsOpenClose();
+
+
+		if (robotPos == 'L') {
+			if (scalePlatePos == 'L') {
+				loadNearScalePlate('L');
+
+			} else {
+				if (switchPlatePos == 'L') {
+
+					loadNearSwitchPlate('L');
+
+				} else {
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+				}
+			}
+		} else if (robotPos == 'R') {
+			if (scalePlatePos == 'R') {
+				loadNearScalePlate('R');
+			} else {
+				if (switchPlatePos == 'R') {
+					loadNearSwitchPlate('R');
+
+				} else {
+					//lost the switch and scale, just go forwards
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				}
 			}
 		}
@@ -255,5 +270,66 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		closeJaws(true);
 	}
 
+	protected void addDoubleCubeCommands(char robotPos, char switchPlatePos, char scalePlatePos) {
+		if (m_positionAfterFirstCube == Position.NEAR_SCALE) {
+			if (robotPos == switchPlatePos) {
+				addDoubleSwitchCommands(robotPos);
+			} else {
+				//AutoDoubleScale
+			}
+		} else if (m_positionAfterFirstCube == Position.NEAR_SWITCH) {
+			addDoubleSwitchCommands(robotPos);
+		} else if (m_positionAfterFirstCube == Position.DROVE_FORWARD) {
+			// do nothing
+		}
+	}
+
+	protected void addDoubleSwitchCommands(char robotPos) {
+		double deltaAngle;
+
+	    //Only for when robotPos is 'L' or 'R'
+	    switch (m_positionAfterFirstCube) {
+		    case NEAR_SCALE:
+		    	if (robotPos == 'L') {
+		    		//Dummy numbers
+		    		deltaAngle = -90;
+		    		System.out.println("Done left near side Scale :D");
+		    	} else {
+		    		deltaAngle = 90;
+		        System.out.println("Done right near side Scale :D");
+		    	}
+		    pickupFirstCubeFromScale(deltaAngle);
+		    dropCubeOntoSwitch();
+	        break;
+		    case FAR_SCALE:
+		    	if (robotPos == 'L') {
+		    		//Dummy numbers
+		    		deltaAngle = 90;
+		    		System.out.println("Done left far side Scale :D");
+		    	} else {
+		    		deltaAngle = -90;
+		        System.out.println("Done right far side Scale :D");
+		    	}
+		    	pickupFirstCubeFromScale(deltaAngle);
+		    dropCubeOntoSwitch();
+	        break;
+		    case NEAR_SWITCH:
+		    	if (robotPos == 'L') {
+		    		pickupFirstCubeFromLeftSwitchPlate();
+		    	} else {
+		    		pickupFirstCubeFromRightSwitchPlate();
+		    	}
+	    		dropCubeOntoSwitch();
+	    		break;
+		    case DROVE_FORWARD:
+		    	System.out.println("Double cube not supported after driving forward.");
+	    }
+	}
+
+	protected void dropCubeOntoSwitch() {
+		moveElevatorToSwitchHeightSequential();
+		driveForwardToWall(13);
+		openJaws();
+	}
 
 }

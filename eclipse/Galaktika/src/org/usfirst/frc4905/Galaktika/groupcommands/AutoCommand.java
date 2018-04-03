@@ -40,9 +40,11 @@ public abstract class AutoCommand extends CommandGroup {
 		}
 	}
 
-	public enum MatchType {
+	public enum AutoType {
 		QUALIFIERS,
-		PLAYOFFS
+		PLAYOFFS,
+		DOUBLE_CUBE_CROSS,
+		DOUBLE_CUBE_FIELD,
 	}
 
 	public AutoCommand() {
@@ -101,12 +103,12 @@ public abstract class AutoCommand extends CommandGroup {
 
 	protected void debug(String information) {
 		char location = Robot.safelyGetInitialRobotLocation();
-		//System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
-		//System.out.flush();
-		// System.out.println("In AutoCommand.java Field Setup: Robot = " +
-		//		location + "! " +
-		//		information);
-		// System.out.flush();
+		System.out.println("In AutoCommand.java (" + getClass().getSimpleName() + ")! ");
+		System.out.flush();
+		 System.out.println("In AutoCommand.java Field Setup: Robot = " +
+				location + "! " +
+				information);
+		 System.out.flush();
 	}
 
 	public void start() {
@@ -125,20 +127,24 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	protected void turnRight() {
+		debug("Attempting to turn right.");
 		addSequential(new GyroPIDTurnDeltaAngle(90));
 
 	}
 
 	protected void turnLeft() {
+		debug("Attempting to turn left.");
 		addSequential(new GyroPIDTurnDeltaAngle(-90));
 
 	}
 
 	protected void turnAround() {
+		debug("Attempting to turn around.");
 		addSequential(new GyroPIDTurnDeltaAngle(180));
 	}
 
 	protected void driveForwardToWall(double estimatedDistance) {
+		debug("Attempting to drive forward to wall, estimatedDistance = " + estimatedDistance);
 		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
 		if (DriveTrain.ULTRASONIC_RANGE_IN_INCHES < estimatedDistance) {
 			addSequential(new MoveUsingEncoderPID(estimatedDistance*distanceScaleFactor - DriveTrain.ULTRASONIC_RANGE_IN_INCHES));
@@ -149,69 +155,86 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	protected void moveElevatorToSwitchHeight() {
+		debug("Attempting to raise elevator to switch height");
 		addParallel(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
 	}
 
 	protected void moveElevatorToSwitchHeightSequential() {
+		debug("Attempting to raise elevator to switch height sequentially");
 		addSequential(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
 	}
 
 	protected void moveElevatorToScaleHeight() {
+		debug("Attempting to raise elevator to high scale height");
 		addParallel(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
+
 	}
 
 	protected void moveElevatorToLowScaleHeight() {
+		debug("Attempting to raise elevator to low scale height");
 		addParallel(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
 	}
 
 	protected void moveElevatorToExchangeHeight() {
+		debug("Attempting to raise elevator to exchange height");
 		addParallel(new MoveElevator(MoveElevator.EXCHANGE_HEIGHT));
 	}
 
 	protected void moveElevatorToGroundHeight(){
+		debug("Attempting to lower elevator to ground height");
 		addParallel(new MoveElevator(MoveElevator.GROUND_LEVEL));
 	}
 
 	protected void resetElevatorInAuto() {
+		debug("Resetting elevator encoder in Auto.");
 		addSequential(new ResetElevatorEncoder());
 	}
 
 	protected void parallelJawsOpenClose(){
+		debug("Attempting to set jaws to correct state.");
 		addParallel(new JawsOpenClose());
 	}
 
 	protected void parallelRetractExtendArms(){
+		debug("Attempting to set arms to correct state.");
 		addParallel(new RetractExtendArms());
 	}
 
 	protected void driveBackward(double backwardDistanceInches) {
+		debug("Attempting to drive backward, distance = " + backwardDistanceInches);
 		driveForward(- backwardDistanceInches);
 	}
 
 
 	protected void closeArmsInAuto(double timeout) {
+		debug("Attempting to close arms.");
 		addParallel(new AutoTimedArmsClose(timeout));
 	}
 
 	protected void extendIntakeAuto() {
+		debug("Attempting to extend intake.");
 		addParallel(new ExtendIntakeInAuto());
 	}
 
 	protected void resetEncoderInElevator() {
+		debug("Attempting to reset elevator encoder.");
 		addSequential(new ResetElevatorEncoder());
 	}
 
 	protected void turnToCompassHeading(double compassHeading) {
+		debug("Attempting to turn to compass heading, compassHeading = " + compassHeading);
 		addSequential(new TurnToCompassHeading(compassHeading));
 	}
 
 	protected void openJaws(){
+		debug("Attempting to open jaws.");
 		addSequential(new SetShouldJawsBeOpenStateCommand(true));
 		// ENABLE IF BACK-UP IS TOO SOON AFTER OPEN
 		// delay(0.5);
 	}
 
 	protected void closeJaws(boolean waitForClose){
+		debug("Attempting to close jaws.");
 		addSequential(new SetShouldJawsBeOpenStateCommand(false));
 		if (waitForClose) {
 			delay(0.5);
@@ -219,14 +242,17 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	protected void raiseIntake(){
+		debug("Attempting to raise intake.");
 		addSequential(new SetIntakeShouldBeUpCommand(true));
 	}
 
 	protected void lowerIntake(){
+		debug("Attempting to lower intake.");
 		addSequential(new SetIntakeShouldBeUpCommand(false));
 	}
 
 	protected void turnDeltaAngle(double angle){
+		debug("Attempting to turn delta angle, angle = " + angle);
 		addSequential(new GyroPIDTurnDeltaAngle(angle));
 
 	}
@@ -238,11 +264,14 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	public void shootCube(double timeout){
+		debug("Attempting to shoot cube");
 		addSequential(new ShootCubeInAuto(timeout));
 	}
 
 	public void shootCubeParallel(double timeout){
+		debug("Attempting to shoot cube");
 		addParallel(new ShootCubeInAuto(timeout));
 	}
+
 
 }

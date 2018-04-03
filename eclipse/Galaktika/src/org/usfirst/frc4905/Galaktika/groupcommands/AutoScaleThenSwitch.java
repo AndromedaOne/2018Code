@@ -12,7 +12,7 @@ public class AutoScaleThenSwitch extends AutoCombinedLeftRight {
 	public AutoScaleThenSwitch(boolean useDelay) {
 
 	    // MATCH TYPE DOES NOT MATTER
-	    super(useDelay, MatchType.QUALIFIERS);
+	    super(useDelay, AutoType.QUALIFIERS);
         m_useDelay = useDelay;
 	}
 
