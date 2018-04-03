@@ -25,7 +25,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private AutoFollowOn m_followOn;
 	private PathOption m_pathOption;
 	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType, PathOption pathOption, AutoFollowOn followOn) {
-
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
 		//      addSequential(new Command2());
@@ -103,14 +102,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE-48);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
 			turnLeft();
 		} else {
 			turnRight();
 		}
-		driveBackward(20);
+		driveBackward(6);
 		moveElevatorToScaleHeight();
 
 		delay(3);

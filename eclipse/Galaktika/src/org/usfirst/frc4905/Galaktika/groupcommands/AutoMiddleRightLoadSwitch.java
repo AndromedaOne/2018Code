@@ -36,9 +36,9 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			delay(0.4);
 			turnLeft();
 			delay(0.4);
-			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES + 24);
+			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES + 12);
 			delay(0.4);
-			turnRight();
+			turnDeltaAngle(95);
 			delay(0.4);
 			moveElevatorToSwitchHeight();
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3) - 12.0);

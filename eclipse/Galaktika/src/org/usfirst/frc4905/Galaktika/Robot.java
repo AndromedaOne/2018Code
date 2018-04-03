@@ -172,7 +172,6 @@ public class Robot extends TimedRobot {
         				'R'
         				)
         		);
-
         chooser.addObject(
         		"3.D Scale Auto - Right(3) Dual Option",
         		new Pair<>(
@@ -286,7 +285,6 @@ public class Robot extends TimedRobot {
         				)
         		);
 
-
         chooser.addObject(
         		"9.SWITCH/Scale/Far Scale - Right(3)",
         		new Pair<>(
@@ -398,7 +396,7 @@ public class Robot extends TimedRobot {
     	Robot.ramps.lockRampsIn();
     	Robot.elevator.disableEncoderPID();
     	Robot.elevator.stopElevator();
-    	Robot.driveTrain.stop();
+    	Robot.driveTrain.reset();
     	Robot.intake.stopIntake();
 
     }
