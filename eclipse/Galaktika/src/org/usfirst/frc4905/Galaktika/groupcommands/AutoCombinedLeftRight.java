@@ -19,6 +19,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		IGNORE_SWITCH,
 		IGNORE_FAR_SCALE,
 	}
+	
 	protected Position m_positionAfterFirstCube;
 	private final boolean m_useDelay;
 	protected final AutoType m_matchType;
@@ -229,7 +230,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		turnToCompassHeading(deltaAngle);
 		driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
 		turnToCompassHeading(180);
-		driveForwardToWall(24.99);
+		driveForwardToWall(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE - FORWARD_DISTANCE_TO_CUBES);
 		closeJaws(true);
 	}
 

@@ -75,6 +75,8 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
 	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188;
 	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218;
+	protected static final double FORWARD_DISTANCE_TO_CUBES = 24.99;
+	protected static final double FORWARD_DISTANCE_TO_SIDE_OF_SCALE = 49.99;
 	protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
 	protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
 	protected static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 41.15;
@@ -83,7 +85,6 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
-	protected static final double DIAGONAL_DISTANCE_TO_FIRST_CUBE_FROM_SCALE = 52.99;
 	private static final double BUMPER_WIDTH = 1.5;
 	protected static final double CLEARANCE_TO_TURN = 25;
 

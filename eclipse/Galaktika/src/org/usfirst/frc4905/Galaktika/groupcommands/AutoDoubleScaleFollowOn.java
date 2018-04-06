@@ -24,7 +24,7 @@ public class AutoDoubleScaleFollowOn extends AutoFollowOn {
 		    	autoCommand.pickupFirstCubeFromScale(deltaAngle);
 		    	autoCommand.moveElevatorToScaleHeight();
 		    	autoCommand.turnToCompassHeading(0);
-		    	autoCommand.driveForward(49.99);
+		    	autoCommand.driveForward(AutoCommand.FORWARD_DISTANCE_TO_SIDE_OF_SCALE);
 		    	autoCommand.openJaws();
 	        break;
 		    case FAR_SCALE:
@@ -39,7 +39,7 @@ public class AutoDoubleScaleFollowOn extends AutoFollowOn {
 		    	autoCommand.pickupFirstCubeFromScale(deltaAngle);
 		    	autoCommand.moveElevatorToScaleHeight();
 		    	autoCommand.turnToCompassHeading(0);
-		    	autoCommand.driveForward(49.99);
+		    	autoCommand.driveForward(AutoCommand.FORWARD_DISTANCE_TO_SIDE_OF_SCALE);
 		    	autoCommand.openJaws();
 	        break;
 		    case NEAR_SWITCH:
