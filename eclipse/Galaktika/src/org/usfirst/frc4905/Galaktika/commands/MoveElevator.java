@@ -40,12 +40,14 @@ public class MoveElevator extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
-    	if(!isInDeadzone(driverInput)){
-    		System.out.println("The Robot is not in the dead zone :p");
-    		//if driver starts moving, disable pid loop
-    		Robot.elevator.disableEncoderPID();
-    		m_driverInterrupt = true;
+    	if(!Robot.AutonomousMode) {
+    		double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
+    		if(!isInDeadzone(driverInput)){
+    			System.out.println("The Robot is not in the dead zone :p");
+    			//if driver starts moving, disable pid loop
+    			Robot.elevator.disableEncoderPID();
+    			m_driverInterrupt = true;
+    		}
     	}
     }
 

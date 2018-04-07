@@ -92,6 +92,7 @@ public class Robot extends TimedRobot {
     public static Jaws jaws;
 
     public static Kinematics kinematics;
+    public static boolean AutonomousMode = false;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -393,7 +394,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit(){
-
+    	AutonomousMode = false;
     	Trace.getInstance().flushTraceFiles();
     	Robot.ramps.lockRampsIn();
     	Robot.elevator.disableEncoderPID();
@@ -413,34 +414,35 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-    		debug("top of autonomousInit");
-	    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
-	    	System.out.println("GAMEDATA!!!!!!!!" + gameData.charAt(SWITCH));
-	    	//if (gameData.length() > SCALE) {
-		    scalePlatePosition =	gameData.charAt(SCALE);
-		    switchPlatePosition = gameData.charAt(SWITCH);
-	    	/*} else {
+    	AutonomousMode = true;
+    	debug("top of autonomousInit");
+    	String gameData = DriverStation.getInstance().getGameSpecificMessage();
+    	System.out.println("GAMEDATA!!!!!!!!" + gameData.charAt(SWITCH));
+    	//if (gameData.length() > SCALE) {
+    	scalePlatePosition =	gameData.charAt(SCALE);
+    	switchPlatePosition = gameData.charAt(SWITCH);
+    	/*} else {
 	    		//here for testing purposes. Could break things.
 	    		scalePlatePosition = scalePlateChooser.getSelected();
 	    		switchPlatePosition = switchPlateChooser.getSelected();
 	    	}*/
-    		delaySeconds = SmartDashboard.getNumber("Autonomous Delay", 5.0);
-    		distanceScaleFactor = SmartDashboard.getNumber("Autonomous Scale Factor", 1.0);
-        Pair<Command, Character> pair = chooser.getSelected();
-        autonomousCommand = pair.getFirst();
-        initialRobotLocation = pair.getSecond();
-        debug("middle of autonomousInit - robot location = " +
-        		initialRobotLocation +
-        		" Scale = " + Robot.getScalePlatePosition() +
+    	delaySeconds = SmartDashboard.getNumber("Autonomous Delay", 5.0);
+    	distanceScaleFactor = SmartDashboard.getNumber("Autonomous Scale Factor", 1.0);
+    	Pair<Command, Character> pair = chooser.getSelected();
+    	autonomousCommand = pair.getFirst();
+    	initialRobotLocation = pair.getSecond();
+    	debug("middle of autonomousInit - robot location = " +
+    			initialRobotLocation +
+    			" Scale = " + Robot.getScalePlatePosition() +
     			" Switch = " + Robot.getSwitchPlatePosition() +
-        		" delaySeconds = " + delaySeconds +
-        		" distanceScaleFactor = " + distanceScaleFactor +
-        		" autonomousCommand " + autonomousCommand.getClass().getSimpleName());
-        // schedule the autonomous command (example)
-        if (autonomousCommand != null) {
-        		autonomousCommand.start();
-        }
-        debug("bottom of autonomousInit");
+    			" delaySeconds = " + delaySeconds +
+    			" distanceScaleFactor = " + distanceScaleFactor +
+    			" autonomousCommand " + autonomousCommand.getClass().getSimpleName());
+    	// schedule the autonomous command (example)
+    	if (autonomousCommand != null) {
+    		autonomousCommand.start();
+    	}
+    	debug("bottom of autonomousInit");
     }
 
 	private static void debug(String information) {
@@ -455,6 +457,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
         PDPLogging.pdpLog();
+        
 
     }
 
