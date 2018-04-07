@@ -444,10 +444,14 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
 
         Scheduler.getInstance().run();
-        PDPLogging.pdpLog();
-
+      
     }
 
+    @Override
+    public void robotPeriodic() {
+    	PDPLogging.pdpLog();
+    }
+    
     @Override
     public void autonomousInit() {
     	AutonomousMode = true;
@@ -492,8 +496,6 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        PDPLogging.pdpLog();
-        
 
     }
 
@@ -522,7 +524,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        PDPLogging.pdpLog();
     }
 
 

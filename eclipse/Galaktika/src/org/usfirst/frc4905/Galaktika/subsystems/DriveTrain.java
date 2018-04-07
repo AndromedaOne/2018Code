@@ -167,7 +167,7 @@ public class DriveTrain extends Subsystem {
 	private double m_pingDelay = 0.02;
 	private int m_timesDistanceAveraged = 5;
 	// Gyro Correction for move
-	private static final double kProportion = .1;
+	private static final double kProportion = .05;
 
 	private double courseCorrectionDelay = 0;
 
@@ -441,11 +441,11 @@ public class DriveTrain extends Subsystem {
 					new TracePair("Avg Error", m_gyroPIDSource.getError()),
 					new TracePair("Output", m_gyroPIDSource.get() * 100));
 			double kMinOutput = 0.1;
-			if((output != 0.0) && (Math.abs(output) < kMinOutput)) {
-				if(output < 0.0) {
-					output = -kMinOutput;
-				} else {
-					output = kMinOutput;
+			if(output != 0.0) {
+				boolean outputLessThanZero = (output < 0.0) ? true : false;
+				output = (Math.abs(output)*(1-kMinOutput))+kMinOutput;
+				if(outputLessThanZero) {
+					output = -output;
 				}
 			}
 
@@ -565,7 +565,7 @@ public class DriveTrain extends Subsystem {
 			// take the most recent course after half a second and make that our angle
 			m_savedAngle = robotAngle;
 		}
-		Trace.getInstance().addTrace(false, "GyroCorrection",
+		Trace.getInstance().addTrace(true, "GyroCorrection",
 				new TracePair("forwardBackwardStickValue", newForwardBackwardStickValue),
 				new TracePair("SavedAngle", m_savedAngle),
 				new TracePair("kProportion", kProportion),
