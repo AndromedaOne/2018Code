@@ -20,6 +20,7 @@ import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoder;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.MoveToWall;
 import org.usfirst.frc4905.Galaktika.subsystems.DriveTrain;
+import org.usfirst.frc4905.Galaktika.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -157,33 +158,33 @@ public abstract class AutoCommand extends CommandGroup {
 
 	protected void moveElevatorToSwitchHeight() {
 		debug("Attempting to raise elevator to switch height");
-		addParallel(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
+		addParallel(new MoveElevator(Elevator.SWITCH_HEIGHT));
 	}
 
 	protected void moveElevatorToSwitchHeightSequential() {
 		debug("Attempting to raise elevator to switch height sequentially");
-		addSequential(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
+		addSequential(new MoveElevator(Elevator.SWITCH_HEIGHT));
 	}
 
 	protected void moveElevatorToScaleHeight() {
 		debug("Attempting to raise elevator to high scale height");
-		addParallel(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
+		addParallel(new MoveElevator(Elevator.HIGH_SCALE_HEIGHT));
 
 	}
 
 	protected void moveElevatorToLowScaleHeight() {
 		debug("Attempting to raise elevator to low scale height");
-		addParallel(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
+		addParallel(new MoveElevator(Elevator.LOW_SCALE_HEIGHT));
 	}
 
 	protected void moveElevatorToExchangeHeight() {
 		debug("Attempting to raise elevator to exchange height");
-		addParallel(new MoveElevator(MoveElevator.EXCHANGE_HEIGHT));
+		addParallel(new MoveElevator(Elevator.EXCHANGE_HEIGHT));
 	}
 
 	protected void moveElevatorToGroundHeight(){
 		debug("Attempting to lower elevator to ground height");
-		addParallel(new MoveElevator(MoveElevator.GROUND_LEVEL));
+		addParallel(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
 
 	protected void resetElevatorInAuto() {

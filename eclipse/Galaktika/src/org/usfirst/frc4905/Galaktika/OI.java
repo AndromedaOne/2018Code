@@ -33,6 +33,7 @@ import org.usfirst.frc4905.Galaktika.commands.Test100InchForward;
 import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.groupcommands.MPTesting;
+import org.usfirst.frc4905.Galaktika.subsystems.Elevator;
 
 import Utilities.LEDColor;
 import Utilities.ControllerButtons.ButtonsEnumerated;
@@ -119,10 +120,10 @@ public class OI {
 		elevatorMoveLowScaleButton = new JoystickButton(subsystemController, ButtonsEnumerated.XBUTTON.getValue());
 		elevatorMoveSwitchButton = new JoystickButton(subsystemController, ButtonsEnumerated.BBUTTON.getValue());
 		elevatorMoveGroundLevelButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
-		elevatorMoveHighScaleButton.whenPressed(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
-		elevatorMoveLowScaleButton.whenPressed(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
-		elevatorMoveSwitchButton.whenPressed(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
-		elevatorMoveGroundLevelButton.whenPressed(new MoveElevator(MoveElevator.GROUND_LEVEL));
+		elevatorMoveHighScaleButton.whenPressed(new MoveElevator(Elevator.HIGH_SCALE_HEIGHT));
+		elevatorMoveLowScaleButton.whenPressed(new MoveElevator(Elevator.LOW_SCALE_HEIGHT));
+		elevatorMoveSwitchButton.whenPressed(new MoveElevator(Elevator.SWITCH_HEIGHT));
+		elevatorMoveGroundLevelButton.whenPressed(new MoveElevator(Elevator.GROUND_LEVEL));
 
 		liftLeftRampButton = new JoystickButton(driveController, ButtonsEnumerated.BACKBUTTON.getValue());
 		liftLeftRampButton.whenPressed(new LiftLeftRamp());
@@ -164,7 +165,7 @@ public class OI {
         SmartDashboard.putData("TurnDeltaAgnle", new GyroPIDTurnDeltaAngle(90.0));
 		SmartDashboard.putData("ResetElevatorEncoderTesting", new ResetElevatorEncoderTesting());
         SmartDashboard.putData("MPGroupTest", new MPTesting());
-
+        SmartDashboard.putData("Move Elevator", new MoveElevator(1500));
 
 	}
 
