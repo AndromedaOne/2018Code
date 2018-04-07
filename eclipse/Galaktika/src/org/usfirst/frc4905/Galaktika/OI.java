@@ -29,7 +29,7 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
-import org.usfirst.frc4905.Galaktika.commands.Test100InchForward;
+import org.usfirst.frc4905.Galaktika.commands.TestForwardToScale;
 import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.groupcommands.MPTesting;
@@ -160,7 +160,7 @@ public class OI {
 		SmartDashboard.putData("Lift Right Ramp", new LiftRightRamp());
 		SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
 		SmartDashboard.putData("DriveSquare", new DriveSquare());
-		SmartDashboard.putData("Test100InchForward", new Test100InchForward());
+		SmartDashboard.putData("TestForwardToScale", new TestForwardToScale());
         SmartDashboard.putData("TurnDeltaAgnle", new GyroPIDTurnDeltaAngle(90.0));
 		SmartDashboard.putData("ResetElevatorEncoderTesting", new ResetElevatorEncoderTesting());
         SmartDashboard.putData("MPGroupTest", new MPTesting());
