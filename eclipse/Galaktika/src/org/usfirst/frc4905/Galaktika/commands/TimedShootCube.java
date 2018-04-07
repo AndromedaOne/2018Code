@@ -31,7 +31,7 @@ public class TimedShootCube extends CommandGroup {
     		addSequential(new SetIntakeShouldBeUpCommand(false));
     		addParallel(new RetractExtendArms());
     		addSequential(new Delay(m_delay));
-    		addSequential(new ShootCubeInAuto(2));
+    		addSequential(new ShootCubeInAuto(1.2));
     		addSequential(new ReinitializeIntakeSystems());
     		
     }

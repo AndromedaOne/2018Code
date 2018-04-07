@@ -28,7 +28,6 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 		raiseIntake();
 		closeJaws(false);
 		parallelJawsOpenClose();
-		parallelRetractExtendArms();
 		
 		if (platePos == 'L') {
 			System.out.println("Plate on the left!");
@@ -57,7 +56,6 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			moveElevatorToSwitchHeight();
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
 			lowerIntake();
-			parallelRetractExtendArms();
 			delay(1);
 			
 			openJaws();

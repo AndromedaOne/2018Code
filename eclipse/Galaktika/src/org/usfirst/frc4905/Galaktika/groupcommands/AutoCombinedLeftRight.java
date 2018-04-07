@@ -1,6 +1,8 @@
 package org.usfirst.frc4905.Galaktika.groupcommands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
+import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
+import org.usfirst.frc4905.Galaktika.commands.RunIntakeInAuto;
 import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand.AutoType;
 
@@ -84,7 +86,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		lowerIntake();
-		parallelRetractExtendArms();
 		delay(1.5);
 		openJaws();
 		parallelJawsOpenClose();
@@ -102,19 +103,19 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE);
 
 		if (robotPos == 'R') {
 			turnDeltaAngle(-45);//18.4
 		} else {
 			turnDeltaAngle(45);
 		}
-		moveElevatorToScaleHeight();
-
-		delay(3);
-		raiseIntake();
-		parallelRetractExtendArms();
+		driveBackward(12);
+		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
+		moveElevatorToSwitchHeightSequential();
+		driveForward(12);
+		openJaws();
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
@@ -146,12 +147,10 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		shootCubeParallel(2);
 
 		lowerIntake();
-		parallelRetractExtendArms();
 
 		driveBackward(12);
 		moveElevatorToGroundHeight();
 		raiseIntake();
-		parallelRetractExtendArms();
 		turnAround();
 		m_positionAfterFirstCube = Position.FAR_SCALE;
 
@@ -241,11 +240,11 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
 		
 		turnDeltaAngle(deltaAngle);
-		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE );
+		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
 		if (robotPos == 'R') {
 			turnLeft();
 			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-//			turnLeft();
+			turnLeft();
 		} else {
 			turnRight();
 			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
@@ -256,13 +255,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
 		turnDeltaAngle(deltaAngle);
 		*/
-//		driveForwardToWall(FORWARD_DISTANCE_TO_CUBES);
-//		closeJaws(true);
-		
-		turnDeltaAngle(-deltaAngle * 2);
-		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
-		turnDeltaAngle(deltaAngle);
-		
+		moveElevatorToGroundHeight();
+		closeJawsParallel(true);
+		runIntakeInAuto();
 	}
 
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
@@ -332,8 +327,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		    	} else {
 		    		deltaAngle = 45;
 		    	}
-		    pickupFirstCubeFromCornerScale(robotPos, deltaAngle);
-		    dropCubeOntoSwitch();
+			    pickupFirstCubeFromCornerScale(robotPos, deltaAngle);
+			    dropCubeOntoSwitch();
 	        break;
 		    case FAR_SCALE:
 		    	if (robotPos == 'L') {
@@ -342,10 +337,10 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		    		System.out.println("Done left far side Scale :D");
 		    	} else {
 		    		deltaAngle = -90;
-		        System.out.println("Done right far side Scale :D");
+		    		System.out.println("Done right far side Scale :D");
 		    	}
 		    	pickupFirstCubeFromScale(deltaAngle);
-		    dropCubeOntoSwitch();
+		    	dropCubeOntoSwitch();
 	        break;
 		    case NEAR_SWITCH:
 		    	if (robotPos == 'L') {
@@ -476,6 +471,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
     		if (scalePlatePos == 'L') {
     			turnRight();
     			driveForward(LATERAL_DISTANCE_TO_SECOND_CUBE);
+    			turnRight();
     		}
     		driveForward(53);
     		closeJaws(true);
@@ -490,7 +486,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	protected void dropCubeOntoSwitch() {
 		moveElevatorToSwitchHeightSequential();
-		driveForwardToWall(13);
+		driveForwardToWall(18);
 		openJaws();
 	}
 

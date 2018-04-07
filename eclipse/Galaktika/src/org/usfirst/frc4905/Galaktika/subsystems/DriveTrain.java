@@ -153,7 +153,7 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
 	private double m_encoderPIDOutputMax = 0.6;
-	private double m_encoderPIDTolerance = 500;
+	private double m_encoderPIDTolerance = 1000;
 	private double m_encoderPIDMaxAllowableDelta = 0.1;
 
 	private PIDController m_ultrasonicPID;
