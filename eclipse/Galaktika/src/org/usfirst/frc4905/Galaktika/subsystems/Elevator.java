@@ -66,11 +66,7 @@ public class Elevator extends Subsystem {
 	private double m_encoderPIDF = 0;
 	private double m_encoderPIDOutputMax = 1;
 	private double m_encoderPIDTolerance = 10;
-
-	private double m_encoderZeroPostion =  0.0;
-	// TODO We need to find the top level postion in encoder ticks
-	private double m_encoderTopPosition = 150000000;//way too big
-
+	
 	public Elevator() {
 		initializeEncoderPID();
 
@@ -244,11 +240,8 @@ public class Elevator extends Subsystem {
 
 	}
 	public double getElevatorPosition() {
-
-		return elevatorController.getSelectedSensorPosition(0) -
-				m_encoderZeroPostion;
+		return elevatorController.getSelectedSensorPosition(0); 				
 	}
-
 	public boolean getPidEnabledStatus(){
 		return m_encoderPID.isEnabled();
 	}
@@ -285,7 +278,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public double getTopEncoderPosition() {
-		return m_encoderTopPosition;
+		return MAX_HEIGHT;
 	}
 	
 	public double getEncoderError(){
