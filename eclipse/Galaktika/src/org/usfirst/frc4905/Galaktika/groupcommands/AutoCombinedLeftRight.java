@@ -30,9 +30,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected PositionAfterSecondCube m_positionAfterSecondCube;
 	private final boolean m_useDelay;
 	protected final AutoType m_matchType;
-	private AutoFollowOn m_followOn;
 	private PathOption m_pathOption;
-	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType, PathOption pathOption, AutoFollowOn followOn) {
+	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType, PathOption pathOption) {
 		// Add Commands here:
 		// e.g. addSequential(new Command1());
 		//      addSequential(new Command2());
@@ -52,16 +51,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		debug("top of AutoQuals constructor");
 		m_useDelay = useDelay;
 		m_matchType = matchType;
-		m_followOn = followOn;
 		m_pathOption = pathOption;
 		debug("bottom of AutoQuals constructor");
 	}
-	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType, PathOption pathOption) {
-		this(useDelay, matchType, pathOption, null);
-	}
 
 	public AutoCombinedLeftRight(boolean useDelay, AutoType matchType) {
-		this(useDelay, matchType, PathOption.NORMAL, null);
+		this(useDelay, matchType, PathOption.NORMAL);
 	}
 
 	protected void prepareToStart() {
@@ -70,9 +65,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			delay(Robot.getAutonomousDelay());
 		}
 		addAutoCombinedCommands(m_matchType);
-		if (m_followOn != null) {
-			m_followOn.addCommands(this);
-		}
 		debug("bottom of prepareToStart");
 	}
 
@@ -249,18 +241,28 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
 		
 		turnDeltaAngle(deltaAngle);
-		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
-//		if (robotPos == 'R') {
+		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE );
+		if (robotPos == 'R') {
+			turnLeft();
+			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
 //			turnLeft();
-//			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-//			turnLeft();
-//		} else {
-//			turnRight();
-//			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-//			turnRight();
-//		}
+		} else {
+			turnRight();
+			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+			turnRight();
+		}
+		/*Possible alternative code for retrieving first cube
+		turnDeltaAngle(-deltaAngle * 2);
+		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
+		turnDeltaAngle(deltaAngle);
+		*/
 //		driveForwardToWall(FORWARD_DISTANCE_TO_CUBES);
 //		closeJaws(true);
+		
+		turnDeltaAngle(-deltaAngle * 2);
+		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
+		turnDeltaAngle(deltaAngle);
+		
 	}
 
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
@@ -300,16 +302,22 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void addDoubleCubeCommands(char robotPos, char switchPlatePos, char scalePlatePos) {
-		if (m_positionAfterFirstCube == Position.CORNER_SCALE) {
-			if (robotPos == switchPlatePos) {
-				addDoubleSwitchCommands(robotPos);
-			} else {
+		switch (m_positionAfterFirstCube) {
+			case CORNER_SCALE:
+				if (robotPos == switchPlatePos) {
+					addDoubleSwitchCommands(robotPos);
+				} else {
+					addDoubleScaleCommands(robotPos);
+				}
+			break;
+			case FAR_SCALE:
 				addDoubleScaleCommands(robotPos);
-			}
-		} else if (m_positionAfterFirstCube == Position.NEAR_SWITCH) {
-			addDoubleSwitchCommands(robotPos);
-		} else if (m_positionAfterFirstCube == Position.DROVE_FORWARD) {
-			// do nothing
+			case NEAR_SWITCH:
+				addDoubleSwitchCommands(robotPos);
+			break;
+			case DROVE_FORWARD:
+				System.out.println("Double cube not supported after driving forward.");
+			break;
 		}
 	}
 
@@ -419,23 +427,23 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected void addTripleSwitchCommands(char robotPos) {
         char switchPlatePos = Robot.getSwitchPlatePosition();
 		if (robotPos == 'L' && switchPlatePos == 'L') {
-	    		driveBackward(CLEARANCE_TO_TURN);
-	    		turnLeft();
-	    		driveForward(15.4);
-	    		turnRight();
-	    		driveForward(13 + CLEARANCE_TO_TURN);
-	    		closeJaws(true);
-	    		dropCubeOntoSwitch();
-	        System.out.println("Done :D");
+			driveBackward(CLEARANCE_TO_TURN);
+			turnLeft();
+			driveForward(15.4);
+			turnRight();
+			driveForward(13 + CLEARANCE_TO_TURN);
+			closeJaws(true);
+			dropCubeOntoSwitch();
+			System.out.println("Done :D");
 	    } else if (robotPos == 'R' && switchPlatePos == 'R') {
-	    		driveBackward(CLEARANCE_TO_TURN);
-	    		turnRight();
-	    		driveForward(15.4);
-	    		turnLeft();
-	    		driveForward(13 + CLEARANCE_TO_TURN);
-	    		closeJaws(true);
-	    		dropCubeOntoSwitch();
-				System.out.println("Done :D");
+	    	driveBackward(CLEARANCE_TO_TURN);
+	    	turnRight();
+	    	driveForward(15.4);
+	    	turnLeft();
+	    	driveForward(13 + CLEARANCE_TO_TURN);
+	    	closeJaws(true);
+	    	dropCubeOntoSwitch();
+	    	System.out.println("Done :D");
 	    }
 	}
 	
@@ -461,7 +469,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
         	moveElevatorToSwitchHeightSequential();
         	openJaws();
             System.out.println("Done :D");
-        } else if (robotPos == scalePlatePos) {
+        } else {
         	driveBackward(53);
     		moveElevatorToGroundHeight();
     		turnAround();

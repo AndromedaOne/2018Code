@@ -68,12 +68,13 @@ public abstract class AutoCommand extends CommandGroup {
 		// arm.
 	}
 
+	private static final double ROBOT_LENGTH = 39;
 	protected static final double FORWARD_DISTANCE_TO_SWITCH = 144;
 	protected static final double LATERAL_DISTANCE_TO_SWITCH = 12;
 	//TODO: Get the following number from CAD
 	protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 100;
 	public static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
-	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 232.25;
+	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 299.34 - ROBOT_LENGTH;
 	protected static final double LATERAL_DISTANCE_FROM_SCALE = 20.00;
 	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188;
 	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218;
@@ -85,6 +86,8 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_LEFT_SWITCH_PLATE = 41.15;
 	protected static final double LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE = 36.85;
 	protected static final double LATERAL_DISTANCE_TO_FIRST_CUBE = 50.75;
+	protected static final double LATERAL_DISTANCE_TO_SECOND_CUBE = 28;
+	protected static final double DIAGONAL_DISTANCE_TO_FIRST_CUBE = LATERAL_DISTANCE_TO_FIRST_CUBE * Math.sqrt(2);
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
