@@ -45,6 +45,7 @@ public abstract class AutoCommand extends CommandGroup {
 		PLAYOFFS,
 		DOUBLE_CUBE_CROSS,
 		DOUBLE_CUBE_FIELD,
+		TRIPLE_CUBE,
 	}
 
 	public AutoCommand() {
@@ -70,12 +71,11 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_SWITCH = 12;
 	//TODO: Get the following number from CAD
 	protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 100;
-	protected static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
+	public static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
 	protected static final double LATERAL_DISTANCE_TO_SCALE = 15.08;
-	protected static final double FORWARD_DISTANCE_TO_MIDDLE = 212;
 	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188;
 	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218;
-	protected static final double FORWARD_DISTANCE_TO_CUBES = 24.99;
+	protected static final double FORWARD_DISTANCE_TO_CUBES = 9;
 	protected static final double FORWARD_DISTANCE_TO_SIDE_OF_SCALE = 49.99;
 	protected static final double LATERAL_DISTANCE_BETWEEN_PATHS = 236.6;
 	protected static final double FORWARD_DISTANCE_TO_AUTO_LINE = 122;
