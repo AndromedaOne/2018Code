@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoCombinedLeftRight extends AutoCommand {
 	enum Position {
-		NEAR_SCALE,
+		CORNER_SCALE,
 		FAR_SCALE,
 		NEAR_SWITCH,
 		DROVE_FORWARD,
@@ -110,21 +110,25 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
-			turnLeft();
+			turnDeltaAngle(-45);//18.4
 		} else {
-			turnRight();
+			turnDeltaAngle(45);
 		}
-		driveBackward(LATERAL_DISTANCE_FROM_SCALE);
 		moveElevatorToScaleHeight();
+		driveBackward(6);
 
 		delay(3);
-		addSequential(new TimedShootCube());
+		lowerIntake();
+		parallelRetractExtendArms();
+		delay(1);
+
+		shootCube(2);
 		raiseIntake();
 		parallelRetractExtendArms();
-		m_positionAfterFirstCube = Position.NEAR_SCALE;
+		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -246,6 +250,23 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForwardToWall(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE - FORWARD_DISTANCE_TO_CUBES);
 		closeJaws(true);
 	}
+	
+	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
+		
+		turnDeltaAngle(deltaAngle);
+		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
+		if (robotPos == 'R') {
+			turnLeft();
+			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+			turnLeft();
+		} else {
+			turnRight();
+			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+			turnRight();
+		}
+		driveForwardToWall(FORWARD_DISTANCE_TO_CUBES);
+		closeJaws(true);
+	}
 
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
 		driveBackward(CLEARANCE_TO_TURN);
@@ -284,7 +305,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void addDoubleCubeCommands(char robotPos, char switchPlatePos, char scalePlatePos) {
-		if (m_positionAfterFirstCube == Position.NEAR_SCALE) {
+		if (m_positionAfterFirstCube == Position.CORNER_SCALE) {
 			if (robotPos == switchPlatePos) {
 				addDoubleSwitchCommands(robotPos);
 			} else {
@@ -302,16 +323,13 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	    //Only for when robotPos is 'L' or 'R'
 	    switch (m_positionAfterFirstCube) {
-		    case NEAR_SCALE:
+		    case CORNER_SCALE:
 		    	if (robotPos == 'L') {
-		    		//Dummy numbers
-		    		deltaAngle = -90;
-		    		System.out.println("Done left near side Scale :D");
+		    		deltaAngle = -45;
 		    	} else {
-		    		deltaAngle = 90;
-		        System.out.println("Done right near side Scale :D");
+		    		deltaAngle = 45;
 		    	}
-		    pickupFirstCubeFromScale(deltaAngle);
+		    pickupFirstCubeFromCornerScale(robotPos, deltaAngle);
 		    dropCubeOntoSwitch();
 	        break;
 		    case FAR_SCALE:
@@ -345,20 +363,19 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 		//Only for when robotPos is 'L' or 'R'
 		switch (m_positionAfterFirstCube) {
-	    case NEAR_SCALE:
+	    case CORNER_SCALE:
 	    	if (robotPos == 'L') {
-	    		//Dummy numbers
-	    		deltaAngle = -90;
-	    		System.out.println("Done left near side Scale :D");
+	    		deltaAngle = -45;
 	    	} else {
-	    		deltaAngle = 90;
-	        System.out.println("Done right near side Scale :D");
+	    		deltaAngle = 45;
 	    	}
-	    	pickupFirstCubeFromScale(deltaAngle);
-	    	moveElevatorToScaleHeight();
+		    pickupFirstCubeFromCornerScale(robotPos, deltaAngle);
+		    driveBackward(FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE / 2);
+		    moveElevatorToScaleHeight();
 	    	turnToCompassHeading(0);
-	    	driveForward(AutoCommand.FORWARD_DISTANCE_TO_SIDE_OF_SCALE);
-	    	openJaws();
+	    	driveForward(FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE / 2);
+	    	raiseIntake();
+	    	addSequential(new TimedShootCube());
 	    	m_positionAfterSecondCube = PositionAfterSecondCube.SCALE;
 	    	
         break;

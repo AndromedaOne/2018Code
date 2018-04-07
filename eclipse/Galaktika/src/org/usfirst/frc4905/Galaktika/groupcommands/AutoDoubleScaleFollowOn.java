@@ -12,7 +12,7 @@ public class AutoDoubleScaleFollowOn extends AutoFollowOn {
 
     //Only for when robotPos is 'L' or 'R'
 	    switch (autoCommand.m_positionAfterFirstCube) {
-		    case NEAR_SCALE:
+		    case CORNER_SCALE:
 		    	if (robotPos == 'L') {
 		    		//Dummy numbers
 		    		deltaAngle = -90;
