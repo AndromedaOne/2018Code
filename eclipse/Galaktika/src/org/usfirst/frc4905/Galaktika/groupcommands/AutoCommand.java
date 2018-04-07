@@ -78,7 +78,7 @@ public abstract class AutoCommand extends CommandGroup {
 	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 299.34 - ROBOT_LENGTH - 15; //temporary fix
 	protected static final double LATERAL_DISTANCE_FROM_SCALE = 20.00;
 	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188;
-	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218 - 8; //temporary fix
+	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218; //temporary fix
 	protected static final double FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE = 128.35;
 	protected static final double FORWARD_DISTANCE_TO_CUBES = 9;
 	protected static final double FORWARD_DISTANCE_TO_SIDE_OF_SCALE = 49.99;
@@ -293,7 +293,7 @@ public abstract class AutoCommand extends CommandGroup {
 	
 	
 	protected void runIntakeInAuto() {
-		addSequential(new RunIntakeInAuto(0.5));
+		addParallel(new RunIntakeInAuto(1.5));
 	}
 
 

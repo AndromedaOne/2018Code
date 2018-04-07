@@ -256,8 +256,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		turnDeltaAngle(deltaAngle);
 		*/
 		moveElevatorToGroundHeight();
-		closeJawsParallel(true);
 		runIntakeInAuto();
+		driveForward(16);
+		closeJaws(true);
 	}
 
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
