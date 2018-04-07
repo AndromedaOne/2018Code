@@ -329,7 +329,8 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'R')
         		);
 
@@ -338,7 +339,8 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'R')
         		);
 
@@ -347,7 +349,8 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'L')
         		);
 
@@ -356,7 +359,40 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'L')
+        		);
+        chooser.addObject(
+        		"13. Scale/Switch 2 Cube - Right(3) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				'R')
+        		);
+        chooser.addObject(
+        		"13.D Scale/Switch 2 Cube - Right(3) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				'R')
+        		);
+        chooser.addObject(
+        		"14. Scale/Switch 2 Cube - Left(1) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				'L')
+        		);
+        chooser.addObject(
+        		"14.D Scale/Switch 2 Cube - Left(1) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
         				'L')
         		);
 
