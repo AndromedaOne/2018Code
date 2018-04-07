@@ -2,6 +2,7 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.RobotMap;
+import org.usfirst.frc4905.Galaktika.subsystems.Elevator;
 
 import Utilities.ControllerButtons.EnumeratedRawAxis;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,7 +18,7 @@ public class ElevatorManualControl extends MoveElevator {
 
 	Joystick subsystemController;
 
-	double m_topElevatorPosition = 4775;
+	double m_topElevatorPosition = Elevator.MAX_HEIGHT;
 	double m_topElevatorLimit = m_topElevatorPosition - 100;
 	double m_bottomElevatorLimit = 100;
 
