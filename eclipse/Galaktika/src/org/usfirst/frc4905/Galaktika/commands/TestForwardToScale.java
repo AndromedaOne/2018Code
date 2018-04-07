@@ -1,13 +1,15 @@
 package org.usfirst.frc4905.Galaktika.commands;
 
+import org.usfirst.frc4905.Galaktika.groupcommands.AutoCommand;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class Test100InchForward extends CommandGroup {
+public class TestForwardToScale extends CommandGroup {
 
-    public Test100InchForward() {
+    public TestForwardToScale() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -24,6 +26,6 @@ public class Test100InchForward extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	    addSequential(new MoveUsingEncoderPID(100));
+    	    addSequential(new MoveUsingEncoderPID(AutoCommand.FORWARD_DISTANCE_TO_SCALE));
     }
 }
