@@ -118,16 +118,11 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			turnDeltaAngle(45);
 		}
 		moveElevatorToScaleHeight();
-		driveBackward(6);
 
 		delay(3);
-		lowerIntake();
-		parallelRetractExtendArms();
-		delay(1);
-
-		shootCube(2);
 		raiseIntake();
 		parallelRetractExtendArms();
+		addSequential(new TimedShootCube());
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
@@ -255,17 +250,17 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		
 		turnDeltaAngle(deltaAngle);
 		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
-		if (robotPos == 'R') {
-			turnLeft();
-			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-			turnLeft();
-		} else {
-			turnRight();
-			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-			turnRight();
-		}
-		driveForwardToWall(FORWARD_DISTANCE_TO_CUBES);
-		closeJaws(true);
+//		if (robotPos == 'R') {
+//			turnLeft();
+//			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+//			turnLeft();
+//		} else {
+//			turnRight();
+//			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
+//			turnRight();
+//		}
+//		driveForwardToWall(FORWARD_DISTANCE_TO_CUBES);
+//		closeJaws(true);
 	}
 
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
@@ -370,13 +365,13 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	    		deltaAngle = 45;
 	    	}
 		    pickupFirstCubeFromCornerScale(robotPos, deltaAngle);
-		    driveBackward(FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE / 2);
-		    moveElevatorToScaleHeight();
-	    	turnToCompassHeading(0);
-	    	driveForward(FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE / 2);
-	    	raiseIntake();
-	    	addSequential(new TimedShootCube());
-	    	m_positionAfterSecondCube = PositionAfterSecondCube.SCALE;
+//		    driveBackward(FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE / 2);
+//		    moveElevatorToScaleHeight();
+//	    	turnToCompassHeading(0);
+//	    	driveForward(FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE / 2);
+//	    	raiseIntake();
+//	    	addSequential(new TimedShootCube());
+//	    	m_positionAfterSecondCube = PositionAfterSecondCube.SCALE;
 	    	
         break;
 	    case FAR_SCALE:

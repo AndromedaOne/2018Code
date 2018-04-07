@@ -73,7 +73,7 @@ public abstract class AutoCommand extends CommandGroup {
 	//TODO: Get the following number from CAD
 	protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 100;
 	public static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
-	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 266.25;
+	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 232.25;
 	protected static final double LATERAL_DISTANCE_FROM_SCALE = 20.00;
 	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188;
 	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218;
