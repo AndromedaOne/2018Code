@@ -240,7 +240,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void pickupFirstCubeFromScale(double deltaAngle) {
-	    driveBackward(LATERAL_DISTANCE_FROM_SCALE);
+	    driveForward(LATERAL_DISTANCE_FROM_SCALE);
 		turnToCompassHeading(180);
 		moveElevatorToGroundHeight();
 		driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
