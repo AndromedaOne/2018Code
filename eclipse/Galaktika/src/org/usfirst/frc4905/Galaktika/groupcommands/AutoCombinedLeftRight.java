@@ -472,7 +472,11 @@ public class AutoCombinedLeftRight extends AutoCommand {
         } else {
         	driveBackward(53);
     		moveElevatorToGroundHeight();
-    		turnAround();
+    		//turnAround();
+    		if (scalePlatePos == 'L') {
+    			turnRight();
+    			driveForward(LATERAL_DISTANCE_TO_SECOND_CUBE);
+    		}
     		driveForward(53);
     		closeJaws(true);
     		driveBackward(53);
