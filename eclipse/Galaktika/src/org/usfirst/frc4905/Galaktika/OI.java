@@ -29,6 +29,7 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
+import org.usfirst.frc4905.Galaktika.commands.TestDriveToWall;
 import org.usfirst.frc4905.Galaktika.commands.TestForwardToScale;
 import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;

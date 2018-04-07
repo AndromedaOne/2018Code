@@ -192,6 +192,10 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			case DOUBLE_CUBE_CROSS:
 				//TODO: do nothing FOR NOW
 			break;
+			case TRIPLE_CUBE:
+				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
+				addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
+				addTripleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
 		}
 
 
@@ -209,6 +213,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 					loadNearSwitchPlate('L');
 
+				} else if (m_pathOption != PathOption.IGNORE_FAR_SCALE) {
+					loadFarScalePlate(robotPos);
 				} else {
 					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				}
@@ -220,8 +226,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				if (switchPlatePos == 'R') {
 					loadNearSwitchPlate('R');
 
+				} else if (m_pathOption != PathOption.IGNORE_FAR_SCALE) {
+					loadFarScalePlate(robotPos);
 				} else {
-					//lost the switch and scale, just go forwards
 					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				}
 			}
@@ -389,12 +396,72 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 	}
 	
-	protected void addTripleCubeCommands(char robotPos) {
+	protected void addTripleCubeCommands(char robotPos, char switchPlatePos, char scalePlatePos) {
 		if (m_positionAfterSecondCube == PositionAfterSecondCube.SCALE) {
-			//AutoTripleScale
+			addTripleScaleCommands(robotPos);
 		} else if (m_positionAfterSecondCube == PositionAfterSecondCube.SWITCH) {
-			//AutoTripleSwitch
+			addTripleSwitchCommands(robotPos);
 		}
+	}
+	
+	protected void addTripleSwitchCommands(char robotPos) {
+        char switchPlatePos = Robot.getSwitchPlatePosition();
+		if (robotPos == 'L' && switchPlatePos == 'L') {
+	    		driveBackward(CLEARANCE_TO_TURN);
+	    		turnLeft();
+	    		driveForward(15.4);
+	    		turnRight();
+	    		driveForward(13 + CLEARANCE_TO_TURN);
+	    		closeJaws(true);
+	    		dropCubeOntoSwitch();
+	        System.out.println("Done :D");
+	    } else if (robotPos == 'R' && switchPlatePos == 'R') {
+	    		driveBackward(CLEARANCE_TO_TURN);
+	    		turnRight();
+	    		driveForward(15.4);
+	    		turnLeft();
+	    		driveForward(13 + CLEARANCE_TO_TURN);
+	    		closeJaws(true);
+	    		dropCubeOntoSwitch();
+				System.out.println("Done :D");
+	    }
+	}
+	
+	protected void addTripleScaleCommands(char robotPos) {
+        char switchPlatePos = Robot.getSwitchPlatePosition();
+        char scalePlatePos = Robot.getScalePlatePosition();
+        //Only for when robotPos is 'L' or 'R'
+        if (robotPos == 'L' && switchPlatePos == 'L' && scalePlatePos == 'L') {
+        	driveBackward(53);
+        	moveElevatorToGroundHeight();
+        	turnAround();
+        	driveForward(53);
+        	closeJaws(true);
+        	moveElevatorToSwitchHeightSequential();
+        	openJaws();
+            System.out.println("Done :D");
+        } else if (robotPos == 'R' && switchPlatePos == 'R' && scalePlatePos == 'R') {
+        	driveBackward(53);
+        	moveElevatorToGroundHeight();
+        	turnAround();
+        	driveForward(53);
+        	closeJaws(true);
+        	moveElevatorToSwitchHeightSequential();
+        	openJaws();
+            System.out.println("Done :D");
+        } else if (robotPos == scalePlatePos) {
+        	driveBackward(53);
+    		moveElevatorToGroundHeight();
+    		turnAround();
+    		driveForward(53);
+    		closeJaws(true);
+    		driveBackward(53);
+    		turnAround();
+    		moveElevatorToScaleHeight();
+    		driveForward(53);
+    		openJaws();
+    		
+        }
 	}
 
 	protected void dropCubeOntoSwitch() {
