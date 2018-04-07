@@ -110,14 +110,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE-48);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
 			turnLeft();
 		} else {
 			turnRight();
 		}
-		driveBackward(6);
+		driveBackward(LATERAL_DISTANCE_FROM_SCALE);
 		moveElevatorToScaleHeight();
 
 		delay(3);
@@ -229,7 +229,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void pickupFirstCubeFromScale(double deltaAngle) {
-	    driveBackward(LATERAL_DISTANCE_TO_SCALE);
+	    driveBackward(LATERAL_DISTANCE_FROM_SCALE);
 		turnToCompassHeading(180);
 		moveElevatorToGroundHeight();
 		driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
