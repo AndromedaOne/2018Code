@@ -17,7 +17,7 @@ public class ElevatorManualControl extends MoveElevator {
 
 	Joystick subsystemController;
 
-	double m_topElevatorPosition = 4200;
+	double m_topElevatorPosition = 4775;
 	double m_topElevatorLimit = m_topElevatorPosition - 100;
 	double m_bottomElevatorLimit = 100;
 
