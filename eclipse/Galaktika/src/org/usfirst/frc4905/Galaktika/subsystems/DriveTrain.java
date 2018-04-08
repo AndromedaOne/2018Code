@@ -173,12 +173,12 @@ public class DriveTrain extends Subsystem {
 
 	private double m_savedAngle = 0;
 
-	double m_gyroPIDP = 0.004;
+	double m_gyroPIDP = 0.003;
 	double m_gyroPIDI = 0.00015;
 	double m_gyroPIDD = 0.0;
 	double m_gyroPIDF = 0.0;
 
-	double gyroPIDAbsTolerance = 5;
+	double gyroPIDAbsTolerance = 2;
 	double maxAllowableDelta = 0.2;
 	private double m_gyroPIDOutputRange = 1.0;
 

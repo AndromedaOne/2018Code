@@ -40,9 +40,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  */
 public class Elevator extends Subsystem {
 	// Encoder Revolution Constants
-	public static final double GROUND_LEVEL = 0.0;
+	public static final double GROUND_LEVEL = 10.0;
 	public static final double EXCHANGE_HEIGHT = 200.0;
-	public static final double SWITCH_HEIGHT = 1500.0;
+	public static final double SWITCH_HEIGHT = 2500.0;
 	public static final double LOW_SCALE_HEIGHT = 3000.0;
 	public static final double HIGH_SCALE_HEIGHT = 4300.0;
 	public static final double MAX_HEIGHT = 4775.0;
@@ -62,12 +62,14 @@ public class Elevator extends Subsystem {
 	private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
 	private double m_encoderPIDP_maintanence = 0.0;//0.00003;//p constant for maintaining position, way too big for distance traveling
-	private double m_encoderPIDP_travel = 0.00325;//p constant for traveling up or down on the elevator
+	private double m_encoderPIDP_travel = 0.01;//p constant for traveling up or down on the elevator
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
-	private double m_encoderPIDOutputMax = 1;
+	private double m_encoderPIDOutputMax = 1.0;
 	private double m_encoderPIDTolerance = 10;
+	
+	private double m_encoderPIDOutputRange = 0.25;
 	
 	public Elevator() {
 		initializeEncoderPID();
@@ -129,10 +131,18 @@ public class Elevator extends Subsystem {
 
 			// Negated because encoder and motor count in opposite directions
 			output *= -1;
-
-			if (output < 0.0 && output >= -0.3) {
-				// Min speed to overcome intake weight when moving upwards
-				output = -0.3;
+			double kMinOutput = 0.15;
+			if(output != 0.0) {
+				boolean outputLessThanZero = (output < 0.0) ? true : false;
+				output = (Math.abs(output)*(1-kMinOutput))+kMinOutput;
+				if(outputLessThanZero) {
+					output = -output;
+				}
+			}
+			if (Math.abs(output) >= m_encoderPIDOutputMax*0.25) {
+				m_encoderPID.setI(0.0);
+			}else {
+				m_encoderPID.setI(m_encoderPIDI);
 			}
 			moveElevatorSafely(output);
 			if(noisyDebug) {
@@ -166,7 +176,7 @@ public class Elevator extends Subsystem {
 		if (setpoint > currentEncoderPosition) {
 			m_encoderPID.setAbsoluteTolerance(300);
 		} else if (setpoint < currentEncoderPosition) {
-			m_encoderPID.setAbsoluteTolerance(50);
+			m_encoderPID.setAbsoluteTolerance(20);
 		}
 		if (noisyDebug) {
 			System.out.println("In Elevator enableEncoderPID setpoint = " + setpoint);

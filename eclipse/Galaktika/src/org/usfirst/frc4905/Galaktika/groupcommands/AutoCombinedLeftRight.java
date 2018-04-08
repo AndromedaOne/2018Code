@@ -73,23 +73,19 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
 		closeJaws(false);
-		parallelJawsOpenClose();
-
 
 		moveElevatorToSwitchHeight();
 
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
 		if (robotPos == 'R') {
-			turnLeft();
+			turnToCompassHeading(-90);
 		} else {
-			turnRight();
+			turnToCompassHeading(90);
 		}
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		lowerIntake();
-		delay(1.5);
-		openJaws();
-		parallelJawsOpenClose();
-		delay(1);
+		delay(0.5);
+		shootCube(1);
 		driveBackward(20);
 		m_positionAfterFirstCube = Position.NEAR_SWITCH;
 		debug("bottom of AutoQuals loadNearSwitchPlate");
@@ -287,13 +283,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	protected void pickupFirstCubeFromRightSwitchPlate() {
 		driveBackward(CLEARANCE_TO_TURN);
-		turnRight();
-		driveForward(80);
-		turnLeft();
-		driveForward(40 + CLEARANCE_TO_TURN);
-		turnLeft();
+		turnToCompassHeading(0);
+		driveForward(60);
+		turnToCompassHeading(-90);
+		driveForward(50 + CLEARANCE_TO_TURN - 8);
+		turnToCompassHeading(180);
+		openJaws();
 		moveElevatorToGroundHeight();
-		driveForward(33);
+		driveForward(23);
 		closeJaws(true);
 	}
 
