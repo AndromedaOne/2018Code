@@ -63,7 +63,7 @@ public class Elevator extends Subsystem {
 
 	private double m_encoderPIDP_maintanence = 0.0;//0.00003;//p constant for maintaining position, way too big for distance traveling
 	private double m_encoderPIDP_travel = 0.01;//p constant for traveling up or down on the elevator
-	private double m_encoderPIDI = 0;
+	private double m_encoderPIDI = 0.00005;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
 	private double m_encoderPIDOutputMax = 1.0;
@@ -160,7 +160,7 @@ public class Elevator extends Subsystem {
 	public void initializeEncoderPID(){
 		EncoderPIDIn encoderPIDIn = new EncoderPIDIn();
 		EncoderPIDOut encoderPIDOut = new EncoderPIDOut();
-		m_encoderPID = new PIDController(m_encoderPIDP_maintanence, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn, encoderPIDOut);
+		m_encoderPID = new PIDController(m_encoderPIDP_maintanence, 0.0, m_encoderPIDD, m_encoderPIDF, encoderPIDIn, encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
 		LiveWindow.add(encoderPIDIn);
@@ -195,6 +195,7 @@ public class Elevator extends Subsystem {
 	}
 
 	public void disableEncoderPID() {
+		m_encoderPID.reset();
 		m_encoderPID.disable();
 	}
 
