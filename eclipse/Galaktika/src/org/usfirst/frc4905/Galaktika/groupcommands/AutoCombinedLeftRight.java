@@ -109,9 +109,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveBackward(12);
 		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
-		moveElevatorToSwitchHeightSequential();
-		driveForward(12);
-		openJaws();
+		
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
@@ -234,17 +232,17 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	
 	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
-		
-		turnDeltaAngle(deltaAngle);
-		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
+		moveElevatorToSwitchHeightSequential();
+		openJaws();
+		driveBackward(12);
+		turnDeltaAngle(-deltaAngle);
+		driveForward(85);
 		if (robotPos == 'R') {
 			turnLeft();
-			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-			turnLeft();
+			
 		} else {
 			turnRight();
-			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-			turnRight();
+			
 		}
 		/*Possible alternative code for retrieving first cube
 		turnDeltaAngle(-deltaAngle * 2);
