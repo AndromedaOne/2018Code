@@ -87,6 +87,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		delay(0.5);
 		shootCube(1);
 		raiseIntake();
+		delay(0.5);
 		driveBackward(20);
 		m_positionAfterFirstCube = Position.NEAR_SWITCH;
 		debug("bottom of AutoQuals loadNearSwitchPlate");
@@ -286,13 +287,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToGroundHeight();
 		turnToCompassHeading(0);
 		driveForward(60);
-		turnToCompassHeading(-90);
+		turnToCompassHeading(270);
 		driveForward(42);
 		turnToCompassHeading(180);
+		driveBackward(12);
 		lowerIntake();
 		openJaws();
-		driveForward(12);
-		closeJaws(true);
+		closeJaws(false);
+		driveForward(24);
 	}
 
 	protected void addDoubleCubeCommands(char robotPos, char switchPlatePos, char scalePlatePos) {
