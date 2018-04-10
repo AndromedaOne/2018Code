@@ -425,7 +425,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		if (robotPos == 'L' && switchPlatePos == 'L') {
 			driveBackward(CLEARANCE_TO_TURN);
 			turnLeft();
-			driveForward(15.4);
+			driveForward(13.4);
 			turnRight();
 			driveForward(13 + CLEARANCE_TO_TURN);
 			closeJaws(true);
@@ -434,7 +434,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	    } else if (robotPos == 'R' && switchPlatePos == 'R') {
 	    	driveBackward(CLEARANCE_TO_TURN);
 	    	turnRight();
-	    	driveForward(15.4);
+	    	driveForward(13.4);
 	    	turnLeft();
 	    	driveForward(13 + CLEARANCE_TO_TURN);
 	    	closeJaws(true);
@@ -471,7 +471,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
     		//turnAround();
     		if (scalePlatePos == 'L') {
     			turnRight();
-    			driveForward(LATERAL_DISTANCE_TO_SECOND_CUBE);
+    			driveForward(LATERAL_DISTANCE_BETWEEN_CUBE_POSITIONS);
     			turnRight();
     		}
     		driveForward(53);
