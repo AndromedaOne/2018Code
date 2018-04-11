@@ -12,13 +12,7 @@ public class MoveElevator extends Command {
 	boolean m_driverInterrupt = false;
 	double m_setPoint = 0;
 	
-	// Encoder Revolution Constants
-	public static final double GROUND_LEVEL = 0;
-	public static final double EXCHANGE_HEIGHT = 200;
-	public static final double SWITCH_HEIGHT = 1500;
-	public static final double LOW_SCALE_HEIGHT = 3000;
-	public static final double HIGH_SCALE_HEIGHT = 4450;
-	
+
     public MoveElevator(double setPoint) {
     	
     	this();
@@ -40,17 +34,20 @@ public class MoveElevator extends Command {
     	Robot.elevator.enableEncoderPID(m_setPoint);
     	System.out.println("Current Position: " + Robot.elevator.getElevatorEncoderPosition());
     	System.out.println("Trying to move elevator to: " + m_setPoint);
-    	System.out.println("Error: " + Robot.elevator.getEncoderError());
+    	System.out.println("PID Actual error: " + Robot.elevator.getEncoderError());
     	m_driverInterrupt = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
-    	if(!isInDeadzone(driverInput)){
-    		//if driver starts moving, disable pid loop
-    		Robot.elevator.disableEncoderPID();
-    		m_driverInterrupt = true;
+    	if(!Robot.AutonomousMode) {
+    		double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
+    		if(!isInDeadzone(driverInput)){
+    			System.out.println("The Robot is not in the dead zone :p");
+    			//if driver starts moving, disable pid loop
+    			Robot.elevator.disableEncoderPID();
+    			m_driverInterrupt = true;
+    		}
     	}
     }
 

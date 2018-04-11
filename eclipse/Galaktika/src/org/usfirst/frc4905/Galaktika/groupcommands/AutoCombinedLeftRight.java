@@ -14,12 +14,20 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		DROVE_FORWARD,
 
 	}
+	
 	public enum PathOption {
 		NORMAL,
 		IGNORE_SWITCH,
 		IGNORE_FAR_SCALE,
 	}
+	
+	enum PositionAfterSecondCube {
+		SCALE,
+		SWITCH,
+	}
+	
 	protected Position m_positionAfterFirstCube;
+	protected PositionAfterSecondCube m_positionAfterSecondCube;
 	private final boolean m_useDelay;
 	protected final AutoType m_matchType;
 	private AutoFollowOn m_followOn;
@@ -102,21 +110,21 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE-48);//empirical measurement subject to change
+		driveForward(FORWARD_DISTANCE_TO_SCALE);//empirical measurement subject to change
 
 		if (robotPos == 'R') {
 			turnLeft();
 		} else {
 			turnRight();
 		}
-		driveBackward(6);
+		driveBackward(LATERAL_DISTANCE_FROM_SCALE);
 		moveElevatorToScaleHeight();
 
 		delay(3);
 		addSequential(new TimedShootCube());
 		raiseIntake();
 		parallelRetractExtendArms();
-
+		m_positionAfterFirstCube = Position.NEAR_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
 
@@ -191,8 +199,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected void addPlayoffPaths(char robotPos, char switchPlatePos, char scalePlatePos) {
 		closeJaws(false);
 		parallelJawsOpenClose();
-
-
+		
 		if (robotPos == 'L') {
 			if (scalePlatePos == 'L') {
 				loadNearScalePlate('L');
@@ -222,14 +229,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void pickupFirstCubeFromScale(double deltaAngle) {
-	    driveBackward(LATERAL_DISTANCE_TO_SCALE);
+	    driveForward(LATERAL_DISTANCE_FROM_SCALE);
 		turnToCompassHeading(180);
 		moveElevatorToGroundHeight();
 		driveForward(FORWARD_DISTANCE_TO_SCALE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
 		turnToCompassHeading(deltaAngle);
 		driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
 		turnToCompassHeading(180);
-		driveForwardToWall(24.99);
+		driveForwardToWall(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE - FORWARD_DISTANCE_TO_CUBES);
 		closeJaws(true);
 	}
 
@@ -274,7 +281,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			if (robotPos == switchPlatePos) {
 				addDoubleSwitchCommands(robotPos);
 			} else {
-				//AutoDoubleScale
+				addDoubleScaleCommands(robotPos);
 			}
 		} else if (m_positionAfterFirstCube == Position.NEAR_SWITCH) {
 			addDoubleSwitchCommands(robotPos);
@@ -323,6 +330,71 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		    case DROVE_FORWARD:
 		    	System.out.println("Double cube not supported after driving forward.");
 	    }
+	}
+	
+	protected void addDoubleScaleCommands(char robotPos) {
+		double deltaAngle;
+
+
+		//Only for when robotPos is 'L' or 'R'
+		switch (m_positionAfterFirstCube) {
+	    case NEAR_SCALE:
+	    	if (robotPos == 'L') {
+	    		//Dummy numbers
+	    		deltaAngle = -90;
+	    		System.out.println("Done left near side Scale :D");
+	    	} else {
+	    		deltaAngle = 90;
+	        System.out.println("Done right near side Scale :D");
+	    	}
+	    	pickupFirstCubeFromScale(deltaAngle);
+	    	moveElevatorToScaleHeight();
+	    	turnToCompassHeading(0);
+	    	driveForward(AutoCommand.FORWARD_DISTANCE_TO_SIDE_OF_SCALE);
+	    	openJaws();
+	    	m_positionAfterSecondCube = PositionAfterSecondCube.SCALE;
+	    	
+        break;
+	    case FAR_SCALE:
+	    	if (robotPos == 'L') {
+	    		//Dummy numbers
+	    		deltaAngle = 90;
+	    		System.out.println("Done left far side Scale :D");
+	    	} else {
+	    		deltaAngle = -90;
+	        System.out.println("Done right far side Scale :D");
+	    	}
+	    	pickupFirstCubeFromScale(deltaAngle);
+	    	moveElevatorToScaleHeight();
+	    	turnToCompassHeading(0);
+	    	driveForward(AutoCommand.FORWARD_DISTANCE_TO_SIDE_OF_SCALE);
+	    	openJaws();
+	    	
+        break;
+	    case NEAR_SWITCH:
+	    	if (robotPos == 'L') {
+	    		pickupFirstCubeFromLeftSwitchPlate();
+	    	} else {
+	    		pickupFirstCubeFromRightSwitchPlate();
+	    	}
+	    	driveBackward(52);
+	    	turnAround();
+    		// Could be moved v
+	    	moveElevatorToScaleHeight();
+	    	driveForward(52);
+	    	openJaws();
+    		break;
+	    case DROVE_FORWARD:
+	    	System.out.println("Double cube not supported after driving forward.");
+		}
+	}
+	
+	protected void addTripleCubeCommands(char robotPos) {
+		if (m_positionAfterSecondCube == PositionAfterSecondCube.SCALE) {
+			//AutoTripleScale
+		} else if (m_positionAfterSecondCube == PositionAfterSecondCube.SWITCH) {
+			//AutoTripleSwitch
+		}
 	}
 
 	protected void dropCubeOntoSwitch() {
