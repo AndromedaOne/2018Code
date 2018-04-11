@@ -253,7 +253,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		*/
 		moveElevatorToGroundHeight();
 		runIntakeInAuto();
-		driveForward(16);
+		driveForward(12);
 		closeJaws(true);
 	}
 
