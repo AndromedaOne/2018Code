@@ -217,6 +217,7 @@ public class Elevator extends Subsystem {
 		}
 		else {
 			if(speed > 0) {
+				
 				speed = speed * 0.6;
 			}
 			moveElevator(speed);

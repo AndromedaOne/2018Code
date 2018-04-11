@@ -17,7 +17,7 @@ public class ElevatorManualControl extends MoveElevator {
 
 	Joystick subsystemController;
 
-	double m_topElevatorPosition = 4200;
+	double m_topElevatorPosition = 4600;//4200 before
 	double m_topElevatorLimit = m_topElevatorPosition - 100;
 	double m_bottomElevatorLimit = 100;
 
@@ -44,10 +44,11 @@ public class ElevatorManualControl extends MoveElevator {
 			// If pid is disabled and stick is in deadzone then maintain position
 			if(isInDeadzone(forwardBackwardStickValue)) {
 				double positionToMaintain = Robot.elevator.getElevatorPosition();
-
+				/*
 				if(positionToMaintain > Robot.elevator.getTopEncoderPosition() - 50) {
 					positionToMaintain = Robot.elevator.getTopEncoderPosition() - 50;
 				}
+				*/
 				if(positionToMaintain < m_bottomElevatorLimit) {
 					Robot.elevator.disableEncoderPID();
 				}else {
