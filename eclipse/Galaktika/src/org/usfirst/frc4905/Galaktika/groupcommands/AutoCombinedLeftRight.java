@@ -234,9 +234,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	
 	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
-		moveElevatorToSwitchHeightSequential();
+		
 		openJaws();
-		driveBackward(12);
+		
 		if (robotPos == 'R') {
 			turnToCompassHeading(215);
 		}else {
@@ -251,7 +251,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
 		turnDeltaAngle(deltaAngle);
 		*/
-		moveElevatorToGroundHeight();
+		
 		runIntakeInAuto();
 		driveForward(12);
 		closeJaws(true);
