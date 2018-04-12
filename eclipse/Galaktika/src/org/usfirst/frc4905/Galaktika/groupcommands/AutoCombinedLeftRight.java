@@ -242,8 +242,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}else {
 			turnToCompassHeading(135);
 		}
-		driveForward(40);
-		turnDeltaAngle(deltaAngle);
+		driveForward(45);
+		turnToCompassHeading(180);
 			
 		
 		/*Possible alternative code for retrieving first cube
