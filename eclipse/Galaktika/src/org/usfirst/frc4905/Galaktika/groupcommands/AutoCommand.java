@@ -199,6 +199,12 @@ public abstract class AutoCommand extends CommandGroup {
 		addSequential(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
 
+	protected void moveElevatorToGroundHeightParallel(){
+		debug("Attempting to lower elevator to ground height");
+		addParallel(new MoveElevator(Elevator.GROUND_LEVEL));
+	}
+	
+	
 	protected void resetElevatorInAuto() {
 		debug("Resetting elevator encoder in Auto.");
 		addSequential(new ResetElevatorEncoder());
@@ -295,6 +301,9 @@ public abstract class AutoCommand extends CommandGroup {
 	protected void runIntakeInAuto() {
 		addParallel(new RunIntakeInAuto(3));
 	}
-
+	
+	protected void runIntakeInAutoTimed(double time) {
+		addParallel(new RunIntakeInAuto(time));
+	}
 
 }

@@ -152,7 +152,7 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderPIDI = 0;
 	private double m_encoderPIDD = 0;
 	private double m_encoderPIDF = 0;
-	private double m_encoderPIDOutputMax = 0.75;
+	private double m_encoderPIDOutputMax = 0.65;
 	private double m_encoderPIDTolerance = 1000;
 	private double m_encoderPIDMaxAllowableDelta = 0.1;
 

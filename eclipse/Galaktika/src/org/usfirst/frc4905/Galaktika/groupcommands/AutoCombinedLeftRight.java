@@ -85,7 +85,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForwardToWall(LATERAL_DISTANCE_TO_SWITCH);
 		lowerIntake();
 		delay(0.5);
-		shootCube(1);
+		shootCube(0.3);
 		raiseIntake();
 		delay(0.5);
 		driveBackward(12);
@@ -260,16 +260,16 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
-		moveElevatorToGroundHeight();
+		moveElevatorToGroundHeightParallel();
 		turnToCompassHeading(0);
 		driveForward(60);
 		turnToCompassHeading(90);
 		driveForward(42);
 		turnToCompassHeading(180);
-		driveBackward(12);
 		lowerIntake();
+		delay(1);
 		openJaws();
-		driveForward(24);
+		driveForward(12);
 		runIntakeInAuto();
 		closeJaws(false);
 		
@@ -288,16 +288,15 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	protected void pickupFirstCubeFromRightSwitchPlate() {
 		
-		moveElevatorToGroundHeight();
+		moveElevatorToGroundHeightParallel();
 		turnToCompassHeading(0);
 		driveForward(60);
 		turnToCompassHeading(270);
 		driveForward(42);
 		turnToCompassHeading(180);
-		driveBackward(12);
 		lowerIntake();
 		openJaws();
-		driveForward(24);
+		driveForward(12);
 		runIntakeInAuto();
 		closeJaws(false);
 	}
@@ -492,7 +491,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	protected void dropCubeOntoSwitch() {
 		moveElevatorToSwitchHeightSequential();
+		lowerIntake();
 		driveForwardToWall(18);
+		delay(1.0);
 		openJaws();
 	}
 
