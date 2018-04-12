@@ -237,15 +237,15 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToSwitchHeightSequential();
 		openJaws();
 		driveBackward(12);
-		turnDeltaAngle(-deltaAngle);
-		driveForward(85);
 		if (robotPos == 'R') {
-			turnLeft();
-			
-		} else {
-			turnRight();
-			
+			turnToCompassHeading(215);
+		}else {
+			turnToCompassHeading(135);
 		}
+		driveForward(40);
+		turnDeltaAngle(deltaAngle);
+			
+		
 		/*Possible alternative code for retrieving first cube
 		turnDeltaAngle(-deltaAngle * 2);
 		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
