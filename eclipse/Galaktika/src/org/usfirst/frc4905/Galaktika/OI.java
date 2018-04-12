@@ -26,6 +26,7 @@ import org.usfirst.frc4905.Galaktika.commands.MoveUsingEncoderPID;
 import org.usfirst.frc4905.Galaktika.commands.MoveUsingFrontUltrasonic;
 import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoderTesting;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
+import org.usfirst.frc4905.Galaktika.commands.RotateToCube;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
@@ -167,6 +168,7 @@ public class OI {
 		SmartDashboard.putData("ResetElevatorEncoderTesting", new ResetElevatorEncoderTesting());
         SmartDashboard.putData("MPGroupTest", new MPTesting());
         SmartDashboard.putData("Move Elevator", new MoveElevator(1500));
+        SmartDashboard.putData("RotateToCube", new RotateToCube()); 
 
 	}
 
