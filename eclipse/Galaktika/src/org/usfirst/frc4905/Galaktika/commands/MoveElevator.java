@@ -65,9 +65,7 @@ public class MoveElevator extends Command {
     	else{
     		Robot.elevator.disableEncoderPID();// there is driver input, let's just preempt the check in manual and disable the loop, for safety.
     	}
-    	if(autoMode) {
-    		Robot.elevator.freeEncoderPID();
-    	}
+    	
     	
     	Robot.elevator.stopElevator();
     }

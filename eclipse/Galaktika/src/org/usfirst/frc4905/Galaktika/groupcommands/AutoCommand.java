@@ -93,7 +93,7 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
 	private static final double BUMPER_WIDTH = 1.5;
-	protected static final double CLEARANCE_TO_TURN = 25;
+	protected static final double CLEARANCE_TO_TURN = 25;//was 25;
 
 	protected void driveForward(double forwardDistanceInches) {
 		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
@@ -293,7 +293,7 @@ public abstract class AutoCommand extends CommandGroup {
 	
 	
 	protected void runIntakeInAuto() {
-		addParallel(new RunIntakeInAuto(1.5));
+		addParallel(new RunIntakeInAuto(3));
 	}
 
 
