@@ -58,12 +58,17 @@ public class MoveElevator extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	if(!m_driverInterrupt){
+    	boolean autoMode = Robot.AutonomousMode;
+    	if(!m_driverInterrupt && !autoMode){
     		Robot.elevator.setPIDControllerToMaintenanceMode();
     	}
     	else{
-    		Robot.elevator.disableEncoderPID();//there is driver input, let's just preempt the check in manual and disable the loop, for safety.
+    		Robot.elevator.disableEncoderPID();// there is driver input, let's just preempt the check in manual and disable the loop, for safety.
     	}
+    	if(autoMode) {
+    		Robot.elevator.freeEncoderPID();
+    	}
+    	
     	Robot.elevator.stopElevator();
     }
 

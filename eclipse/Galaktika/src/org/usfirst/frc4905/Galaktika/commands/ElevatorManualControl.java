@@ -45,10 +45,11 @@ public class ElevatorManualControl extends MoveElevator {
 			// If pid is disabled and stick is in deadzone then maintain position
 			if(isInDeadzone(forwardBackwardStickValue)) {
 				double positionToMaintain = Robot.elevator.getElevatorPosition();
-
+				/*
 				if(positionToMaintain > Robot.elevator.getTopEncoderPosition() - 50) {
 					positionToMaintain = Robot.elevator.getTopEncoderPosition() - 50;
 				}
+				*/
 				if(positionToMaintain < m_bottomElevatorLimit) {
 					Robot.elevator.disableEncoderPID();
 				}else {
