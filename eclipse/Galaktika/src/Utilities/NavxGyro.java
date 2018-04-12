@@ -76,15 +76,10 @@ public class NavxGyro {
 	public AHRS getAHRS() {
 		return m_navX;
 	}
-	private void setInitialAngleReading() {
-		if (angleReadingSet) {
-			System.out.println("Angle already set, not resetting");
-			return;
-		} else {
-			m_initialAngleReading = m_navX.getAngle();
-			System.out.println("Initial angle set to: " + m_initialAngleReading);
-			angleReadingSet = true;
-		}
+	public void setInitialAngleReading() {
+		m_initialAngleReading = m_navX.getAngle();
+		System.out.println("Initial angle set to: " + m_initialAngleReading);
+		angleReadingSet = true;
 	}
 
 	 

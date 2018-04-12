@@ -27,6 +27,7 @@ public class RunIntakeInAuto extends TimedCommand {
 
     // Called once after timeout
     protected void end() {
+    	Robot.intake.runIntake(0);
     }
 
     // Called when another command which requires one or more of the same

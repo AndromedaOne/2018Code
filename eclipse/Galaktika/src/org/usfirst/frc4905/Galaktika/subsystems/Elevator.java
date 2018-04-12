@@ -43,9 +43,9 @@ public class Elevator extends Subsystem {
 	public static final double GROUND_LEVEL = 10.0;
 	public static final double EXCHANGE_HEIGHT = 200.0;
 	public static final double SWITCH_HEIGHT = 2500.0;
-	public static final double LOW_SCALE_HEIGHT = 3000.0;
-	public static final double HIGH_SCALE_HEIGHT = 4300.0;
-	public static final double MAX_HEIGHT = 4775.0;
+	public static final double LOW_SCALE_HEIGHT = 3870.0;
+	public static final double HIGH_SCALE_HEIGHT = 4750.0;
+	public static final double MAX_HEIGHT = 4750.0;
 	
 	private boolean noisyDebug = false;
 
@@ -178,7 +178,7 @@ public class Elevator extends Subsystem {
 		double currentEncoderPosition = elevatorController.getSelectedSensorPosition(0);
 		m_encoderPID.setSetpoint(setpoint);
 		if (setpoint > currentEncoderPosition) {
-			m_encoderPID.setAbsoluteTolerance(300);
+			m_encoderPID.setAbsoluteTolerance(120);
 		} else if (setpoint < currentEncoderPosition) {
 			m_encoderPID.setAbsoluteTolerance(20);
 		}
@@ -208,9 +208,7 @@ public class Elevator extends Subsystem {
 		
 	}
 	
-	public void freeEncoderPID() {
-		m_encoderPID.free();
-	}
+	
 
 
 	public boolean getBottomLimitSwitch() {
