@@ -75,9 +75,9 @@ public abstract class AutoCommand extends CommandGroup {
 	//TODO: Get the following number from CAD
 	protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 100;
 	public static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
-	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 299.34 - ROBOT_LENGTH - 15; //temporary fix
+	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 299.34 - ROBOT_LENGTH; //temporary fix
 	protected static final double LATERAL_DISTANCE_FROM_SCALE = 20.00;
-	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188;
+	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188.0 + 10;
 	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218; //temporary fix
 	protected static final double FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE = 128.35;
 	protected static final double FORWARD_DISTANCE_TO_CUBES = 9;
@@ -204,6 +204,12 @@ public abstract class AutoCommand extends CommandGroup {
 		addParallel(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
 
+	protected void moveElevatorToGroundHeightParallel(){
+		debug("Attempting to lower elevator to ground height");
+		addParallel(new MoveElevator(Elevator.GROUND_LEVEL));
+	}
+	
+	
 	protected void resetElevatorInAuto() {
 		debug("Resetting elevator encoder in Auto.");
 		addSequential(new ResetElevatorEncoder());
@@ -300,6 +306,9 @@ public abstract class AutoCommand extends CommandGroup {
 	protected void runIntakeInAuto() {
 		addParallel(new RunIntakeInAuto(3));
 	}
-
+	
+	protected void runIntakeInAutoTimed(double time) {
+		addParallel(new RunIntakeInAuto(time));
+	}
 
 }
