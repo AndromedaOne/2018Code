@@ -516,7 +516,7 @@ public class Robot extends TimedRobot {
         	Robot.ramps.setSafetyBooleanStatus(false);
         }
 
-
+        System.out.println("TELEOP STARTED");
         Robot.ramps.lockRampsIn();
     }
 

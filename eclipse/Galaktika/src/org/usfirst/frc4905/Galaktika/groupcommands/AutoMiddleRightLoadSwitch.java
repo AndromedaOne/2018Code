@@ -57,8 +57,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
 			lowerIntake();
 			delay(1);
-			
-			openJaws();
+			addSequential(new TimedShootCube());
 			parallelJawsOpenClose();
 			
 		}

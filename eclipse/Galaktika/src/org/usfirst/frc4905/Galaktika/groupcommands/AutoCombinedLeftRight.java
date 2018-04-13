@@ -112,7 +112,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
 		moveElevatorToGroundHeight();
-		driveForward(12);
+		driveForward(12);// Why are we driving forward after we shoot the cube
 		openJaws();
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
@@ -125,31 +125,24 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 		driveForward(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
 		if(robotPos == 'L'){
-			turnRight();
+			turnToCompassHeading(90);
 		}
 		else{
-			turnLeft();
+			turnToCompassHeading(270);
 		}
-
 		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES);
-		if(robotPos == 'L'){
-			turnLeft();
-		}
-		else{
-			turnRight();
-		}
-		moveElevatorToScaleHeight();
-		delay(4.5);
-
-		driveForward(12);//eyeballed
-		shootCubeParallel(2);
-
-		lowerIntake();
-
-		driveBackward(12);
-		moveElevatorToGroundHeight();
+		turnToCompassHeading(0);
+		driveForward(17);//TODO Needs tuning
+		moveElevatorToScaleHeightSequential();
+		addSequential(new TimedShootCube());
 		raiseIntake();
-		turnAround();
+		moveElevatorToGroundHeight();
+		driveBackward(24);
+		turnToCompassHeading(180);
+		lowerIntake();
+		delay(1);
+		openJaws();
+		
 		m_positionAfterFirstCube = Position.FAR_SCALE;
 
 	}
@@ -174,8 +167,14 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
 			break;
 			case DOUBLE_CUBE_FIELD:
-				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
-				addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
+				if(robotPos == switchPlatePos || robotPos == scalePlatePos) {
+					addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
+					addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
+				}
+				else {
+					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
+				}
+				
 			break;
 			case DOUBLE_CUBE_CROSS:
 				//TODO: do nothing FOR NOW
@@ -204,6 +203,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				} else if (m_pathOption != PathOption.IGNORE_FAR_SCALE) {
 					loadFarScalePlate(robotPos);
 				} else {
+					System.out.println("Driving forward because haven't got either");
 					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				}
 			}
