@@ -104,9 +104,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE);
 
 		if (robotPos == 'R') {
-			turnDeltaAngle(-45);//18.4
+			turnDeltaAngle(-65);//18.4
 		} else {
-			turnDeltaAngle(45);
+			turnDeltaAngle(65);
 		}
 		driveBackward(12);
 		moveElevatorToScaleHeightSequential();
@@ -131,6 +131,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			turnToCompassHeading(270);
 		}
 		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES);
+		if(robotPos == 'L'){
+			turnToCompassHeading(295);
+		}
+		else{
+			turnToCompassHeading(65);
+		}
 		turnToCompassHeading(0);
 		driveForward(17);//TODO Needs tuning
 		moveElevatorToScaleHeightSequential();
