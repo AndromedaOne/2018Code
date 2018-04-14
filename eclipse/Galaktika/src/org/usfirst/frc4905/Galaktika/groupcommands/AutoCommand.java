@@ -95,13 +95,17 @@ public abstract class AutoCommand extends CommandGroup {
 	private static final double BUMPER_WIDTH = 1.5;
 	protected static final double CLEARANCE_TO_TURN = 25;//was 25;
 
-	protected void driveForward(double forwardDistanceInches) {
+	protected void driveForward(double forwardDistanceInches, boolean useDelay) {
 		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();
 		debug("top of driveForward, Forward Distance = " +
 				forwardDistanceInches +
 				"Scale Factor = " + distanceScaleFactor +
 				"Actual Distance = " + distanceScaleFactor * forwardDistanceInches);
-		addSequential(new MoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor));
+		addSequential(new MoveUsingEncoderPID(forwardDistanceInches * distanceScaleFactor, useDelay));
+	}
+	
+	protected void driveForward(double forwardDistanceInches) {
+		driveForward(forwardDistanceInches, true);
 	}
 
 	protected void delay(double delaySeconds) {

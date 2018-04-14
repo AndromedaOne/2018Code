@@ -112,8 +112,8 @@ public class Robot extends TimedRobot {
        
 
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        camera.setResolution(320, 300);
-        camera.setFPS(20);
+        camera.setResolution(320, 240);
+        camera.setFPS(15);
 
         retractor = new Retractor();
         jaws = new Jaws();

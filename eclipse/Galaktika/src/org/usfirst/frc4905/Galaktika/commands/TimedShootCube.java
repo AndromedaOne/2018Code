@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class TimedShootCube extends CommandGroup {
 	
-	private double m_delay = 0.3;
+	private double m_delay = 0.1;//was 0.3
     public TimedShootCube() {
         // Add Commands here:
         // e.g. addSequential(new Command1());

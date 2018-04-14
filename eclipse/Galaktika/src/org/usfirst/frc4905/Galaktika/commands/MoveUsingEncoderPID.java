@@ -13,14 +13,20 @@ public class MoveUsingEncoderPID extends Command {
 
 	private double m_setpoint = 0;
 	private final boolean useMotionProfilng = false;
-
-	public MoveUsingEncoderPID(double setpointInches) {
+	private boolean m_useDelay = true;
+	
+	public MoveUsingEncoderPID(double setpointInches, boolean useDelay) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
     		debug("top of constructor, inches = " + setpointInches);
 		requires(Robot.driveTrain);
 	    	
 	    	m_setpoint = setpointInches * DriveTrain.ENCODER_TICKS_PER_INCH;
+	    	m_useDelay = useDelay;
+	}
+	
+	public MoveUsingEncoderPID(double setPointInches) {
+		this(setPointInches, true);
 	}
 
 	// Called just before this Command runs the first time
@@ -29,7 +35,7 @@ public class MoveUsingEncoderPID extends Command {
 		//debug("Initializing");
 		System.out.println("In the Init command");
 		if (!useMotionProfilng) {
-			Robot.driveTrain.initializeEncoderPID();
+			Robot.driveTrain.initializeEncoderPID(m_useDelay);
 			Robot.driveTrain.enableEncoderPID(m_setpoint);
 		} else {
 			Robot.driveTrain.initializeEncoderMP();
