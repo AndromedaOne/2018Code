@@ -101,19 +101,21 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 
 		//240
-		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE);
+		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE, false);
 
 		if (robotPos == 'R') {
 			turnDeltaAngle(-65);//18.4
 		} else {
 			turnDeltaAngle(65);
 		}
-		driveBackward(12);
+		driveBackward(18);//changed after we hit the scale in auto that time
 		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
+		raiseIntake();
+		delay(0.3);
 		moveElevatorToGroundHeight();
 		driveForward(12);// Why are we driving forward after we shoot the cube
-		openJaws();
+		
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
@@ -242,8 +244,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	
 	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
-		
+		lowerIntake();
 		turnDeltaAngle(deltaAngle);
+		openJaws();
 		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
 		if (robotPos == 'R') {
 			turnLeft();
@@ -271,9 +274,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(60);
 		turnToCompassHeading(90);
 		driveForward(42);
-		turnToCompassHeading(180);
 		lowerIntake();
-		delay(1);
+		turnToCompassHeading(180);
 		openJaws();
 		driveForward(12);
 		runIntakeInAuto();
@@ -299,8 +301,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(60);
 		turnToCompassHeading(270);
 		driveForward(42);
-		turnToCompassHeading(180);
 		lowerIntake();
+		turnToCompassHeading(180);
 		openJaws();
 		driveForward(12);
 		runIntakeInAuto();

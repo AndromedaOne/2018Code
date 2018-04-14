@@ -339,9 +339,17 @@ public class DriveTrain extends Subsystem {
 	private class EncoderPIDOut implements PIDOutput {
 		private double m_previousOutput = 0;
 		private double m_maxAllowableDelta;
+		private boolean m_useDelay = true;
+		
 
 		public EncoderPIDOut(double maxAllowableDelta) {
 			m_maxAllowableDelta = maxAllowableDelta;
+			m_useDelay = true;
+		}
+		
+		public EncoderPIDOut(double maxAllowableDelta, boolean delay) {
+			m_maxAllowableDelta = maxAllowableDelta;
+			m_useDelay = delay;
 		}
 		@Override
 		public void pidWrite(double output) {
@@ -360,15 +368,15 @@ public class DriveTrain extends Subsystem {
 			}
 			*/
 			// Negation causes forward movement for positive values
-			gyroCorrectMove(output, 0.0, 1.0, true,false);
+			gyroCorrectMove(output, 0.0, 1.0, m_useDelay,false);
 			m_previousOutput = output;
 
 		}
 	}
 
-	public void initializeEncoderPID() {
+	public void initializeEncoderPID(boolean useDelay) {
 		EncoderPIDIn encoderPIDIn = new EncoderPIDIn();
-		EncoderPIDOut encoderPIDOut = new EncoderPIDOut(m_encoderPIDMaxAllowableDelta);
+		EncoderPIDOut encoderPIDOut = new EncoderPIDOut(m_encoderPIDMaxAllowableDelta, useDelay);
 		m_encoderPID = new PIDController(m_encoderPIDP, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn,
 				encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
@@ -381,6 +389,11 @@ public class DriveTrain extends Subsystem {
 		LiveWindow.add(m_encoderPID);
 		m_encoderPID.setName("DriveTrain","Encoder PID");
 	}
+	
+	public void initializeEncoderPID() {
+		initializeEncoderPID(true);
+	}
+	
 
 	public void enableEncoderPID(double setpoint) {
 		double currentEncoderPosition = getEncoderTicks();
