@@ -112,9 +112,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
 		raiseIntake();
-		moveElevatorToGroundHeightParallel();
 		delay(0.3);
-		
+		moveElevatorToGroundHeightParallel();
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
