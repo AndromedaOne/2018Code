@@ -71,7 +71,7 @@ public abstract class AutoCommand extends CommandGroup {
 
 	private static final double ROBOT_LENGTH = 39;
 	protected static final double FORWARD_DISTANCE_TO_SWITCH = 144;
-	protected static final double LATERAL_DISTANCE_TO_SWITCH = 12;
+	protected static final double LATERAL_DISTANCE_TO_SWITCH = 12 + 3;
 	//TODO: Get the following number from CAD
 	protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 100;
 	public static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
