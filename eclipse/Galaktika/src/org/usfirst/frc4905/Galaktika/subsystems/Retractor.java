@@ -17,6 +17,13 @@ public class Retractor extends Subsystem {
 
 	private final DoubleSolenoid retractor = RobotMap.retractIntake;
 	private boolean shouldIntakeBeUp = true;
+	
+	enum SolenoidStates {
+		Extending,
+		Retracting,
+		Stopped
+	}
+	private SolenoidStates m_currentSolenoidState = SolenoidStates.Stopped;
 
     @Override
 	public void initDefaultCommand() {
@@ -33,12 +40,20 @@ public class Retractor extends Subsystem {
     	retractor.set(DoubleSolenoid.Value.kForward);
     }
 
-    public void stopIntakeExtension(){
-    	//retractor.set(DoubleSolenoid.Value.kOff);
+    public void stopIntakeExtension() {
+    	retractor.set(DoubleSolenoid.Value.kOff);
     }
 
     public void setShouldIntakeBeUpBoolean(boolean state){
-    	shouldIntakeBeUp = state;
+    	if(state) {
+    		m_currentSolenoidState = SolenoidStates.Retracting;
+    	} else {
+    		m_currentSolenoidState = SolenoidStates.Extending;
+    	}
+    }
+    
+    public void setIntakeRetractionShouldBeStopped() {
+    	m_currentSolenoidState = SolenoidStates.Stopped;
     }
 
     public boolean getShouldIntakeBeUpBoolean() {
@@ -46,10 +61,10 @@ public class Retractor extends Subsystem {
     }
 
     public void setIntakeToCorrectState(){
-    	if(shouldIntakeBeUp){
+    	if(m_currentSolenoidState == SolenoidStates.Retracting){
     		retractIntake();
     	}
-    	else if(!shouldIntakeBeUp){
+    	else if(m_currentSolenoidState == SolenoidStates.Extending){
     		extendIntake();
     	}
     }

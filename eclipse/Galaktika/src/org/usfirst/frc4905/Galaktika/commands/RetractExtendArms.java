@@ -21,6 +21,7 @@ public class RetractExtendArms extends Command {
 	private final double kDeadZone = 0.05;
 	// Duty Cycle on solenoid is 5 times a second
 	private final long kDelayTime = 201;
+	// Time in between inches
 	private final long kHoldTime = 200;
 	private long m_currentDelayTime = 0;
 	private long m_currentHoldTime = 0;
@@ -115,12 +116,55 @@ public class RetractExtendArms extends Command {
 		if(upPovPressed){
 			System.out.println("UP");
 			Robot.retractor.setShouldIntakeBeUpBoolean(true);
-			m_currentState = RetractorStates.BeginMovingUp;
 		}
-		if(downPovPressed){
+		else if(downPovPressed){
 			System.out.println("Down");
 			Robot.retractor.setShouldIntakeBeUpBoolean(false);
-			m_currentState = RetractorStates.MovingDown;
+		}
+		else if(((kDeadZone < leftJoystick) || (-kDeadZone > leftJoystick))
+				&& !Robot.jaws.getShouldJawsBeOpen()){
+			long currentTime = System.currentTimeMillis();
+			System.out.println("Current State = " + m_currentState + "   Current Time = " + currentTime 
+					+ "   Left JoyStick = " + leftJoystick);
+			switch (m_currentState) {
+			case Stop:
+				Robot.retractor.setIntakeRetractionShouldBeStopped();
+				if(leftJoystick > 0) {
+					m_currentState = RetractorStates.BeginMovingUp;
+				}
+				if(leftJoystick < 0) {
+					m_currentState = RetractorStates.BeginMovingDown;
+				}
+				break;
+			case BeginMovingUp:
+				m_currentDelayTime = (long) (currentTime + kHoldTime + kDelayTime / leftJoystick);
+				m_currentHoldTime = currentTime + kHoldTime;
+				Robot.retractor.retractIntake();
+				m_currentState = RetractorStates.Moving;
+				break;
+			case Moving:
+				if(currentTime > m_currentHoldTime) {
+					Robot.retractor.setIntakeRetractionShouldBeStopped();
+					m_currentState = RetractorStates.InchingDelay;
+				}
+				break;
+			case BeginMovingDown:
+				m_currentDelayTime = (long) (currentTime + kHoldTime + kDelayTime / -leftJoystick);
+				m_currentHoldTime = currentTime + kHoldTime;
+				Robot.retractor.extendIntake();
+				m_currentState = RetractorStates.Moving;
+				break;
+			case InchingDelay: 
+				if(currentTime > m_currentDelayTime) {
+					m_currentState = RetractorStates.Stop;
+				}
+				break;
+			default: 
+				m_currentState = RetractorStates.Stop;
+			}
+
+		} else {
+			m_currentState = RetractorStates.Stop;
 		}
 		
 		Robot.retractor.setIntakeToCorrectState();
@@ -136,7 +180,7 @@ public class RetractExtendArms extends Command {
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		Robot.retractor.stopIntakeExtension();
+		//Robot.retractor.stopIntakeExtension();
 	}
 
 	// Called when another command which requires one or more of the same
