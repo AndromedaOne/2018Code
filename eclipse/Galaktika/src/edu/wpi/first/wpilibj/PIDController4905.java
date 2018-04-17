@@ -62,6 +62,7 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
   private double m_result = 0.0;
   private double m_period = kDefaultPeriod;
   private double m_integralWindupPercent = 1.0;
+  private int m_onTargetSamples;
   
   PIDSource m_origSource;
   LinearDigitalFilter m_filter;
@@ -119,7 +120,12 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
 
     @Override
     public boolean onTarget() {
-      return Math.abs(getError()) < m_value;
+    	if (Math.abs(getError()) < m_value) {
+    		++m_onTargetSamples;
+    	} else {
+    		m_onTargetSamples = 0;
+    	}
+    	return (m_onTargetSamples > 3);
     }
   }
 
