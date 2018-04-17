@@ -17,19 +17,15 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 	}
 
 	protected void prepareToStart() {
-		char platePos = Robot.getSwitchPlatePosition();
         if (m_useDelay) {
     			delay(Robot.getAutonomousDelay());
         }
-		parallelJawsOpenClose();
-		parallelRetractExtendArms();
-		setJawsShouldBeOpenState(false);
-		setRetractorShouldBeUp(false);
-
+        closeJaws(false);
+        lowerIntake();
 		moveElevatorToSwitchHeight();
-
 		driveForward(FORWARD_DISTANCE_TO_AUTO_LINE/2);
 
+		char platePos = Robot.getSwitchPlatePosition();
 		if (platePos == 'R') {
 			turnRight();
 			driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
@@ -42,27 +38,7 @@ public class AutoMiddleLoadSwitch extends AutoCommand {
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
 		}
 
-		setJawsShouldBeOpenState(true);
-
-		/*
-		if (platePos == 'R') {
-
-			driveBackward(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-			moveElevatorToGroundHeight();
-			turnLeft();
-			driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
-			turnRight();
-
-		} else {
-			driveBackward(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 2.0));
-			moveElevatorToGroundHeight();
-			turnRight();
-			driveForward(LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE);
-			turnLeft();
-
-		}
-
-*/
+		openJaws();
 
 	}
 

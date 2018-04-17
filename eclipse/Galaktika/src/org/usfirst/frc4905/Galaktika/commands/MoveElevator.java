@@ -12,15 +12,11 @@ public class MoveElevator extends Command {
 	boolean m_driverInterrupt = false;
 	double m_setPoint = 0;
 	
-	// Encoder Revolution Constants
-	public static final double GROUND_LEVEL = 0;
-	public static final double EXCHANGE_HEIGHT = 200;
-	public static final double SWITCH_HEIGHT = 1200;
-	public static final double LOW_SCALE_HEIGHT = 2000;
-	public static final double HIGH_SCALE_HEIGHT = 2500;
-	
+
     public MoveElevator(double setPoint) {
+    	
     	this();
+    	System.out.println("MOVEELEVATOR CONSTRUCTOR CALLED, SETPOINT = " + setPoint);
     	m_setPoint = setPoint;
     }
     public MoveElevator() {
@@ -29,22 +25,29 @@ public class MoveElevator extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	System.out.println("Initializing ELevator PID");
     	if(Robot.elevator.getPidEnabledStatus() == true){
     		Robot.elevator.disableEncoderPID();
     	}
     	Robot.elevator.initializeEncoderPID();
     	Robot.elevator.setPIDControllerToTravelMode();
     	Robot.elevator.enableEncoderPID(m_setPoint);
+    	System.out.println("Current Position: " + Robot.elevator.getElevatorEncoderPosition());
+    	System.out.println("Trying to move elevator to: " + m_setPoint);
+    	System.out.println("PID Actual error: " + Robot.elevator.getEncoderError());
     	m_driverInterrupt = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
-    	if(!isInDeadzone(driverInput)){
-    		//if driver starts moving, disable pid loop
-    		Robot.elevator.disableEncoderPID();
-    		m_driverInterrupt = true;
+    	if(!Robot.AutonomousMode) {
+    		double driverInput = EnumeratedRawAxis.getRightStickVertical(Robot.oi.subsystemController);
+    		if(!isInDeadzone(driverInput)){
+    			System.out.println("The Robot is not in the dead zone :p");
+    			//if driver starts moving, disable pid loop
+    			Robot.elevator.disableEncoderPID();
+    			m_driverInterrupt = true;
+    		}
     	}
     }
 
@@ -55,13 +58,16 @@ public class MoveElevator extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	if(!m_driverInterrupt){
+    	boolean autoMode = Robot.AutonomousMode;
+    	if(!m_driverInterrupt && !autoMode){
     		Robot.elevator.setPIDControllerToMaintenanceMode();
     	}
     	else{
-    		Robot.elevator.disableEncoderPID();//there is driver input, let's just preempt the check in manual and disable the loop, for safety.
+    		Robot.elevator.disableEncoderPID();// there is driver input, let's just preempt the check in manual and disable the loop, for safety.
     	}
     	
+    	
+    	Robot.elevator.stopElevator();
     }
 
     // Called when another command which requires one or more of the same

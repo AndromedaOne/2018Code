@@ -3,6 +3,7 @@ package org.usfirst.frc4905.Galaktika.groupcommands;
 import org.usfirst.frc4905.Galaktika.Robot;
 import org.usfirst.frc4905.Galaktika.commands.JawsOpenClose;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
+import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -24,50 +25,44 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 		if (m_useDelay) {
 			delay(Robot.getAutonomousDelay());
 		}
-		setRetractorShouldBeUp(true);
-		setJawsShouldBeOpenState(false);
+		raiseIntake();
+		closeJaws(false);
 		parallelJawsOpenClose();
-		parallelRetractExtendArms();
 		
-
-
-
 		if (platePos == 'L') {
-			/*System.out.println("We're ont he left!");
+			System.out.println("Plate on the left!");
 			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 3);
-			delay(1);
+			delay(0.4);
 			turnLeft();
-			delay(1);
-			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES + 40);
-			delay(1);
-			turnRight();
-			delay(1);
+			delay(0.4);
+			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES + 12);
+			delay(0.4);
+			turnDeltaAngle(95);
+			delay(0.4);
 			moveElevatorToSwitchHeight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3 * 2.0));
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3) - 12.0);
 			
-			setRetractorShouldBeUp(false);
+			/*lowerIntake();
 			parallelRetractExtendArms();
 			delay(1);
 			
-			setJawsShouldBeOpenState(true);
-			parallelJawsOpenClose();*/
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES-16);
-			//EMERGENCY CODE FIX FOR A POTENTIAL EASY SWITCH AUTO. WE WILL TRY AND GET IT IF THE PLATE IS ON THE RIGHT,
-			// OTHERWISE WE WILL JUST DRIVEFORWARD
+			openJaws();*/
+			
+			addSequential(new TimedShootCube());
+			parallelJawsOpenClose();
+			
 
 		} else {
 			moveElevatorToSwitchHeight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES-16);
-			setRetractorShouldBeUp(false);
-			parallelRetractExtendArms();
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+			lowerIntake();
 			delay(1);
-			
-			setJawsShouldBeOpenState(true);
+			addSequential(new TimedShootCube());
 			parallelJawsOpenClose();
 			
 		}
-
-
+		delay(2);
+		driveBackward(30);
 
 		/*
 		if (platePos == 'R') {
@@ -86,10 +81,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			turnLeft();
 
 		}
-
-		 */
-
-
+	*/
 
 	}
 

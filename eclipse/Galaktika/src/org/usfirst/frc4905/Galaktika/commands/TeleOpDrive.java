@@ -86,7 +86,7 @@ public class TeleOpDrive extends Command {
 				System.out.println("Slow Mode IS enabled!");
 			}
 			else {
-				mod = 0.8;
+				mod = 0.9;
 				slowMoEnabled = false;
 				System.out.println("SLOW MODE HAS ENDED!");
 			}
