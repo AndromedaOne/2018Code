@@ -23,7 +23,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Utilities.Tracing.Trace;
 import Utilities.Tracing.TracePair;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDController4905;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -156,7 +156,7 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderPIDTolerance = 1000;
 	private double m_encoderPIDMaxAllowableDelta = 0.1;
 
-	private PIDController m_ultrasonicPID;
+	private PIDController4905 m_ultrasonicPID;
 	private double m_P = .2;
 	private double m_I = .00000;
 	private double m_D = .0;
@@ -189,7 +189,7 @@ public class DriveTrain extends Subsystem {
 		frontUltrasonic.setAutomaticMode(true);
 		UltrasonicPIDOutputFront ultraPIDOutput = new UltrasonicPIDOutputFront();
 		UltrasonicPIDin pdIn = new UltrasonicPIDin();
-		m_ultrasonicPID = new PIDController(m_P, m_I, m_D, m_f, pdIn, ultraPIDOutput);
+		m_ultrasonicPID = new PIDController4905(m_P, m_I, m_D, m_f, pdIn, ultraPIDOutput);
 		m_ultrasonicPID.setAbsoluteTolerance(m_tolerance);
 		m_ultrasonicPID.setOutputRange(-m_maxSpeed, m_maxSpeed);
 		frontUltrasonic.SetUltrasonicNoiseTolerance(m_noiseTolerance);
@@ -292,7 +292,7 @@ public class DriveTrain extends Subsystem {
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 
-	private PIDController m_encoderPID;
+	private PIDController4905 m_encoderPID;
 	private class EncoderPIDIn extends SensorBase implements PIDSource, Sendable {
 
 
@@ -377,7 +377,7 @@ public class DriveTrain extends Subsystem {
 	public void initializeEncoderPID(boolean useDelay) {
 		EncoderPIDIn encoderPIDIn = new EncoderPIDIn();
 		EncoderPIDOut encoderPIDOut = new EncoderPIDOut(m_encoderPIDMaxAllowableDelta, useDelay);
-		m_encoderPID = new PIDController(m_encoderPIDP, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn,
+		m_encoderPID = new PIDController4905(m_encoderPIDP, m_encoderPIDI, m_encoderPIDD, m_encoderPIDF, encoderPIDIn,
 				encoderPIDOut);
 		m_encoderPID.setOutputRange(-m_encoderPIDOutputMax, m_encoderPIDOutputMax);
 		m_encoderPID.setAbsoluteTolerance(m_encoderPIDTolerance);
@@ -415,7 +415,7 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.disable();
 	}
 
-	private PIDController m_gyroPIDSource;
+	private PIDController4905 m_gyroPIDSource;
 	private class GyroPIDIn extends SensorBase implements PIDSource, Sendable {
 		@Override
 		public void setPIDSourceType(PIDSourceType PIDSource) {
@@ -462,11 +462,6 @@ public class DriveTrain extends Subsystem {
 				}
 			}
 
-			if (Math.abs(output) >= m_gyroPIDOutputRange*0.25) {
-				m_gyroPIDSource.setI(0.0);
-			}else {
-				m_gyroPIDSource.setI(m_gyroPIDI);
-			}
 			move(0,output,false);
 			m_previousOutput = output;
 		}
@@ -476,7 +471,7 @@ public class DriveTrain extends Subsystem {
 
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
 		GyroPIDOut gyroPIDOut = new GyroPIDOut(maxAllowableDelta);
-		m_gyroPIDSource = new PIDController(m_gyroPIDP, 0.0, m_gyroPIDD, m_gyroPIDF, gyroPIDIn, gyroPIDOut);
+		m_gyroPIDSource = new PIDController4905(m_gyroPIDP, m_gyroPIDI, m_gyroPIDD, m_gyroPIDF, gyroPIDIn, gyroPIDOut, 0.25);
 		// I is set to 0.0 because I is only touched inside of pidWrite and if it is non 0 it messes with the integral windup
 		m_gyroPIDSource.setOutputRange(-m_gyroPIDOutputRange, m_gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
