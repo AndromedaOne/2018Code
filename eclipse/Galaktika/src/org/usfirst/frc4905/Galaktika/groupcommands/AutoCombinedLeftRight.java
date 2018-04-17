@@ -73,10 +73,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
 		closeJaws(false);
-
-		moveElevatorToSwitchHeight();
-
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
+		moveElevatorToSwitchHeight();
 		if (robotPos == 'R') {
 			turnToCompassHeading(-90);
 		} else {
