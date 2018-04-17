@@ -63,6 +63,9 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
   private double m_period = kDefaultPeriod;
   private double m_integralWindupPercent = 1.0;
   private int m_onTargetSamples;
+  private double m_Perror;
+  private double m_Ierror;
+  private double m_Derror;
   
   PIDSource m_origSource;
   LinearDigitalFilter m_filter;
@@ -322,8 +325,12 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
         	}
           
         }
+        
+        m_Perror = P * error;
+        m_Ierror = I * totalError;
+        m_Derror = D * (error - prevError);
 
-        result = P * error + I * totalError + D * (error - prevError)
+        result = m_Perror + m_Ierror + m_Derror
             + feedForward;
       }
 
