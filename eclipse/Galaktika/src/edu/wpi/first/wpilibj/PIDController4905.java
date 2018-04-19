@@ -7,18 +7,14 @@
 
 package edu.wpi.first.wpilibj;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.TimerTask;
 import java.util.concurrent.locks.ReentrantLock;
 
-import edu.wpi.first.wpilibj.PIDInterface;
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.util.BoundaryException;
-import edu.wpi.first.wpilibj.Controller;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Class implements a PID Control Loop.
@@ -66,7 +62,7 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
   private double m_Perror;
   private double m_Ierror;
   private double m_Derror;
-  
+
   PIDSource m_origSource;
   LinearDigitalFilter m_filter;
 
@@ -116,10 +112,16 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
 
   public class AbsoluteTolerance implements Tolerance {
     private final double m_value;
+    private int m_numberOfSamples = 3;
 
     AbsoluteTolerance(double value) {
       m_value = value;
     }
+
+    public AbsoluteTolerance(double value, int numberOfSamples) {
+		this(value);
+		m_numberOfSamples = numberOfSamples;
+	}
 
     @Override
     public boolean onTarget() {
@@ -128,7 +130,7 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
     	} else {
     		m_onTargetSamples = 0;
     	}
-    	return (m_onTargetSamples > 3);
+    	return (m_onTargetSamples > m_numberOfSamples);
     }
   }
 
@@ -206,28 +208,28 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *               the integral and differential terms. The default is 50ms.
    */
   @SuppressWarnings("ParameterName")
-  public PIDController4905(double Kp, double Ki, double Kd, PIDSource source, 
+  public PIDController4905(double Kp, double Ki, double Kd, PIDSource source,
 		  PIDOutput output,
                        double period) {
     this(Kp, Ki, Kd, 0.0, source, output, period);
   }
-  
-  public PIDController4905(double Kp, double Ki, double Kd, PIDSource source, 
+
+  public PIDController4905(double Kp, double Ki, double Kd, PIDSource source,
 		  PIDOutput output) {
     this(Kp, Ki, Kd, 0.0, source, output, kDefaultPeriod);
   }
-  
+
   public PIDController4905(double Kp, double Ki, double Kd, double Kf,
 		  PIDSource source, PIDOutput output,
           double period) {
 	  this(Kp, Ki, Kd, 0.0, source, output, period, 1.0);
   }
-  
+
   public PIDController4905(double Kp, double Ki, double Kd, double Kf,
 		  PIDSource source, PIDOutput output) {
 	  this(Kp, Ki, Kd, 0.0, source, output, kDefaultPeriod, 1.0);
   }
-  
+
   public PIDController4905(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output,
           double period, double integralWindupPercent) {
 	  this(Kp, Ki, Kd, 0.0, source, output, period, integralWindupPercent);
@@ -323,9 +325,9 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
         	} else {
         		totalError = 0;
         	}
-          
+
         }
-        
+
         m_Perror = P * error;
         m_Ierror = I * totalError;
         m_Derror = D * (error - prevError);
@@ -400,7 +402,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    * @param i Integral coefficient
    * @param d Differential coefficient
    */
-  @SuppressWarnings("ParameterName")
+  @Override
+@SuppressWarnings("ParameterName")
   public void setPID(double p, double i, double d) {
     m_thisMutex.lock();
     try {
@@ -499,7 +502,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *
    * @return proportional coefficient
    */
-  public double getP() {
+  @Override
+public double getP() {
     m_thisMutex.lock();
     try {
       return m_P;
@@ -513,7 +517,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *
    * @return integral coefficient
    */
-  public double getI() {
+  @Override
+public double getI() {
     m_thisMutex.lock();
     try {
       return m_I;
@@ -527,7 +532,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *
    * @return differential coefficient
    */
-  public double getD() {
+  @Override
+public double getD() {
     m_thisMutex.lock();
     try {
       return m_D;
@@ -639,7 +645,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *
    * @param setpoint the desired setpoint
    */
-  public void setSetpoint(double setpoint) {
+  @Override
+public void setSetpoint(double setpoint) {
     m_thisMutex.lock();
     try {
       if (m_maximumInput > m_minimumInput) {
@@ -663,7 +670,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *
    * @return the current setpoint
    */
-  public double getSetpoint() {
+  @Override
+public double getSetpoint() {
     m_thisMutex.lock();
     try {
       return m_setpoint;
@@ -691,7 +699,8 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
    *
    * @return the current error
    */
-  public double getError() {
+  @Override
+public double getError() {
     m_thisMutex.lock();
     try {
       return getContinuousError(getSetpoint() - m_pidInput.pidGet());
@@ -764,6 +773,16 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
       m_thisMutex.unlock();
     }
   }
+
+  public void setAbsoluteTolerance(double absvalue, int numberOfSamples) {
+	    m_thisMutex.lock();
+	    try {
+	      m_tolerance = new AbsoluteTolerance(absvalue, numberOfSamples);
+	    } finally {
+	      m_thisMutex.unlock();
+	    }
+	  }
+
 
   /**
    * Set the percentage error which is considered tolerable for use with OnTarget. (Input of 15.0 =
