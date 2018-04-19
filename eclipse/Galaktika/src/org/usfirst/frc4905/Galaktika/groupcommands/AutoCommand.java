@@ -138,23 +138,6 @@ public abstract class AutoCommand extends CommandGroup {
 		debug("bottom of AutoCommand prepareToStart");
 	}
 
-	protected void turnRight() {
-		debug("Attempting to turn right.");
-		addSequential(new GyroPIDTurnDeltaAngle(90));
-
-	}
-
-	protected void turnLeft() {
-		debug("Attempting to turn left.");
-		addSequential(new GyroPIDTurnDeltaAngle(-90));
-
-	}
-
-	protected void turnAround() {
-		debug("Attempting to turn around.");
-		addSequential(new GyroPIDTurnDeltaAngle(180));
-	}
-
 	protected void driveForwardToWall(double estimatedDistance) {
 		debug("Attempting to drive forward to wall, estimatedDistance = " + estimatedDistance);
 		double distanceScaleFactor = Robot.getAutonomousDistanceScaleFactor();

@@ -95,8 +95,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		debug("top of AutoQuals loadNearScalePlate");
 
 		closeJaws(false);
-		parallelJawsOpenClose();
-
 
 		//240
 		driveForward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE, false);
@@ -108,7 +106,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		driveBackward(18);//changed after we hit the scale in auto that time
 		moveElevatorToScaleHeightSequential();
-		addSequential(new TimedShootCube());
+		shootCube(0.5);
 		raiseIntake();
 		delay(0.8);
 		moveElevatorToGroundHeightParallel();
@@ -119,7 +117,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private void loadFarScalePlate(char robotPos){
 
 		closeJaws(false);
-		parallelJawsOpenClose();
 
 		driveForward(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
 		if(robotPos == 'L'){
@@ -194,7 +191,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	protected void addPlayoffPaths(char robotPos, char switchPlatePos, char scalePlatePos) {
 		closeJaws(false);
-		parallelJawsOpenClose();
 		
 		if (robotPos == 'L') {
 			if (scalePlatePos == 'L') {
@@ -269,18 +265,6 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		driveForward(15);
 		closeJaws(false);
 		
-	}
-
-	protected void pickupFarCubeFromLeftSwitchPlate() {
-		turnLeft();
-		driveForward(65);
-		turnRight();
-		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES + 35);
-		turnRight();
-		moveElevatorToGroundHeight();
-		runIntakeInAuto();
-		driveForward(28);
-		closeJaws(true);
 	}
 
 	protected void pickupFirstCubeFromRightSwitchPlate() {
@@ -402,11 +386,12 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	    		pickupFirstCubeFromRightSwitchPlate();
 	    	}
 	    	driveBackward(52);
-	    	turnAround();
+	    	turnToCompassHeading(0);
     		// Could be moved v
 	    	moveElevatorToScaleHeight();
 	    	driveForward(52);
-	    	openJaws();
+	    	raiseIntake();
+	    	shootCube(0.5);
     		break;
 	    case DROVE_FORWARD:
 	    	System.out.println("Double cube not supported after driving forward.");
@@ -422,66 +407,62 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	
 	protected void addTripleSwitchCommands(char robotPos) {
-        char switchPlatePos = Robot.getSwitchPlatePosition();
-		if (robotPos == 'L' && switchPlatePos == 'L') {
-			driveBackward(CLEARANCE_TO_TURN);
-			turnLeft();
-			driveForward(13.4);
-			turnRight();
-			driveForward(13 + CLEARANCE_TO_TURN);
-			closeJaws(true);
-			dropCubeOntoSwitch();
-			System.out.println("Done :D");
-	    } else if (robotPos == 'R' && switchPlatePos == 'R') {
-	    	driveBackward(CLEARANCE_TO_TURN);
-	    	turnRight();
-	    	driveForward(13.4);
-	    	turnLeft();
-	    	driveForward(13 + CLEARANCE_TO_TURN);
-	    	closeJaws(true);
-	    	dropCubeOntoSwitch();
-	    	System.out.println("Done :D");
-	    }
+		int firstTurnCompassHeading;
+		if (robotPos == 'L') {
+			firstTurnCompassHeading = 90;
+		} else {
+			firstTurnCompassHeading = 270;
+		}
+		driveBackward(CLEARANCE_TO_TURN);
+		turnToCompassHeading(firstTurnCompassHeading);
+		driveForward(13.4);
+		turnToCompassHeading(180);
+		driveForward(13 + CLEARANCE_TO_TURN);
+		closeJaws(true);
+		dropCubeOntoSwitch();
+		System.out.println("Done :D");
 	}
 	
 	protected void addTripleScaleCommands(char robotPos) {
         char switchPlatePos = Robot.getSwitchPlatePosition();
         char scalePlatePos = Robot.getScalePlatePosition();
         //Only for when robotPos is 'L' or 'R'
-        if (robotPos == 'L' && switchPlatePos == 'L' && scalePlatePos == 'L') {
+        if (robotPos == switchPlatePos && robotPos == scalePlatePos) {
         	driveBackward(53);
         	moveElevatorToGroundHeight();
-        	turnAround();
-        	driveForward(53);
-        	closeJaws(true);
-        	moveElevatorToSwitchHeightSequential();
-        	openJaws();
-            System.out.println("Done :D");
-        } else if (robotPos == 'R' && switchPlatePos == 'R' && scalePlatePos == 'R') {
-        	driveBackward(53);
-        	moveElevatorToGroundHeight();
-        	turnAround();
+        	turnToCompassHeading(180);
         	driveForward(53);
         	closeJaws(true);
         	moveElevatorToSwitchHeightSequential();
         	openJaws();
             System.out.println("Done :D");
         } else {
+        	// Switch is on wrong side, target is scale
         	driveBackward(53);
     		moveElevatorToGroundHeight();
     		//turnAround();
     		if (scalePlatePos == 'L') {
-    			turnRight();
-    			driveForward(LATERAL_DISTANCE_BETWEEN_CUBE_POSITIONS);
-    			turnRight();
+    			turnToCompassHeading(90);
+    		} else {
+    			turnToCompassHeading(270);
     		}
+    		driveForward(LATERAL_DISTANCE_BETWEEN_CUBE_POSITIONS);
+			turnToCompassHeading(180);
     		driveForward(53);
     		closeJaws(true);
     		driveBackward(53);
-    		turnAround();
+    		if (scalePlatePos == 'L') {
+    			turnToCompassHeading(270);
+    		} else {
+    			turnToCompassHeading(90);
+    		}
+    		driveForward(LATERAL_DISTANCE_BETWEEN_CUBE_POSITIONS);
+			turnToCompassHeading(0);
     		moveElevatorToScaleHeight();
     		driveForward(53);
-    		openJaws();
+    		shootCube(0.5);
+    		raiseIntake();
+    		delay(0.8);
     		
         }
 	}
