@@ -452,6 +452,8 @@ public class DriveTrain extends Subsystem {
 					new TracePair("Target", m_gyroPIDSource.getSetpoint()),
 					new TracePair("Robot Angle", RobotMap.navX.getRobotAngle()),
 					new TracePair("Avg Error", m_gyroPIDSource.getError()),
+					new TracePair("P Error", m_gyroPIDSource.getPerror() * 100),
+					new TracePair("I Error", m_gyroPIDSource.getIerror() * 100),
 					new TracePair("Output", m_gyroPIDSource.get() * 100));
 			double kMinOutput = 0.1;
 			if(output != 0.0) {

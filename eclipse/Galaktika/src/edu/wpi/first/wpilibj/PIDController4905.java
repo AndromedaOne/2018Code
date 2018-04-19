@@ -549,7 +549,19 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
       m_thisMutex.unlock();
     }
   }
+  
+  public double getPerror() {
+	  return m_Perror;
+  }
 
+  public double getIerror() {
+	  return m_Ierror;
+  }
+  
+  public double getDerror() {
+	  return m_Derror;
+  }
+  
   /**
    * Return the current PID result This is always centered on zero and constrained the the max and
    * min outs.
