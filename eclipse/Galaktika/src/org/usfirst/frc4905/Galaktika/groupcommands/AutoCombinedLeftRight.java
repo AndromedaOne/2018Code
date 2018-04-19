@@ -106,7 +106,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		}
 		driveBackward(18);//changed after we hit the scale in auto that time
 		moveElevatorToScaleHeightSequential();
-		shootCube(0.5);
+		timedShootCube();
 		raiseIntake();
 		delay(0.8);
 		moveElevatorToGroundHeightParallel();
@@ -168,23 +168,16 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			case PLAYOFFS:
 				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
 			break;
-			case DOUBLE_CUBE_FIELD:
-				if(robotPos == switchPlatePos || robotPos == scalePlatePos) {
-					addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
-					addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
-				}
-				else {
-					driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
-				}
-				
-			break;
-			case DOUBLE_CUBE_CROSS:
-				//TODO: do nothing FOR NOW
+			case DOUBLE_CUBE:
+				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
+				addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
 			break;
 			case TRIPLE_CUBE:
 				addPlayoffPaths(robotPos, switchPlatePos, scalePlatePos);
 				addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
 				addTripleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
+			break;
+			
 		}
 
 
@@ -390,8 +383,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
     		// Could be moved v
 	    	moveElevatorToScaleHeight();
 	    	driveForward(52);
-	    	raiseIntake();
-	    	shootCube(0.5);
+	    	timedShootCube();
     		break;
 	    case DROVE_FORWARD:
 	    	System.out.println("Double cube not supported after driving forward.");
@@ -460,8 +452,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 			turnToCompassHeading(0);
     		moveElevatorToScaleHeight();
     		driveForward(53);
-    		shootCube(0.5);
-    		raiseIntake();
+	    	timedShootCube();
     		delay(0.8);
     		
         }

@@ -328,7 +328,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'R')
         		);
@@ -338,7 +338,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'R')
         		);
@@ -348,7 +348,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'L')
         		);
@@ -358,7 +358,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_FIELD,
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE,
         				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
         				'L')
         		);
@@ -367,7 +367,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE),
         				'R')
         		);
         chooser.addObject(
@@ -375,7 +375,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE),
         				'R')
         		);
         chooser.addObject(
@@ -383,7 +383,7 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				false,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE),
         				'L')
         		);
         chooser.addObject(
@@ -391,9 +391,82 @@ public class Robot extends TimedRobot {
         		new Pair<>(
         				new AutoCombinedLeftRight(
         				true,
-        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE_CROSS),
+        				AutoCombinedLeftRight.AutoType.DOUBLE_CUBE),
         				'L')
         		);
+        chooser.addObject(
+        		"15. Scale/Switch 3 Cube - Right(3) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'R')
+        		);
+
+        chooser.addObject(
+        		"15. D Scale/Switch 3 Cube - Right(3) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'R')
+        		);
+
+        chooser.addObject(
+        		"16. Scale/Switch 3 Cube - Left(1) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'L')
+        		);
+
+        chooser.addObject(
+        		"16. D Scale/Switch 3 Cube - Left(1) Field",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE,
+        				AutoCombinedLeftRight.PathOption.IGNORE_FAR_SCALE),
+        				'L')
+        		);
+        chooser.addObject(
+        		"17. Scale/Switch 3 Cube - Right(3) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE),
+        				'R')
+        		);
+        chooser.addObject(
+        		"17.D Scale/Switch 3 Cube - Right(3) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE),
+        				'R')
+        		);
+        chooser.addObject(
+        		"18. Scale/Switch 3 Cube - Left(1) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				false,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE),
+        				'L')
+        		);
+        chooser.addObject(
+        		"18.D Scale/Switch 3 Cube - Left(1) Cross",
+        		new Pair<>(
+        				new AutoCombinedLeftRight(
+        				true,
+        				AutoCombinedLeftRight.AutoType.TRIPLE_CUBE),
+        				'L')
+        		);
+        
+        
 
 
         SmartDashboard.putData("Auto mode", chooser);
