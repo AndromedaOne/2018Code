@@ -318,12 +318,12 @@ public class PIDController4905 extends SendableBase implements PIDInterface, Sen
         result = P * totalError + D * error + feedForward;
       } else {
         if (I != 0) {
-			if (((P * error) < (maximumOutput * m_integralWindupPercent)) ||
-        			((P * error) > (minimumOutput * m_integralWindupPercent))) {
-        		totalError = clamp(totalError + error, minimumOutput / I,
-        	              maximumOutput / I);
-        	} else {
+			if (((P * error) > (maximumOutput * m_integralWindupPercent)) ||
+        			((P * error) < (minimumOutput * m_integralWindupPercent))) {
         		totalError = 0;
+        	} else {
+        		totalError = clamp(totalError + error, minimumOutput / I,
+      	              maximumOutput / I);
         	}
 
         }
@@ -555,7 +555,7 @@ public double getD() {
       m_thisMutex.unlock();
     }
   }
-  
+
   public double getPerror() {
 	  return m_Perror;
   }
@@ -563,11 +563,11 @@ public double getD() {
   public double getIerror() {
 	  return m_Ierror;
   }
-  
+
   public double getDerror() {
 	  return m_Derror;
   }
-  
+
   /**
    * Return the current PID result This is always centered on zero and constrained the the max and
    * min outs.
@@ -855,6 +855,7 @@ public double getError() {
     m_thisMutex.lock();
     try {
       m_enabled = true;
+      m_totalError = 0;
     } finally {
       m_thisMutex.unlock();
     }

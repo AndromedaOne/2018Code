@@ -173,8 +173,8 @@ public class DriveTrain extends Subsystem {
 
 	private double m_savedAngle = 0;
 
-	double m_gyroPIDP = 0.003;
-	double m_gyroPIDI = 0.00015;
+	double m_gyroPIDP = 0.0016;
+	double m_gyroPIDI = 0.0001;
 	double m_gyroPIDD = 0.0;
 	double m_gyroPIDF = 0.0;
 
@@ -340,13 +340,13 @@ public class DriveTrain extends Subsystem {
 		private double m_previousOutput = 0;
 		private double m_maxAllowableDelta;
 		private boolean m_useDelay = true;
-		
+
 
 		public EncoderPIDOut(double maxAllowableDelta) {
 			m_maxAllowableDelta = maxAllowableDelta;
 			m_useDelay = true;
 		}
-		
+
 		public EncoderPIDOut(double maxAllowableDelta, boolean delay) {
 			m_maxAllowableDelta = maxAllowableDelta;
 			m_useDelay = delay;
@@ -389,11 +389,11 @@ public class DriveTrain extends Subsystem {
 		LiveWindow.add(m_encoderPID);
 		m_encoderPID.setName("DriveTrain","Encoder PID");
 	}
-	
+
 	public void initializeEncoderPID() {
 		initializeEncoderPID(true);
 	}
-	
+
 
 	public void enableEncoderPID(double setpoint) {
 		double currentEncoderPosition = getEncoderTicks();
@@ -473,7 +473,7 @@ public class DriveTrain extends Subsystem {
 
 		GyroPIDIn gyroPIDIn = new GyroPIDIn();
 		GyroPIDOut gyroPIDOut = new GyroPIDOut(maxAllowableDelta);
-		m_gyroPIDSource = new PIDController4905(m_gyroPIDP, m_gyroPIDI, m_gyroPIDD, m_gyroPIDF, gyroPIDIn, gyroPIDOut, 0.25);
+		m_gyroPIDSource = new PIDController4905(m_gyroPIDP, m_gyroPIDI, m_gyroPIDD, m_gyroPIDF, gyroPIDIn, gyroPIDOut, 0.125);
 		// I is set to 0.0 because I is only touched inside of pidWrite and if it is non 0 it messes with the integral windup
 		m_gyroPIDSource.setOutputRange(-m_gyroPIDOutputRange, m_gyroPIDOutputRange);
 		m_gyroPIDSource.setAbsoluteTolerance(gyroPIDAbsTolerance);
