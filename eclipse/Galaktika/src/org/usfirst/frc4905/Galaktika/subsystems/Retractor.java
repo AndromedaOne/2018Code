@@ -67,6 +67,9 @@ public class Retractor extends Subsystem {
     	else if(m_currentSolenoidState == SolenoidStates.Extending){
     		extendIntake();
     	}
+    	else {
+    		stopIntakeExtension();
+    	}
     }
 
 }
