@@ -88,7 +88,7 @@ public abstract class AutoCommand extends CommandGroup {
 	protected static final double LATERAL_DISTANCE_TO_RIGHT_SWITCH_PLATE = 36.85;
 	protected static final double LATERAL_DISTANCE_TO_FIRST_CUBE = 50.75 - 16.5;
 	protected static final double LATERAL_DISTANCE_BETWEEN_CUBE_POSITIONS = 28;
-	protected static final double DIAGONAL_DISTANCE_TO_FIRST_CUBE = LATERAL_DISTANCE_TO_FIRST_CUBE * Math.sqrt(2);
+	protected static final double DIAGONAL_DISTANCE_TO_FIRST_CUBE = 65; // LATERAL_DISTANCE_TO_FIRST_CUBE * Math.sqrt(2);
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_L = 90;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_R = 154;
 	protected static final double LATERAL_DISTANCE_TO_EXCHANGE_M = 31.13;
@@ -202,12 +202,11 @@ public abstract class AutoCommand extends CommandGroup {
 		debug("Attempting to lower elevator to ground height");
 		addSequential(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
-
+	
 	protected void moveElevatorToGroundHeightParallel(){
 		debug("Attempting to lower elevator to ground height");
 		addParallel(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
-	
 	
 	protected void resetElevatorInAuto() {
 		debug("Resetting elevator encoder in Auto.");
