@@ -151,7 +151,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 
 	}
 
-	protected void addAutoCombinedCommands(AutoType autoType) {
+		protected void addAutoCombinedCommands(AutoType autoType) {
 		char robotPos = Robot.getInitialRobotLocation();
 		char switchPlatePos = Robot.getSwitchPlatePosition();
 		char scalePlatePos = Robot.getScalePlatePosition();
@@ -160,7 +160,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				if (switchPlatePos == robotPos && m_pathOption != PathOption.IGNORE_SWITCH) {
 					loadNearSwitchPlate(robotPos);
 				} else if (scalePlatePos == robotPos){
-					loadNearScalePlate(robotPos);
+					loadNearScalePlate(robotPos); 
+					//driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				} else if(m_pathOption != PathOption.IGNORE_FAR_SCALE) {
 					loadFarScalePlate(robotPos);
 				} else {
