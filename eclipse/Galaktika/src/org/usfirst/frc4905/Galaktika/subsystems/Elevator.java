@@ -42,7 +42,7 @@ public class Elevator extends Subsystem {
 	// Encoder Revolution Constants
 	public static final double GROUND_LEVEL = 10.0;
 	public static final double EXCHANGE_HEIGHT = 200.0;
-	public static final double SWITCH_HEIGHT = 2500.0;
+	public static final double SWITCH_HEIGHT = 2000.0;
 	public static final double LOW_SCALE_HEIGHT = 3870.0;
 	public static final double HIGH_SCALE_HEIGHT = 4750.0;
 	public static final double MAX_HEIGHT = 4750.0;

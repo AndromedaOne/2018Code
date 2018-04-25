@@ -202,12 +202,11 @@ public abstract class AutoCommand extends CommandGroup {
 		debug("Attempting to lower elevator to ground height");
 		addSequential(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
-
+	
 	protected void moveElevatorToGroundHeightParallel(){
 		debug("Attempting to lower elevator to ground height");
 		addParallel(new MoveElevator(Elevator.GROUND_LEVEL));
 	}
-	
 	
 	protected void resetElevatorInAuto() {
 		debug("Resetting elevator encoder in Auto.");

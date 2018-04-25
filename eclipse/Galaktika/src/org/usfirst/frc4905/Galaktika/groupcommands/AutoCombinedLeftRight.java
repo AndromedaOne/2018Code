@@ -73,10 +73,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	private void loadNearSwitchPlate(char robotPos) {
 		debug("top of AutoQuals loadNearSwitchPlate");
 		closeJaws(false);
-
-		moveElevatorToSwitchHeight();
-
 		driveForward(FORWARD_DISTANCE_TO_SWITCH);
+		moveElevatorToSwitchHeight();
 		if (robotPos == 'R') {
 			turnToCompassHeading(-90);
 		} else {
@@ -88,7 +86,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		shootCube(0.3);
 		raiseIntake();
 		delay(0.5);
-		driveBackward(12);
+		driveBackward(LATERAL_DISTANCE_TO_SWITCH);
 		m_positionAfterFirstCube = Position.NEAR_SWITCH;
 		debug("bottom of AutoQuals loadNearSwitchPlate");
 	}
@@ -112,10 +110,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
 		raiseIntake();
-		delay(0.3);
-		moveElevatorToGroundHeight();
-		driveForward(12);// Why are we driving forward after we shoot the cube
-		
+		delay(0.8);
+		moveElevatorToGroundHeightParallel();
 		m_positionAfterFirstCube = Position.CORNER_SCALE;
 		debug("bottom of AutoQuals loadNearScalePlate");
 	}
@@ -245,25 +241,26 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	}
 	
 	protected void pickupFirstCubeFromCornerScale(char robotPos, double deltaAngle) {
-		lowerIntake();
-		turnDeltaAngle(deltaAngle);
-		openJaws();
-		driveBackward(FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE - FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
+		
+		
 		if (robotPos == 'R') {
-			turnLeft();
-			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-			turnLeft();
-		} else {
-			turnRight();
-			driveForward(LATERAL_DISTANCE_TO_FIRST_CUBE);
-			turnRight();
+			turnToCompassHeading(215);
+		}else {
+			turnToCompassHeading(135);
 		}
+		lowerIntake();
+		delay(0.4);
+		openJaws();
+		driveForward(65);
+		turnToCompassHeading(180);
+			
+		
 		/*Possible alternative code for retrieving first cube
 		turnDeltaAngle(-deltaAngle * 2);
 		driveForward(DIAGONAL_DISTANCE_TO_FIRST_CUBE);
 		turnDeltaAngle(deltaAngle);
 		*/
-		moveElevatorToGroundHeight();
+		
 		runIntakeInAuto();
 		driveForward(12);
 		closeJaws(true);
@@ -272,26 +269,27 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected void pickupFirstCubeFromLeftSwitchPlate() {
 		moveElevatorToGroundHeightParallel();
 		turnToCompassHeading(0);
-		driveForward(60);
+		driveForward(56);
 		turnToCompassHeading(90);
-		driveForward(42);
+		driveForward(34);
 		lowerIntake();
 		turnToCompassHeading(180);
 		openJaws();
-		driveForward(12);
 		runIntakeInAuto();
+		driveForward(15);
 		closeJaws(false);
 		
 	}
 
 	protected void pickupFarCubeFromLeftSwitchPlate() {
 		turnLeft();
-		driveForward(80);
+		driveForward(65);
 		turnRight();
-		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES + 40);
+		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES + 35);
 		turnRight();
 		moveElevatorToGroundHeight();
-		driveForward(33);
+		runIntakeInAuto();
+		driveForward(28);
 		closeJaws(true);
 	}
 
@@ -299,7 +297,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		
 		moveElevatorToGroundHeightParallel();
 		turnToCompassHeading(0);
-		driveForward(60);
+		driveForward(65);
 		turnToCompassHeading(270);
 		driveForward(42);
 		lowerIntake();
@@ -501,9 +499,9 @@ public class AutoCombinedLeftRight extends AutoCommand {
 	protected void dropCubeOntoSwitch() {
 		moveElevatorToSwitchHeightSequential();
 		lowerIntake();
-		driveForwardToWall(18);
-		delay(1.0);
-		openJaws();
+		driveForwardToWall(11);
+		shootCube(2.0);
+		
 	}
 
 }
