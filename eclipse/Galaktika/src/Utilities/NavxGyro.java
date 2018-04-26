@@ -17,6 +17,7 @@ public class NavxGyro {
 	// gyroEncoder PID controller
 
 	// gyroEncoder PID controller variables
+	//these numbers are not used
 	private static final double gyroEncoderKp = 0.012;
 	private static final double gyroEncoderKi = 0.000;
 	private static final double gyroEncoderKd = 0.000;

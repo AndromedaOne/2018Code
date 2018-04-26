@@ -63,7 +63,7 @@ public class Elevator extends Subsystem {
 	private DigitalInput elevatorTopLimitSwitch = RobotMap.elevatorTopLimitSwitch;
 
 	private double m_encoderPIDP_maintanence = 0.0;//0.00003;//p constant for maintaining position, way too big for distance traveling
-	private double m_encoderPIDP_travel = 0.01;//p constant for traveling up or down on the elevator
+	private double m_encoderPIDP_travel = 0.013;//p constant for traveling up or down on the elevator
 	private double m_encoderPIDI_travel = 0.0005;
 	private double m_encoderPIDI_maintanence = 0.0;
 	private double m_encoderPIDD = 0;

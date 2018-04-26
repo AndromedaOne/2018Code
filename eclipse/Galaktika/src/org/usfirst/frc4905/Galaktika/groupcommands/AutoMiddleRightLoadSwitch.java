@@ -33,11 +33,11 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 			System.out.println("Plate on the left!");
 			driveForward(FORWARD_DISTANCE_TO_AUTO_LINE / 3);
 			delay(0.4);
-			turnToCompassHeading(285);
+			turnToCompassHeading(270);
 			delay(0.4);
 			driveForward(LATERAL_DISTANCE_BETWEEN_PLATES + 12);
 			delay(0.4);
-			turnToCompassHeading(350);
+			turnToCompassHeading(0);
 			delay(0.4);
 			moveElevatorToSwitchHeight();
 			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES - (FORWARD_DISTANCE_TO_AUTO_LINE / 3) - 12.0);
@@ -55,7 +55,7 @@ public class AutoMiddleRightLoadSwitch extends AutoCommand {
 
 		} else {
 			moveElevatorToSwitchHeight();
-			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES);
+			driveForwardToWall(FORWARD_DISTANCE_TO_SWITCH_PLATES-12);
 			lowerIntake();
 			delay(1);
 			addSequential(new TimedShootCube());

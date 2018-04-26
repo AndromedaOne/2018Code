@@ -173,8 +173,8 @@ public class DriveTrain extends Subsystem {
 
 	private double m_savedAngle = 0;
 
-	double m_gyroPIDP = 0.0016;
-	double m_gyroPIDI = 0.0001;
+	double m_gyroPIDP = 0.0025;
+	double m_gyroPIDI = 1.0e-5;
 	double m_gyroPIDD = 0.0;
 	double m_gyroPIDF = 0.0;
 
@@ -400,9 +400,9 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.setSetpoint(setpoint + currentEncoderPosition);
 		System.out.println("Current position: " + currentEncoderPosition);
 		if (setpoint + currentEncoderPosition > currentEncoderPosition) {
-			System.out.println("Moving forwards, distance = " + Math.abs(setpoint));
+			System.out.println("Moving forwards, distance = " + Math.abs((setpoint + currentEncoderPosition)));
 		} else {
-			System.out.println("Moving backwards, distance = " + Math.abs(setpoint));
+			System.out.println("Moving backwards, distance = " + Math.abs((setpoint + currentEncoderPosition)));
 		}
 		m_encoderPID.enable();
 	}

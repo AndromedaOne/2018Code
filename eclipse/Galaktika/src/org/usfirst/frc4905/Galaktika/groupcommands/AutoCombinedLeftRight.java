@@ -121,7 +121,7 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		closeJaws(false);
 		parallelJawsOpenClose();
 
-		driveForward(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE);
+		driveForward(FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE - 16);
 		if(robotPos == 'L'){
 			turnToCompassHeading(90);
 		}
@@ -160,7 +160,8 @@ public class AutoCombinedLeftRight extends AutoCommand {
 				if (switchPlatePos == robotPos && m_pathOption != PathOption.IGNORE_SWITCH) {
 					loadNearSwitchPlate(robotPos);
 				} else if (scalePlatePos == robotPos){
-					loadNearScalePlate(robotPos); 
+					loadNearScalePlate(robotPos);
+					addDoubleCubeCommands(robotPos, switchPlatePos, scalePlatePos);
 					//driveForward(FORWARD_DISTANCE_TO_AUTO_LINE);
 				} else if(m_pathOption != PathOption.IGNORE_FAR_SCALE) {
 					loadFarScalePlate(robotPos);

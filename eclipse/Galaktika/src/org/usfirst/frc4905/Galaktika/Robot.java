@@ -122,7 +122,7 @@ public class Robot extends TimedRobot {
         // pointers. Bad news. Don't move it.
         kinematics = new Kinematics();
         oi = new OI();
-        pdp = new PowerDistributionPanel();
+        //pdp = new PowerDistributionPanel();
 
 
         // Add commands to Autonomous Sendable Chooser
@@ -446,7 +446,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-    	PDPLogging.pdpLog();
+    	//PDPLogging.pdpLog();
     }
 
     @Override

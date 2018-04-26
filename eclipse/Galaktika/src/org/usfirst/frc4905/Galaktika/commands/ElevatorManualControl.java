@@ -34,7 +34,6 @@ public class ElevatorManualControl extends MoveElevator {
 	@Override
 	protected void execute() {
 		double forwardBackwardStickValue = EnumeratedRawAxis.getRightStickVertical(subsystemController);
-
 		if(Robot.elevator.getPidEnabledStatus()) {
 
 			// If pid is enabled and stick is not in deadzone then disable the encoder pid

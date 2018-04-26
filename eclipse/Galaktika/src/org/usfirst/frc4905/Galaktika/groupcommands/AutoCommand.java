@@ -70,14 +70,14 @@ public abstract class AutoCommand extends CommandGroup {
 	}
 
 	private static final double ROBOT_LENGTH = 39;
-	protected static final double FORWARD_DISTANCE_TO_SWITCH = 144;
+	protected static final double FORWARD_DISTANCE_TO_SWITCH = 144- 12;
 	protected static final double LATERAL_DISTANCE_TO_SWITCH = 12;
 	//TODO: Get the following number from CAD
 	protected static final double FORWARD_DISTANCE_TO_SWITCH_PLATES = 100;
 	public static final double FORWARD_DISTANCE_TO_SCALE = 304.25;
 	public static final double FORWARD_DISTANCE_TO_SCALE_FORTY_FIVE_DEGREE = 299.34 - ROBOT_LENGTH; //temporary fix
 	protected static final double LATERAL_DISTANCE_FROM_SCALE = 20.00;
-	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 188.0 + 10;
+	protected static final double LATERAL_DISTANCE_TO_SCALE_PLATES = 12.0;//144.0;
 	protected static final double FORWARD_DISTANCE_BETWEEN_SWITCH_AND_SCALE = 218; //temporary fix
 	protected static final double FORWARD_DISTANCE_TO_SCALE_PLATE_FROM_CUBE = 128.35;
 	protected static final double FORWARD_DISTANCE_TO_CUBES = 9;
