@@ -149,9 +149,9 @@ public class DriveTrain extends Subsystem {
 
 	// Encoder PID
 	private double m_encoderPIDP = 0.00015;
-	private double m_encoderPIDI = 0;
-	private double m_encoderPIDD = 0;
-	private double m_encoderPIDF = 0;
+	private double m_encoderPIDI = 0.0;
+	private double m_encoderPIDD = 0.0;
+	private double m_encoderPIDF = 0.0;
 	private double m_encoderPIDOutputMax = 0.75;
 	private double m_encoderPIDTolerance = 1000;
 	private double m_encoderPIDMaxAllowableDelta = 0.1;
@@ -367,6 +367,11 @@ public class DriveTrain extends Subsystem {
 				output = -0.3;
 			}
 			*/
+			Trace.getInstance().addTrace(true, "DriveTrainEncoderPID",
+					new TracePair("output", output*10000),
+					new TracePair("EncoderTicks", getEncoderPosition()),
+					new TracePair("Setpoint", m_encoderPID.getSetpoint()),
+					new TracePair("Error", m_encoderPID.getError()));
 			// Negation causes forward movement for positive values
 			gyroCorrectMove(output, 0.0, 1.0, m_useDelay,false);
 			m_previousOutput = output;
@@ -640,7 +645,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public double getEncoderPosition() {
-		return leftBottomTalon.getSelectedSensorPosition(0);
+		return leftBottomTalon.getSelectedSensorPosition(0);//used to be left
 	}
 
 	private class GyroMPOut implements PIDOutput {

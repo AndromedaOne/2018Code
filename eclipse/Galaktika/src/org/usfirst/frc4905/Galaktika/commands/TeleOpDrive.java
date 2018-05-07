@@ -68,6 +68,8 @@ public class TeleOpDrive extends Command {
 	@Override
 	protected void execute() {
 		
+		//System.out.println("Encoder Position: " + Robot.driveTrain.getEncoderPosition());
+		
 		double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(drivecontroller);
 		double rotateStickValue = EnumeratedRawAxis.getRightStickHorizontal(drivecontroller);
 		if(forwardBackwardStickValue < kDeadzone && forwardBackwardStickValue > -kDeadzone) {

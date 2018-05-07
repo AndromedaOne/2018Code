@@ -128,15 +128,15 @@ public class AutoCombinedLeftRight extends AutoCommand {
 		else{
 			turnToCompassHeading(270);
 		}
-		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES);
+		driveForward(LATERAL_DISTANCE_TO_SCALE_PLATES + 16);
 		if(robotPos == 'L'){
-			turnToCompassHeading(295);
+			turnToCompassHeading(315);
 		}
 		else{
-			turnToCompassHeading(65);
+			turnToCompassHeading(45);
 		}
-		turnToCompassHeading(0);
-		driveForward(17);//TODO Needs tuning
+		
+		driveForward(20);//TODO Needs tuning
 		moveElevatorToScaleHeightSequential();
 		addSequential(new TimedShootCube());
 		raiseIntake();
