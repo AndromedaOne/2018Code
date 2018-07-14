@@ -20,7 +20,7 @@ public class Kinematics {
 	 * 
 	 * @throws InvalidDimentionException
 	 */
-	public void addPointToPath(Path Key, Point point) throws InvalidDimentionException {
+	public static void addPointToPath(Path Key, Point point) throws InvalidDimentionException {
 		privateAddPointToPath(Key, point, 0);
 	}
 
@@ -31,7 +31,7 @@ public class Kinematics {
 	 * 
 	 * @throws InvalidDimentionException
 	 */
-	public void addPointToPath(Path Key, Point point, double maxVelocity) throws InvalidDimentionException {
+	public static void addPointToPath(Path Key, Point point, double maxVelocity) throws InvalidDimentionException {
 		privateAddPointToPath(Key, point, maxVelocity);
 	}
 
@@ -40,7 +40,7 @@ public class Kinematics {
 	 * if the point is not the same dimension as all the other points inside of the
 	 * setpoint vector
 	 */
-	private void privateAddPointToPath(Path Key, Point point, double maxVelocity) throws InvalidDimentionException {
+	private static void privateAddPointToPath(Path Key, Point point, double maxVelocity) throws InvalidDimentionException {
 		// If the dimension of the path vector has not been set yet set it to the
 		// dimension of the point
 		if (Key.setPointDimention == 0) {

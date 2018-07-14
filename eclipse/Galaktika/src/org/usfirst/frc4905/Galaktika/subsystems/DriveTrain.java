@@ -62,9 +62,9 @@ public class DriveTrain extends Subsystem {
 	private final Compressor compressor = RobotMap.driveTrainCompressor;
 	private final Ultrasonic frontUltrasonic = RobotMap.driveTrainFrontUltrasonic;
 
-	private static final double kEncoderMaxVelocity = 64000.0; // Encoder ticks per second
-	private static final double kEncoderMaxAcceleration = 11500; // Encoder ticks per second^2
-	private static final double kEncoderMaxJerk = 56250; // Encoder ticks per second^3
+	private static final double kEncoderMaxVelocity = 80000.0; // Encoder ticks per second
+	private static final double kEncoderMaxAcceleration = 35000.0; // Encoder ticks per second^2
+	private static final double kEncoderMaxJerk = 20000.0; // Encoder ticks per second^3
 	public int m_encoderTicksPassed = 0;
 
 	public static double getMaxVelocity() {
@@ -85,10 +85,12 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderMPPositionkd = 0.0;
 
 	private double m_encoderMPVelocitykp = 0.0;//0.000015;
-	private double m_encoderMPVelocityki = 0.0;//1.0e-6;
+	private double m_encoderMPVelocityki = 1.0e-6;//1.0e-6;
 	private double m_encoderMPVelocitykd = 0.0;
+	private double m_encoderMPMinOutput = 0.3;
 	public double m_encoderMPVelocitykf = 1.0 / kEncoderMaxVelocity;
 
+	
 	private double kEncoderMPTolerance = 50;
 	private MotionProfilingController m_encoderMotionProfilingController;
 
@@ -607,11 +609,9 @@ public class DriveTrain extends Subsystem {
 				m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration, kEncoderMaxJerk, encoderMPIn,
 				encoderPIDOut);
 		m_encoderMotionProfilingController.setAbsoluteTolerance(kEncoderMPTolerance);
-		System.out.println("Adding MP controller!");
+		m_encoderMotionProfilingController.setMinimumOutput(m_encoderMPMinOutput);
 		LiveWindow.add(m_encoderMotionProfilingController);
-		System.out.println("Setting MP name");
 		m_encoderMotionProfilingController.setName("MPEncoder", "EncoderMP");
-		System.out.println("Done with INIT");
 	}
 
 	public void enableEncoderMP(double setpoint) {
@@ -701,6 +701,6 @@ public class DriveTrain extends Subsystem {
 		m_encoderPID.reset();
 	}
 
-
+	
 
 }
