@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import kinematics.MPSource;
-import kinematics.MotionProfilingController;
+import kinematics.MotionProfilingController4905;
 
 /**
  *
@@ -92,9 +92,9 @@ public class DriveTrain extends Subsystem {
 
 	
 	private double kEncoderMPTolerance = 50;
-	private MotionProfilingController m_encoderMotionProfilingController;
+	private MotionProfilingController4905 m_encoderMotionProfilingController;
 
-	public MotionProfilingController getEncoderMPController() {
+	public MotionProfilingController4905 getEncoderMPController() {
 		return m_encoderMotionProfilingController;
 	}
 
@@ -125,9 +125,9 @@ public class DriveTrain extends Subsystem {
 	private double m_gyroMPVelocitykf = 1.0 / kGyroMaxVelocity;
 
 	private double kGyroMPTolerance = 2.5;
-	private MotionProfilingController m_gyroMotionProfilingController;
+	private MotionProfilingController4905 m_gyroMotionProfilingController;
 
-	public MotionProfilingController getGyroMPController() {
+	public MotionProfilingController4905 getGyroMPController() {
 		return m_gyroMotionProfilingController;
 	}
 
@@ -143,9 +143,9 @@ public class DriveTrain extends Subsystem {
 	private double m_ultrasonicMPInitialPosition = 0.0;
 
 	private double kUltrasonicMPTolerance = 1.0;
-	private MotionProfilingController m_ultrasonicMotionProfilingController;
+	private MotionProfilingController4905 m_ultrasonicMotionProfilingController;
 
-	public MotionProfilingController getUltrasonicMPController() {
+	public MotionProfilingController4905 getUltrasonicMPController() {
 		return m_ultrasonicMotionProfilingController;
 	}
 
@@ -604,7 +604,7 @@ public class DriveTrain extends Subsystem {
 	public void initializeEncoderMP() {
 		EncoderMPIn encoderMPIn = new EncoderMPIn();
 		EncoderMPOut encoderPIDOut = new EncoderMPOut();
-		m_encoderMotionProfilingController = new MotionProfilingController(m_encoderMPPositionkp, m_encoderMPPositionki,
+		m_encoderMotionProfilingController = new MotionProfilingController4905(m_encoderMPPositionkp, m_encoderMPPositionki,
 				m_encoderMPPositionkd, m_encoderMPVelocitykp, m_encoderMPVelocityki, m_encoderMPVelocitykd,
 				m_encoderMPVelocitykf, kEncoderMaxVelocity, kEncoderMaxAcceleration, kEncoderMaxJerk, encoderMPIn,
 				encoderPIDOut);
@@ -663,7 +663,7 @@ public class DriveTrain extends Subsystem {
 	public void initializeGyroMP() {
 		GyroMPIn gyroMPIn = new GyroMPIn();
 		GyroMPOut gyroMPOut = new GyroMPOut();
-		m_gyroMotionProfilingController = new MotionProfilingController(m_gyroMPPositionkp, m_gyroMPPositionki,
+		m_gyroMotionProfilingController = new MotionProfilingController4905(m_gyroMPPositionkp, m_gyroMPPositionki,
 				m_gyroMPPositionkd, m_gyroMPVelocitykp, m_gyroMPVelocityki, m_gyroMPVelocitykd, m_gyroMPVelocitykf,
 				kGyroMaxVelocity, kGyroMaxAcceleration, kGyroMaxJerk, gyroMPIn, gyroMPOut);
 		m_gyroMotionProfilingController.setAbsoluteTolerance(kGyroMPTolerance);

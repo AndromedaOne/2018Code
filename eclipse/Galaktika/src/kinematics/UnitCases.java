@@ -61,7 +61,7 @@ public class UnitCases {
 		Path myPath = new Path();
 		KinematicsTester kinematicsTester = new KinematicsTester();
 		for (CustomMaxVelocitySetpoint setpoint : setpoints) {
-			m_kinematics.addPointToPath(myPath, new Point(setpoint.getSetpoint(), setpoint.getCustomMaxVelocity()));
+			Kinematics.addPointToPath(myPath, new Point(setpoint.getSetpoint(), setpoint.getCustomMaxVelocity()));
 		}
 		m_kinematics.createTrajectory(myPath, maxV, maxA, maxJ, debugMode); // 2.0, 0.5, 0.25
 		if (printMode) {
@@ -382,7 +382,7 @@ public class UnitCases {
 						setpoint -= maxAcceleration * Kinematics.getTrajectoryPointInterval();
 					}
 				}
-				m_kinematics.addPointToPath(myPath, new Point(setpoint * directionConstant), customMaxVelocity);
+				Kinematics.addPointToPath(myPath, new Point(setpoint * directionConstant), customMaxVelocity);
 
 				previousPoint = new Point(setpoint * directionConstant);
 
