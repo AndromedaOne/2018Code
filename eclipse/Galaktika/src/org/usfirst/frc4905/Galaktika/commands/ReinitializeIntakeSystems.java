@@ -7,24 +7,21 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class SetIntakeShouldBeUpCommand extends Command {
+public class ReinitializeIntakeSystems extends Command {
 
-	private boolean m_state;
-	
-    public SetIntakeShouldBeUpCommand(boolean state) {
+    public ReinitializeIntakeSystems() {
         // Use requires() here to declare subsystem dependencies
     	requires(Robot.retractor);
-    	m_state = state;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.intake.initDefaultCommand();
+		Robot.retractor.initDefaultCommand();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	System.out.println("SetIntakeShouldBeUpCommand m_state: " + m_state);
-    	Robot.retractor.setShouldIntakeBeUpBoolean(m_state);
     }
 
     // Make this return true when this Command no longer needs to run execute()

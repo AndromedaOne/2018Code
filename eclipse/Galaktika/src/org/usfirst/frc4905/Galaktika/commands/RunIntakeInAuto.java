@@ -2,19 +2,18 @@ package org.usfirst.frc4905.Galaktika.commands;
 
 import org.usfirst.frc4905.Galaktika.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 
 /**
  *
  */
-public class SetIntakeShouldBeUpCommand extends Command {
+public class RunIntakeInAuto extends TimedCommand {
 
-	private boolean m_state;
-	
-    public SetIntakeShouldBeUpCommand(boolean state) {
+    public RunIntakeInAuto(double timeout) {
+        super(timeout);
         // Use requires() here to declare subsystem dependencies
-    	requires(Robot.retractor);
-    	m_state = state;
+        // eg. requires(chassis);
+        requires(Robot.intake);
     }
 
     // Called just before this Command runs the first time
@@ -23,17 +22,12 @@ public class SetIntakeShouldBeUpCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	System.out.println("SetIntakeShouldBeUpCommand m_state: " + m_state);
-    	Robot.retractor.setShouldIntakeBeUpBoolean(m_state);
+    	Robot.intake.runIntake(RunIntakeIn.kIntakeSpeed);
     }
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return true;
-    }
-
-    // Called once after isFinished returns true
+    // Called once after timeout
     protected void end() {
+    	Robot.intake.runIntake(0);
     }
 
     // Called when another command which requires one or more of the same

@@ -36,19 +36,29 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	private double m_outputRangeMin = 0.0;
 	private double m_outputRangeMax = 1.0;
 
-	private Kinematics m_kinematics = new Kinematics();
+	private Kinematics m_kinematics;
 	private Path m_path = new Path();
-	private TrajectoryPoint m_currentTrajectoryPoint = new TrajectoryPoint(0.0, 0.0, 0.0);
+	private TrajectoryPoint m_currentTrajectoryPoint;
 
 	private double m_deltaTime = 0.0;
 	private double m_endDeltaTime = 0.0;
 	private double m_initialPosition = 0.0;
+	
+	private double m_previousOutput = 0.0;
+	
+	// This variable determines what values you will be tuning...
+	private final TuningType tuningType = TuningType.positionPID;
 
 	// This creates the thread that will run the run method
 	private java.util.Timer m_controlLoop;
 	// this tells the thread how long to wait in between cycles. This is 50
 	// miliseconds
 	private long kdefaultPeriod = 20;
+	
+	private int traceId = 0;
+	private double m_mod = 0.9;
+	
+	private double m_minOutput;
 
 	public MotionProfilingController(double positionPValue, double positionIValue, double positionDValue,
 			double velocityPValue, double velocityIValue, double velocityDValue, double velocityFValue,
@@ -70,7 +80,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 		m_maxAcceleration = maxAcceleration;
 		m_maxJerk = maxJerk;
 
-		m_mpSource = mpSource;
+		m_mpSource = mpSource;	
 		m_pidOutput = pidOutput;
 		m_controlLoop = new java.util.Timer();
 		MotionProfilingTask motionProfilingTask = new MotionProfilingTask(this);
@@ -79,13 +89,19 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	public void disable() {
+		Trace.getInstance().flushTraceFiles();
 		m_enableStatus = false;
 		m_pidOutput.pidWrite(0.0);
+		traceId++;
 	}
 
 	public void enable() {
+		System.out.println("In Enable");
+		m_kinematics = new Kinematics();
 		m_velocityPIDCalculator.reset();
 		m_positionPIDCalculator.reset();
+		m_previousOutput = 0.0;
+		m_currentTrajectoryPoint = new TrajectoryPoint(0.0, 0.0, 0.0);
 
 		m_initialTimeStamp = Timer.getFPGATimestamp();
 		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk, false);
@@ -108,17 +124,31 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			double velocity = m_mpSource.getVelocity();
 
 			double velocityPIDOut = m_velocityPIDCalculator.getPIDOut(nextVelocity, velocity);
-			double output = nextVelocity * m_velocityF + velocityPIDOut;
+			double output = velocityPIDOut;
+			
+			if(output < -0.001 && output > m_minOutput && nextTrajectoryPoint.m_currentVelocity != 0.0) {
+				output = -m_minOutput;
+			}else if(output > 0.001 && output < m_minOutput && nextTrajectoryPoint.m_currentVelocity != 0.0) {
+				output = output + m_minOutput;
+			}
+			output = output>1.0?1.0:output;
+			output = output<-1.0?-1.0:output;
 
 			m_pidOutput.pidWrite(output);
-
+			
 			// THIS DOES NOT WORK FOR MULTIPLE MOTIONPROFILING CONTROLLERS
-			Trace.getInstance().addTrace(true, "MotionProfilingData", new TracePair("ActualVelocity", velocity),
-					new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
+			Trace.getInstance().addTrace(true, "MotionProfilingData" + String.format("%08d", traceId), 
+					new TracePair("ActualVelocity", velocity),
+					//new TracePair("ProjectedVelocity", m_currentTrajectoryPoint.m_currentVelocity),
 					new TracePair("ActualPosition", deltaPosition),
 					new TracePair("ProjectedPosition", m_currentTrajectoryPoint.m_position),
-					new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
-					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition) * 10));
+					//new TracePair("VelocityError", m_currentTrajectoryPoint.m_currentVelocity - velocity),
+					new TracePair("PositionError", (m_currentTrajectoryPoint.m_position - deltaPosition) * 10),
+					new TracePair("NextVelocity", nextVelocity),
+					//new TracePair("velocityPIDOut", velocityPIDOut*100000),
+					new TracePair("MotorVoltage", RobotMap.driveTrainRightBottomTalon.getMotorOutputVoltage()*5000),
+					new TracePair("Output", output*10000));
+			
 
 			/*
 			 * new TracePair("velocityPIDOut", (velocityPIDOut)), new
@@ -128,7 +158,12 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 			 */
 
 			m_currentTrajectoryPoint = nextTrajectoryPoint;
+			m_previousOutput = output;
 		}
+	}
+	
+	public void setMinimumOutput(double minOutput) {
+		m_minOutput = minOutput;
 	}
 
 	public boolean onTarget() {
@@ -151,12 +186,16 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	public void setSetpoint(double setpoint) {
+		System.out.println("Setting Setpoint");
 		m_currentSetpoint = setpoint;
+		m_path = new Path();
+		System.out.println("Clearing Path");
 		try {
-			m_kinematics.addPointToPath(m_path, new Point(setpoint));
+			Kinematics.addPointToPath(m_path, new Point(setpoint));
 		} catch (InvalidDimentionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Whoops the point was never set...");
 		}
 
 	}
@@ -226,6 +265,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	private void setV(double value) {
+		m_velocityF = 1.0 / value;
 		m_maxVelocity = value;
 	}
 
@@ -254,6 +294,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 	}
 
 	private void setEnabled(boolean status) {
+		
 		if (status) {
 			enable();
 		} else {
@@ -263,23 +304,36 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.setSmartDashboardType("MotionProfilingController");
-		builder.addDoubleProperty("PositionP", this::getPositionP, this::setPositionP);
-		builder.addDoubleProperty("PositionI", this::getPositionI, this::setPositionI);
-		builder.addDoubleProperty("PositionD", this::getPositionD, this::setPositionD);
+		System.out.println("In init Sendable MP");
+		builder.setSmartDashboardType("PIDController");
+		
+		builder.setSafeState(this::disable);
+		
+		switch(tuningType) {
+		case maxKinematicsParameters:
+			m_mod = 1.0;
+			builder.addDoubleProperty("p", this::getV, this::setV);
+			builder.addDoubleProperty("i", this::getA, this::setA);
+			builder.addDoubleProperty("d", this::getJ, this::setJ);
+			break;
+			
+		case positionPID:
+			m_mod = 0.9;
+			builder.addDoubleProperty("p", this::getPositionP, this::setPositionP);
+			builder.addDoubleProperty("i", this::getPositionI, this::setPositionI);
+			builder.addDoubleProperty("d", this::getPositionD, this::setPositionD);
+			break;
 
-		builder.addDoubleProperty("VelocityP", this::getVelocityP, this::setVelocityP);
-		builder.addDoubleProperty("VelocityI", this::getVelocityI, this::setVelocityI);
-		builder.addDoubleProperty("VelocityD", this::getVelocityD, this::setVelocityD);
-		builder.addDoubleProperty("VelocityF", this::getVelocityF, this::setVelocityF);
+		case velocityPID:
+			m_mod = 0.9;
+			builder.addDoubleProperty("p", this::getVelocityP, this::setVelocityP);
+			builder.addDoubleProperty("i", this::getVelocityI, this::setVelocityI);
+			builder.addDoubleProperty("d", this::getVelocityD, this::setVelocityD);
+			builder.addDoubleProperty("f", this::getVelocityF, this::setVelocityF);
 
-		builder.addDoubleProperty("MaxV", this::getV, this::setV);
-		builder.addDoubleProperty("MaxA", this::getA, this::setA);
-		builder.addDoubleProperty("MaxJ", this::getJ, this::setJ);
-
+		}
 		builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
 		builder.addBooleanProperty("enabled", this::getEnabled, this::setEnabled);
-
 	}
 
 	private class MotionProfilingTask extends TimerTask {

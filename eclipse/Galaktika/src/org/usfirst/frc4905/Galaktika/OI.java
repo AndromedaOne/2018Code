@@ -29,8 +29,12 @@ import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
+import org.usfirst.frc4905.Galaktika.commands.TestDriveToWall;
+import org.usfirst.frc4905.Galaktika.commands.TestForwardToScale;
+import org.usfirst.frc4905.Galaktika.commands.TimedShootCube;
 import org.usfirst.frc4905.Galaktika.commands.TurnToCompassHeading;
 import org.usfirst.frc4905.Galaktika.groupcommands.MPTesting;
+import org.usfirst.frc4905.Galaktika.subsystems.Elevator;
 
 import Utilities.LEDColor;
 import Utilities.ControllerButtons.ButtonsEnumerated;
@@ -93,6 +97,7 @@ public class OI {
 	public JoystickButton liftRightRampButton;
 	
 	public JoystickButton throwCubeButton;
+	public JoystickButton angleIntakeButton;
 	
 
 	public OI() {
@@ -115,19 +120,21 @@ public class OI {
 		elevatorMoveHighScaleButton = new JoystickButton(subsystemController, ButtonsEnumerated.YBUTTON.getValue());
 		elevatorMoveLowScaleButton = new JoystickButton(subsystemController, ButtonsEnumerated.XBUTTON.getValue());
 		elevatorMoveSwitchButton = new JoystickButton(subsystemController, ButtonsEnumerated.BBUTTON.getValue());
-		elevatorMoveGroundLevelButton = new JoystickButton(subsystemController, ButtonsEnumerated.ABUTTON.getValue());
-		elevatorMoveHighScaleButton.whenPressed(new MoveElevator(MoveElevator.HIGH_SCALE_HEIGHT));
-		elevatorMoveLowScaleButton.whenPressed(new MoveElevator(MoveElevator.LOW_SCALE_HEIGHT));
-		elevatorMoveSwitchButton.whenPressed(new MoveElevator(MoveElevator.SWITCH_HEIGHT));
-		elevatorMoveGroundLevelButton.whenPressed(new MoveElevator(MoveElevator.GROUND_LEVEL));
+		elevatorMoveGroundLevelButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
+		elevatorMoveHighScaleButton.whenPressed(new MoveElevator(Elevator.HIGH_SCALE_HEIGHT));
+		elevatorMoveLowScaleButton.whenPressed(new MoveElevator(Elevator.LOW_SCALE_HEIGHT));
+		elevatorMoveSwitchButton.whenPressed(new MoveElevator(Elevator.SWITCH_HEIGHT));
+		elevatorMoveGroundLevelButton.whenPressed(new MoveElevator(Elevator.GROUND_LEVEL));
 
 		liftLeftRampButton = new JoystickButton(driveController, ButtonsEnumerated.BACKBUTTON.getValue());
 		liftLeftRampButton.whenPressed(new LiftLeftRamp());
 		liftRightRampButton = new JoystickButton(driveController, ButtonsEnumerated.STARTBUTTON.getValue());
 		liftRightRampButton.whenPressed(new LiftRightRamp());
 		
-		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());
-		//throwCubeButton.whenPressed(new MoveDownAndShoot()); //has to be tested
+		throwCubeButton = new JoystickButton(subsystemController, ButtonsEnumerated.ABUTTON.getValue());
+		throwCubeButton.whenPressed(new TimedShootCube()); //has to be tested
+		
+		angleIntakeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());	
 		
 
 		// SmartDashboard Buttons
@@ -155,10 +162,11 @@ public class OI {
 		SmartDashboard.putData("Lift Right Ramp", new LiftRightRamp());
 		SmartDashboard.putData("MotionProfilingTest", new MotionProfilingTest());
 		SmartDashboard.putData("DriveSquare", new DriveSquare());
+		SmartDashboard.putData("TestForwardToScale", new TestForwardToScale());
         SmartDashboard.putData("TurnDeltaAgnle", new GyroPIDTurnDeltaAngle(90.0));
 		SmartDashboard.putData("ResetElevatorEncoderTesting", new ResetElevatorEncoderTesting());
         SmartDashboard.putData("MPGroupTest", new MPTesting());
-
+        SmartDashboard.putData("Move Elevator", new MoveElevator(1500));
 
 	}
 

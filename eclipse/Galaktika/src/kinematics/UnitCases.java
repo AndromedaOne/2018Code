@@ -73,11 +73,13 @@ public class UnitCases {
 
 	public static void realTests() throws InvalidDimentionException, 
 	KinematicsException {
-		Kinematics.setTrajectoryPointInterval(0.000001);
+		/*Kinematics.setTrajectoryPointInterval(0.000001);
 		createUnitCase(DriveTrain.getMaxVelocity(), DriveTrain.getMaxAcceleration(), DriveTrain.getMaxJerk(), false, false, 100000.0);
 		
+		Kinematics.setTrajectoryPointInterval(1.0);*/
+		Kinematics.setTrajectoryPointInterval(0.001);
+		createUnitCase(64000, 61500, 56250, true, false, 25000.0);
 		Kinematics.setTrajectoryPointInterval(1.0);
-
 	}
 
 	static void createSingleSetpointCases() throws InvalidDimentionException, 
@@ -460,7 +462,7 @@ public class UnitCases {
 		}
 		double originalTrajectoryPointInterval = Kinematics.getTrajectoryPointInterval();
 		if(originalTrajectoryPointInterval < 0.1) {
-			Kinematics.setTrajectoryPointInterval(0.1);
+			Kinematics.setTrajectoryPointInterval(0.01);
 		}
 
 		for (double i = 0.0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
