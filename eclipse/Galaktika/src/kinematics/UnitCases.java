@@ -386,8 +386,7 @@ public class UnitCases {
 
 			}
 
-			m_kinematics.createTrajectory(myPath, maxVelocity, maxAcceleration, 0.25);
-			;
+			m_kinematics.createTrajectory(myPath, maxVelocity, maxAcceleration, 0.25, false);
 			System.out.println("Number: " + (i + 1));
 			Checkers.checkTrajectoryPath(myPath, kinematicsTester);
 		}

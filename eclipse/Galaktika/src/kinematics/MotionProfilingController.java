@@ -88,7 +88,7 @@ public class MotionProfilingController extends SendableBase implements Sendable,
 		m_positionPIDCalculator.reset();
 
 		m_initialTimeStamp = Timer.getFPGATimestamp();
-		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk);
+		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk, false);
 		m_endDeltaTime = m_path.getSetpointVector().get(0).endDeltaTime;
 		m_initialPosition = m_mpSource.getPosition();
 		m_enableStatus = true;
