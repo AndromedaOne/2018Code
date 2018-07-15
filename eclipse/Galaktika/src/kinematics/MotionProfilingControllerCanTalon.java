@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class MotionProfilingControllerCanTalon extends SendableBase
-		implements MotionProfilingController, Sendable, Runnable {
+public class MotionProfilingControllerCanTalon //extends SendableBase
+		/*implements MotionProfilingController, Sendable, Runnable*/ {
 	// Copied most of this code from
 	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java/MotionProfile/src/org/usfirst/frc/team217/robot/MotionProfileExample.java
 
@@ -34,42 +34,6 @@ public class MotionProfilingControllerCanTalon extends SendableBase
 		 */
 		_talon.changeMotionControlFramePeriod(5);
 		_notifer.startPeriodic(0.005);
-	}
-
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void disable() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void enable() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean onTarget() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setSetpoint(double setpoint) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -346,7 +310,7 @@ public class MotionProfilingControllerCanTalon extends SendableBase
 	 * Called by application to signal Talon to start the buffered MP (when it's
 	 * able to).
 	 */
-	void startMotionProfile() {
+	public void startMotionProfile() {
 		_bStart = true;
 	}
 
@@ -356,7 +320,7 @@ public class MotionProfilingControllerCanTalon extends SendableBase
 	 *         motion-profile output, 1 for enable motion-profile, 2 for hold
 	 *         current motion profile trajectory point.
 	 */
-	SetValueMotionProfile getSetValue() {
+	public SetValueMotionProfile getSetValue() {
 		return _setValue;
 	}
 

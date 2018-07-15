@@ -28,6 +28,7 @@ import org.usfirst.frc4905.Galaktika.commands.ResetElevatorEncoderTesting;
 import org.usfirst.frc4905.Galaktika.commands.RetractExtendArms;
 import org.usfirst.frc4905.Galaktika.commands.RunIntakeIn;
 import org.usfirst.frc4905.Galaktika.commands.RunMotorAndLog;
+import org.usfirst.frc4905.Galaktika.commands.RunTalonMP;
 import org.usfirst.frc4905.Galaktika.commands.TeleOpDrive;
 import org.usfirst.frc4905.Galaktika.commands.TestDriveToWall;
 import org.usfirst.frc4905.Galaktika.commands.TestForwardToScale;
@@ -99,6 +100,7 @@ public class OI {
 	public JoystickButton throwCubeButton;
 	public JoystickButton angleIntakeButton;
 	
+	JoystickButton talonMPButton;
 
 	public OI() {
 		//Button Presets for compass headings
@@ -136,7 +138,9 @@ public class OI {
 		
 		angleIntakeButton = new JoystickButton(subsystemController, ButtonsEnumerated.BACKBUTTON.getValue());	
 		
-
+		talonMPButton = new JoystickButton(driveController, ButtonsEnumerated.LEFTBUMPERBUTTON.getValue());
+		talonMPButton.whenPressed(new RunTalonMP());
+		
 		// SmartDashboard Buttons
 		SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
 		SmartDashboard.putData("TeleOpDrive", new TeleOpDrive());
