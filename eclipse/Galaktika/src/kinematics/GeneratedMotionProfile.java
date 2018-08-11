@@ -1,7 +1,18 @@
 package kinematics;
 
 public class GeneratedMotionProfile {
-	public static final int kNumPoints = 185;
+	
+	public GeneratedMotionProfile(double [][]points, int numOfPoints) {
+		m_numPoints = numOfPoints;
+		m_points = points;
+	}
+	
+	public int m_numPoints;
+	
+	public double [][]m_points;
+	
+	
+	/*public static final int kNumPoints = 185;
 	// Position (rotations) Velocity (RPM) Duration (ms)
 	public static double [][]Points = new double[][]{		
 		{0,	0	,10},
@@ -189,5 +200,5 @@ public class GeneratedMotionProfile {
 		{4.99988095238095,	0.857142857	,10},
 		{4.99997619047619,	0.285714286	,10},
 		{5,	0	,10}};
-
+*/
 }

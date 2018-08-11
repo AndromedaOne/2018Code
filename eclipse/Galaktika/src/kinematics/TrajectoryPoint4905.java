@@ -1,13 +1,13 @@
 package kinematics;
 
-public class TrajectoryPoint {
-	public TrajectoryPoint(double currentVelocity, double position, double timestamp) {
+public class TrajectoryPoint4905 {
+	public TrajectoryPoint4905(double currentVelocity, double position, double timestamp) {
 		m_currentVelocity = currentVelocity;
 		m_timestamp = timestamp;
 		m_position = position;
 	}
 
-	public TrajectoryPoint() {
+	public TrajectoryPoint4905() {
 
 	}
 

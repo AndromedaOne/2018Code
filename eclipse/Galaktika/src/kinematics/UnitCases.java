@@ -394,10 +394,10 @@ public class UnitCases {
 		}
 	}
 
-	static double getVelocityOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
-		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+	static double getVelocityOfPoint(Path Key, TrajectoryPoint4905 originalTrajectoryPoint) {
+		TrajectoryPoint4905 deltaBeforeOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
-		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+		TrajectoryPoint4905 deltaAfterOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 		double changeInPosition = deltaAfterOriginalTrajectoryPoint.m_position
 				- deltaBeforeOriginalTrajectoryPoint.m_position;
@@ -411,14 +411,14 @@ public class UnitCases {
 	}
 
 	private static double getAccelerationOfPoint(Path Key, double originalTrajectoryPointTime) {
-		TrajectoryPoint trajectoryPoint = new TrajectoryPoint(0.0, 0.0, originalTrajectoryPointTime);
+		TrajectoryPoint4905 trajectoryPoint = new TrajectoryPoint4905(0.0, 0.0, originalTrajectoryPointTime);
 		return getAccelerationOfPoint(Key, trajectoryPoint);
 	}
 
-	static double getAccelerationOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
-		TrajectoryPoint deltaBeforeOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+	static double getAccelerationOfPoint(Path Key, TrajectoryPoint4905 originalTrajectoryPoint) {
+		TrajectoryPoint4905 deltaBeforeOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
-		TrajectoryPoint deltaAfterOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+		TrajectoryPoint4905 deltaAfterOriginalTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 				originalTrajectoryPoint.m_timestamp + m_deltaTimeFromOriginalPoint);
 		double changeInVelocity = deltaAfterOriginalTrajectoryPoint.m_currentVelocity
 				- deltaBeforeOriginalTrajectoryPoint.m_currentVelocity;
@@ -429,20 +429,20 @@ public class UnitCases {
 	}
 
 	private static double getJerkOfPoint(Path Key, double originalTrajectoryPointTime, boolean testMode) {
-		TrajectoryPoint trajectoryPoint = new TrajectoryPoint(0.0, 0.0, originalTrajectoryPointTime);
+		TrajectoryPoint4905 trajectoryPoint = new TrajectoryPoint4905(0.0, 0.0, originalTrajectoryPointTime);
 		return getJerkOfPoint(Key, trajectoryPoint, testMode);
 	}
 
 	static double getJerkOfPoint(Path Key, double originalTrajectoryPointTime) {
-		TrajectoryPoint trajectoryPoint = new TrajectoryPoint(0.0, 0.0, originalTrajectoryPointTime);
+		TrajectoryPoint4905 trajectoryPoint = new TrajectoryPoint4905(0.0, 0.0, originalTrajectoryPointTime);
 		return getJerkOfPoint(Key, trajectoryPoint);
 	}
 
-	static double getJerkOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint) {
+	static double getJerkOfPoint(Path Key, TrajectoryPoint4905 originalTrajectoryPoint) {
 		return getJerkOfPoint(Key, originalTrajectoryPoint, false);
 	}
 
-	private static double getJerkOfPoint(Path Key, TrajectoryPoint originalTrajectoryPoint, boolean testMode) {
+	private static double getJerkOfPoint(Path Key, TrajectoryPoint4905 originalTrajectoryPoint, boolean testMode) {
 		double deltaBeforeAcceleration = getAccelerationOfPoint(Key,
 				originalTrajectoryPoint.m_timestamp - m_deltaTimeFromOriginalPoint);
 		double deltaAfterAcceleration = getAccelerationOfPoint(Key,
@@ -454,7 +454,7 @@ public class UnitCases {
 		return calculatedJerk;
 	}
 
-	private static void printTrajectory(Path Key) {
+	public static void printTrajectory(Path Key) {
 		System.out.println("Trajectory Point: [vel, acel, jerk, pos, time]");
 		double endDeltatTimeFromStartOfPath = 0;
 		for (int i = 0; i < Key.getSetpointVector().size(); i++) {
@@ -466,13 +466,13 @@ public class UnitCases {
 		}
 
 		for (double i = 0.0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
-			TrajectoryPoint currentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, i, true);
+			TrajectoryPoint4905 currentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, i, true);
 
 			double currentAcceleration = getAccelerationOfPoint(Key, currentPoint);
 
-			TrajectoryPoint twiceDeltaBeforeCurrentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+			TrajectoryPoint4905 twiceDeltaBeforeCurrentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 					i - 2 * m_deltaTimeFromOriginalPoint);
-			TrajectoryPoint twiceDeltaAfterCurrentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+			TrajectoryPoint4905 twiceDeltaAfterCurrentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 					i + 2 * m_deltaTimeFromOriginalPoint);
 
 			double deltaBeforeAcceleration = (currentPoint.m_currentVelocity

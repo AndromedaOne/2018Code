@@ -26,7 +26,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVNorth(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == NORTH.getValue()) {
 			return true;
@@ -35,7 +35,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVNorthEast(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == NORTHEAST.getValue()) {
 			return true;
@@ -44,7 +44,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVEast(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == EAST.getValue()) {
 			return true;
@@ -53,7 +53,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVSouthEast(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == SOUTHEAST.getValue()) {
 			return true;
@@ -62,7 +62,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVSouth(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == SOUTH.getValue()) {
 			return true;
@@ -71,7 +71,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVSouthWest(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == SOUTHWEST.getValue()) {
 			return true;
@@ -80,7 +80,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVWest(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == WEST.getValue()) {
 			return true;
@@ -89,7 +89,7 @@ public enum POVDirectionNames {
 	}
 	
 	public static boolean getPOVNorthWest(Joystick gamepad) {
-		int povReading = gamepad.getPOV();
+		int povReading = 8;//gamepad.getPOV();
 		
 		if (povReading == NORTHWEST.getValue()) {
 			return true;

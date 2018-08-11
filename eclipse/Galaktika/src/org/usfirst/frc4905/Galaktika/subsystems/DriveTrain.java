@@ -70,10 +70,10 @@ public class DriveTrain extends Subsystem {
 	public int m_encoderTicksPassed = 0;
 
 	public WPI_TalonSRX getLeftTopTalon() {
-		return leftTopTalon;
+		return leftBottomTalon; // lazy lazy lazy Sean
 	}
-	
-	
+
+
 	public static double getMaxVelocity() {
 		return kEncoderMaxVelocity;
 
@@ -97,7 +97,7 @@ public class DriveTrain extends Subsystem {
 	private double m_encoderMPMinOutput = 0.3;
 	public double m_encoderMPVelocitykf = 1.0 / kEncoderMaxVelocity;
 
-	
+
 	private double kEncoderMPTolerance = 50;
 	private MotionProfilingController4905 m_encoderMotionProfilingController;
 
@@ -192,27 +192,11 @@ public class DriveTrain extends Subsystem {
 	private double m_gyroPIDOutputRange = 1.0;
 
 	public DriveTrain() {
-		leftBottomTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1, 10);
-		leftBottomTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		
-		leftTopTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		leftTopTalon.setSensorPhase(true); /* keep sensor and motor in phase */
-		leftTopTalon.configNeutralDeadband(TalonMPConstants.kNeutralDeadband, TalonMPConstants.kTimeoutMs);
+		configureTalon(leftBottomTalon);
+		configureTalon(leftTopTalon);
+		configureTalon(rightBottomTalon);
+		configureTalon(rightTopTalon);
 
-		leftTopTalon.config_kF(0, 0.076, TalonMPConstants.kTimeoutMs);
-		leftTopTalon.config_kP(0, 2.000, TalonMPConstants.kTimeoutMs);
-		leftTopTalon.config_kI(0, 0.0, TalonMPConstants.kTimeoutMs);
-		leftTopTalon.config_kD(0, 20.0, TalonMPConstants.kTimeoutMs);
-
-		/* Our profile uses 10ms timing */
-		leftTopTalon.configMotionProfileTrajectoryPeriod(10, TalonMPConstants.kTimeoutMs); 
-		/*
-		 * status 10 provides the trajectory target for motion profile AND
-		 * motion magic
-		 */
-		leftTopTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, TalonMPConstants.kTimeoutMs);
-		
-		
 		frontUltrasonic.setEnabled(true);
 		frontUltrasonic.setAutomaticMode(true);
 		UltrasonicPIDOutputFront ultraPIDOutput = new UltrasonicPIDOutputFront();
@@ -231,6 +215,25 @@ public class DriveTrain extends Subsystem {
 
 		initializeEncoderMP();
 		initializeGyroMP();
+	}
+
+	private void configureTalon(WPI_TalonSRX talon) {
+		talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		talon.setSensorPhase(true); /* keep sensor and motor in phase */
+		talon.configNeutralDeadband(TalonMPConstants.kNeutralDeadband, TalonMPConstants.kTimeoutMs);
+
+		talon.config_kF(0, 0.45, TalonMPConstants.kTimeoutMs);
+		talon.config_kP(0, 0.0, TalonMPConstants.kTimeoutMs);
+		talon.config_kI(0, 0.0, TalonMPConstants.kTimeoutMs);
+		talon.config_kD(0, 0.0, TalonMPConstants.kTimeoutMs);
+
+		/* Our profile uses 10ms timing */
+		talon.configMotionProfileTrajectoryPeriod(10, TalonMPConstants.kTimeoutMs);
+		/*
+		 * status 10 provides the trajectory target for motion profile AND
+		 * motion magic
+		 */
+		talon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, TalonMPConstants.kTimeoutMs);
 	}
 
 	// Ultrasonic Code - Begins
@@ -523,7 +526,7 @@ public class DriveTrain extends Subsystem {
 
 	public double getEncoderTicks() {
 		// TODO Auto-generated method stub
-		return leftBottomTalon.getSelectedSensorPosition(0);
+		return getLeftTopTalon().getSelectedSensorPosition(0);
 	}
 
 	public void move(double forwardBackSpeed, double rotateAmount) {
@@ -655,11 +658,11 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public double getTalonVelocity() {
-		return leftBottomTalon.getSelectedSensorVelocity(0) * 10;
+		return getLeftTopTalon().getSelectedSensorVelocity(0) * 10;
 	}
 
 	public double getEncoderPosition() {
-		return leftBottomTalon.getSelectedSensorPosition(0);
+		return getLeftTopTalon().getSelectedSensorPosition(0);
 	}
 
 	private class GyroMPOut implements PIDOutput {
@@ -728,7 +731,12 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void setLeftTopTalonMPMode(double value) {
-		leftTopTalon.set(ControlMode.MotionProfile, value);
+		//System.out.println("Value: " + value);
+		getLeftTopTalon().set(ControlMode.MotionProfile, value);
+	}
+
+	public void pauseDifferentialDrive() {
+		differentialDrive.setExpiration(100000);
 	}
 
 }

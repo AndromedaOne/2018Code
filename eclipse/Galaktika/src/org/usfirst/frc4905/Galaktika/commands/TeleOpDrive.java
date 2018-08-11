@@ -67,7 +67,6 @@ public class TeleOpDrive extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		
 		double forwardBackwardStickValue = EnumeratedRawAxis.getLeftStickVertical(drivecontroller);
 		double rotateStickValue = EnumeratedRawAxis.getRightStickHorizontal(drivecontroller);
 		if(forwardBackwardStickValue < kDeadzone && forwardBackwardStickValue > -kDeadzone) {

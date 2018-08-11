@@ -38,7 +38,7 @@ public class MotionProfilingController4905 extends SendableBase implements Motio
 
 	private Kinematics m_kinematics;
 	private Path m_path = new Path();
-	private TrajectoryPoint m_currentTrajectoryPoint;
+	private TrajectoryPoint4905 m_currentTrajectoryPoint;
 
 	private double m_deltaTime = 0.0;
 	private double m_endDeltaTime = 0.0;
@@ -101,7 +101,7 @@ public class MotionProfilingController4905 extends SendableBase implements Motio
 		m_velocityPIDCalculator.reset();
 		m_positionPIDCalculator.reset();
 		m_previousOutput = 0.0;
-		m_currentTrajectoryPoint = new TrajectoryPoint(0.0, 0.0, 0.0);
+		m_currentTrajectoryPoint = new TrajectoryPoint4905(0.0, 0.0, 0.0);
 
 		m_initialTimeStamp = Timer.getFPGATimestamp();
 		m_kinematics.createTrajectory(m_path, m_maxVelocity * 0.9, m_maxAcceleration, m_maxJerk, false);
@@ -115,7 +115,7 @@ public class MotionProfilingController4905 extends SendableBase implements Motio
 
 			double currentTimestamp = Timer.getFPGATimestamp();
 			m_deltaTime = currentTimestamp - m_initialTimeStamp;
-			TrajectoryPoint nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_deltaTime);
+			TrajectoryPoint4905 nextTrajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(m_path, m_deltaTime);
 			double deltaPosition = getDeltaPosition(m_mpSource.getPosition());
 			double positionPidOut = m_positionPIDCalculator.getPIDOut(m_currentTrajectoryPoint.m_position,
 					deltaPosition);

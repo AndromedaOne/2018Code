@@ -5,7 +5,7 @@ import java.util.Vector;
 public class Kinematics implements KinematicsGenerator {
 
 	private boolean alreadyPrinted = true;
-	private static double m_trajectoryPointInterval = 1.0;
+	private static double m_trajectoryPointInterval = 0.1;
 	
 	public static void setTrajectoryPointInterval(double trajectoryPointInterval) {
 		m_trajectoryPointInterval = trajectoryPointInterval;
@@ -68,7 +68,7 @@ public class Kinematics implements KinematicsGenerator {
 	@Override
 	public Path createTrajectory(double maxVelocity, double maxAcceleration, double maxJerk, double... setpoints) {
 		Path Key = new Path();
-		createTrajectory(Key, maxVelocity, maxAcceleration, maxJerk, false);
+		
 		for(double setpoint: setpoints) {
 			try {
 				addPointToPath(Key, new Point(setpoint));
@@ -77,6 +77,7 @@ public class Kinematics implements KinematicsGenerator {
 				e.printStackTrace();
 			}
 		}
+		createTrajectory(Key, maxVelocity, maxAcceleration, maxJerk, false);
 		return Key;
 	}
 

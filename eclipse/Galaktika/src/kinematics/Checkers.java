@@ -67,7 +67,7 @@ public class Checkers {
 		// Go thru a whole bunch of points and if any of the parameters of the point are
 		// NAN throw
 		for (double i = 0; i < endDeltatTimeFromStartOfPath; i += Kinematics.getTrajectoryPointInterval()) {
-			TrajectoryPoint currentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, i);
+			TrajectoryPoint4905 currentPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, i);
 
 			if (Double.isNaN(currentPoint.m_currentVelocity) || Double.isNaN(currentPoint.m_position)
 					|| Double.isNaN(currentPoint.m_timestamp)) {
@@ -122,7 +122,7 @@ public class Checkers {
 	private static void checkVelocity(Path Key, KinematicsTester kinematicsTester) throws KinematicsException {
 		KinematicsException kinematicsException;
 		String errMessage;
-		Vector<TrajectoryPoint> originalTrajectoryPointsVector = new Vector<TrajectoryPoint>();
+		Vector<TrajectoryPoint4905> originalTrajectoryPointsVector = new Vector<TrajectoryPoint4905>();
 		Vector<Double> velocityCalculatedFromPositionVector = new Vector<Double>();
 		double endDeltatTimeFromStartOfPath = 0;
 		// Gets the total amount of time it takes to reach the end of the path.
@@ -132,14 +132,14 @@ public class Checkers {
 		// Grabs a whole bunch of points to test their velocities
 		for (double currentTime = 0.0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
-			TrajectoryPoint trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
+			TrajectoryPoint4905 trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
 
 			originalTrajectoryPointsVector.add(trajectoryPoint);
 		}
 		// Calculate the velocities of all of the points just grabbed by looking at the
 		// change in position in those points divided by the change in time.
 		for (int i = 0; i < originalTrajectoryPointsVector.size(); i++) {
-			TrajectoryPoint originalTrajectoryPoint = originalTrajectoryPointsVector.get(i);
+			TrajectoryPoint4905 originalTrajectoryPoint = originalTrajectoryPointsVector.get(i);
 			double calculatedVelocity = UnitCases.getVelocityOfPoint(Key, originalTrajectoryPoint);
 			velocityCalculatedFromPositionVector.add(calculatedVelocity);
 		}
@@ -193,7 +193,7 @@ public class Checkers {
 	private static void checkAcceleration(Path Key, KinematicsTester kinematicsTester) throws KinematicsException {
 		KinematicsException kinematicsException;
 		String errMessage;
-		Vector<TrajectoryPoint> originalTrajectoryPointsPath = new Vector<TrajectoryPoint>();
+		Vector<TrajectoryPoint4905> originalTrajectoryPointsPath = new Vector<TrajectoryPoint4905>();
 		Vector<Double> accelerationCalculatedFromPositionVector = new Vector<Double>();
 		double endDeltatTimeFromStartOfPath = 0;
 		// Gets the total amount of time it takes to reach the end of the path.
@@ -203,14 +203,14 @@ public class Checkers {
 		// Grabs a whole bunch of points to test their accelerations
 		for (double currentTime = 0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
-			TrajectoryPoint trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
+			TrajectoryPoint4905 trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
 			originalTrajectoryPointsPath.add(trajectoryPoint);
 		}
 		// Calculate the accelerations of all of the points just grabbed by looking at
 		// the
 		// change in velocity in those points divided by the change in time.
 		for (int i = 0; i < originalTrajectoryPointsPath.size(); i++) {
-			TrajectoryPoint originalTrajectoryPoint = originalTrajectoryPointsPath.get(i);
+			TrajectoryPoint4905 originalTrajectoryPoint = originalTrajectoryPointsPath.get(i);
 			double calculatedAcceleration = UnitCases.getAccelerationOfPoint(Key, originalTrajectoryPoint);
 
 			accelerationCalculatedFromPositionVector.add(calculatedAcceleration);
@@ -241,7 +241,7 @@ public class Checkers {
 	private static void checkJerk(Path Key, KinematicsTester kinematicsTester) throws KinematicsException {
 		KinematicsException kinematicsException;
 		String errMessage;
-		Vector<TrajectoryPoint> originalTrajectoryPointsPath = new Vector<TrajectoryPoint>();
+		Vector<TrajectoryPoint4905> originalTrajectoryPointsPath = new Vector<TrajectoryPoint4905>();
 		Vector<Double> jerkCalculatedFromCalculatedAccelerationVector = new Vector<Double>();
 		double endDeltatTimeFromStartOfPath = 0;
 		// Gets the total amount of time it takes to reach the end of the path.
@@ -251,13 +251,13 @@ public class Checkers {
 		// Grabs a whole bunch of points to test their jerks
 		for (double currentTime = 0; currentTime <= endDeltatTimeFromStartOfPath; currentTime += Kinematics
 				.getTrajectoryPointInterval()) {
-			TrajectoryPoint trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
+			TrajectoryPoint4905 trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key, currentTime);
 			originalTrajectoryPointsPath.add(trajectoryPoint);
 		}
 		// Calculate the jerks of all of the points just grabbed by looking at the
 		// change in acceleration in those points divided by the change in time.
 		for (int i = 0; i < originalTrajectoryPointsPath.size(); i++) {
-			TrajectoryPoint originalTrajectoryPoint = originalTrajectoryPointsPath.get(i);
+			TrajectoryPoint4905 originalTrajectoryPoint = originalTrajectoryPointsPath.get(i);
 
 			double calculatedJerk = UnitCases.getJerkOfPoint(Key, originalTrajectoryPoint);
 
@@ -300,7 +300,7 @@ public class Checkers {
 			// This point is the last point for each setpoint. It should have a position
 			// equal to that of the setpoint because it is supposed to be the time when the
 			// setpoint is reached.
-			TrajectoryPoint trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+			TrajectoryPoint4905 trajectoryPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 					currentTrajectoryPointIndex);
 			try {
 				nextSetpoint = Key.getSetpointVector().get(i + 1);
@@ -388,7 +388,7 @@ public class Checkers {
 				}
 
 				double calculatedAcceleration = UnitCases.getAccelerationOfPoint(Key, trajectoryPoint);
-				TrajectoryPoint nextPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
+				TrajectoryPoint4905 nextPoint = GettingOfTrajectoryPoint.getTrajectoryPoint(Key,
 						trajectoryPoint.m_timestamp + UnitCases.m_deltaTimeFromOriginalPoint);
 				double nextAcceleration = UnitCases.getAccelerationOfPoint(Key, nextPoint);
 				double currentJerk = UnitCases.getJerkOfPoint(Key, trajectoryPoint.m_timestamp);

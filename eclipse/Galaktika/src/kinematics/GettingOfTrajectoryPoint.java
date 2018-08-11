@@ -14,11 +14,11 @@ public class GettingOfTrajectoryPoint {
 	 * This method takes a delta time from the beginning of a trajectory path and
 	 * returns the point where that time is
 	 */
-	public static TrajectoryPoint getTrajectoryPoint(Path Key, double deltaTimeFromStartOfSetpointVector) {
+	public static TrajectoryPoint4905 getTrajectoryPoint(Path Key, double deltaTimeFromStartOfSetpointVector) {
 		return getTrajectoryPoint(Key, deltaTimeFromStartOfSetpointVector, false);
 	}
 
-	public static TrajectoryPoint getTrajectoryPoint(Path Key, double deltaTimeFromStartOfSetpointVector,
+	public static TrajectoryPoint4905 getTrajectoryPoint(Path Key, double deltaTimeFromStartOfSetpointVector,
 			Boolean debugMode) {
 		double velocity = 0.0;
 		double deltaPosition = Double.NaN;
@@ -216,7 +216,7 @@ public class GettingOfTrajectoryPoint {
 		velocity *= directionConstant;
 		deltaPosition *= directionConstant;
 		double position = previousPositions + deltaPosition;
-		TrajectoryPoint point = new TrajectoryPoint(velocity, position, time);
+		TrajectoryPoint4905 point = new TrajectoryPoint4905(velocity, position, time);
 
 		return point;
 	}

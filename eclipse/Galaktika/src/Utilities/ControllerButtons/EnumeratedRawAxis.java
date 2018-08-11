@@ -21,34 +21,34 @@ public enum EnumeratedRawAxis {
 	}
 
 	public static double getLeftStickHorizontal (Joystick gamepad) {
-		return LEFTSTICKHORIZONTAL.getRawAxis(gamepad);
+		return 0.0;//LEFTSTICKHORIZONTAL.getRawAxis(gamepad);
 	}
 
 	public static double getLeftStickVertical (Joystick gamepad) {
-		return LEFTSTICKVERTICAL.getRawAxis(gamepad);
+		return 0.0;//LEFTSTICKVERTICAL.getRawAxis(gamepad);
 	}
 
 	public static boolean getLeftTriggerButton(Joystick gamepad) {
-		return LEFTTRIGGER.getRawAxis(gamepad)>0.5;
+		return false;//LEFTTRIGGER.getRawAxis(gamepad)>0.5;
 	}
 
 	public static double getLeftTriggerValue(Joystick gamepad) {
-		return LEFTTRIGGER.getRawAxis(gamepad);
+		return 0.0;//LEFTTRIGGER.getRawAxis(gamepad);
 	}
 
 	public static boolean getRightTriggerButton(Joystick gamepad) {
-		return RIGHTTRIGGER.getRawAxis(gamepad)>0.5;
+		return false;//RIGHTTRIGGER.getRawAxis(gamepad)>0.5;
 	}
 
 	public static double getRightTriggerValue(Joystick gamepad) {
-		return RIGHTTRIGGER.getRawAxis(gamepad);
+		return 0.0;//RIGHTTRIGGER.getRawAxis(gamepad);
 	}
 
 	public static double getRightStickHorizontal (Joystick gamepad) {
-		return RIGHTSTICKHORIZONTAL.getRawAxis(gamepad);
+		return 0.0;//RIGHTSTICKHORIZONTAL.getRawAxis(gamepad);
 	}
 
 	public static double getRightStickVertical (Joystick gamepad) {
-		return RIGHTSTICKVERTICAL.getRawAxis(gamepad);
+		return 0.0;//RIGHTSTICKVERTICAL.getRawAxis(gamepad);
 	}
 }

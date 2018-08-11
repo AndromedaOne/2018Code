@@ -3,12 +3,9 @@ package kinematics;
 
 public class TalonMPConstants {
 
-	/** which Talon on CANBus */
-	public static final int kTalonID = 0;
-
 	/**
 	 * How many sensor units per rotation. Using CTRE Magnetic Encoder.
-	 * 
+	 *
 	 * @link https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-are-the-units-of-my-sensor
 	 */
 	public static final double kSensorUnitsPerRotation = 4096;
@@ -41,4 +38,12 @@ public class TalonMPConstants {
 	 * Motor deadband, set to 1%.
 	 */
 	public static final double kNeutralDeadband = 0.01;
+
+	public static final double maxVelocity = 30000.0; // This needs to be tested and played around with...
+
+	public static final double maxAcceleration = 35000.0; // This needs to be tested and played around with...
+
+	public static final double maxJerk = 20000.0; // This needs to be tested and played around with...
+
+	public static final double trajectoryPointInterval = 0.005;
 }
