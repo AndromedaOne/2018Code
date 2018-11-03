@@ -736,7 +736,7 @@ public class DriveTrain extends Subsystem {
 	}
 
 	public void pauseDifferentialDrive() {
-		differentialDrive.setExpiration(100000);
+		differentialDrive.setExpiration(1.0e20);
 	}
 
 }
